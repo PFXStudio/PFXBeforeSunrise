@@ -1,4 +1,4 @@
-package com.example.fashionet_provider;
+package com.pfxstudio.beforesunrise;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
