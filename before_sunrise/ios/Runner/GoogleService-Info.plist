@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1086197933690-3uortdlpjla4t8o56m8kj0ldtp01focl.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1086197933690-3uortdlpjla4t8o56m8kj0ldtp01focl</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC2fYVtjYTVO_BurmLofMT0xz9X1j4xKNw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1086197933690</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.pfxstudio.beforesunrise</string>
+	<key>PROJECT_ID</key>
+	<string>beforesunrise-17dc9</string>
+	<key>STORAGE_BUCKET</key>
+	<string>beforesunrise-17dc9.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1086197933690:ios:3d3653185c3d51b6</string>
+	<key>DATABASE_URL</key>
+	<string>https://beforesunrise-17dc9.firebaseio.com</string>
+</dict>
+</plist>
