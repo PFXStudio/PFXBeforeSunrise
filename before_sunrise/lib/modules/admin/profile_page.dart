@@ -1,11 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fashionet_provider/blocs/blocs.dart';
-import 'package:fashionet_provider/models/models.dart';
-import 'package:fashionet_provider/widgets/widgets.dart';
-import 'package:flutter/material.dart';
-import 'package:popup_menu/popup_menu.dart';
-import 'package:provider/provider.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:before_sunrise/import.dart';
 
 class ProfilePage extends StatefulWidget {
   final Profile userProfile;

@@ -1,4 +1,4 @@
-import 'package:meta/meta.dart';
+import 'package:before_sunrise/import.dart';
 
 class PostCategory {
   final String userId;

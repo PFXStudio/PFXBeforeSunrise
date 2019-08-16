@@ -1,6 +1,4 @@
-import 'package:fashionet_provider/blocs/blocs.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:before_sunrise/import.dart';
 
 class LoginForm extends StatefulWidget {
   @override

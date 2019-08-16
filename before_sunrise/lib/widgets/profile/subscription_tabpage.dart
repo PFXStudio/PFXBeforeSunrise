@@ -1,12 +1,10 @@
-import 'package:fashionet_provider/blocs/blocs.dart';
-import 'package:fashionet_provider/widgets/widgets.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:before_sunrise/import.dart';
 
 class SubscriptionTabPage extends StatelessWidget {
   final bool isRefreshing;
 
-  const SubscriptionTabPage({Key key, @required this.isRefreshing}) : super(key: key);
+  const SubscriptionTabPage({Key key, @required this.isRefreshing})
+      : super(key: key);
 
   bool get _isRefreshing => isRefreshing;
 
@@ -23,40 +21,40 @@ class SubscriptionTabPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ProfileBloc>(
         builder: (BuildContext context, ProfileBloc profileBloc, Widget child) {
-      return 
-      _isRefreshing ? _buildSliverList(profileBloc: profileBloc) : 
-      profileBloc.profileSubscriptionState == ProfileState.Loading
-          ? SliverToBoxAdapter(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(height: 50.0),
-                  _isRefreshing ? Container() : CircularProgressIndicator(),
-                ],
-              ),
-            )
-          : profileBloc.profileSubscriptions.length == 0
+      return _isRefreshing
+          ? _buildSliverList(profileBloc: profileBloc)
+          : profileBloc.profileSubscriptionState == ProfileState.Loading
               ? SliverToBoxAdapter(
                   child: Column(
                     children: <Widget>[
                       SizedBox(height: 50.0),
-                      FlatButton(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Icon(Icons.refresh),
-                            Text('refresh'),
-                          ],
-                        ),
-                        onPressed: () {
-                          profileBloc.fetchUserProfileSubscriptions();
-                        },
-                      ),
-                      Text('Sorry! You are not subsribed to any page :('),
+                      _isRefreshing ? Container() : CircularProgressIndicator(),
                     ],
                   ),
                 )
-              : _buildSliverList(profileBloc: profileBloc);
+              : profileBloc.profileSubscriptions.length == 0
+                  ? SliverToBoxAdapter(
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(height: 50.0),
+                          FlatButton(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Icon(Icons.refresh),
+                                Text('refresh'),
+                              ],
+                            ),
+                            onPressed: () {
+                              profileBloc.fetchUserProfileSubscriptions();
+                            },
+                          ),
+                          Text('Sorry! You are not subsribed to any page :('),
+                        ],
+                      ),
+                    )
+                  : _buildSliverList(profileBloc: profileBloc);
     });
   }
 }

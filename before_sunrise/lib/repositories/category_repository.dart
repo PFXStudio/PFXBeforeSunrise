@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fashionet_provider/models/models.dart';
-import 'package:meta/meta.dart';
+import 'package:before_sunrise/import.dart';
 
 class CategoryRepository {
   final FieldValue _firestoreTimestamp;
@@ -10,7 +8,8 @@ class CategoryRepository {
       : _firestoreTimestamp = FieldValue.serverTimestamp(),
         _categoryCollection = Firestore.instance.collection('categories');
 
-  Future<QuerySnapshot> fetchCategories({@required PostCategory lastVisiblePostCategory}) {
+  Future<QuerySnapshot> fetchCategories(
+      {@required PostCategory lastVisiblePostCategory}) {
     return lastVisiblePostCategory == null
         ? _categoryCollection
             .orderBy('lastUpdate', descending: true)

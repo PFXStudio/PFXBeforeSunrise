@@ -1,7 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
-import 'package:libphonenumber/libphonenumber.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:before_sunrise/import.dart';
 
 enum AuthState { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 enum VerificationState { Default, Loading, Failure, Success }

@@ -1,9 +1,4 @@
-import 'package:fashionet_provider/blocs/blocs.dart';
-import 'package:flutter/material.dart';
-import 'package:keyboard_avoider/keyboard_avoider.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+import 'package:before_sunrise/import.dart';
 
 class CategoryForm extends StatefulWidget {
   @override

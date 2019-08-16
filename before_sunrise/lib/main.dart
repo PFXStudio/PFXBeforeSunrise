@@ -1,20 +1,32 @@
-import 'package:fashionet_provider/blocs/blocs.dart';
-import 'package:fashionet_provider/models/models.dart';
-import 'package:fashionet_provider/modules/modules.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:popup_menu/popup_menu.dart';
-import 'package:provider/provider.dart';
-
-import 'widgets/widgets.dart';
+import 'package:before_sunrise/import.dart';
 
 void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-      .then((_) => runApp(MyApp()));
+      .then((_) => runApp(MainApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
+  MainApp();
+
   @override
+  _MainAppState createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  @override
+  LocalizableDelegate _localizableDelegate;
+  void initState() {
+    super.initState();
+    _localizableDelegate = LocalizableDelegate(newLocale: null);
+    localizableManager.onLocaleChanged = onLocaleChange;
+  }
+
+  void onLocaleChange(Locale locale) {
+    setState(() {
+      _localizableDelegate = LocalizableDelegate(newLocale: locale);
+    });
+  }
+
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
@@ -27,13 +39,19 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'FashioNet',
+        title: 'Before Sunrise',
         theme: ThemeData(
-          fontFamily: 'QuickSand',
+          fontFamily: 'Roboto',
           primarySwatch: Colors.indigo,
           accentColor: Colors.orange,
         ),
         home: new DynamicInitialPage(),
+        localizationsDelegates: [
+          _localizableDelegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: localizableManager.supportedLocales(),
         routes: <String, WidgetBuilder>{
           '/home': (BuildContext context) => HomePage(),
           '/category-form': (BuildContext context) => CategoryForm(),

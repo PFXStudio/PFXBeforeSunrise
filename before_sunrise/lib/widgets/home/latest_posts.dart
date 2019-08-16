@@ -1,7 +1,4 @@
-import 'package:fashionet_provider/blocs/blocs.dart';
-import 'package:fashionet_provider/widgets/widgets.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:before_sunrise/import.dart';
 
 class LatestPosts extends StatelessWidget {
   final bool isRefreshing;

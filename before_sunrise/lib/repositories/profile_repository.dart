@@ -1,5 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:meta/meta.dart';
+import 'package:before_sunrise/import.dart';
 
 class ProfileRepository {
   // final Firestore _firestore;
@@ -12,7 +11,7 @@ class ProfileRepository {
 
   Future<DocumentSnapshot> hasProfile({@required String userId}) async {
     return _profileCollection.document(userId).get();
-  }  
+  }
 
   Future<bool> isBookmarked(
       {@required String postId, @required String userId}) async {

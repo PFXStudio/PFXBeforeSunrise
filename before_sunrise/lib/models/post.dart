@@ -1,6 +1,4 @@
-import 'package:fashionet_provider/models/models.dart';
-import 'package:meta/meta.dart';
-
+import 'package:before_sunrise/import.dart';
 class Post {
   final String userId;
   final String postId;

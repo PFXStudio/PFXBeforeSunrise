@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:before_sunrise/import.dart';
 
 class MenuOption {
   final IconData icon;

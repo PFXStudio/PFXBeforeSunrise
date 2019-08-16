@@ -1,6 +1,4 @@
-import 'package:fashionet_provider/widgets/widgets.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:before_sunrise/import.dart';
 
 class SuggestedPosts extends StatefulWidget {
   final bool isPined;

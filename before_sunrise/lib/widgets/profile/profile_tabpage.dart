@@ -1,5 +1,4 @@
-import 'package:fashionet_provider/models/models.dart';
-import 'package:flutter/material.dart';
+import 'package:before_sunrise/import.dart';
 
 class ProfileTabPage extends StatelessWidget {
   final Profile profile;

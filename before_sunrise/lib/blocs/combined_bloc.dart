@@ -1,6 +1,5 @@
-import 'package:fashionet_provider/models/models.dart';
-import 'package:flutter/foundation.dart';
+import 'package:before_sunrise/import.dart';
 
 class CombinedBloc extends ChangeNotifier {
-    List<Post> latestFollowingProfilePost;
+  List<Post> latestFollowingProfilePost;
 }

@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fashionet_provider/models/models.dart';
-import 'package:meta/meta.dart';
+import 'package:before_sunrise/import.dart';
 
 class PostRepository {
   final FieldValue _firestoreTimestamp;

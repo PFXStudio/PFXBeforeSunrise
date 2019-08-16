@@ -1,6 +1,4 @@
-import 'package:fashionet_provider/widgets/widgets.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:before_sunrise/import.dart';
 
 class SearchForm extends StatelessWidget {
   @override

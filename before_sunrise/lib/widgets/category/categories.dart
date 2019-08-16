@@ -1,9 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fashionet_provider/blocs/blocs.dart';
-import 'package:fashionet_provider/models/models.dart';
-import 'package:fashionet_provider/modules/utilities/utilities.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:before_sunrise/import.dart';
 
 class Categories extends StatefulWidget {
   @override

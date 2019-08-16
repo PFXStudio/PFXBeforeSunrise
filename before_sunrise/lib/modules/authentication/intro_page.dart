@@ -1,7 +1,4 @@
-import 'package:fashionet_provider/modules/modules.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:before_sunrise/import.dart';
 
 class IntroPage extends StatefulWidget {
   @override

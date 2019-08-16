@@ -1,9 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fashionet_provider/blocs/blocs.dart';
-import 'package:fashionet_provider/models/models.dart';
-import 'package:fashionet_provider/repositories/repositories.dart';
-import 'package:flutter/foundation.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:before_sunrise/import.dart';
 
 enum CategoryState { Default, Loading, Success, Failure }
 // enum CategoryFetchState { Default, Loaded, Failure }
@@ -38,8 +33,8 @@ class CategoryBloc with ChangeNotifier {
       _categoryState = CategoryState.Loading;
       notifyListeners();
 
-      QuerySnapshot _snapshot =
-          await _categoryRepository.fetchCategories(lastVisiblePostCategory: null);
+      QuerySnapshot _snapshot = await _categoryRepository.fetchCategories(
+          lastVisiblePostCategory: null);
 
       List<PostCategory> _categories = [];
 

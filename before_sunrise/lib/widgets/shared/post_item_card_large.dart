@@ -1,9 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fashionet_provider/blocs/blocs.dart';
-import 'package:fashionet_provider/models/models.dart';
-import 'package:flutter/material.dart';
+import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class PostItemCardLarge extends StatefulWidget {
   final int postIndex;

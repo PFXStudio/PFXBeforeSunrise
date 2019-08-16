@@ -1,7 +1,4 @@
-import 'package:country_code_picker/country_code_picker.dart';
-import 'package:fashionet_provider/blocs/blocs.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:before_sunrise/import.dart';
 
 class VerificationForm extends StatefulWidget {
   @override

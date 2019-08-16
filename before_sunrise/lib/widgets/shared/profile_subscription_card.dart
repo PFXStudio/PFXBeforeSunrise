@@ -1,8 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fashionet_provider/blocs/blocs.dart';
-import 'package:fashionet_provider/models/models.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:before_sunrise/import.dart';
 
 class ProfileSubscriptionCard extends StatefulWidget {
   final Profile profile;
@@ -18,7 +14,7 @@ class ProfileSubscriptionCard extends StatefulWidget {
 class _ProfileSubscriptionCardState extends State<ProfileSubscriptionCard> {
   Profile get _profile => widget.profile;
 
-   void _navigateToProfilePage() {
+  void _navigateToProfilePage() {
     Navigator.of(context).pushNamed('/subscribed-profile/${_profile.userId}');
   }
 

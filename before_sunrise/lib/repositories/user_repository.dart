@@ -1,6 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:libphonenumber/libphonenumber.dart';
-import 'package:meta/meta.dart';
+import 'package:before_sunrise/import.dart';
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
