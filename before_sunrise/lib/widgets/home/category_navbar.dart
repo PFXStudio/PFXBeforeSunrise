@@ -19,18 +19,20 @@ class _CategoryNavBarState extends State<CategoryNavBar> {
     super.initState();
   }
 
-  Function(String) get _onActiveCategoryChange => widget.onActiveCategoryChange;
+  List<String> _categories;
 
-  List<String> _categories = <String>[
-    'Latest',
-    'Wears',
-    'Shoes',
-    'Jeweries',
-    'Others',
-  ];
+  Function(String) get _onActiveCategoryChange => widget.onActiveCategoryChange;
 
   @override
   Widget build(BuildContext context) {
+    _categories = <String>[
+      LocalizableLoader.of(context).text("${PostType.free}"),
+      LocalizableLoader.of(context).text("${PostType.realTime}"),
+      LocalizableLoader.of(context).text("${PostType.together}"),
+      LocalizableLoader.of(context).text("${PostType.gallery}"),
+      LocalizableLoader.of(context).text("${PostType.maxLastest}"),
+    ];
+
     return Container(
       height: 40.0,
       width: double.infinity,
@@ -54,7 +56,9 @@ class _CategoryNavBarState extends State<CategoryNavBar> {
   }
 
   Color _getItemColor({@required String categoryId}) {
-    return categoryId == _activeCategoryId ? Colors.black54 : Colors.grey[300];
+    return categoryId == _activeCategoryId
+        ? MainTheme.enabledButtonColor
+        : Colors.grey[300];
   }
 
   Widget _buildCategoryItem(
@@ -89,11 +93,11 @@ class _CategoryNavBarState extends State<CategoryNavBar> {
               Visibility(
                 visible: _activeCategoryId == categoryId,
                 child: Container(
-                  height: 5.0,
+                  height: 6.0,
                   width: _spacerWidth,
-                  margin: EdgeInsets.only(bottom: 5.0),
+                  margin: EdgeInsets.only(top: 3, bottom: 5.0),
                   decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: MainTheme.activeIndicatorColor,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(50.0),
                         topRight: Radius.circular(50.0),

@@ -1,11 +1,13 @@
 {
   "//////////////////// Default...": "",
-  "app_title": "Club Angel",
+  "app_title": "Before Sunrise",
 
   "//////////////////// Types...": "",
-  "BoardType.realTime": "Real Time",
-  "BoardType.gallery": "Gallery",
-  "BoardType.free": "Free",
+  "PostType.free": "Free",
+  "PostType.together": "Together",
+  "PostType.realTime": "RealTime",
+  "PostType.gallery": "Gallery",
+  "PostType.maxLastest": "Lastest",
   "publish_type_select": "Select publish type..",
   "PublishType.all": "All",
   "PublishType.male": "Only publish male",

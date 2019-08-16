@@ -44,6 +44,8 @@ dependencies:
   firebase_storage: ^3.0.2
   flutter_localizations:
     sdk: flutter
+  flutter_xlider: ^2.5.2
+  sprintf: "^4.0.0"
 
 dev_dependencies:
   flutter_test:

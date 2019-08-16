@@ -41,7 +41,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           Positioned(
             bottom: 0.0,
             child: BottomAppBar(
-              shape: CircularNotchedRectangle(),
+              // shape: CircularNotchedRectangle(),
               child: Container(
                 width: _deviceWidth,
                 child: Row(
@@ -78,7 +78,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
 
   Color _getItemColor({@required int index}) {
-    return index == _activeIndex ? _primaryColor : Colors.grey[300];
+    return index == _activeIndex
+        ? MainTheme.enabledButtonColor
+        : MainTheme.disabledButtonColor;
   }
 
   Widget _buildBottomNavBarItem(

@@ -1,11 +1,13 @@
 {
   "//////////////////// Default...": "",
-  "app_title": "클럽엔젤",
+  "app_title": "Before Sunrise",
 
   "//////////////////// Types...": "",
-  "BoardType.realTime": "실시간 게시판",
-  "BoardType.gallery": "갤러리 게시판",
-  "BoardType.free": "자유 게시판",
+  "PostType.free": "자유",
+  "PostType.together": "함께",
+  "PostType.realTime": "실시간",
+  "PostType.gallery": "갤러리",
+  "PostType.maxLastest": "최신",
   "publish_type_select": "공개 종류",
   "PublishType.all": "전체 공개",
   "PublishType.male": "남성에게만 공개",

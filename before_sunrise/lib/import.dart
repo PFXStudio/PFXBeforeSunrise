@@ -6,6 +6,7 @@ export 'dart:typed_data';
 // package
 export 'package:flutter/foundation.dart';
 export 'package:flutter/material.dart';
+export 'package:flutter/src/material/refresh_indicator.dart';
 export 'package:flutter/services.dart';
 export 'package:uuid/uuid.dart';
 export 'package:provider/provider.dart';
@@ -26,6 +27,8 @@ export 'package:font_awesome_flutter/font_awesome_flutter.dart';
 export 'package:carousel_slider/carousel_slider.dart';
 export 'package:keyboard_avoider/keyboard_avoider.dart';
 export 'package:flutter_localizations/flutter_localizations.dart';
+export 'package:flutter_xlider/flutter_xlider.dart';
+export 'package:sprintf/sprintf.dart';
 
 // modules
 export 'consts/const.dart';
@@ -56,7 +59,20 @@ export 'modules/localizables/localizable_manager.dart';
 export 'modules/utilities/bottom_loader.dart';
 export 'modules/utilities/splash_page.dart';
 
+export 'themes/main_theme.dart';
+export 'defines/define_enums.dart';
+export 'defines/define_images.dart';
+export 'defines/define_strings.dart';
+
 // widgets
+export 'widgets/items/thumbnail_item.dart';
+export 'widgets/buttons/flat_icon_text_button.dart';
+export 'widgets/dialogs/dialog_bottom_widget.dart';
+export 'widgets/dialogs/dialog_publish_type_widget.dart';
+export 'widgets/dialogs/dialog_header_widget.dart';
+export 'widgets/snackbars/error_snackbar_widget.dart';
+export 'widgets/snackbars/success_snackbar_widget.dart';
+
 export 'widgets/authentication/login_form.dart';
 export 'widgets/authentication/verification_form.dart';
 export 'widgets/category/categories.dart';
@@ -65,7 +81,8 @@ export 'widgets/home/bottom_navbar.dart';
 export 'widgets/home/category_navbar.dart';
 export 'widgets/home/latest_posts.dart';
 export 'widgets/home/suggested_posts.dart';
-export 'widgets/post_form/post_form.dart';
+export 'widgets/post_forms/post_form.dart';
+export 'widgets/post_forms/post_form_top_bar.dart';
 export 'widgets/profile/profile_form.dart';
 export 'widgets/profile/profile_navbar.dart';
 export 'widgets/profile/profile_tabpage.dart';
@@ -77,5 +94,3 @@ export 'widgets/shared/post_item_card_small.dart';
 export 'widgets/shared/profile_subscription_card.dart';
 export 'widgets/shared/search_form.dart';
 export 'widgets/post_details/post_details.dart';
-
-import 'package:before_sunrise/import.dart';

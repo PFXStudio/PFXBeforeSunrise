@@ -12,8 +12,6 @@ class _HomePageState extends State<HomePage> {
 
   final PanelController _panelController = PanelController();
 
-  Color get _primaryColor => Theme.of(context).primaryColor;
-
   // CategoryBloc _categoryBloc;
 
   int _activePageIndex = 0;
@@ -54,10 +52,6 @@ class _HomePageState extends State<HomePage> {
       callback();
     });
   }
-
-  final Shader linearGradient = LinearGradient(
-    colors: <Color>[Colors.orange, Colors.indigo],
-  ).createShader(new Rect.fromLTWH(0.0, 0.0, 250.0, 70.0));
 
   void _openCategoryModal() {
     showModalBottomSheet(
@@ -120,6 +114,8 @@ class _HomePageState extends State<HomePage> {
       {@required BuildContext context,
       @required int index,
       @required IconData icon}) {
+    double _deviceWidth = MediaQuery.of(context).size.width;
+
     return InkWell(
       key: index == 1 ? _menuButtonKey : null,
       onTap: () {
@@ -127,7 +123,8 @@ class _HomePageState extends State<HomePage> {
           Navigator.of(context).pushNamed('/search');
         } else if (index == 1) {
           // _openCustomMenu();
-          _menu.show(widgetKey: _menuButtonKey);
+          Rect rect = PopupMenu.getWidgetGlobalRect(_menuButtonKey);
+          _menu.show(rect: rect, widgetKey: _menuButtonKey);
         }
       },
       child: Padding(
@@ -135,7 +132,7 @@ class _HomePageState extends State<HomePage> {
         child: Icon(
           icon,
           size: 30.0,
-          color: _primaryColor,
+          color: Colors.white,
         ),
       ),
     );
@@ -145,25 +142,20 @@ class _HomePageState extends State<HomePage> {
     return AppBar(
       elevation: 0.0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.transparent,
+      backgroundColor: MainTheme.appBarColor,
       leading: IconButton(
         icon: Icon(
           Icons.menu,
           size: 30.0,
-          color: _primaryColor,
+          color: Colors.white,
         ),
         onPressed: () => _scaffoldKey.currentState.openDrawer(),
       ),
       title: Text(
-        'FashionNet',
-        style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 30.0,
-            foreground: new Paint()..shader = linearGradient),
+        LocalizableLoader.of(context).text("app_title"),
+        style: MainTheme.navTitleTextStyle,
       ),
       actions: <Widget>[
-        _buildAppbarActionWidgets(
-            context: context, index: 0, icon: Icons.search),
         _buildAppbarActionWidgets(
             context: context, index: 1, icon: Icons.more_vert),
         SizedBox(width: 10.0)
@@ -187,18 +179,18 @@ class _HomePageState extends State<HomePage> {
           _isPined
               ? Flexible(child: LatestPosts(isRefreshing: _isRefreshing))
               : Container(),
-          Flexible(
-            child: SuggestedPosts(
-              isPined: _isPined,
-              isFavorite: _isFavorite,
-              onExpandSuggestedPostsToggle: (bool isPined) {
-                setState(() => _isPined = isPined);
-              },
-              onIsFavoriteToggle: (bool isFavorite) {
-                setState(() => _isFavorite = isFavorite);
-              },
-            ),
-          )
+          // Flexible(
+          //   child: SuggestedPosts(
+          //     isPined: _isPined,
+          //     isFavorite: _isFavorite,
+          //     onExpandSuggestedPostsToggle: (bool isPined) {
+          //       setState(() => _isPined = isPined);
+          //     },
+          //     onIsFavoriteToggle: (bool isFavorite) {
+          //       setState(() => _isFavorite = isFavorite);
+          //     },
+          //   ),
+          // )
         ],
       ),
     );
@@ -218,26 +210,6 @@ class _HomePageState extends State<HomePage> {
           'Slide up to post item',
           style: TextStyle(color: Colors.white),
         ),
-      ),
-    );
-  }
-
-  Widget _floatingPanel() {
-    return Container(
-      margin: const EdgeInsets.only(top: 24.0, right: 24.0, left: 24.0),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0)),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20.0,
-              color: Colors.grey,
-            ),
-          ]),
-      child: Container(
-        margin: EdgeInsets.only(top: 25.0),
-        child: PostForm(key: _postBloc.postFormKey, scaffoldKey: _scaffoldKey),
       ),
     );
   }
@@ -341,13 +313,22 @@ class _HomePageState extends State<HomePage> {
               minHeight: 50.0,
               renderPanelSheet: false,
               controller: _panelController,
-              panel: _floatingPanel(),
-              collapsed: _floatingCollapsed(),
               body: _pageView,
+              panel: Container(),
             ),
           );
         }),
+        floatingActionButton: FloatingActionButton(
+          onPressed: touchedAddButton,
+          tooltip: 'Increment',
+          child: const Icon(Icons.add),
+          backgroundColor: MainTheme.enabledButtonColor,
+        ),
       ),
     );
+  }
+
+  Future<void> touchedAddButton() async {
+    Navigator.of(context).pushNamed('/post_form');
   }
 }

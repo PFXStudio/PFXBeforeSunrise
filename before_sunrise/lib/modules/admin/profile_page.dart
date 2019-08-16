@@ -330,7 +330,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       onPressed: () {
         print('call ${_profile.firstName}');
-        // Navigator.of(context).pushNamed('/post-form');
+        Navigator.of(context).pushNamed('/post_form');
       },
     );
   }
@@ -363,44 +363,6 @@ class _ProfilePageState extends State<ProfilePage> {
     return _dynamicSliverContent;
   }
 
-  Widget _floatingCollapsed() {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
-      decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
-        // color: Colors.blueGrey,
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0)),
-      ),
-      child: Center(
-        child: Text(
-          'Slide up to post item',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-    );
-  }
-
-  Widget _floatingPanel() {
-    return Container(
-      margin: const EdgeInsets.only(top: 24.0, right: 24.0, left: 24.0),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0)),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20.0,
-              color: Colors.grey,
-            ),
-          ]),
-      child: Container(
-        margin: EdgeInsets.only(top: 25.0),
-        child: PostForm(scaffoldKey: _scaffoldKey),
-      ),
-    );
-  }
-
   Widget _buildCustomScrollView(
       {@required double deviceHeight, @required deviceWidth}) {
     return CustomScrollView(
@@ -410,18 +372,6 @@ class _ProfilePageState extends State<ProfilePage> {
         _buildDynamicSliverContent(),
       ],
     );
-  }
-
-  Widget _buildSlideUpPanel(
-      {@required double deviceHeight, @required deviceWidth}) {
-    return SlidingUpPanel(
-        minHeight: 50.0,
-        renderPanelSheet: false,
-        controller: _panelController,
-        panel: _floatingPanel(),
-        collapsed: _floatingCollapsed(),
-        body: _buildCustomScrollView(
-            deviceHeight: deviceHeight, deviceWidth: deviceWidth));
   }
 
   @override
@@ -449,11 +399,8 @@ class _ProfilePageState extends State<ProfilePage> {
             }
             setState(() => _isRefreshing = false);
           },
-          child: _isCurrentUserProfile
-              ? _buildSlideUpPanel(
-                  deviceHeight: _deviceHeight, deviceWidth: _deviceWidth)
-              : _buildCustomScrollView(
-                  deviceHeight: _deviceHeight, deviceWidth: _deviceWidth),
+          child: _buildCustomScrollView(
+              deviceHeight: _deviceHeight, deviceWidth: _deviceWidth),
         ),
       ),
     );
