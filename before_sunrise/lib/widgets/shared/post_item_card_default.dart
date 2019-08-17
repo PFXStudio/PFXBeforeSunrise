@@ -30,7 +30,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
 
     if (_profileBloc.userProfile != null) {
       setState(() {
-        _profileBloc.userProfile.userId == _post.profile.userId
+        _profileBloc.userProfile.userID == _post.profile.userID
             ? _isCurrentUserProfile = true
             : _isCurrentUserProfile = false;
       });
@@ -39,14 +39,14 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
 
   void _navigateToPostDetailsPage() {
     if (_isProfilePost) {
-      Navigator.of(context).pushNamed('/profile-post/${_post.postId}');
+      Navigator.of(context).pushNamed('/profile-post/${_post.postID}');
     } else {
-      Navigator.of(context).pushNamed('/post/${_post.postId}');
+      Navigator.of(context).pushNamed('/post/${_post.postID}');
     }
   }
 
   void _navigateToProfilePage() {
-    Navigator.of(context).pushNamed('/post-profile/${_post.postId}').then((_) {
+    Navigator.of(context).pushNamed('/post-profile/${_post.postID}').then((_) {
       final _postFormKey = UniqueKey();
       _postBloc.postFormKey = _postFormKey;
     });
@@ -131,7 +131,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
                     Center(child: Icon(Icons.error)),
                 imageBuilder: (BuildContext context, ImageProvider image) {
                   return Hero(
-                    tag: '${_post.postId}_${_post.imageUrls[0]}',
+                    tag: '${_post.postID}_${_post.imageUrls[0]}',
                     child: Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(image: image, fit: BoxFit.cover),
@@ -161,7 +161,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
           // borderRadius: BorderRadius.circular(25.0),
         ),
         child: Text(
-          'GHC ${_post.price}',
+          'GHC ${_post.likeCount}',
           style: TextStyle(
               color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
@@ -259,7 +259,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
                     Center(child: Icon(Icons.error)),
                 imageBuilder: (BuildContext context, ImageProvider image) {
                   return Hero(
-                    tag: '${_post.postId}_${_post.profile.profileImageUrl}',
+                    tag: '${_post.postID}_${_post.profile.profileImageUrl}',
                     child: Container(
                       height: 50.0,
                       width: 50.0,
@@ -291,17 +291,17 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
     return ListTile(
       title:
           Text('${_post.title}', style: TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text('${_post.description}', overflow: TextOverflow.ellipsis),
+      subtitle: Text('${_post.contents}', overflow: TextOverflow.ellipsis),
       trailing: Consumer<PostBloc>(
           builder: (BuildContext context, PostBloc postBloc, Widget child) {
         return IconButton(
           tooltip: 'Save this post',
           icon: Icon(
-            _post.isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+            _post.isLiked ? Icons.favorite : Icons.favorite_border,
             color: Theme.of(context).accentColor,
           ),
           onPressed: () {
-            postBloc.toggleBookmarkStatus(post: _post);
+            postBloc.toggleLikeStatus(post: _post);
           },
         );
       }),

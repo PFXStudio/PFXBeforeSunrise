@@ -9,46 +9,45 @@ class ProfileRepository {
       : _profileCollection = Firestore.instance.collection('profiles'),
         _firestoreTimestamp = FieldValue.serverTimestamp();
 
-  Future<DocumentSnapshot> hasProfile({@required String userId}) async {
-    return _profileCollection.document(userId).get();
+  Future<DocumentSnapshot> hasProfile({@required String userID}) async {
+    return _profileCollection.document(userID).get();
   }
 
-  Future<bool> isBookmarked(
-      {@required String postId, @required String userId}) async {
+  Future<bool> isLiked(
+      {@required String postID, @required String userID}) async {
     final DocumentSnapshot snapshot = await _profileCollection
-        .document(userId)
-        .collection('bookmarks')
-        .document(postId)
+        .document(userID)
+        .collection('likes')
+        .document(postID)
         .get();
 
     return snapshot.exists;
   }
 
-  Future<void> addToBookmark(
-      {@required String postId, @required String userId}) {
+  Future<void> addToLike({@required String postID, @required String userID}) {
     return _profileCollection
-        .document(userId)
-        .collection('bookmarks')
-        .document(postId)
+        .document(userID)
+        .collection('likes')
+        .document(postID)
         .setData({
-      'isBookmarked': true,
+      'isLiked': true,
       'lastUpdate': _firestoreTimestamp,
     });
   }
 
-  Future<void> removeFromBookmark(
-      {@required String postId, @required String userId}) {
+  Future<void> removeFromLike(
+      {@required String postID, @required String userID}) {
     return _profileCollection
-        .document(userId)
-        .collection('bookmarks')
-        .document(postId)
+        .document(userID)
+        .collection('likes')
+        .document(postID)
         .delete();
   }
 
   Future<bool> isSubscribedTo(
-      {@required String postUserId, @required String userId}) async {
+      {@required String postUserId, @required String userID}) async {
     final DocumentSnapshot snapshot = await _profileCollection
-        .document(userId)
+        .document(userID)
         .collection('following')
         .document(postUserId)
         .get();
@@ -57,80 +56,80 @@ class ProfileRepository {
   }
 
   Future<void> subscribeTo(
-      {@required String postUserId, @required String userId}) {
+      {@required String postUserId, @required String userID}) {
     return _profileCollection
-        .document(userId)
+        .document(userID)
         .collection('following')
         .document(postUserId)
         .setData({'isFollowing': true});
   }
 
   Future<void> unsubscribeFrom(
-      {@required String postUserId, @required String userId}) {
+      {@required String postUserId, @required String userID}) {
     return _profileCollection
-        .document(userId)
+        .document(userID)
         .collection('following')
         .document(postUserId)
         .delete();
   }
 
   Future<bool> isSubscriber(
-      {@required String postUserId, @required String userId}) async {
+      {@required String postUserId, @required String userID}) async {
     final DocumentSnapshot snapshot = await _profileCollection
         .document(postUserId)
         .collection('followers')
-        .document(userId)
+        .document(userID)
         .get();
 
     return snapshot.exists;
   }
 
   Future<void> addToSubscribers(
-      {@required String postUserId, @required String userId}) {
+      {@required String postUserId, @required String userID}) {
     return _profileCollection
         .document(postUserId)
         .collection('followers')
-        .document(userId)
+        .document(userID)
         .setData({'isFollowing': true});
   }
 
   Future<void> removeFromSubscribers(
-      {@required String postUserId, @required String userId}) {
+      {@required String postUserId, @required String userID}) {
     return _profileCollection
         .document(postUserId)
         .collection('followers')
-        .document(userId)
+        .document(userID)
         .delete();
   }
 
-  Future<QuerySnapshot> fetchProfileBookmarkedPosts({@required String userId}) {
+  Future<QuerySnapshot> fetchProfileLikedPosts({@required String userID}) {
     return _profileCollection
-        .document(userId)
-        .collection('bookmarks')
+        .document(userID)
+        .collection('likes')
         .orderBy('lastUpdate', descending: true)
         .getDocuments();
   }
 
-  Future<QuerySnapshot> fetchProfileSubscribers({@required String userId}) {
+  Future<QuerySnapshot> fetchProfileSubscribers({@required String userID}) {
     return _profileCollection
-        .document(userId)
+        .document(userID)
         .collection('followers')
         .getDocuments();
   }
 
-  Future<QuerySnapshot> fetchProfileSubscriptions({@required String userId}) {
+  Future<QuerySnapshot> fetchProfileSubscriptions({@required String userID}) {
     return _profileCollection
-        .document(userId)
+        .document(userID)
         .collection('following')
         .getDocuments();
   }
 
-  Future<DocumentSnapshot> fetchProfile({@required String userId}) {
-    return _profileCollection.document(userId).get();
+  Future<DocumentSnapshot> fetchProfile({@required String userID}) {
+    return _profileCollection.document(userID).get();
   }
 
   Future<void> createProfile(
-      {@required String userId,
+      {@required String userID,
       @required String firstName,
       @required String lastName,
       @required String businessName,
@@ -139,7 +138,7 @@ class ProfileRepository {
       String otherPhoneNumber,
       @required String businessLocation,
       @required String profileImageUrl}) {
-    return _profileCollection.document(userId).setData({
+    return _profileCollection.document(userID).setData({
       'firstName': firstName.trim(),
       'lastName': lastName.trim(),
       'businessName': businessName,

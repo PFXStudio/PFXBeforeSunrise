@@ -1,7 +1,7 @@
 import 'package:before_sunrise/import.dart';
 
 class Profile {
-  final String userId;
+  final String userID;
   final String firstName;
   final String lastName;
   final String businessName;
@@ -17,7 +17,7 @@ class Profile {
   final int followersCount;
 
   Profile({
-    @required this.userId,
+    @required this.userID,
     @required this.firstName,
     @required this.lastName,
     @required this.businessName,
@@ -33,24 +33,23 @@ class Profile {
     this.followersCount = 0,
   });
 
-  Profile copyWith({
-    String userId,
-    String firstName,
-    String lastName,
-    String businessName,
-    String businessDescription,
-    String businessLocation,
-    String phoneNumber,
-    String otherPhoneNumber,
-    String profileImageUrl,
-    bool hasProfile,
-    dynamic created,
-    dynamic lastUpdate,
-    bool isFollowing,
-    int followersCount
-  }) {
+  Profile copyWith(
+      {String userID,
+      String firstName,
+      String lastName,
+      String businessName,
+      String businessDescription,
+      String businessLocation,
+      String phoneNumber,
+      String otherPhoneNumber,
+      String profileImageUrl,
+      bool hasProfile,
+      dynamic created,
+      dynamic lastUpdate,
+      bool isFollowing,
+      int followersCount}) {
     return Profile(
-      userId: userId ?? this.userId,
+      userID: userID ?? this.userID,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       businessName: businessName ?? this.businessName,

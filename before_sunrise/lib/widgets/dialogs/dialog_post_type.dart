@@ -1,27 +1,26 @@
 import 'package:before_sunrise/import.dart';
 
-typedef DialogPublishTypeWidgetCallback = void Function(String type);
+typedef DialogPostTypeCallback = void Function(String type);
 
-PublishType dialogPublishType = PublishType.all;
+PostType dialogPostType = PostType.free;
 
-class DialogPublishTypeWidget extends StatefulWidget {
-  DialogPublishTypeWidget({this.callback = null});
+class DialogPostType extends StatefulWidget {
+  DialogPostType({@required this.callback = null});
   @override
-  _DialogPublishTypeWidgetState createState() =>
-      _DialogPublishTypeWidgetState();
-  DialogPublishTypeWidgetCallback callback;
+  _DialogPostTypeState createState() => _DialogPostTypeState();
+  DialogPostTypeCallback callback;
 }
 
-class _DialogPublishTypeWidgetState extends State<DialogPublishTypeWidget> {
-  @override
+class _DialogPostTypeState extends State<DialogPostType> {
   String selectedText;
+
   Widget build(BuildContext context) {
     return FlatIconTextButton(
-        iconData: FontAwesomeIcons.venusMars,
+        iconData: FontAwesomeIcons.thLarge,
         color: MainTheme.enabledButtonColor,
         width: 170,
         text: selectedText == null
-            ? LocalizableLoader.of(context).text("publish_type_select")
+            ? LocalizableLoader.of(context).text("post_type_select")
             : selectedText,
         onPressed: () {
           showDialog(
@@ -35,10 +34,10 @@ class _DialogPublishTypeWidgetState extends State<DialogPublishTypeWidget> {
                       children: <Widget>[
                         DialogHeaderWidget(
                             title: LocalizableLoader.of(context)
-                                .text("publish_type_select")),
+                                .text("post_type_select")),
                         Material(
                           type: MaterialType.transparency,
-                          child: DialogPublishTypeWidgetContentsWidget(),
+                          child: DialogPostTypeContents(),
                         ),
                         DialogBottomWidget(
                           cancelCallback: () {
@@ -46,9 +45,9 @@ class _DialogPublishTypeWidgetState extends State<DialogPublishTypeWidget> {
                           },
                           confirmCallback: () {
                             selectedText = LocalizableLoader.of(context)
-                                .text("$dialogPublishType");
+                                .text("$dialogPostType");
                             if (widget.callback != null) {
-                              widget.callback("$dialogPublishType");
+                              widget.callback("$dialogPostType");
                             }
                             Navigator.pop(context);
                           },
@@ -58,14 +57,12 @@ class _DialogPublishTypeWidgetState extends State<DialogPublishTypeWidget> {
   }
 }
 
-class DialogPublishTypeWidgetContentsWidget extends StatefulWidget {
+class DialogPostTypeContents extends StatefulWidget {
   @override
-  _DialogPublishTypeWidgetContentsWidgetState createState() =>
-      _DialogPublishTypeWidgetContentsWidgetState();
+  _DialogPostTypeContentsState createState() => _DialogPostTypeContentsState();
 }
 
-class _DialogPublishTypeWidgetContentsWidgetState
-    extends State<DialogPublishTypeWidgetContentsWidget> {
+class _DialogPostTypeContentsState extends State<DialogPostTypeContents> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -73,29 +70,28 @@ class _DialogPublishTypeWidgetContentsWidgetState
       child: Column(
         children: <Widget>[
           ListTile(
-            title:
-                Text(LocalizableLoader.of(context).text("${PublishType.all}")),
+            title: Text(LocalizableLoader.of(context).text("${PostType.free}")),
             leading: Radio(
-              value: PublishType.all,
-              groupValue: dialogPublishType,
-              onChanged: onChangedValue,
-            ),
-          ),
-          ListTile(
-            title:
-                Text(LocalizableLoader.of(context).text("${PublishType.male}")),
-            leading: Radio(
-              value: PublishType.male,
-              groupValue: dialogPublishType,
+              value: PostType.free,
+              groupValue: dialogPostType,
               onChanged: onChangedValue,
             ),
           ),
           ListTile(
             title: Text(
-                LocalizableLoader.of(context).text("${PublishType.female}")),
+                LocalizableLoader.of(context).text("${PostType.realTime}")),
             leading: Radio(
-              value: PublishType.female,
-              groupValue: dialogPublishType,
+              value: PostType.realTime,
+              groupValue: dialogPostType,
+              onChanged: onChangedValue,
+            ),
+          ),
+          ListTile(
+            title:
+                Text(LocalizableLoader.of(context).text("${PostType.gallery}")),
+            leading: Radio(
+              value: PostType.gallery,
+              groupValue: dialogPostType,
               onChanged: onChangedValue,
             ),
           ),
@@ -106,7 +102,7 @@ class _DialogPublishTypeWidgetContentsWidgetState
 
   onChangedValue(value) {
     setState(() {
-      dialogPublishType = value;
+      dialogPostType = value;
     });
   }
 }

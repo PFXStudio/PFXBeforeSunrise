@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:before_sunrise/import.dart';
 
 class ThumbnailItem extends StatefulWidget {
   final ByteData data;

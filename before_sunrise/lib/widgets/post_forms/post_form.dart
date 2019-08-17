@@ -1,5 +1,4 @@
 import 'package:before_sunrise/import.dart';
-import 'package:before_sunrise/widgets/post_forms/post_form_option.dart';
 
 class PostForm extends StatefulWidget {
   Profile userProfile;
@@ -29,10 +28,12 @@ class PostFormState extends State<PostForm>
 // 이 값은 초기에 초기화 되기 때문에 재 진입해야 적용 됨.
   double maxContentsHeight = 1200;
   final int maxPicturesCount = 20;
-  List<Asset> _assets = List<Asset>();
+  PostBloc postBloc;
+  Post post = Post();
 
   @override
   Widget build(BuildContext context) {
+    postBloc = Provider.of<PostBloc>(context);
     return new Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
@@ -53,7 +54,7 @@ class PostFormState extends State<PostForm>
                 flex: 3,
                 child: ConstrainedBox(
                   constraints: const BoxConstraints.expand(),
-                  child: PostFormHeaderWidget(),
+                  child: _buildHeader(),
                 ),
               ),
               Expanded(
@@ -146,7 +147,90 @@ class PostFormState extends State<PostForm>
     });
   }
 
-  Widget _buildBoardType(BuildContext context) {}
+  Widget _buildHeader() {
+    return Container(
+      padding: EdgeInsets.only(top: MainTheme.edgeInsets.top),
+      child: Column(
+        children: <Widget>[
+          Stack(
+            alignment: Alignment.topCenter,
+            overflow: Overflow.visible,
+            children: <Widget>[
+              Card(
+                elevation: 2.0,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width -
+                      MainTheme.edgeInsets.left,
+                  height: 100,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  DialogPostType(
+                                    callback: (type) {
+                                      setState(() {
+                                        post.type = type;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  DialogPublishTypeWidget(
+                                    callback: (type) {
+                                      setState(() {
+                                        post.publishType = type;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              LocalizableLoader.of(context)
+                                  .text("anonymous_checkbox"),
+                              style: TextStyle(color: Colors.black54),
+                            ),
+                            Checkbox(
+                              value: post.enabledAnonymous,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  post.enabledAnonymous = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ]),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildContents(BuildContext context) {
     return Container(
@@ -446,97 +530,34 @@ class PostFormState extends State<PostForm>
   }
 
   void _requestRegist(BuildContext context) {
-    showInSnackBar("Registed your contents.");
-    Future.delayed(new Duration(seconds: 2), () {
-      Navigator.of(context).pop();
-    });
-  }
-}
+    if (titleController.text.length <= 0) {
+      ErrorSnackbarWidget()
+          .show(_scaffoldKey, "error_post_form_empty_title", null);
+      return;
+    }
 
-class PostFormHeaderWidget extends StatefulWidget {
-  @override
-  PostFormHeaderWidgetState createState() => PostFormHeaderWidgetState();
-  bool enabledAnonymous = false;
-}
+    if (contentsController.text.length <= 0) {
+      ErrorSnackbarWidget()
+          .show(_scaffoldKey, "error_post_form_empty_contents", null);
+      return;
+    }
 
-class PostFormHeaderWidgetState extends State<PostFormHeaderWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: MainTheme.edgeInsets.top),
-      child: Column(
-        children: <Widget>[
-          Stack(
-            alignment: Alignment.topCenter,
-            overflow: Overflow.visible,
-            children: <Widget>[
-              Card(
-                elevation: 2.0,
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Container(
-                  width: MediaQuery.of(context).size.width -
-                      MainTheme.edgeInsets.left,
-                  height: 100,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 1,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  PostFormOption(callback: (index) {
-                                    print(index);
-                                  }),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  DialogPublishTypeWidget(
-                                    callback: (index) {
-                                      print(index);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              LocalizableLoader.of(context)
-                                  .text("anonymous_checkbox"),
-                              style: TextStyle(color: Colors.black54),
-                            ),
-                            Checkbox(
-                              value: widget.enabledAnonymous,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  widget.enabledAnonymous = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ]),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+    if (post.type.length <= 0) {
+      ErrorSnackbarWidget()
+          .show(_scaffoldKey, "error_post_form_empty_type", null);
+      return;
+    }
+
+    if (post.publishType.length <= 0) {
+      ErrorSnackbarWidget()
+          .show(_scaffoldKey, "error_post_form_publish_type", null);
+      return;
+    }
+
+    post.title = titleController.text;
+    post.contents = contentsController.text;
+    post.youtubeUrl = youtubeController.text;
+    post.created = DateTime.now().millisecondsSinceEpoch;
+    postBloc.createPost(post: post, datas: selectedOriginalDatas);
   }
 }

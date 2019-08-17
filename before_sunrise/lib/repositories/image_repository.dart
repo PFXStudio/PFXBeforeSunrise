@@ -15,8 +15,8 @@ class ImageRepository {
   }
 
   Future<String> saveProfileImage(
-      {@required String userId, @required Asset asset}) async {
-    final String fileName = 'profiles/$userId/$userId';
+      {@required String userID, @required Asset asset}) async {
+    final String fileName = 'profiles/$userID/$userID';
 
     ByteData byteData = await asset.requestOriginal();
     List<int> imageData = byteData.buffer.asUint8List();
@@ -75,13 +75,14 @@ class ImageRepository {
     }
   }
 
-  Future<List<String>> uploadPostImages(
-      {@required String fileLocation, @required List<Asset> assets}) async {
+  Future<List<String>> uploadPostImages({
+    @required String fileLocation,
+    @required List<ByteData> datas,
+  }) async {
     List<String> uploadUrls = [];
 
     await Future.wait(
-            assets.map((Asset asset) async {
-              ByteData byteData = await asset.requestOriginal();
+            datas.map((ByteData byteData) async {
               List<int> imageData = byteData.buffer.asUint8List();
 
               // compress file

@@ -93,11 +93,11 @@ class _CategoryNavBarState extends State<CategoryNavBar> {
               Visibility(
                 visible: _activeCategoryId == categoryId,
                 child: Container(
-                  height: 6.0,
+                  height: 5.0,
                   width: _spacerWidth,
-                  margin: EdgeInsets.only(top: 3, bottom: 5.0),
+                  margin: EdgeInsets.only(bottom: 5.0),
                   decoration: BoxDecoration(
-                      color: MainTheme.activeIndicatorColor,
+                      color: MainTheme.pivotColor,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(50.0),
                         topRight: Radius.circular(50.0),

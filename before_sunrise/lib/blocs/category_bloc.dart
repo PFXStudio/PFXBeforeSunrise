@@ -42,7 +42,7 @@ class CategoryBloc with ChangeNotifier {
         final String _categoryId = document.documentID;
 
         final _category = PostCategory(
-          userId: document.data['userId'],
+          userID: document.data['userID'],
           categoryId: _categoryId,
           title: document.data['title'],
           description: document.data['description'],
@@ -103,7 +103,7 @@ class CategoryBloc with ChangeNotifier {
         final String _categoryId = document.documentID;
 
         final _category = PostCategory(
-          userId: document.data['userId'],
+          userID: document.data['userID'],
           categoryId: _categoryId,
           title: document.data['title'],
           description: document.data['description'],
@@ -139,14 +139,14 @@ class CategoryBloc with ChangeNotifier {
       _categoryState = CategoryState.Loading;
       notifyListeners();
 
-      final String userId = await _authBloc.getUser;
+      final String userID = await _authBloc.getUser;
 
       final String _imageUrl =
           await _imageRepository.uploadCategoryImage(asset: asset);
 
       await _categoryRepository.createCategory(
           imageUrl: _imageUrl,
-          userId: userId,
+          userID: userID,
           title: title,
           description: description);
 

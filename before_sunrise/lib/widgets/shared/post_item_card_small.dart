@@ -2,25 +2,23 @@ import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart';
 
 class PostItemCardSmall extends StatefulWidget {
-  final Post bookmarkPost;
+  final Post likePost;
 
-  const PostItemCardSmall({Key key, @required this.bookmarkPost})
-      : super(key: key);
+  const PostItemCardSmall({Key key, @required this.likePost}) : super(key: key);
 
   @override
   _PostItemCardSmallState createState() => _PostItemCardSmallState();
 }
 
 class _PostItemCardSmallState extends State<PostItemCardSmall> {
-  Post get _bookmarkPost => widget.bookmarkPost;
+  Post get _likePost => widget.likePost;
 
   void _navigateToPostDetailsPage() {
-    Navigator.of(context).pushNamed('/bookmark/${_bookmarkPost.postId}');
+    Navigator.of(context).pushNamed('/like/${_likePost.postID}');
   }
 
   void _navigateToProfilePage() {
-    Navigator.of(context)
-        .pushNamed('/bookmarked-post-profile/${_bookmarkPost.postId}');
+    Navigator.of(context).pushNamed('/liked-post-profile/${_likePost.postID}');
   }
 
   Widget _buildPostPriceTag({@required BuildContext context}) {
@@ -39,7 +37,7 @@ class _PostItemCardSmallState extends State<PostItemCardSmall> {
             // borderRadius: BorderRadius.circular(25.0),
           ),
           child: Text(
-            'GHC ${_bookmarkPost.price}',
+            'GHC ${_likePost.likeCount}',
             style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontWeight: FontWeight.w900),
@@ -69,22 +67,22 @@ class _PostItemCardSmallState extends State<PostItemCardSmall> {
               Expanded(
                 child: ListTile(
                   isThreeLine: true,
-                  title: Text('${_bookmarkPost.title}',
+                  title: Text('${_likePost.title}',
                       style: TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text('${_bookmarkPost.description}',
+                  subtitle: Text('${_likePost.contents}',
                       overflow: TextOverflow.ellipsis),
                   trailing: Consumer<PostBloc>(builder:
                       (BuildContext context, PostBloc postBloc, Widget child) {
                     return IconButton(
                       tooltip: 'Save this post',
                       icon: Icon(
-                        _bookmarkPost.isBookmarked
-                            ? Icons.bookmark
-                            : Icons.bookmark_border,
+                        _likePost.isLiked
+                            ? Icons.favorite
+                            : Icons.favorite_border,
                         color: Theme.of(context).accentColor,
                       ),
                       onPressed: () {
-                        postBloc.toggleBookmarkStatus(post: _bookmarkPost);
+                        postBloc.toggleLikeStatus(post: _likePost);
                       },
                     );
                   }),
@@ -94,9 +92,9 @@ class _PostItemCardSmallState extends State<PostItemCardSmall> {
                 child: ListTile(
                   onTap: () => _navigateToProfilePage(),
                   title: Text(
-                      'by ${_bookmarkPost.profile.firstName} ${_bookmarkPost.profile.lastName}'),
+                      'by ${_likePost.profile.firstName} ${_likePost.profile.lastName}'),
                   subtitle: Text(
-                    '${DateFormat.yMMMMEEEEd().format(_bookmarkPost.lastUpdate.toDate())}',
+                    '${DateFormat.yMMMMEEEEd().format(_likePost.lastUpdate.toDate())}',
                     style: TextStyle(fontSize: 11.0),
                   ),
                   trailing: _buildPostPriceTag(context: context),
@@ -118,17 +116,16 @@ class _PostItemCardSmallState extends State<PostItemCardSmall> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
         ),
-        child: _bookmarkPost != null && _bookmarkPost.imageUrls.isNotEmpty
+        child: _likePost != null && _likePost.imageUrls.isNotEmpty
             ? CachedNetworkImage(
-                imageUrl: '${_bookmarkPost.imageUrls[0]}',
+                imageUrl: '${_likePost.imageUrls[0]}',
                 placeholder: (context, imageUrl) =>
                     Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
                 errorWidget: (context, imageUrl, error) =>
                     Center(child: Icon(Icons.error)),
                 imageBuilder: (BuildContext context, ImageProvider image) {
                   return Hero(
-                    tag:
-                        '${_bookmarkPost.postId}_${_bookmarkPost.imageUrls[0]}',
+                    tag: '${_likePost.postID}_${_likePost.imageUrls[0]}',
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
@@ -153,10 +150,9 @@ class _PostItemCardSmallState extends State<PostItemCardSmall> {
   Widget _buildProfileAvatar() {
     return Align(
       alignment: Alignment.bottomCenter,
-      child: _bookmarkPost != null &&
-              _bookmarkPost.profile.profileImageUrl.isNotEmpty
+      child: _likePost != null && _likePost.profile.profileImageUrl.isNotEmpty
           ? CachedNetworkImage(
-              imageUrl: '${_bookmarkPost.profile.profileImageUrl}',
+              imageUrl: '${_likePost.profile.profileImageUrl}',
               placeholder: (context, imageUrl) =>
                   Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
               errorWidget: (context, imageUrl, error) =>
@@ -164,7 +160,7 @@ class _PostItemCardSmallState extends State<PostItemCardSmall> {
               imageBuilder: (BuildContext context, ImageProvider image) {
                 return Hero(
                   tag:
-                      '${_bookmarkPost.postId}_${_bookmarkPost.profile.profileImageUrl}',
+                      '${_likePost.postID}_${_likePost.profile.profileImageUrl}',
                   child: Material(
                     color: Colors.transparent,
                     borderRadius: BorderRadius.circular(25.0),
@@ -202,7 +198,7 @@ class _PostItemCardSmallState extends State<PostItemCardSmall> {
   }
 
   Widget _buildPostImageCount() {
-    return widget.bookmarkPost.imageUrls.length == 1
+    return widget.likePost.imageUrls.length == 1
         ? Container()
         : Align(
             alignment: Alignment.topRight,
@@ -220,7 +216,7 @@ class _PostItemCardSmallState extends State<PostItemCardSmall> {
                         bottomLeft: Radius.circular(15.0)),
                   ),
                   child: Text(
-                    '+ ${widget.bookmarkPost.imageUrls.length - 1}',
+                    '+ ${widget.likePost.imageUrls.length - 1}',
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.w900),
                   ),

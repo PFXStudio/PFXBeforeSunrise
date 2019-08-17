@@ -37,14 +37,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (_profileBloc.userProfile != null) {
       setState(() {
-        _profileBloc.userProfile.userId == _profile.userId
+        _profileBloc.userProfile.userID == _profile.userID
             ? _isCurrentUserProfile = true
             : _isCurrentUserProfile = false;
       });
     }
 
     _onWidgetDidBuild(() {
-      _postBloc.fetchProfilePosts(userId: _profile.userId);
+      _postBloc.fetchProfilePosts(userID: _profile.userID);
     });
   }
 
@@ -59,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final currentScroll = _scrollController.position.pixels;
     if (maxScroll - currentScroll <= _scrollThreshold) {
       print('sroll next');
-      _postBloc.fetchMoreProfilePosts(userId: _profile.userId);
+      _postBloc.fetchMoreProfilePosts(userID: _profile.userID);
     }
   }
 
@@ -129,7 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
               });
 
               if (_currentDisplayedPageIndex == 0) {
-                _postBloc.fetchProfilePosts(userId: _profile.userId);
+                _postBloc.fetchProfilePosts(userID: _profile.userID);
               } else if (_currentDisplayedPageIndex == 1) {
                 _profileBloc.fetchUserProfileSubscriptions();
               }
@@ -154,7 +154,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     // _isUserProfile
                     // ?
                     '${_profile.profileImageUrl}',
-                // : '${_post.postId}_${_profile.profileImageUrl}',
+                // : '${_post.postID}_${_profile.profileImageUrl}',
                 child: Container(
                   height: 120.0,
                   width: 120.0,
@@ -341,7 +341,7 @@ class _ProfilePageState extends State<ProfilePage> {
     switch (_currentDisplayedPageIndex) {
       case 0:
         _dynamicSliverContent = TimelineTabPage(
-            userId: _profile.userId, isRefreshing: _isRefreshing);
+            userID: _profile.userID, isRefreshing: _isRefreshing);
         break;
 
       case 1:
@@ -356,7 +356,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
       default:
         _dynamicSliverContent = TimelineTabPage(
-            userId: _profile.userId, isRefreshing: _isRefreshing);
+            userID: _profile.userID, isRefreshing: _isRefreshing);
         break;
     }
 
@@ -393,7 +393,7 @@ class _ProfilePageState extends State<ProfilePage> {
           onRefresh: () async {
             setState(() => _isRefreshing = true);
             if (_currentDisplayedPageIndex == 0) {
-              await _postBloc.fetchProfilePosts(userId: _profile.userId);
+              await _postBloc.fetchProfilePosts(userID: _profile.userID);
             } else if (_currentDisplayedPageIndex == 1) {
               await _profileBloc.fetchUserProfileSubscriptions();
             }

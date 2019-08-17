@@ -24,12 +24,12 @@ class CategoryRepository {
 
   Future<DocumentReference> createCategory(
       {@required String imageUrl,
-      @required String userId,
+      @required String userID,
       @required String title,
       @required String description}) {
     return _categoryCollection.add({
       'imageUrl': imageUrl,
-      'userId': userId,
+      'userID': userID,
       'title': title,
       'description': description,
       'created': _firestoreTimestamp,

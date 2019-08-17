@@ -10,11 +10,11 @@ class PostBloc with ChangeNotifier {
   final ProfileRepository _profileRepository;
 
   PostState _postState = PostState.Default;
-  PostState _bookmarkPostState = PostState.Default;
+  PostState _likePostState = PostState.Default;
   PostState _profilePostState = PostState.Default;
 
   List<Post> _posts = [];
-  List<Post> _bookmarkedPosts = [];
+  List<Post> _likedPosts = [];
   List<Post> _profilePosts = [];
 
   UniqueKey _postFormKey;
@@ -32,18 +32,18 @@ class PostBloc with ChangeNotifier {
         _profileBloc = ProfileBloc.instance(),
         _profileRepository = ProfileRepository() {
     fetchPosts();
-    fetchBookmarkedPosts();
+    fetchLikedPosts();
   }
 
   // getters
   PostState get postState => _postState;
-  PostState get bookmarkPostState => _bookmarkPostState;
+  PostState get likePostState => _likePostState;
   PostState get profilePostState => _profilePostState;
 
   List<Post> get posts => _posts;
   List<Post> get profilePosts => _profilePosts;
-  List<Post> get bookmarkedPosts =>
-      _bookmarkedPosts.where((Post post) => post.isBookmarked == true).toList();
+  List<Post> get likedPosts =>
+      _likedPosts.where((Post post) => post.isLiked == true).toList();
 
   UniqueKey get postFormKey => _postFormKey;
 
@@ -61,12 +61,12 @@ class PostBloc with ChangeNotifier {
 
   // methods
   Future<List<String>> _uploadPostImage(
-      {@required String userId, @required List<Asset> assets}) async {
+      {@required String userID, @required List<ByteData> datas}) async {
     try {
-      final String fileLocation = '$userId/posts';
+      final String fileLocation = '$userID/posts';
 
       final List<String> imageUrls = await _imageRepository.uploadPostImages(
-          fileLocation: fileLocation, assets: assets);
+          fileLocation: fileLocation, datas: datas);
 
       print('Image uploaded ${imageUrls.toList()}');
       return imageUrls;
@@ -75,52 +75,41 @@ class PostBloc with ChangeNotifier {
     }
   }
 
-  Future<Post> _getBookmarkPost({String postId}) async {
+  Future<Post> _getLikePost({String postID}) async {
     final String _currentUserId = await _authBloc.getUser; // get current-user
 
     DocumentSnapshot _document =
-        await _postRepository.fetchPost(postId: postId);
+        await _postRepository.fetchPost(postID: postID);
 
-    print('Get bookmarkPost');
+    print('Get likePost');
 
-    final String _postId = _document.documentID;
-    final String _userId = _document.data['userId'];
+    final String _postID = _document.documentID;
+    final String _userID = _document.data['userID'];
 
-    await _profileBloc.fetchProfile(userId: _userId);
+    await _profileBloc.fetchProfile(userID: _userID);
 
     final Profile _profile =
         _profileBloc.postProfile; // fetch user for current post
 
-    final _post = Post(
-      userId: _userId,
-      postId: _postId,
-      title: _document.data['title'],
-      description: _document.data['description'],
-      price: _document.data['price'],
-      isAvailable: _document.data['isAvailable'],
-      imageUrls: _document.data['imageUrls'],
-      categories: _document.data['categories'],
-      created: _document.data['created'],
-      lastUpdate: _document.data['lastUpdate'],
-      profile: _profile,
-    );
+    final _post = Post();
+    _post.initialize(_document);
 
-    // get post bookmark status for current user
-    final bool _isBookmarked = await _postRepository.isBookmarked(
-        postId: _postId, userId: _currentUserId);
+    // get post like status for current user
+    final bool _isLiked =
+        await _postRepository.isLiked(postID: _postID, userID: _currentUserId);
 
     // get post user following status for current user
     final bool _isFollowing = await _profileRepository.isSubscribedTo(
-        postUserId: _userId, userId: _currentUserId);
+        postUserId: _userID, userID: _currentUserId);
 
-    // get post bookmark count
+    // get post like count
     QuerySnapshot _snapshot =
-        await _postRepository.fetchPostBookmarks(postId: _postId);
-    final int _postBookmarkCount = _snapshot.documents.length;
+        await _postRepository.fetchPostLikes(postID: _postID);
+    final int _postLikeCount = _snapshot.documents.length;
 
     return _post.copyWith(
-        isBookmarked: _isBookmarked,
-        bookmarkCount: _postBookmarkCount,
+        isLiked: _isLiked,
+        likeCount: _postLikeCount,
         profile: _profile.copyWith(isFollowing: _isFollowing));
   }
 
@@ -129,67 +118,56 @@ class PostBloc with ChangeNotifier {
 
     DocumentSnapshot _document = document;
 
-    final String _postId = _document.documentID;
-    final String _userId = _document.data['userId'];
+    final String _postID = _document.documentID;
+    final String _userID = _document.data['userID'];
 
     await _profileBloc.fetchProfile(
-        userId: _userId); // fetch user for current post
+        userID: _userID); // fetch user for current post
 
     final Profile _profile = _profileBloc.postProfile;
 
-    final _post = Post(
-      userId: _userId,
-      postId: _postId,
-      title: _document.data['title'],
-      description: _document.data['description'],
-      price: _document.data['price'],
-      isAvailable: _document.data['isAvailable'],
-      imageUrls: _document.data['imageUrls'],
-      categories: _document.data['categories'],
-      created: _document.data['created'],
-      lastUpdate: _document.data['lastUpdate'],
-      profile: _profile,
-    );
+    final _post = Post();
+    _post.initialize(_document);
 
-    // get post bookmark status for current user
-    final bool _isBookmarked = await _postRepository.isBookmarked(
-        postId: _postId, userId: _currentUserId);
+    // get post like status for current user
+    final bool _isLiked =
+        await _postRepository.isLiked(postID: _postID, userID: _currentUserId);
 
     // get post user following status for current user
     final bool _isFollowing = await _profileRepository.isSubscribedTo(
-        postUserId: _userId, userId: _currentUserId);
+        postUserId: _userID, userID: _currentUserId);
 
-    // get post bookmark count
+    // get post like count
     QuerySnapshot _snapshot =
-        await _postRepository.fetchPostBookmarks(postId: _postId);
-    final int _postBookmarkCount = _snapshot.documents.length;
+        await _postRepository.fetchPostLikes(postID: _postID);
+    final int _postLikeCount = _snapshot.documents.length;
 
     return _post.copyWith(
-        isBookmarked: _isBookmarked,
-        bookmarkCount: _postBookmarkCount,
+        isLiked: _isLiked,
+        likeCount: _postLikeCount,
         profile: _profile.copyWith(isFollowing: _isFollowing));
   }
 
-  Future<void> toggleBookmarkStatus({@required Post post}) async {
+  Future<void> toggleLikeStatus({@required Post post}) async {
     final Post _recievedPost = post;
 
-    final bool _bookmarkStatus = _recievedPost.isBookmarked;
-    final bool _newBookmarkStatus = !_bookmarkStatus;
+    final bool _likeStatus = _recievedPost.isLiked;
+    final bool _newLikeStatus = !_likeStatus;
 
-    final String _userId = await _authBloc.getUser;
-    final String _postId = _recievedPost.postId;
+    final String _userID = await _authBloc.getUser;
+    final String _postID = _recievedPost.postID;
 
-    final int _updatedBookmarkCount = _newBookmarkStatus
-        ? _recievedPost.bookmarkCount + 1
-        : _recievedPost.bookmarkCount - 1;
+    final int _updatedLikeCount = _newLikeStatus
+        ? _recievedPost.likeCount + 1
+        : _recievedPost.likeCount - 1;
 
     final Post _updatedPost = _recievedPost.copyWith(
-        isBookmarked: _newBookmarkStatus,
-        bookmarkCount: _updatedBookmarkCount); // update bookmark status
+        isLiked: _newLikeStatus,
+        likeCount: _updatedLikeCount); // update like status
 
     // get post index in _posts;
     final int _postIndex =
-        _posts.indexWhere((Post post) => post.postId == _postId);
+        _posts.indexWhere((Post post) => post.postID == _postID);
 
     if (_postIndex != -1) {
       _posts[_postIndex] =
@@ -197,7 +175,7 @@ class PostBloc with ChangeNotifier {
     }
 
     final int _profilePostIndex = _profilePosts.indexWhere((Post post) =>
-        post.postId == _postId); // get post index in _profilePosts;
+        post.postID == _postID); // get post index in _profilePosts;
 
     if (_profilePostIndex != -1) {
       _profilePosts[_profilePostIndex] =
@@ -209,7 +187,7 @@ class PostBloc with ChangeNotifier {
         ProfileBloc.latestProfileSubscriptionPosts;
 
     final latestFollowingProfilePostIndex = _latestFollowingProfilePost
-        .indexWhere((Post post) => post.postId == _postId);
+        .indexWhere((Post post) => post.postID == _postID);
 
     if (latestFollowingProfilePostIndex != -1) {
       // ProfileBloc.latestFollowingProfilePost[latestFollowingProfilePostIndex] =
@@ -223,37 +201,34 @@ class PostBloc with ChangeNotifier {
       notifyListeners();
     }
 
-    // update post in List<post> (optimistic update) in _bookmarkedPosts
-    if (_newBookmarkStatus) {
-      _bookmarkedPosts.insert(0, _updatedPost);
+    // update post in List<post> (optimistic update) in _likedPosts
+    if (_newLikeStatus) {
+      _likedPosts.insert(0, _updatedPost);
     } else {
-      _bookmarkedPosts.removeWhere(
-          (Post bookmarkedPost) => bookmarkedPost.postId == _postId);
+      _likedPosts.removeWhere((Post likedPost) => likedPost.postID == _postID);
     }
     notifyListeners();
 
     try {
-      if (_newBookmarkStatus) {
-        await _postRepository.addToBookmark(postId: _postId, userId: _userId);
+      if (_newLikeStatus) {
+        await _postRepository.addToLike(postID: _postID, userID: _userID);
       } else {
-        await _postRepository.removeFromBookmark(
-            postId: _postId, userId: _userId);
+        await _postRepository.removeFromLike(postID: _postID, userID: _userID);
       }
 
-      // set post bookmark in user collection
-      await _profileBloc.togglePostBookmarkStatus(post: post, userId: _userId);
+      // set post like in user collection
+      await _profileBloc.togglePostLikeStatus(post: post, userID: _userID);
 
       return;
     } catch (e) {
       print(e.toString());
 
-      final int _updatedBookmarkCount = !_newBookmarkStatus
-          ? _recievedPost.bookmarkCount + 1
-          : _recievedPost.bookmarkCount - 1;
+      final int _updatedLikeCount = !_newLikeStatus
+          ? _recievedPost.likeCount + 1
+          : _recievedPost.likeCount - 1;
 
       final Post _updatedPost = _recievedPost.copyWith(
-          isBookmarked: !_newBookmarkStatus,
-          bookmarkCount: _updatedBookmarkCount);
+          isLiked: !_newLikeStatus, likeCount: _updatedLikeCount);
 
       if (_postIndex != -1) {
         _posts[_postIndex] = _updatedPost;
@@ -271,11 +246,11 @@ class PostBloc with ChangeNotifier {
         notifyListeners();
       }
 
-      if (_newBookmarkStatus) {
-        _bookmarkedPosts.removeWhere(
-            (Post bookmarkedPost) => bookmarkedPost.postId == _postId);
+      if (_newLikeStatus) {
+        _likedPosts
+            .removeWhere((Post likedPost) => likedPost.postID == _postID);
       } else {
-        _bookmarkedPosts.insert(0, _updatedPost);
+        _likedPosts.insert(0, _updatedPost);
       }
       notifyListeners();
     }
@@ -298,16 +273,16 @@ class PostBloc with ChangeNotifier {
         followersCount: _updateFollowersCount);
 
     final List<Post> _userPosts = _posts
-        .where((Post post) => post.userId == currentPostProfile.userId)
-        .toList(); // get all posts with current post userId
+        .where((Post post) => post.userID == currentPostProfile.userID)
+        .toList(); // get all posts with current post userID
 
     for (int i = 0; i < _userPosts.length; i++) {
-      final String _postId = _userPosts[i].postId;
+      final String _postID = _userPosts[i].postID;
       final Post _updatedPost =
           _userPosts[i].copyWith(profile: _updatedProfile);
 
       final int _postIndex =
-          _posts.indexWhere((Post post) => post.postId == _postId);
+          _posts.indexWhere((Post post) => post.postID == _postID);
 
       _posts[_postIndex] = _updatedPost;
       notifyListeners();
@@ -316,10 +291,10 @@ class PostBloc with ChangeNotifier {
     try {
       if (_newFollowingStatus) {
         await _profileRepository.addToSubscribers(
-            postUserId: _profile.userId, userId: _currentUserId);
+            postUserId: _profile.userID, userID: _currentUserId);
       } else {
         await _profileRepository.removeFromSubscribers(
-            postUserId: _profile.userId, userId: _currentUserId);
+            postUserId: _profile.userID, userID: _currentUserId);
       }
 
       // set user following in user collection
@@ -338,15 +313,15 @@ class PostBloc with ChangeNotifier {
           followersCount: _updateFollowersCount);
 
       final List<Post> _userPosts = _posts
-          .where((Post post) => post.userId == _profile.userId)
-          .toList(); // get all posts with current post userId
+          .where((Post post) => post.userID == _profile.userID)
+          .toList(); // get all posts with current post userID
 
       _userPosts.forEach((Post post) {
-        final String _postId = post.postId;
+        final String _postID = post.postID;
         final Post _updatedPost = post.copyWith(profile: _updatedProfile);
 
         final int _postIndex =
-            _posts.indexWhere((Post post) => post.postId == _postId);
+            _posts.indexWhere((Post post) => post.postID == _postID);
 
         _posts[_postIndex] = _updatedPost;
         notifyListeners();
@@ -354,34 +329,34 @@ class PostBloc with ChangeNotifier {
     }
   }
 
-  Future<void> fetchBookmarkedPosts() async {
+  Future<void> fetchLikedPosts() async {
     try {
-      _bookmarkPostState = PostState.Loading;
+      _likePostState = PostState.Loading;
       notifyListeners();
 
       final String _currentUserId = await _authBloc.getUser;
-      QuerySnapshot _snapshot = await _profileRepository
-          .fetchProfileBookmarkedPosts(userId: _currentUserId);
+      QuerySnapshot _snapshot = await _profileRepository.fetchProfileLikedPosts(
+          userID: _currentUserId);
 
       List<Post> posts = [];
 
       for (int i = 0; i < _snapshot.documents.length; i++) {
         final DocumentSnapshot document = _snapshot.documents[i];
-        final String _postId = document.documentID;
-        final Post _post = await _getBookmarkPost(postId: _postId);
+        final String _postID = document.documentID;
+        final Post _post = await _getLikePost(postID: _postID);
 
         posts.add(_post);
       }
 
-      _bookmarkedPosts = posts;
+      _likedPosts = posts;
 
-      _bookmarkPostState = PostState.Success;
+      _likePostState = PostState.Success;
       notifyListeners();
       return;
     } catch (e) {
       print(e.toString());
 
-      _bookmarkPostState = PostState.Failure;
+      _likePostState = PostState.Failure;
       notifyListeners();
     }
   }
@@ -464,13 +439,13 @@ class PostBloc with ChangeNotifier {
     }
   }
 
-  Future<void> fetchProfilePosts({@required String userId}) async {
+  Future<void> fetchProfilePosts({@required String userID}) async {
     try {
       _profilePostState = PostState.Loading;
       notifyListeners();
 
       QuerySnapshot _snapshot = await _postRepository.fetchProfilePosts(
-          lastVisiblePost: null, userId: userId);
+          lastVisiblePost: null, userID: userID);
 
       List<Post> profilePosts = [];
 
@@ -495,7 +470,7 @@ class PostBloc with ChangeNotifier {
     }
   }
 
-  Future<void> fetchMoreProfilePosts({@required String userId}) async {
+  Future<void> fetchMoreProfilePosts({@required String userID}) async {
     try {
       final List<Post> currentProfilePosts = _profilePosts;
       final Post lastVisiblePost =
@@ -511,7 +486,7 @@ class PostBloc with ChangeNotifier {
       notifyListeners();
 
       final QuerySnapshot _snapshot = await _postRepository.fetchProfilePosts(
-          lastVisiblePost: lastVisiblePost, userId: userId);
+          lastVisiblePost: lastVisiblePost, userID: userID);
 
       if (_snapshot.documents.length < 1) {
         _moreProfilePostsAvailable = false;
@@ -545,31 +520,22 @@ class PostBloc with ChangeNotifier {
     }
   }
 
-  Future<bool> createPost(
-      {@required List<Asset> assets,
-      @required String title,
-      @required String description,
-      @required double price,
-      @required bool isAvailable,
-      @required List<String> categories}) async {
+  Future<bool> createPost({
+    @required Post post,
+    @required List<ByteData> datas,
+  }) async {
     try {
       _postState = PostState.Loading;
       notifyListeners();
 
-      final String userId = await _authBloc.getUser;
+      final String userID = await _authBloc.getUser;
+      post.userID = userID;
 
       final List<String> _imageUrls =
-          await _uploadPostImage(userId: userId, assets: assets);
+          await _uploadPostImage(userID: userID, datas: datas);
+      post.imageUrls = _imageUrls;
 
-      await _postRepository.createPost(
-        imageUrls: _imageUrls,
-        userId: userId,
-        title: title,
-        description: description,
-        price: price,
-        isAvailable: isAvailable,
-        categories: categories,
-      );
+      await _postRepository.createPost(data: post.data());
 
       _postState = PostState.Success;
       notifyListeners();

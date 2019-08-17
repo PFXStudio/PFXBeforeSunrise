@@ -50,7 +50,7 @@ export 'modules/admin/profile_formpage.dart';
 export 'modules/admin/profile_page.dart';
 export 'modules/authentication/auth_page.dart';
 export 'modules/authentication/intro_page.dart';
-export 'modules/general/bookmark_page.dart';
+export 'modules/general/like_page.dart';
 export 'modules/general/feed_page.dart';
 export 'modules/general/home_page.dart';
 export 'modules/localizables/localizable_delegate.dart';
@@ -70,6 +70,7 @@ export 'widgets/buttons/flat_icon_text_button.dart';
 export 'widgets/dialogs/dialog_bottom_widget.dart';
 export 'widgets/dialogs/dialog_publish_type_widget.dart';
 export 'widgets/dialogs/dialog_header_widget.dart';
+export 'package:before_sunrise/widgets/dialogs/dialog_post_type.dart';
 export 'widgets/snackbars/error_snackbar_widget.dart';
 export 'widgets/snackbars/success_snackbar_widget.dart';
 

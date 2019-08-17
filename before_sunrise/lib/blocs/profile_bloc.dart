@@ -30,9 +30,9 @@ class ProfileBloc with ChangeNotifier {
 
   // getters
   Future<bool> get hasProfile async {
-    final String _userId = await _authBloc.getUser;
+    final String _userID = await _authBloc.getUser;
     final DocumentSnapshot _snapshot =
-        await _profileRepository.hasProfile(userId: _userId);
+        await _profileRepository.hasProfile(userID: _userID);
 
     final bool _hasProfile =
         _snapshot.exists ? _snapshot.data['hasProfile'] : false;
@@ -75,19 +75,19 @@ class ProfileBloc with ChangeNotifier {
     _latestProfileSubscriptionPosts = followingProfilePosts;
   }
 
-  Future<void> togglePostBookmarkStatus(
-      {@required Post post, @required String userId}) async {
-    final bool _bookmarkStatus = post.isBookmarked;
-    final bool _newBookmarkStatus = !_bookmarkStatus;
+  Future<void> togglePostLikeStatus(
+      {@required Post post, @required String userID}) async {
+    final bool _likeStatus = post.isLiked;
+    final bool _newLikeStatus = !_likeStatus;
 
-    final String _postId = post.postId;
+    final String _postID = post.postID;
 
     try {
-      if (_newBookmarkStatus) {
-        await _profileRepository.addToBookmark(postId: _postId, userId: userId);
+      if (_newLikeStatus) {
+        await _profileRepository.addToLike(postID: _postID, userID: userID);
       } else {
-        await _profileRepository.removeFromBookmark(
-            postId: _postId, userId: userId);
+        await _profileRepository.removeFromLike(
+            postID: _postID, userID: userID);
       }
     } catch (e) {
       print(e.toString());
@@ -96,10 +96,10 @@ class ProfileBloc with ChangeNotifier {
 
   Future<void> toggleFollowProfilePageStatus(
       {@required Profile profile}) async {
-    // final String _profileId = profile.userId;
-    final String _userId = await _authBloc.getUser;
+    // final String _profileId = profile.userID;
+    final String _userID = await _authBloc.getUser;
 
-    final String _postUserId = profile.userId;
+    final String _postUserId = profile.userID;
 
     final bool _followingStatus = profile.isFollowing;
     final bool _newFollowingStatus = !_followingStatus;
@@ -107,10 +107,10 @@ class ProfileBloc with ChangeNotifier {
     try {
       if (_newFollowingStatus) {
         await _profileRepository.subscribeTo(
-            postUserId: _postUserId, userId: _userId);
+            postUserId: _postUserId, userID: _userID);
       } else {
         await _profileRepository.unsubscribeFrom(
-            postUserId: _postUserId, userId: _userId);
+            postUserId: _postUserId, userID: _userID);
       }
     } catch (e) {
       print(e.toString());
@@ -124,51 +124,40 @@ class ProfileBloc with ChangeNotifier {
 
     DocumentSnapshot _document = document;
 
-    final String _postId = _document.documentID;
-    final String _userId = _document.data['userId'];
+    final String _postID = _document.documentID;
+    final String _userID = _document.data['userID'];
 
     final Profile _profile = postUserProfile;
 
-    final _post = Post(
-      userId: _userId,
-      postId: _postId,
-      title: _document.data['title'],
-      description: _document.data['description'],
-      price: _document.data['price'],
-      isAvailable: _document.data['isAvailable'],
-      imageUrls: _document.data['imageUrls'],
-      categories: _document.data['categories'],
-      created: _document.data['created'],
-      lastUpdate: _document.data['lastUpdate'],
-      profile: _profile,
-    );
+    final _post = Post();
+    _post.initialize(_document);
 
-    // get post bookmark status for current user
-    final bool _isBookmarked = await _postRepository.isBookmarked(
-        postId: _postId, userId: _currentUserId);
+    // get post like status for current user
+    final bool _isLiked =
+        await _postRepository.isLiked(postID: _postID, userID: _currentUserId);
 
     // get post user following status for current user
     final bool _isFollowing = await _profileRepository.isSubscribedTo(
-        postUserId: _userId, userId: _currentUserId);
+        postUserId: _userID, userID: _currentUserId);
 
-    // get post bookmark count
+    // get post like count
     QuerySnapshot _snapshot =
-        await _postRepository.fetchPostBookmarks(postId: _postId);
-    final int _postBookmarkCount = _snapshot.documents.length;
+        await _postRepository.fetchPostLikes(postID: _postID);
+    final int _postLikeCount = _snapshot.documents.length;
 
     return _post.copyWith(
-        isBookmarked: _isBookmarked,
-        bookmarkCount: _postBookmarkCount,
+        isLiked: _isLiked,
+        likeCount: _postLikeCount,
         profile: _profile.copyWith(isFollowing: _isFollowing));
   }
 
   Future<Profile> _fetchSubscribedProfile(
       {@required String postUserId, @required String currentUserId}) async {
     DocumentSnapshot _snapshot =
-        await _profileRepository.fetchProfile(userId: postUserId);
+        await _profileRepository.fetchProfile(userID: postUserId);
 
     final Profile _postProfile = Profile(
-      userId: _snapshot.documentID,
+      userID: _snapshot.documentID,
       firstName: _snapshot.data['firstName'],
       lastName: _snapshot.data['lastName'],
       businessName: _snapshot.data['businessName'],
@@ -184,11 +173,11 @@ class ProfileBloc with ChangeNotifier {
 
     // get post user following status for current user
     final bool _isFollowing = await _profileRepository.isSubscribedTo(
-        postUserId: postUserId, userId: currentUserId);
+        postUserId: postUserId, userID: currentUserId);
 
     // get follower count
     final QuerySnapshot snapshot =
-        await _profileRepository.fetchProfileSubscribers(userId: postUserId);
+        await _profileRepository.fetchProfileSubscribers(userID: postUserId);
     final int _profileSubscribersCount = snapshot.documents.length;
 
     return _postProfile.copyWith(
@@ -198,7 +187,7 @@ class ProfileBloc with ChangeNotifier {
   Future<Post> _fetchSubscribedLatestPosts(
       {@required String postUserId, @required Profile postUserProfile}) async {
     QuerySnapshot _snapshot =
-        await _postRepository.fetchSubscribedLatestPosts(userId: postUserId);
+        await _postRepository.fetchSubscribedLatestPosts(userID: postUserId);
 
     final List<Post> _latesPosts = [];
 
@@ -219,10 +208,10 @@ class ProfileBloc with ChangeNotifier {
       _profileSubscriptionState = ProfileState.Loading;
       notifyListeners();
 
-      final String _userId = await _authBloc.getUser;
+      final String _userID = await _authBloc.getUser;
 
       final QuerySnapshot _snapshot =
-          await _profileRepository.fetchProfileSubscriptions(userId: _userId);
+          await _profileRepository.fetchProfileSubscriptions(userID: _userID);
 
       final List<Profile> profile = [];
       final List<Post> profileLatestPost = [];
@@ -234,7 +223,7 @@ class ProfileBloc with ChangeNotifier {
         final DocumentSnapshot document = _snapshot.documents[i];
         final String _profileId = document.documentID;
         final Profile _profile = await _fetchSubscribedProfile(
-            postUserId: _profileId, currentUserId: _userId);
+            postUserId: _profileId, currentUserId: _userID);
 
         final Post _profileLatestPost = await _fetchSubscribedLatestPosts(
             postUserId: _profileId, postUserProfile: _profile);
@@ -264,9 +253,9 @@ class ProfileBloc with ChangeNotifier {
       // _userProfileState = ProfileState.Loading;
       // notifyListeners();
 
-      final String _userId = await _authBloc.getUser;
+      final String _userID = await _authBloc.getUser;
       DocumentSnapshot _snapshot =
-          await _profileRepository.fetchProfile(userId: _userId);
+          await _profileRepository.fetchProfile(userID: _userID);
 
       if (!_snapshot.exists) {
         print('UserId do not exit');
@@ -274,7 +263,7 @@ class ProfileBloc with ChangeNotifier {
       }
 
       final Profile _userProfile = Profile(
-        userId: _snapshot.documentID,
+        userID: _snapshot.documentID,
         firstName: _snapshot.data['firstName'],
         lastName: _snapshot.data['lastName'],
         businessName: _snapshot.data['businessName'],
@@ -289,13 +278,13 @@ class ProfileBloc with ChangeNotifier {
       );
 
       final QuerySnapshot snapshot =
-          await _profileRepository.fetchProfileSubscribers(userId: _userId);
+          await _profileRepository.fetchProfileSubscribers(userID: _userID);
       final int _userProfileFollowersCount = snapshot.documents.length;
 
       setUserProfile(
           userProfile: _userProfile.copyWith(
               followersCount: _userProfileFollowersCount));
-      // _userProfileState = ProfileState.Success;
+      _userProfileState = ProfileState.Success;
       // notifyListeners();
       return;
     } catch (e) {
@@ -307,13 +296,13 @@ class ProfileBloc with ChangeNotifier {
     }
   }
 
-  Future<bool> fetchProfile({@required String userId}) async {
+  Future<bool> fetchProfile({@required String userID}) async {
     try {
       _postProfileState = ProfileState.Loading;
       notifyListeners();
 
       DocumentSnapshot _snapshot =
-          await _profileRepository.fetchProfile(userId: userId);
+          await _profileRepository.fetchProfile(userID: userID);
 
       if (!_snapshot.exists) {
         print('UserId do not exit');
@@ -321,7 +310,7 @@ class ProfileBloc with ChangeNotifier {
       }
 
       final Profile _postProfile = Profile(
-        userId: _snapshot.documentID,
+        userID: _snapshot.documentID,
         firstName: _snapshot.data['firstName'],
         lastName: _snapshot.data['lastName'],
         businessName: _snapshot.data['businessName'],
@@ -337,7 +326,7 @@ class ProfileBloc with ChangeNotifier {
 
       // get follower count
       final QuerySnapshot snapshot =
-          await _profileRepository.fetchProfileSubscribers(userId: userId);
+          await _profileRepository.fetchProfileSubscribers(userID: userID);
       final int _profileSubscribersCount = snapshot.documents.length;
 
       setProfile(
@@ -368,13 +357,13 @@ class ProfileBloc with ChangeNotifier {
       _profileState = ProfileState.Loading;
       notifyListeners();
 
-      final String _userId = await _authBloc.getUser;
+      final String _userID = await _authBloc.getUser;
 
       final String _profileImageUrl = await _imageRepository.saveProfileImage(
-          userId: _userId, asset: profileImage);
+          userID: _userID, asset: profileImage);
 
       await _profileRepository.createProfile(
-        userId: _userId,
+        userID: _userID,
         firstName: firstName,
         lastName: lastName,
         businessName: businessName,

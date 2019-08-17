@@ -29,7 +29,7 @@ class _PostDetailsState extends State<PostDetails> {
 
     if (_profileBloc.userProfile != null) {
       setState(() {
-        _profileBloc.userProfile.userId == _post.profile.userId
+        _profileBloc.userProfile.userID == _post.profile.userID
             ? _isCurrentUserProfile = true
             : _isCurrentUserProfile = false;
       });
@@ -139,7 +139,7 @@ class _PostDetailsState extends State<PostDetails> {
                     Center(child: Icon(Icons.error)),
                 imageBuilder: (BuildContext context, ImageProvider image) {
                   return Hero(
-                    tag: '${_post.postId}_${_post.imageUrls[0]}',
+                    tag: '${_post.postID}_${_post.imageUrls[0]}',
                     child: Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(image: image, fit: BoxFit.cover),
@@ -165,7 +165,7 @@ class _PostDetailsState extends State<PostDetails> {
               Center(child: Icon(Icons.error)),
           imageBuilder: (BuildContext context, ImageProvider image) {
             return Hero(
-              tag: '${_post.postId}_${_post.profile.profileImageUrl}',
+              tag: '${_post.postID}_${_post.profile.profileImageUrl}',
               child: Container(
                   height: 40.0,
                   width: 40.0,
@@ -179,7 +179,7 @@ class _PostDetailsState extends State<PostDetails> {
         ),
         SizedBox(width: 10.0),
         Hero(
-          tag: '${_post.postId}_${_post.profile.firstName}',
+          tag: '${_post.postID}_${_post.profile.firstName}',
           child: Text(
             '${_post.profile.firstName} ${_post.profile.lastName}',
             style: TextStyle(fontSize: 20.0),
@@ -252,12 +252,12 @@ class _PostDetailsState extends State<PostDetails> {
             builder: (BuildContext context, PostBloc postBloc, Widget child) {
           return InkWell(
             onTap: () {
-              postBloc.toggleBookmarkStatus(post: _post);
+              postBloc.toggleLikeStatus(post: _post);
             },
             child: Padding(
               padding: const EdgeInsets.all(2.0),
               child: Icon(
-                _post.isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                _post.isLiked ? Icons.favorite : Icons.favorite_border,
                 color: Theme.of(context).accentColor,
               ),
             ),
@@ -297,7 +297,7 @@ class _PostDetailsState extends State<PostDetails> {
             // borderRadius: BorderRadius.circular(25.0),
           ),
           child: Text(
-            'GHC ${_post.price}',
+            'GHC ${_post.likeCount}',
             style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontSize: 16.0,
@@ -336,12 +336,12 @@ class _PostDetailsState extends State<PostDetails> {
             Row(
               children: <Widget>[
                 Icon(
-                  Icons.bookmark,
+                  Icons.favorite,
                   color: Theme.of(context).accentColor,
                   size: 20.0,
                 ),
                 SizedBox(width: 5.0),
-                Text('${_post.bookmarkCount}',
+                Text('${_post.likeCount}',
                     style: TextStyle(
                         color: Colors.black38, fontWeight: FontWeight.bold)),
               ],
@@ -426,7 +426,7 @@ class _PostDetailsState extends State<PostDetails> {
         Divider(),
         // SizedBox(height: 10.0),
         Text(
-          '${_post.description}',
+          '${_post.contents}',
           softWrap: true,
           textAlign: TextAlign.justify,
         ),

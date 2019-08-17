@@ -1,14 +1,14 @@
 import 'package:before_sunrise/import.dart';
 
 class TimelineTabPage extends StatelessWidget {
-  final String userId;
+  final String userID;
   final bool isRefreshing;
 
   const TimelineTabPage(
-      {Key key, @required this.userId, @required this.isRefreshing})
+      {Key key, @required this.userID, @required this.isRefreshing})
       : super(key: key);
 
-  String get _userId => userId;
+  String get _userID => userID;
   bool get _isRefreshing => isRefreshing;
 
   Widget _buildSliverList({@required PostBloc postBloc}) {
@@ -57,7 +57,7 @@ class TimelineTabPage extends StatelessWidget {
                               ],
                             ),
                             onPressed: () {
-                              postBloc.fetchProfilePosts(userId: _userId);
+                              postBloc.fetchProfilePosts(userID: _userID);
                             },
                           ),
                           Text('No Post(s) Loaded'),

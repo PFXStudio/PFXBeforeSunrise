@@ -8,54 +8,50 @@ class PostRepository {
       : _firestoreTimestamp = FieldValue.serverTimestamp(),
         _postCollection = Firestore.instance.collection('posts');
 
-  Future<bool> isBookmarked(
-      {@required String postId, @required String userId}) async {
+  Future<bool> isLiked(
+      {@required String postID, @required String userID}) async {
     final DocumentSnapshot snapshot = await _postCollection
-        .document(postId)
-        .collection('bookmarks')
-        .document(userId)
+        .document(postID)
+        .collection('likes')
+        .document(userID)
         .get();
 
     return snapshot.exists;
   }
 
-  Future<void> addToBookmark(
-      {@required String postId, @required String userId}) {
+  Future<void> addToLike({@required String postID, @required String userID}) {
     return _postCollection
-        .document(postId)
-        .collection('bookmarks')
-        .document(userId)
+        .document(postID)
+        .collection('likes')
+        .document(userID)
         .setData({
-      'isBookmarked': true,
+      'isLiked': true,
     });
   }
 
-  Future<void> removeFromBookmark(
-      {@required String postId, @required String userId}) {
+  Future<void> removeFromLike(
+      {@required String postID, @required String userID}) {
     return _postCollection
-        .document(postId)
-        .collection('bookmarks')
-        .document(userId)
+        .document(postID)
+        .collection('likes')
+        .document(userID)
         .delete();
   }
 
-  Future<DocumentSnapshot> fetchPost({@required String postId}) {
-    return _postCollection.document(postId).get();
+  Future<DocumentSnapshot> fetchPost({@required String postID}) {
+    return _postCollection.document(postID).get();
   }
 
-  Future<QuerySnapshot> fetchSubscribedLatestPosts({@required String userId}) {
+  Future<QuerySnapshot> fetchSubscribedLatestPosts({@required String userID}) {
     return _postCollection
         .orderBy('lastUpdate', descending: true)
-        .where('userId', isEqualTo: userId)
+        .where('userID', isEqualTo: userID)
         .limit(1)
         .getDocuments();
   }
 
-  Future<QuerySnapshot> fetchPostBookmarks({@required String postId}) {
-    return _postCollection
-        .document(postId)
-        .collection('bookmarks')
-        .getDocuments();
+  Future<QuerySnapshot> fetchPostLikes({@required String postID}) {
+    return _postCollection.document(postID).collection('likes').getDocuments();
   }
 
   Future<QuerySnapshot> fetchPosts({@required Post lastVisiblePost}) {
@@ -72,39 +68,22 @@ class PostRepository {
   }
 
   Future<QuerySnapshot> fetchProfilePosts(
-      {@required Post lastVisiblePost, @required String userId}) {
+      {@required Post lastVisiblePost, @required String userID}) {
     return lastVisiblePost == null
         ? _postCollection
-            .where('userId', isEqualTo: userId)
+            .where('userID', isEqualTo: userID)
             .orderBy('lastUpdate', descending: true)
             .limit(5)
             .getDocuments()
         : _postCollection
-            .where('userId', isEqualTo: userId)
+            .where('userID', isEqualTo: userID)
             .orderBy('lastUpdate', descending: true)
             .startAfter([lastVisiblePost.lastUpdate])
             .limit(5)
             .getDocuments();
   }
 
-  Future<DocumentReference> createPost(
-      {@required List<String> imageUrls,
-      @required String userId,
-      @required String title,
-      @required String description,
-      @required double price,
-      @required bool isAvailable,
-      @required List<String> categories}) {
-    return _postCollection.add({
-      'imageUrls': imageUrls,
-      'userId': userId,
-      'title': title,
-      'description': description,
-      'price': price,
-      'isAvailable': isAvailable,
-      'category': categories,
-      'created': _firestoreTimestamp,
-      'lastUpdate': _firestoreTimestamp,
-    });
+  Future<DocumentReference> createPost({@required Map<String, dynamic> data}) {
+    return _postCollection.add(data);
   }
 }

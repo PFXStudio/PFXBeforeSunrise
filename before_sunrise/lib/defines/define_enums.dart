@@ -6,10 +6,10 @@ enum AuthSequenceType {
 }
 
 enum PostType {
-  together,
   free,
   realTime,
   gallery,
+  together,
 
   maxLastest,
 }

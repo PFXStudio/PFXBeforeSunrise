@@ -20,7 +20,11 @@ class ErrorSnackbarWidget {
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(child: Text(message)),
+              Expanded(
+                  child: Text(
+                message,
+                style: TextStyle(color: Colors.white),
+              )),
               Icon(Icons.error_outline, color: Colors.red),
             ],
           ),

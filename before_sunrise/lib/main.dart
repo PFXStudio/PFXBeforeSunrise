@@ -64,14 +64,14 @@ class _MainAppState extends State<MainApp> {
           }
 
           if (pathElements[1] == 'post') {
-            final String _postId = pathElements[2];
+            final String _postID = pathElements[2];
 
             return MaterialPageRoute(builder: (BuildContext context) {
               return Consumer<PostBloc>(
                 builder:
                     (BuildContext context, PostBloc postBloc, Widget child) {
                   final Post _post = postBloc.posts
-                      .firstWhere((Post post) => post.postId == _postId);
+                      .firstWhere((Post post) => post.postID == _postID);
 
                   return PostDetails(post: _post);
                 },
@@ -79,17 +79,17 @@ class _MainAppState extends State<MainApp> {
             });
           }
 
-          if (pathElements[1] == 'bookmark') {
-            final String _postId = pathElements[2];
+          if (pathElements[1] == 'like') {
+            final String _postID = pathElements[2];
 
             return MaterialPageRoute(builder: (BuildContext context) {
               return Consumer<PostBloc>(
                 builder:
                     (BuildContext context, PostBloc postBloc, Widget child) {
-                  final Post _bookmarkedpost = postBloc.bookmarkedPosts
-                      .firstWhere((Post post) => post.postId == _postId);
+                  final Post _likedpost = postBloc.likedPosts
+                      .firstWhere((Post post) => post.postID == _postID);
 
-                  return PostDetails(post: _bookmarkedpost);
+                  return PostDetails(post: _likedpost);
                 },
               );
             });
@@ -97,14 +97,14 @@ class _MainAppState extends State<MainApp> {
 
           // get the details of selected profile post in profile posts
           if (pathElements[1] == 'profile-post') {
-            final String _postId = pathElements[2];
+            final String _postID = pathElements[2];
 
             return MaterialPageRoute(builder: (BuildContext context) {
               return Consumer<PostBloc>(
                 builder:
                     (BuildContext context, PostBloc postBloc, Widget child) {
                   final Post _post = postBloc.profilePosts
-                      .firstWhere((Post post) => post.postId == _postId);
+                      .firstWhere((Post post) => post.postID == _postID);
 
                   return PostDetails(post: _post);
                 },
@@ -114,14 +114,14 @@ class _MainAppState extends State<MainApp> {
 
           // get details of subscribed post from subscribedPosts
           if (pathElements[1] == 'subscribed-post') {
-            final String _postId = pathElements[2];
+            final String _postID = pathElements[2];
 
             return MaterialPageRoute(builder: (BuildContext context) {
               return Consumer<ProfileBloc>(
                 builder: (BuildContext context, ProfileBloc profileBloc,
                     Widget child) {
                   final Post _post = ProfileBloc.latestProfileSubscriptionPosts
-                      .firstWhere((Post post) => post.postId == _postId);
+                      .firstWhere((Post post) => post.postID == _postID);
 
                   return PostDetails(post: _post);
                 },
@@ -131,14 +131,14 @@ class _MainAppState extends State<MainApp> {
 
           // get the profile of selected post in feed
           if (pathElements[1] == 'post-profile') {
-            final String _postId = pathElements[2];
+            final String _postID = pathElements[2];
 
             return MaterialPageRoute(builder: (BuildContext context) {
               return Consumer<PostBloc>(
                 builder:
                     (BuildContext context, PostBloc postBloc, Widget child) {
                   final Post _post = postBloc.posts
-                      .firstWhere((Post post) => post.postId == _postId);
+                      .firstWhere((Post post) => post.postID == _postID);
 
                   return ProfilePage(userProfile: _post.profile);
                   // return ProfilePage(post: _post);
@@ -147,16 +147,16 @@ class _MainAppState extends State<MainApp> {
             });
           }
 
-          // get the profile of selected post in bookmarked posts
-          if (pathElements[1] == 'bookmarked-post-profile') {
-            final String _postId = pathElements[2];
+          // get the profile of selected post in liked posts
+          if (pathElements[1] == 'liked-post-profile') {
+            final String _postID = pathElements[2];
 
             return MaterialPageRoute(builder: (BuildContext context) {
               return Consumer<PostBloc>(
                 builder:
                     (BuildContext context, PostBloc postBloc, Widget child) {
-                  final Post _post = postBloc.bookmarkedPosts
-                      .firstWhere((Post post) => post.postId == _postId);
+                  final Post _post = postBloc.likedPosts
+                      .firstWhere((Post post) => post.postID == _postID);
 
                   return ProfilePage(userProfile: _post.profile);
                 },
@@ -166,14 +166,14 @@ class _MainAppState extends State<MainApp> {
 
           // get the profile of selected post in subscribed posts
           if (pathElements[1] == 'subscribed-post-profile') {
-            final String _postId = pathElements[2];
+            final String _postID = pathElements[2];
 
             return MaterialPageRoute(builder: (BuildContext context) {
               return Consumer<ProfileBloc>(
                 builder: (BuildContext context, ProfileBloc profileBloc,
                     Widget child) {
                   final Post _post = ProfileBloc.latestProfileSubscriptionPosts
-                      .firstWhere((Post post) => post.postId == _postId);
+                      .firstWhere((Post post) => post.postID == _postID);
 
                   return ProfilePage(userProfile: _post.profile);
                 },
@@ -191,7 +191,7 @@ class _MainAppState extends State<MainApp> {
                     Widget child) {
                   final Profile _userProfile = profileBloc.profileSubscriptions
                       .firstWhere(
-                          (Profile profile) => profile.userId == _profileId);
+                          (Profile profile) => profile.userID == _profileId);
 
                   return ProfilePage(userProfile: _userProfile);
                 },
@@ -243,18 +243,13 @@ class _DynamicInitialPageState extends State<DynamicInitialPage> {
 
   Future<void> _getHasProfile({@required ProfileBloc profileBloc}) async {
     final bool hasProfile = await profileBloc.hasProfile;
+    if (_hasProfile == hasProfile) {
+      return;
+    }
+
     setState(() {
       _hasProfile = hasProfile;
     });
-  }
-
-  Widget _displayedAuthenticatedPage({@required ProfileBloc profileBloc}) {
-    if (_hasProfile) {
-      profileBloc.fetchUserProfile(); // fetch user profile
-      return HomePage();
-    } else {
-      return ProfileForm();
-    }
   }
 
   @override
@@ -271,12 +266,25 @@ class _DynamicInitialPageState extends State<DynamicInitialPage> {
           case AuthState.Authenticated:
             _getHasProfile(profileBloc: _profileBloc);
             // _loadFollowingProfileLatestPosts();
+            if (_hasProfile == null) {
+              return Scaffold(
+                  backgroundColor: Colors.transparent,
+                  body: Center(child: CircularProgressIndicator()));
+            }
 
-            return _hasProfile != null
-                ? _displayedAuthenticatedPage(profileBloc: _profileBloc)
-                : Scaffold(
-                    backgroundColor: Colors.transparent,
-                    body: Center(child: CircularProgressIndicator()));
+            if (_hasProfile == false) {
+              print("goto ProfileForm");
+              return ProfileForm();
+            }
+
+            if (_profileBloc.userProfileState == ProfileState.Success) {
+              print("goto HomePage");
+              return HomePage();
+            }
+
+            _profileBloc.fetchUserProfile(); // fetch user profile
+            print("fetched profile goto HomePage");
+            return HomePage();
 
           case AuthState.Unauthenticated:
             return AuthPage();

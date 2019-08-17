@@ -29,8 +29,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
 
   double get _deviceWidth => MediaQuery.of(context).size.width;
-  Color get _accentColor => Theme.of(context).accentColor;
-  Color get _primaryColor => Theme.of(context).primaryColor;
+  Color get _accentColor => MainTheme.pivotColor;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +57,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                     ),
                     _buildBottomNavBarItem(
                       index: 2,
-                      icon: Icons.bookmark_border,
+                      icon: Icons.thumb_up,
                     ),
                     // Container(
                     //   width: _deviceWidth / 6,

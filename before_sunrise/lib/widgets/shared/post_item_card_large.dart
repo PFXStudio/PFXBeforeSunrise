@@ -25,11 +25,11 @@ class _PostItemCardLargeState extends State<PostItemCardLarge> {
   PostBloc _postBloc;
 
   void _navigateToPostDetailsPage() {
-    Navigator.of(context).pushNamed('/subscribed-post/${_post.postId}');
+    Navigator.of(context).pushNamed('/subscribed-post/${_post.postID}');
   }
 
   void _navigateToProfilePage() {
-    Navigator.of(context).pushNamed('/subscribed-post-profile/${_post.postId}');
+    Navigator.of(context).pushNamed('/subscribed-post-profile/${_post.postID}');
   }
 
   Widget _buildPostPriceTag() {
@@ -48,7 +48,7 @@ class _PostItemCardLargeState extends State<PostItemCardLarge> {
           // borderRadius: BorderRadius.circular(25.0),
         ),
         child: Text(
-          'GHC ${_post.price}',
+          'GHC ${_post.likeCount}',
           style: TextStyle(
               color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
@@ -111,7 +111,7 @@ class _PostItemCardLargeState extends State<PostItemCardLarge> {
                     Center(child: Icon(Icons.error)),
                 imageBuilder: (BuildContext context, ImageProvider image) {
                   return Hero(
-                    tag: '${_post.postId}_${_post.imageUrls[0]}',
+                    tag: '${_post.postID}_${_post.imageUrls[0]}',
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
@@ -140,15 +140,15 @@ class _PostItemCardLargeState extends State<PostItemCardLarge> {
         title: Text('${_post.title}',
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text('${_post.description}', overflow: TextOverflow.ellipsis),
+        subtitle: Text('${_post.contents}', overflow: TextOverflow.ellipsis),
         trailing: IconButton(
           tooltip: 'Save this post',
           icon: Icon(
-            _post.isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+            _post.isLiked ? Icons.favorite : Icons.favorite_border,
             color: Theme.of(context).accentColor,
           ),
           onPressed: () {
-            _postBloc.toggleBookmarkStatus(post: _post);
+            _postBloc.toggleLikeStatus(post: _post);
           },
         ),
       ),
@@ -171,7 +171,7 @@ class _PostItemCardLargeState extends State<PostItemCardLarge> {
                       Center(child: Icon(Icons.error)),
                   imageBuilder: (BuildContext context, ImageProvider image) {
                     return Hero(
-                      tag: '${_post.postId}_${_post.profile.profileImageUrl}',
+                      tag: '${_post.postID}_${_post.profile.profileImageUrl}',
                       child: Container(
                         height: 50.0,
                         width: 50.0,

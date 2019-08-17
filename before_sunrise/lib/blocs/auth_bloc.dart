@@ -176,10 +176,11 @@ class AuthBloc with ChangeNotifier {
   Future<void> _onAuthStateChanged(FirebaseUser firebaseUser) async {
     if (firebaseUser == null) {
       _authState = AuthState.Unauthenticated;
-    } else {
+      notifyListeners();
+    } else if (_firebaseUser != firebaseUser) {
       _firebaseUser = firebaseUser;
       _authState = AuthState.Authenticated;
+      notifyListeners();
     }
-    notifyListeners();
   }
 }

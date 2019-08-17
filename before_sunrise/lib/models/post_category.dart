@@ -1,7 +1,7 @@
 import 'package:before_sunrise/import.dart';
 
 class PostCategory {
-  final String userId;
+  final String userID;
   final String categoryId;
   final String title;
   final String description;
@@ -10,7 +10,7 @@ class PostCategory {
   final dynamic lastUpdate;
 
   PostCategory({
-    @required this.userId,
+    @required this.userID,
     @required this.categoryId,
     @required this.title,
     @required this.description,
