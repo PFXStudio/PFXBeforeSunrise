@@ -23,7 +23,7 @@ class Post {
   String type;
   String title;
   String contents;
-  List<String> imageUrls;
+  List<dynamic> imageUrls;
   String youtubeUrl;
   String publishType;
   bool enabledAnonymous;
@@ -60,7 +60,7 @@ class Post {
       "publishType": publishType,
       "enabledAnonymous": enabledAnonymous,
       'created': created,
-      'lastUpdate': DateTime.now().millisecondsSinceEpoch,
+      'lastUpdate': lastUpdate,
     };
   }
 
@@ -70,7 +70,7 @@ class Post {
     String type,
     String title,
     String contents,
-    List<String> imageUrls,
+    List<dynamic> imageUrls,
     String youtubeUrl,
     String publishType,
     bool enabledAnonymous,

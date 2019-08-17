@@ -8,6 +8,7 @@ class PostBloc with ChangeNotifier {
   final ImageRepository _imageRepository;
   final ProfileBloc _profileBloc;
   final ProfileRepository _profileRepository;
+  final FieldValue _firestoreTimestamp;
 
   PostState _postState = PostState.Default;
   PostState _likePostState = PostState.Default;
@@ -30,7 +31,8 @@ class PostBloc with ChangeNotifier {
         _authBloc = AuthBloc.instance(),
         _imageRepository = ImageRepository(),
         _profileBloc = ProfileBloc.instance(),
-        _profileRepository = ProfileRepository() {
+        _profileRepository = ProfileRepository(),
+        _firestoreTimestamp = FieldValue.serverTimestamp() {
     fetchPosts();
     fetchLikedPosts();
   }
@@ -534,6 +536,8 @@ class PostBloc with ChangeNotifier {
 
       final String userID = await _authBloc.getUser;
       post.userID = userID;
+      post.created = _firestoreTimestamp;
+      post.lastUpdate = _firestoreTimestamp;
 
       List<String> imageUrls = [];
       if (datas != null && datas.length > 0) {

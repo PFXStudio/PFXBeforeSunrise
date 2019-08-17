@@ -18,9 +18,6 @@ class _HomePageState extends State<HomePage> {
   final _pageController = PageController(initialPage: 0, keepPage: false);
   PageView _pageView;
 
-  bool _isPined = true;
-  bool _isFavorite = false;
-
   ProfileBloc _profileBloc;
   PostBloc _postBloc;
 
@@ -176,40 +173,8 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           SizedBox(height: 10.0),
-          _isPined
-              ? Flexible(child: LatestPosts(isRefreshing: _isRefreshing))
-              : Container(),
-          // Flexible(
-          //   child: SuggestedPosts(
-          //     isPined: _isPined,
-          //     isFavorite: _isFavorite,
-          //     onExpandSuggestedPostsToggle: (bool isPined) {
-          //       setState(() => _isPined = isPined);
-          //     },
-          //     onIsFavoriteToggle: (bool isFavorite) {
-          //       setState(() => _isFavorite = isFavorite);
-          //     },
-          //   ),
-          // )
+          Flexible(child: FreePost()),
         ],
-      ),
-    );
-  }
-
-  Widget _floatingCollapsed() {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
-      decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
-        // color: Colors.blueGrey,
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0)),
-      ),
-      child: Center(
-        child: Text(
-          'Slide up to post item',
-          style: TextStyle(color: Colors.white),
-        ),
       ),
     );
   }
@@ -303,12 +268,7 @@ class _HomePageState extends State<HomePage> {
             builder: (BuildContext context, PostBloc postBloc, Widget child) {
           _postBloc = postBloc;
           return RefreshIndicator(
-            onRefresh: () async {
-              // setState(() => _isRefreshing = true);
-              // await postBloc.fetchPosts();
-              // await _profileBloc.fetchUserProfileFollowing();
-              // setState(() => _isRefreshing = false);
-            },
+            onRefresh: () async {},
             child: SlidingUpPanel(
               minHeight: 50.0,
               renderPanelSheet: false,
@@ -320,7 +280,7 @@ class _HomePageState extends State<HomePage> {
         }),
         floatingActionButton: FloatingActionButton(
           onPressed: touchedAddButton,
-          tooltip: 'Increment',
+          tooltip: LocalizableLoader.of(context).text("hint_post"),
           child: const Icon(Icons.add),
           backgroundColor: MainTheme.enabledButtonColor,
         ),
