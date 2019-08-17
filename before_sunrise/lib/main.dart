@@ -213,19 +213,6 @@ class _MainAppState extends State<MainApp> {
             });
           }
 
-          if (pathElements[1] == 'post_form') {
-            return MaterialPageRoute(builder: (BuildContext context) {
-              return Consumer<ProfileBloc>(
-                builder: (BuildContext context, ProfileBloc profileBloc,
-                    Widget child) {
-                  final Profile _userProfile = profileBloc.userProfile;
-
-                  return PostForm(userProfile: _userProfile);
-                },
-              );
-            });
-          }
-
           return null;
         },
       ),

@@ -2,6 +2,8 @@
 export 'dart:async';
 export 'dart:convert';
 export 'dart:typed_data';
+export 'dart:io';
+export 'dart:collection';
 
 // package
 export 'package:flutter/foundation.dart';
@@ -29,6 +31,8 @@ export 'package:keyboard_avoider/keyboard_avoider.dart';
 export 'package:flutter_localizations/flutter_localizations.dart';
 export 'package:flutter_xlider/flutter_xlider.dart';
 export 'package:sprintf/sprintf.dart';
+export 'package:modal_progress_hud/modal_progress_hud.dart';
+export 'package:progress_dialog/progress_dialog.dart';
 
 // modules
 export 'consts/const.dart';
@@ -65,6 +69,8 @@ export 'defines/define_images.dart';
 export 'defines/define_strings.dart';
 
 // widgets
+export 'widgets/loadings/loading_contents.dart';
+export 'widgets/loadings/platform_adaptive_progress_indicator.dart';
 export 'widgets/items/thumbnail_item.dart';
 export 'widgets/buttons/flat_icon_text_button.dart';
 export 'widgets/dialogs/dialog_bottom_widget.dart';

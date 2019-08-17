@@ -1,8 +1,7 @@
 import 'package:before_sunrise/import.dart';
 
 class PostForm extends StatefulWidget {
-  Profile userProfile;
-  PostForm({Key key, @required this.userProfile}) : super(key: key);
+  PostForm({Key key}) : super(key: key);
 
   @override
   PostFormState createState() => new PostFormState();
@@ -33,8 +32,31 @@ class PostFormState extends State<PostForm>
 
   @override
   Widget build(BuildContext context) {
-    postBloc = Provider.of<PostBloc>(context);
-    return new Scaffold(
+    return Consumer(
+        builder: (BuildContext context, PostBloc postBloc, Widget child) {
+      this.postBloc = postBloc;
+      print(postBloc.postState);
+      if (postBloc.postState == PostState.Loading) {
+        return ModalProgressHUD(
+            child: buildContents(), color: Colors.black, inAsyncCall: true);
+      }
+
+      if (postBloc.postState == PostState.Success) {
+        SuccessSnackbarWidget().show(_scaffoldKey, "success_post", () {
+          Navigator.pop(context);
+        });
+      }
+
+      if (postBloc.postState == PostState.Failure) {
+        ErrorSnackbarWidget().show(_scaffoldKey, "error_post", null);
+      }
+
+      return buildContents();
+    });
+  }
+
+  Widget buildContents() {
+    return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: PostFormTopBar(),
@@ -524,12 +546,12 @@ class PostFormState extends State<PostForm>
             ),
           ),
           onPressed: () {
-            _requestRegist(context);
+            _requestRegist();
           }),
     );
   }
 
-  void _requestRegist(BuildContext context) {
+  void _requestRegist() {
     if (titleController.text.length <= 0) {
       ErrorSnackbarWidget()
           .show(_scaffoldKey, "error_post_form_empty_title", null);

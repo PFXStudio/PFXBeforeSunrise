@@ -59,6 +59,10 @@ class PostBloc with ChangeNotifier {
     notifyListeners();
   }
 
+  void ready() {
+    _postState = PostState.Default;
+  }
+
   // methods
   Future<List<String>> _uploadPostImage(
       {@required String userID, @required List<ByteData> datas}) async {
@@ -531,9 +535,11 @@ class PostBloc with ChangeNotifier {
       final String userID = await _authBloc.getUser;
       post.userID = userID;
 
-      final List<String> _imageUrls =
-          await _uploadPostImage(userID: userID, datas: datas);
-      post.imageUrls = _imageUrls;
+      List<String> imageUrls = [];
+      if (datas != null && datas.length > 0) {
+        imageUrls = await _uploadPostImage(userID: userID, datas: datas);
+      }
+      post.imageUrls = imageUrls;
 
       await _postRepository.createPost(data: post.data());
 

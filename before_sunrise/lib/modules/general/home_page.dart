@@ -329,6 +329,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> touchedAddButton() async {
-    Navigator.of(context).pushNamed('/post_form');
+    _postBloc.ready();
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => PostForm()),
+    );
   }
 }
