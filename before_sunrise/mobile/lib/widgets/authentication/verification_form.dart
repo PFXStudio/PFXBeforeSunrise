@@ -26,9 +26,11 @@ class _VerificationFormFormState extends State<VerificationForm> {
   }
 
   bool _isLoginButtonEnabled({@required AuthBloc authBloc}) {
-    final bool _isLoading =
-        authBloc.verificationState == VerificationState.Loading ? true : false;
-    return _isLoading ? false : true;
+    // TODO
+    return false;
+    // final bool _isLoading =
+    //     authBloc.verificationState == VerificationState.Loading ? true : false;
+    // return _isLoading ? false : true;
   }
 
   Future<void> _onLoginButtonTapped({@required AuthBloc authBloc}) async {
@@ -42,21 +44,22 @@ class _VerificationFormFormState extends State<VerificationForm> {
     final String phoneNumberWithCode =
         '$_selectedCountryCode${_phoneNumberController.text}';
 
-    final bool _isPhoneNumberVerified = await authBloc.verifyPhoneNumber(
-        phoneNumber: phoneNumberWithCode, countryIsoCode: _countryIsoCode);
+// TODO
+    // final bool _isPhoneNumberVerified = await authBloc.verifyPhoneNumber(
+    //     phoneNumber: phoneNumberWithCode, countryIsoCode: _countryIsoCode);
 
-    if (_isPhoneNumberVerified) {
-      _showMessageSnackBar(
-          content: 'Verification code sent to $phoneNumberWithCode',
-          icon: Icons.check,
-          isError: false);
-    } else {
-      _showMessageSnackBar(
-          content:
-              'Sorry! We could not validate this phone number ($phoneNumberWithCode)',
-          icon: Icons.error_outline,
-          isError: true);
-    }
+    // if (_isPhoneNumberVerified) {
+    //   _showMessageSnackBar(
+    //       content: 'Verification code sent to $phoneNumberWithCode',
+    //       icon: Icons.check,
+    //       isError: false);
+    // } else {
+    //   _showMessageSnackBar(
+    //       content:
+    //           'Sorry! We could not validate this phone number ($phoneNumberWithCode)',
+    //       icon: Icons.error_outline,
+    //       isError: true);
+    // }
   }
 
   _showErrorSnackBar() {
@@ -172,26 +175,28 @@ class _VerificationFormFormState extends State<VerificationForm> {
           decoration: BoxDecoration(
               border: Border.all(width: 2.0, color: Colors.white70),
               borderRadius: BorderRadius.circular(30.0)),
-          child: authBloc.verificationState == VerificationState.Loading
-              ? CircularProgressIndicator()
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'LOGIN',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Icon(
-                      Icons.arrow_right,
-                      size: 30.0,
-                      color: Colors.white,
-                    )
-                  ],
+          // TODO
+          child: // authBloc.verificationState == VerificationState.Loading
+              // ? CircularProgressIndicator()
+              //:
+              Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'LOGIN',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
                 ),
+              ),
+              Icon(
+                Icons.arrow_right,
+                size: 30.0,
+                color: Colors.white,
+              )
+            ],
+          ),
         ),
       ),
     );

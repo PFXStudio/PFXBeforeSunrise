@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 
-class AuthBlocDelegate extends BlocDelegate {
+class SimpleBlocDelegate extends BlocDelegate {
   @override
   void onEvent(Bloc bloc, Object event) {
     super.onEvent(bloc, event);

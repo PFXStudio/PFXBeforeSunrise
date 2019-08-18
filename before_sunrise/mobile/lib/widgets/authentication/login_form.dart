@@ -18,13 +18,16 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   bool _isVerifyCodeButtonEnabled({@required AuthBloc authBloc}) {
-    final bool _isAuthenticating =
-        authBloc.authState == AuthState.Authenticating ? true : false;
-    return _isAuthenticating ? false : true;
+    // TODO :
+    return false;
+    // final bool _isAuthenticating =
+    //     authBloc.authState == AuthState.Authenticating ? true : false;
+    // return _isAuthenticating ? false : true;
   }
 
   void _onRequestANewCode({@required AuthBloc authBloc}) {
-    authBloc.authLevel = AuthLevel.Verification;
+    // TODO :
+    // authBloc.authLevel = AuthLevel.Verification;
   }
 
   Future<void> _onVerifyCodeButtonPressed({@required AuthBloc authBloc}) async {
@@ -33,22 +36,23 @@ class _LoginFormState extends State<LoginForm> {
       return;
     }
 
-    final bool _isAuthenticated = await authBloc.logInWithPhoneNumber(
-        verificationCode: _verificationCodeController.text);
+// TODO
+    // final bool _isAuthenticated = await authBloc.logInWithPhoneNumber(
+    //     verificationCode: _verificationCodeController.text);
 
-    if (_isAuthenticated) {
-      _showMessageSnackBar(
-          content: 'Authentication sucessful',
-          icon: Icons.verified_user,
-          isError: false);
+    // if (_isAuthenticated) {
+    //   _showMessageSnackBar(
+    //       content: 'Authentication sucessful',
+    //       icon: Icons.verified_user,
+    //       isError: false);
 
-      Navigator.of(context).pop();
-    } else {
-      _showMessageSnackBar(
-          content: 'Sorry! Something went wrong!',
-          icon: Icons.error_outline,
-          isError: true);
-    }
+    //   Navigator.of(context).pop();
+    // } else {
+    //   _showMessageSnackBar(
+    //       content: 'Sorry! Something went wrong!',
+    //       icon: Icons.error_outline,
+    //       isError: true);
+    // }
   }
 
   _showErrorSnackBar() {
@@ -195,26 +199,28 @@ class _LoginFormState extends State<LoginForm> {
           decoration: BoxDecoration(
               border: Border.all(width: 2.0, color: Colors.white70),
               borderRadius: BorderRadius.circular(30.0)),
-          child: authBloc.authState == AuthState.Authenticating
-              ? CircularProgressIndicator()
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'VERIFY CODE',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Icon(
-                      Icons.arrow_right,
-                      size: 30.0,
-                      color: Colors.white,
-                    )
-                  ],
+          // TODO
+          child: // authBloc.authState == AuthState.Authenticating
+              // ? CircularProgressIndicator()
+              // :
+              Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'VERIFY CODE',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
                 ),
+              ),
+              Icon(
+                Icons.arrow_right,
+                size: 30.0,
+                color: Colors.white,
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -223,14 +229,16 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     final AuthBloc _authBloc = Provider.of<AuthBloc>(context);
-    final String _authPhoneNumber = _authBloc.authPhoneNumber;
+    // TODO :
+    // final String _authPhoneNumber = _authBloc.authPhoneNumber;
 
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          _buildLoginFormTitle(phoneNumber: _authPhoneNumber),
+          // TODO :
+          _buildLoginFormTitle(phoneNumber: "" /*_authPhoneNumber */),
           SizedBox(height: 30.0),
           _loginFormSubTitle(),
           SizedBox(height: 10.0),
