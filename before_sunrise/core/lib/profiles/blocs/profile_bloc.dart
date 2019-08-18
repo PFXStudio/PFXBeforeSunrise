@@ -1,14 +1,13 @@
-import 'package:before_sunrise/import.dart';
+import 'package:core/import.dart';
 
 enum ProfileState { Default, Loading, Success, Failure }
 
 class ProfileBloc with ChangeNotifier {
   final ProfileRepository _profileRepository;
   final ImageRepository _imageRepository;
-  final AuthBloc _authBloc;
   final PostRepository _postRepository;
 
-  Asset _profileImage;
+  ByteData _profileImage;
   Profile _postProfile;
   Profile _userProfile;
   List<Profile> _profileSubscriptions;
@@ -22,7 +21,6 @@ class ProfileBloc with ChangeNotifier {
   ProfileBloc.instance()
       : _profileRepository = ProfileRepository(),
         _imageRepository = ImageRepository(),
-        _authBloc = AuthBloc.instance(),
         _postRepository = PostRepository() {
     fetchUserProfile();
     fetchUserProfileSubscriptions();
@@ -30,7 +28,7 @@ class ProfileBloc with ChangeNotifier {
 
   // getters
   Future<bool> get hasProfile async {
-    final String _userID = await _authBloc.getUser;
+    final String _userID = await AuthBloc().getUserID();
     final DocumentSnapshot _snapshot =
         await _profileRepository.hasProfile(userID: _userID);
 
@@ -40,7 +38,7 @@ class ProfileBloc with ChangeNotifier {
     return _hasProfile == null || !_hasProfile ? false : true;
   }
 
-  Asset get profileImage => _profileImage;
+  ByteData get profileImage => _profileImage;
   Profile get postProfile => _postProfile;
   Profile get userProfile => _userProfile;
   List<Profile> get profileSubscriptions => _profileSubscriptions;
@@ -55,7 +53,7 @@ class ProfileBloc with ChangeNotifier {
   ProfileState get postProfileState => _postProfileState;
 
   // setters
-  void setProfileImage({@required Asset profileImage}) {
+  void setProfileImage({@required ByteData profileImage}) {
     _profileImage = profileImage;
     notifyListeners();
   }
@@ -97,7 +95,7 @@ class ProfileBloc with ChangeNotifier {
   Future<void> toggleFollowProfilePageStatus(
       {@required Profile profile}) async {
     // final String _profileId = profile.userID;
-    final String _userID = await _authBloc.getUser;
+    final String _userID = await AuthBloc().getUserID();
 
     final String _postUserId = profile.userID;
 
@@ -120,7 +118,7 @@ class ProfileBloc with ChangeNotifier {
   Future<Post> _getPost(
       {@required DocumentSnapshot document,
       @required Profile postUserProfile}) async {
-    final String _currentUserId = await _authBloc.getUser; // get current-user
+    final String _currentUserId = await AuthBloc().getUserID();
 
     DocumentSnapshot _document = document;
 
@@ -208,7 +206,7 @@ class ProfileBloc with ChangeNotifier {
       _profileSubscriptionState = ProfileState.Loading;
       notifyListeners();
 
-      final String _userID = await _authBloc.getUser;
+      final String _userID = await AuthBloc().getUserID();
 
       final QuerySnapshot _snapshot =
           await _profileRepository.fetchProfileSubscriptions(userID: _userID);
@@ -253,7 +251,7 @@ class ProfileBloc with ChangeNotifier {
       // _userProfileState = ProfileState.Loading;
       // notifyListeners();
 
-      final String _userID = await _authBloc.getUser;
+      final String _userID = await AuthBloc().getUserID();
       DocumentSnapshot _snapshot =
           await _profileRepository.fetchProfile(userID: _userID);
 
@@ -357,10 +355,10 @@ class ProfileBloc with ChangeNotifier {
       _profileState = ProfileState.Loading;
       notifyListeners();
 
-      final String _userID = await _authBloc.getUser;
+      final String _userID = await AuthBloc().getUserID();
 
       final String _profileImageUrl = await _imageRepository.saveProfileImage(
-          userID: _userID, asset: profileImage);
+          userID: _userID, imageData: profileImage);
 
       await _profileRepository.createProfile(
         userID: _userID,

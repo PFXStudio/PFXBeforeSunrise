@@ -16,9 +16,10 @@ class AuthPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SizedBox(height: 30.0),
-                authBloc.authLevel == AuthLevel.Verification
-                    ? VerificationForm()
-                    : LoginForm(),
+                // authBloc.authLevel == AuthLevel.Verification
+                //     ? VerificationForm()
+                //     : LoginForm(),
+                LoginForm(),
               ],
             ),
           ),

@@ -1,4 +1,4 @@
-import 'package:before_sunrise/import.dart';
+import 'package:core/import.dart';
 
 class ImageRepository {
   final FirebaseStorage _firebaseStorage;
@@ -6,23 +6,21 @@ class ImageRepository {
   ImageRepository() : _firebaseStorage = FirebaseStorage.instance;
 
   Future<Uint8List> _compressFile(
-      {@required List<int> imageData, int quality = 20}) async {
-    List<int> compressedImageData = await FlutterImageCompress.compressWithList(
-        imageData,
-        quality: quality);
+      {@required List<int> listData, int quality = 20}) async {
+    List<int> compressedImageData =
+        await FlutterImageCompress.compressWithList(listData, quality: quality);
 
     return Uint8List.fromList(compressedImageData);
   }
 
   Future<String> saveProfileImage(
-      {@required String userID, @required Asset asset}) async {
+      {@required String userID, @required ByteData imageData}) async {
     final String fileName = 'profiles/$userID/$userID';
 
-    ByteData byteData = await asset.requestOriginal();
-    List<int> imageData = byteData.buffer.asUint8List();
+    List<int> listData = imageData.buffer.asUint8List();
 
     // compress file
-    Uint8List compressedFile = await _compressFile(imageData: imageData);
+    Uint8List compressedFile = await _compressFile(listData: listData);
 
     StorageReference reference = _firebaseStorage.ref().child(fileName);
     StorageUploadTask uploadTask = reference.putData(compressedFile);
@@ -44,16 +42,15 @@ class ImageRepository {
     }
   }
 
-  Future<String> uploadCategoryImage({@required Asset asset}) async {
+  Future<String> uploadCategoryImage({@required ByteData imageData}) async {
     final uuid = Uuid();
     final String fileName = 'categories/${uuid.v1()}';
 
-    ByteData byteData = await asset.requestOriginal();
-    List<int> imageData = byteData.buffer.asUint8List();
+    List<int> listData = imageData.buffer.asUint8List();
 
     // compress file
     Uint8List compressedFile =
-        await _compressFile(imageData: imageData, quality: 30);
+        await _compressFile(listData: listData, quality: 30);
 
     StorageReference reference = _firebaseStorage.ref().child(fileName);
     StorageUploadTask uploadTask = reference.putData(compressedFile);
@@ -83,11 +80,11 @@ class ImageRepository {
 
     await Future.wait(
             datas.map((ByteData byteData) async {
-              List<int> imageData = byteData.buffer.asUint8List();
+              List<int> listData = byteData.buffer.asUint8List();
 
               // compress file
               Uint8List compressedFile =
-                  await _compressFile(imageData: imageData);
+                  await _compressFile(listData: listData);
 
               final uuid = Uuid();
               final fileName = 'posts/$fileLocation/${uuid.v1()}';

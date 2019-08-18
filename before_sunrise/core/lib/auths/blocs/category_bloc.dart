@@ -1,11 +1,10 @@
-import 'package:before_sunrise/import.dart';
+import 'package:core/import.dart';
 
 enum CategoryState { Default, Loading, Success, Failure }
 // enum CategoryFetchState { Default, Loaded, Failure }
 
 class CategoryBloc with ChangeNotifier {
   final CategoryRepository _categoryRepository;
-  final AuthBloc _authBloc;
   final ImageRepository _imageRepository;
 
   CategoryState _categoryState = CategoryState.Default;
@@ -17,7 +16,6 @@ class CategoryBloc with ChangeNotifier {
 
   CategoryBloc.instance()
       : _categoryRepository = CategoryRepository(),
-        _authBloc = AuthBloc.instance(),
         _imageRepository = ImageRepository() {
     fetchCategories();
   }
@@ -134,15 +132,15 @@ class CategoryBloc with ChangeNotifier {
   Future<bool> createCategory(
       {@required String title,
       @required String description,
-      @required Asset asset}) async {
+      @required ByteData imageData}) async {
     try {
       _categoryState = CategoryState.Loading;
       notifyListeners();
 
-      final String userID = await _authBloc.getUser;
+      final String userID = await AuthBloc().getUserID();
 
       final String _imageUrl =
-          await _imageRepository.uploadCategoryImage(asset: asset);
+          await _imageRepository.uploadCategoryImage(imageData: imageData);
 
       await _categoryRepository.createCategory(
           imageUrl: _imageUrl,

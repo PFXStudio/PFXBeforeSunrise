@@ -1,4 +1,4 @@
-import 'package:before_sunrise/import.dart';
+import 'package:core/import.dart';
 
 class Profile {
   final String userID;

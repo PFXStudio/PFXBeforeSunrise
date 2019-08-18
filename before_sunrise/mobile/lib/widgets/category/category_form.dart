@@ -265,10 +265,11 @@ class _CategoryFormState extends State<CategoryForm> {
       return;
     }
 
+    ByteData imageData = await _images[0].getByteData();
     final bool _isCategoryCreated = await _categoryBloc.createCategory(
       title: _titleController.text,
       description: _descriptionController.text,
-      asset: _images[0],
+      imageData: imageData,
     );
 
     if (_isCategoryCreated) {

@@ -1,18 +1,18 @@
-import 'package:before_sunrise/import.dart';
+import 'package:core/import.dart';
 
-class UserRepository {
-  final FirebaseAuth _firebaseAuth;
+class AuthRepository {
+  final FirebaseAuth firebaseAuth;
 
-  UserRepository({FirebaseAuth firebaseAuth})
-      : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
+  AuthRepository({FirebaseAuth firebaseAuth})
+      : firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
   Future<bool> isSignedIn() async {
-    final FirebaseUser currentUser = await _firebaseAuth.currentUser();
+    final FirebaseUser currentUser = await firebaseAuth.currentUser();
     return currentUser != null ? true : false;
   }
 
   Future<String> getUser() async {
-    return (await _firebaseAuth.currentUser()).phoneNumber ?? '';
+    return (await firebaseAuth.currentUser()).phoneNumber ?? '';
   }
 
   Future<String> verifyPhoneNumber(
@@ -27,7 +27,7 @@ class UserRepository {
 
       final PhoneVerificationCompleted verificationCompleted =
           (AuthCredential phoneAuthCredential) {
-        _firebaseAuth.signInWithCredential(phoneAuthCredential);
+        firebaseAuth.signInWithCredential(phoneAuthCredential);
 
         print('Received phone auth credential: $phoneAuthCredential');
       };
@@ -53,7 +53,7 @@ class UserRepository {
 
       print(phoneNumber);
 
-      await _firebaseAuth.verifyPhoneNumber(
+      await firebaseAuth.verifyPhoneNumber(
           phoneNumber: phoneNumber,
           timeout: const Duration(seconds: 0),
           verificationCompleted: verificationCompleted,
@@ -78,8 +78,8 @@ class UserRepository {
       );
 
       final FirebaseUser user =
-          await _firebaseAuth.signInWithCredential(credential);
-      final FirebaseUser currentUser = await _firebaseAuth.currentUser();
+          await firebaseAuth.signInWithCredential(credential);
+      final FirebaseUser currentUser = await firebaseAuth.currentUser();
       assert(user.uid == currentUser.uid);
 
       user != null
@@ -93,7 +93,9 @@ class UserRepository {
 
   Future<void> signout() {
     return Future.wait([
-      _firebaseAuth.signOut(),
+      firebaseAuth.signOut(),
     ]);
   }
+
+  void test() {}
 }

@@ -52,10 +52,11 @@ class _ProfileFormState extends State<ProfileForm> {
     // setState to update our non-existent appearance.
     if (!mounted) return;
 
+    ByteData imageData = await _images[0].getByteData();
     setState(() {
       _images = resultList;
       if (_images.isNotEmpty)
-        _profileBloc.setProfileImage(profileImage: _images[0]);
+        _profileBloc.setProfileImage(profileImage: imageData);
       _error = error;
     });
   }
@@ -424,7 +425,7 @@ class _ProfileFormState extends State<ProfileForm> {
     _profileBloc = Provider.of<ProfileBloc>(context);
     _authBloc = Provider.of<AuthBloc>(context);
 
-    _authBloc.getUserPhoneNumber.then((String authPhoneNumber) {
+    _authBloc.getPhoneNumber().then((String authPhoneNumber) {
       setState(() => _phoneNumberController.text = authPhoneNumber);
     });
 

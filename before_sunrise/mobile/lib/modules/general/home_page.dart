@@ -249,9 +249,10 @@ class _HomePageState extends State<HomePage> {
         drawer: Drawer(
           child: Center(
             child: RaisedButton(
-              child: Text('Logout'),
-              onPressed: () => _authBloc.signout(),
-            ),
+                child: Text('Logout'),
+                onPressed: () {
+                  // TODO : logout
+                }),
           ),
         ),
         bottomNavigationBar: BottomNavBar(

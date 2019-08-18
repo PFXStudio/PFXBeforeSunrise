@@ -1,10 +1,9 @@
-import 'package:before_sunrise/import.dart';
+import 'package:core/import.dart';
 
 enum PostState { Default, Loading, Success, Failure }
 
 class PostBloc with ChangeNotifier {
   final PostRepository _postRepository;
-  final AuthBloc _authBloc;
   final ImageRepository _imageRepository;
   final ProfileBloc _profileBloc;
   final ProfileRepository _profileRepository;
@@ -28,7 +27,6 @@ class PostBloc with ChangeNotifier {
 
   PostBloc.instance()
       : _postRepository = PostRepository(),
-        _authBloc = AuthBloc.instance(),
         _imageRepository = ImageRepository(),
         _profileBloc = ProfileBloc.instance(),
         _profileRepository = ProfileRepository(),
@@ -82,7 +80,7 @@ class PostBloc with ChangeNotifier {
   }
 
   Future<Post> _getLikePost({String postID}) async {
-    final String _currentUserId = await _authBloc.getUser; // get current-user
+    final String _currentUserId = await AuthBloc().getUserID();
 
     DocumentSnapshot _document =
         await _postRepository.fetchPost(postID: postID);
@@ -120,7 +118,7 @@ class PostBloc with ChangeNotifier {
   }
 
   Future<Post> _getPost({DocumentSnapshot document}) async {
-    final String _currentUserId = await _authBloc.getUser; // get current-user
+    final String _currentUserId = await AuthBloc().getUserID();
 
     DocumentSnapshot _document = document;
 
@@ -160,7 +158,7 @@ class PostBloc with ChangeNotifier {
     final bool _likeStatus = _recievedPost.isLiked;
     final bool _newLikeStatus = !_likeStatus;
 
-    final String _userID = await _authBloc.getUser;
+    final String _userID = await AuthBloc().getUserID();
     final String _postID = _recievedPost.postID;
 
     final int _updatedLikeCount = _newLikeStatus
@@ -265,7 +263,7 @@ class PostBloc with ChangeNotifier {
   Future<void> toggleFollowProfilePageStatus(
       {@required Profile currentPostProfile}) async {
     final Profile _profile = currentPostProfile;
-    final String _currentUserId = await _authBloc.getUser;
+    final String _currentUserId = await AuthBloc().getUserID();
 
     final bool _followingStatus = _profile.isFollowing;
     final bool _newFollowingStatus = !_followingStatus;
@@ -340,7 +338,7 @@ class PostBloc with ChangeNotifier {
       _likePostState = PostState.Loading;
       notifyListeners();
 
-      final String _currentUserId = await _authBloc.getUser;
+      final String _currentUserId = await AuthBloc().getUserID();
       QuerySnapshot _snapshot = await _profileRepository.fetchProfileLikedPosts(
           userID: _currentUserId);
 
@@ -534,7 +532,7 @@ class PostBloc with ChangeNotifier {
       _postState = PostState.Loading;
       notifyListeners();
 
-      final String userID = await _authBloc.getUser;
+      final String userID = await AuthBloc().getUserID();
       post.userID = userID;
       post.created = _firestoreTimestamp;
       post.lastUpdate = _firestoreTimestamp;
