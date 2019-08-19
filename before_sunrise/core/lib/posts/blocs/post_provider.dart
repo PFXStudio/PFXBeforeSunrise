@@ -1,22 +1,20 @@
 import 'package:core/import.dart';
 
 // 정의 한 것만 접근 하도록 인터페이스 관리
-abstract class IAuthProvider {
+abstract class IPostProvider {
   Future<bool> isSingedIn();
   Future<String> getUserID();
   Future<String> getPhoneNumber();
   Future<bool> requestVerifyCode(
-      {@required String phoneNumber,
-      @required String countryIsoCode,
-      @required CreateVerifyCodeCallback callback});
+      {@required String phoneNumber, @required String countryIsoCode});
   Future<String> requestAuth({@required String verificationCode});
   Future<void> requestSignout();
 }
 
-class AuthProvider implements IAuthProvider {
+class PostProvider implements IPostProvider {
   IClient _client;
 
-  AuthProvider() {
+  PostProvider() {
     _client = Injector().currentClient;
   }
 
@@ -46,12 +44,8 @@ class AuthProvider implements IAuthProvider {
 
   @override
   Future<bool> requestVerifyCode(
-      {String phoneNumber,
-      String countryIsoCode,
-      @required CreateVerifyCodeCallback callback}) async {
+      {String phoneNumber, String countryIsoCode}) async {
     return await _client.requestVerifyCode(
-        phoneNumber: phoneNumber,
-        countryIsoCode: countryIsoCode,
-        callback: callback);
+        phoneNumber: phoneNumber, countryIsoCode: countryIsoCode);
   }
 }

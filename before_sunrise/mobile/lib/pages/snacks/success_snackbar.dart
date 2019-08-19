@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 
-class SuccessSnackbarWidget {
-  @override
-  SuccessSnackbarWidget();
+class SuccessSnackbar {
+  static final SuccessSnackbar _successSnarbarSingleton =
+      new SuccessSnackbar._internal();
+  factory SuccessSnackbar() {
+    return _successSnarbarSingleton;
+  }
 
-  void show(
-      GlobalKey<ScaffoldState> key, String message, void Function() callback) {
-    if (key == null) {
+  SuccessSnackbar._internal();
+  GlobalKey<ScaffoldState> _scaffoldKey;
+
+  void initialize(GlobalKey<ScaffoldState> scaffoldKey) {
+    _scaffoldKey = scaffoldKey;
+  }
+
+  void show(String message, void Function() callback) {
+    if (_scaffoldKey == null) {
       return;
     }
 
     final maxDuration = 3;
-    key.currentState
+    _scaffoldKey.currentState
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
@@ -29,7 +38,7 @@ class SuccessSnackbarWidget {
 
     Future.delayed(Duration(seconds: maxDuration), () {
       // deleayed code here
-      key.currentState..hideCurrentSnackBar();
+      _scaffoldKey.currentState..hideCurrentSnackBar();
       if (callback == null) {
         return;
       }

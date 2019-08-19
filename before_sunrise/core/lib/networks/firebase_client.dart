@@ -3,7 +3,7 @@ import 'package:core/networks/i_client.dart';
 
 class FirebaseClient implements IClient {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  @override
+  String _verificationId;
   Future<bool> isSingedIn() async {
     final FirebaseUser currentUser = await _firebaseAuth.currentUser();
     return currentUser != null ? true : false;
@@ -17,15 +17,17 @@ class FirebaseClient implements IClient {
     return (await _firebaseAuth.currentUser()).phoneNumber ?? '';
   }
 
-  Future<String> requestVerifyCode(
-      {@required String phoneNumber, @required String countryIsoCode}) async {
-    String _verificationId;
-
+  Future<bool> requestVerifyCode(
+      {@required String phoneNumber,
+      @required String countryIsoCode,
+      @required CreateVerifyCodeCallback callback}) async {
     try {
       if (!await PhoneNumberUtil.isValidPhoneNumber(
           phoneNumber: phoneNumber, isoCode: countryIsoCode)) {
         throw Exception('Invalid phone number!');
       }
+
+      _verificationId = "";
 
       final PhoneVerificationCompleted verificationCompleted =
           (AuthCredential phoneAuthCredential) {
@@ -38,6 +40,7 @@ class FirebaseClient implements IClient {
           (AuthException authException) {
         print(
             'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
+        callback(null);
       };
 
       final PhoneCodeSent codeSent =
@@ -46,11 +49,13 @@ class FirebaseClient implements IClient {
 
         _verificationId = verificationId;
         print('PhoneCodeSent $_verificationId');
+        callback(_verificationId);
       };
 
       final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
           (String verificationId) {
         _verificationId = verificationId;
+        callback(null);
       };
 
       print(phoneNumber);
@@ -63,19 +68,21 @@ class FirebaseClient implements IClient {
           codeSent: codeSent,
           codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
 
-      return _verificationId;
+      return true;
     } catch (e) {
       print(e.toString());
       throw (e.toString());
     }
   }
 
-  Future<String> requestAuth(
-      {@required String verificationCode,
-      @required String verificationId}) async {
+  Future<String> requestAuth({@required String verificationCode}) async {
     try {
+      if (_verificationId == null || _verificationId.length <= 0) {
+        throw Exception('Invalid _verificationId!');
+      }
+
       final AuthCredential credential = PhoneAuthProvider.getCredential(
-        verificationId: verificationId,
+        verificationId: _verificationId,
         smsCode: verificationCode,
       );
 

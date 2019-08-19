@@ -40,13 +40,6 @@ export 'package:core/import.dart';
 // modules
 export 'utils/before_sunrise.dart';
 export 'consts/const.dart';
-export 'modules/admin/profile_formpage.dart';
-export 'modules/admin/profile_page.dart';
-export 'modules/authentication/auth_page.dart';
-export 'modules/authentication/intro_page.dart';
-export 'modules/general/like_page.dart';
-export 'modules/general/feed_page.dart';
-export 'modules/general/home_page.dart';
 export 'modules/localizables/localizable_delegate.dart';
 export 'modules/localizables/localizable_loader.dart';
 export 'modules/localizables/localizable_manager.dart';
@@ -63,9 +56,16 @@ export 'models/profile_business.dart';
 // screens
 export 'screens/universal/image_card.dart';
 
+// dialogs
+export 'dialogs/error_dialog.dart';
+
 // pages
 export 'pages/auths/auth_page.dart';
 export 'pages/auths/auth_screen.dart';
+export 'pages/snacks/success_snackbar.dart';
+export 'pages/snacks/fail_snackbar.dart';
+export 'pages/profiles/profile_input_page.dart';
+export 'pages/profiles/profile_input_screen.dart';
 
 export 'widgets/loadings/loading_contents.dart';
 export 'widgets/loadings/platform_adaptive_progress_indicator.dart';
@@ -74,28 +74,4 @@ export 'widgets/buttons/flat_icon_text_button.dart';
 export 'widgets/dialogs/dialog_bottom_widget.dart';
 export 'widgets/dialogs/dialog_publish_type_widget.dart';
 export 'widgets/dialogs/dialog_header_widget.dart';
-export 'package:before_sunrise/widgets/dialogs/dialog_post_type.dart';
-export 'widgets/snackbars/error_snackbar_widget.dart';
-export 'widgets/snackbars/success_snackbar_widget.dart';
-
-export 'widgets/authentication/login_form.dart';
-export 'widgets/authentication/verification_form.dart';
-export 'widgets/category/categories.dart';
-export 'widgets/category/category_form.dart';
-export 'widgets/home/bottom_navbar.dart';
-export 'widgets/home/category_navbar.dart';
-export 'widgets/home/suggested_posts.dart';
-export 'widgets/posts/free_post.dart';
-export 'widgets/post_forms/post_form.dart';
-export 'widgets/post_forms/post_form_top_bar.dart';
-export 'widgets/profile/profile_form.dart';
-export 'widgets/profile/profile_navbar.dart';
-export 'widgets/profile/profile_tabpage.dart';
-export 'widgets/profile/subscription_tabpage.dart';
-export 'widgets/profile/timeline-tabpage.dart';
-export 'widgets/shared/post_item_card_default.dart';
-export 'widgets/shared/post_item_card_large.dart';
-export 'widgets/shared/post_item_card_small.dart';
-export 'widgets/shared/profile_subscription_card.dart';
-export 'widgets/shared/search_form.dart';
-export 'widgets/post_details/post_details.dart';
+export 'widgets/dialogs/dialog_post_type.dart';

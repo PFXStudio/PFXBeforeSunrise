@@ -18,14 +18,24 @@ export 'package:shared_preferences/shared_preferences.dart';
 export 'package:uuid/uuid.dart';
 export 'package:bloc/bloc.dart';
 
+export 'networks/firebase_client.dart';
+export 'networks/mock_client.dart';
+export 'networks/i_client.dart';
 export 'delegates/simple_bloc_delegate.dart';
+
 export 'auths/blocs/auth_bloc.dart';
 export 'auths/blocs/auth_event.dart';
 export 'auths/blocs/auth_provider.dart';
 export 'auths/blocs/auth_state.dart';
-export 'networks/firebase_client.dart';
-export 'networks/mock_client.dart';
-export 'networks/i_client.dart';
+export 'profiles/blocs/profile_bloc.dart';
+export 'profiles/blocs/profile_event.dart';
+export 'profiles/blocs/profile_provider.dart';
+export 'profiles/blocs/profile_state.dart';
+export 'posts/blocs/post_bloc.dart';
+export 'posts/blocs/post_event.dart';
+export 'posts/blocs/post_provider.dart';
+export 'posts/blocs/post_state.dart';
+
 export 'utils/dependency_injection.dart';
 export 'models/post_category.dart';
 export 'models/post.dart';
@@ -36,9 +46,4 @@ export 'repositories/image_repository.dart';
 export 'repositories/post_repository.dart';
 export 'repositories/profile_repository.dart';
 export 'repositories/user_repository.dart';
-export 'auths/blocs/auth_bloc.dart';
-export 'auths/blocs/auth_event.dart';
-export 'auths/blocs/auth_state.dart';
-export 'auths/blocs/category_bloc.dart';
-export 'posts/blocs/post_bloc.dart';
 export 'profiles/blocs/profile_bloc.dart';
