@@ -19,7 +19,6 @@ export 'package:uuid/uuid.dart';
 export 'package:bloc/bloc.dart';
 
 export 'networks/config.dart';
-export 'networks/firebase_client.dart';
 export 'networks/mock_client.dart';
 export 'networks/i_client.dart';
 export 'delegates/simple_bloc_delegate.dart';
@@ -37,7 +36,6 @@ export 'posts/blocs/post_event.dart';
 export 'posts/blocs/post_provider.dart';
 export 'posts/blocs/post_state.dart';
 
-export 'utils/dependency_injection.dart';
 export 'models/post_category.dart';
 export 'models/post.dart';
 export 'models/profile.dart';

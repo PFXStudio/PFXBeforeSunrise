@@ -15,35 +15,35 @@ abstract class IAuthProvider {
 }
 
 class AuthProvider implements IAuthProvider {
-  IClient _client;
+  AuthRepository _authRepository;
 
   AuthProvider() {
-    _client = Injector().currentClient;
+    _authRepository = AuthRepository();
   }
 
   @override
   Future<String> getUserID() {
-    return _client.getUserID();
+    return _authRepository.getUserID();
   }
 
   Future<String> getPhoneNumber() {
-    return _client.getPhoneNumber();
+    return _authRepository.getPhoneNumber();
   }
 
   @override
   Future<bool> isSingedIn() {
-    return _client.isSingedIn();
+    return _authRepository.isSingedIn();
   }
 
   @override
   Future<String> requestAuth({String verificationCode, String verificationID}) {
-    return _client.requestAuth(
+    return _authRepository.requestAuth(
         verificationCode: verificationCode, verificationID: verificationID);
   }
 
   @override
   Future<void> requestSignout() {
-    return _client.requestSignout();
+    return _authRepository.requestSignout();
   }
 
   @override
@@ -51,7 +51,7 @@ class AuthProvider implements IAuthProvider {
       {String phoneNumber,
       String countryIsoCode,
       @required CreateVerifyCodeCallback callback}) async {
-    return await _client.requestVerifyCode(
+    return await _authRepository.requestVerifyCode(
         phoneNumber: phoneNumber,
         countryIsoCode: countryIsoCode,
         callback: callback);

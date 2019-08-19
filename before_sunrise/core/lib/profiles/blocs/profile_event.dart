@@ -8,14 +8,18 @@ abstract class ProfileEvent {
 }
 
 class LoadProfileEvent extends ProfileEvent {
+  LoadProfileEvent({@required this.userID});
   @override
   String toString() => 'LoadProfileEvent';
+  final IProfileProvider _profileProvider = ProfileProvider();
+
+  String userID;
 
   @override
   Future<ProfileState> applyAsync(
       {ProfileState currentState, ProfileBloc bloc}) async {
     try {
-      await Future.delayed(new Duration(seconds: 2));
+      await _profileProvider.hasProfile(userID: user)
       return new InProfileState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');

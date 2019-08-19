@@ -8,7 +8,7 @@ abstract class ProfileState extends Equatable {
   ProfileState getStateCopy();
 }
 
-/// UnInitialized
+/// 프로필이 없는 상태(기본)
 class UnProfileState extends ProfileState {
   @override
   String toString() => 'UnProfileState';

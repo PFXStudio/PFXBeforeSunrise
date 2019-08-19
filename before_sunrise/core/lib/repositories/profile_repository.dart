@@ -1,19 +1,37 @@
 import 'package:core/import.dart';
 
 class ProfileRepository {
-  // final Firestore _firestore;
   final CollectionReference _profileCollection;
   final FieldValue _firestoreTimestamp;
 
   ProfileRepository()
-      : _profileCollection = Firestore.instance.collection('profiles'),
+      : _profileCollection = Firestore.instance
+            .collection(Config().root() + "/account/profiles"),
         _firestoreTimestamp = FieldValue.serverTimestamp();
 
   Future<DocumentSnapshot> hasProfile({@required String userID}) async {
     return _profileCollection.document(userID).get();
   }
 
-  Future<bool> isLiked(
+  Future<QuerySnapshot> getProfileFollowers({@required String userID}) {
+    return _profileCollection
+        .document(userID)
+        .collection('followers')
+        .getDocuments();
+  }
+
+  Future<QuerySnapshot> getProfileFollowing({@required String userID}) {
+    return _profileCollection
+        .document(userID)
+        .collection('following')
+        .getDocuments();
+  }
+
+  Future<DocumentSnapshot> fetchProfile({@required String userID}) {
+    return _profileCollection.document(userID).get();
+  }
+
+  Future<bool> isLikeed(
       {@required String postID, @required String userID}) async {
     final DocumentSnapshot snapshot = await _profileCollection
         .document(userID)
@@ -30,7 +48,7 @@ class ProfileRepository {
         .collection('likes')
         .document(postID)
         .setData({
-      'isLiked': true,
+      'isLikeed': true,
       'lastUpdate': _firestoreTimestamp,
     });
   }
@@ -44,39 +62,39 @@ class ProfileRepository {
         .delete();
   }
 
-  Future<bool> isSubscribedTo(
-      {@required String postUserId, @required String userID}) async {
+  Future<bool> isFollowing(
+      {@required String postUserID, @required String userID}) async {
     final DocumentSnapshot snapshot = await _profileCollection
         .document(userID)
         .collection('following')
-        .document(postUserId)
+        .document(postUserID)
         .get();
 
     return snapshot.exists;
   }
 
-  Future<void> subscribeTo(
-      {@required String postUserId, @required String userID}) {
+  Future<void> addToFollowing(
+      {@required String postUserID, @required String userID}) {
     return _profileCollection
         .document(userID)
         .collection('following')
-        .document(postUserId)
+        .document(postUserID)
         .setData({'isFollowing': true});
   }
 
-  Future<void> unsubscribeFrom(
-      {@required String postUserId, @required String userID}) {
+  Future<void> removeFromFollowing(
+      {@required String postUserID, @required String userID}) {
     return _profileCollection
         .document(userID)
         .collection('following')
-        .document(postUserId)
+        .document(postUserID)
         .delete();
   }
 
-  Future<bool> isSubscriber(
-      {@required String postUserId, @required String userID}) async {
+  Future<bool> isFollower(
+      {@required String postUserID, @required String userID}) async {
     final DocumentSnapshot snapshot = await _profileCollection
-        .document(postUserId)
+        .document(postUserID)
         .collection('followers')
         .document(userID)
         .get();
@@ -84,25 +102,25 @@ class ProfileRepository {
     return snapshot.exists;
   }
 
-  Future<void> addToSubscribers(
-      {@required String postUserId, @required String userID}) {
+  Future<void> addToFollowers(
+      {@required String postUserID, @required String userID}) {
     return _profileCollection
-        .document(postUserId)
+        .document(postUserID)
         .collection('followers')
         .document(userID)
         .setData({'isFollowing': true});
   }
 
-  Future<void> removeFromSubscribers(
-      {@required String postUserId, @required String userID}) {
+  Future<void> removeFromFollowers(
+      {@required String postUserID, @required String userID}) {
     return _profileCollection
-        .document(postUserId)
+        .document(postUserID)
         .collection('followers')
         .document(userID)
         .delete();
   }
 
-  Future<QuerySnapshot> fetchProfileLikedPosts({@required String userID}) {
+  Future<QuerySnapshot> fetchLikedPosts({@required String userID}) {
     return _profileCollection
         .document(userID)
         .collection('likes')
@@ -110,46 +128,23 @@ class ProfileRepository {
         .getDocuments();
   }
 
-  Future<QuerySnapshot> fetchProfileSubscribers({@required String userID}) {
-    return _profileCollection
-        .document(userID)
-        .collection('followers')
-        .getDocuments();
+  Future<void> updateProfile({
+    @required String userID,
+    @required Object data,
+  }) {
+    return _profileCollection.document(userID).setData(data, merge: true);
   }
 
-  Future<QuerySnapshot> fetchProfileSubscriptions({@required String userID}) {
-    return _profileCollection
-        .document(userID)
-        .collection('following')
-        .getDocuments();
-  }
+  Future<QuerySnapshot> selectProfile({
+    @required String nickname,
+  }) async {
+    Query query =
+        _profileCollection.where('nickname', isEqualTo: nickname).limit(1);
+    final QuerySnapshot querySnapshot = await query.getDocuments();
+    if (querySnapshot.documents.length <= 0) {
+      return null;
+    }
 
-  Future<DocumentSnapshot> fetchProfile({@required String userID}) {
-    return _profileCollection.document(userID).get();
-  }
-
-  Future<void> createProfile(
-      {@required String userID,
-      @required String firstName,
-      @required String lastName,
-      @required String businessName,
-      @required String businessDescription,
-      @required String phoneNumber,
-      String otherPhoneNumber,
-      @required String businessLocation,
-      @required String profileImageUrl}) {
-    return _profileCollection.document(userID).setData({
-      'firstName': firstName.trim(),
-      'lastName': lastName.trim(),
-      'businessName': businessName,
-      'businessDescription': businessDescription,
-      'phoneNumber': phoneNumber,
-      'otherPhoneNumber': otherPhoneNumber,
-      'businessLocation': businessLocation,
-      'profileImageUrl': profileImageUrl,
-      'hasProfile': true,
-      'created': _firestoreTimestamp,
-      'lastUpdate': _firestoreTimestamp,
-    }, merge: true);
+    return querySnapshot;
   }
 }

@@ -11,7 +11,6 @@ Future<void> main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   BlocSupervisor.delegate = SimpleBlocDelegate();
-  Injector.configure(Flavor.FIREBASE);
 
   runApp(MainApp());
 }
@@ -38,7 +37,6 @@ class _MainAppState extends State<MainApp> {
   }
 
   Widget build(BuildContext context) {
-    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Before Sunrise',

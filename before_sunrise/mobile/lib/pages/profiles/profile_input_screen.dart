@@ -22,7 +22,7 @@ class ProfileInputScreenState extends State<ProfileInputScreen> {
   @override
   void initState() {
     super.initState();
-    this._profileBloc.dispatch(LoadProfileEvent());
+    this._profileBloc.dispatch(LoadProfileEvent(userID: ""));
   }
 
   @override

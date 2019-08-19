@@ -32,6 +32,35 @@ class Profile {
     this.isFollowing = false,
     this.followersCount = 0,
   });
+  void initialize(DocumentSnapshot snapshot) {
+    this.postID = snapshot.documentID;
+    this.userID = snapshot["userID"];
+    this.type = snapshot["type"];
+    this.title = snapshot["title"];
+    this.contents = snapshot["contents"];
+    this.imageUrls = snapshot["imageUrls"];
+    this.youtubeUrl = snapshot["youtubeUrl"];
+    this.publishType = snapshot["publishType"];
+    this.enabledAnonymous = snapshot["enabledAnonymous"];
+    this.created = snapshot["created"];
+    this.lastUpdate = snapshot["lastUpdate"];
+  }
+
+  Object data() {
+    return {
+      "userID": userID,
+      // "postID": postID,
+      "type": type,
+      "title": title,
+      "contents": contents,
+      "imageUrls": imageUrls,
+      "youtubeUrl": youtubeUrl,
+      "publishType": publishType,
+      "enabledAnonymous": enabledAnonymous,
+      'created': created,
+      'lastUpdate': lastUpdate,
+    };
+  }
 
   Profile copyWith(
       {String userID,

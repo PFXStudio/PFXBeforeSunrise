@@ -2,50 +2,126 @@ import 'package:core/import.dart';
 
 // 정의 한 것만 접근 하도록 인터페이스 관리
 abstract class IProfileProvider {
-  Future<bool> isSingedIn();
-  Future<String> getUserID();
-  Future<String> getPhoneNumber();
-  Future<bool> requestVerifyCode(
-      {@required String phoneNumber, @required String countryIsoCode});
-  Future<String> requestAuth({@required String verificationCode});
-  Future<void> requestSignout();
+  Future<DocumentSnapshot> hasProfile({@required String userID});
+  Future<QuerySnapshot> getProfileFollowers({@required String userID});
+  Future<QuerySnapshot> getProfileFollowing({@required String userID});
+  Future<DocumentSnapshot> fetchProfile({@required String userID});
+  Future<bool> isLikeed({@required String postID, @required String userID});
+  Future<void> addToLike({@required String postID, @required String userID});
+  Future<void> removeFromLike(
+      {@required String postID, @required String userID});
+  Future<bool> isFollowing(
+      {@required String postUserID, @required String userID});
+  Future<void> addToFollowing(
+      {@required String postUserID, @required String userID});
+  Future<void> removeFromFollowing(
+      {@required String postUserID, @required String userID});
+  Future<bool> isFollower(
+      {@required String postUserID, @required String userID});
+  Future<void> addToFollowers(
+      {@required String postUserID, @required String userID});
+  Future<void> removeFromFollowers(
+      {@required String postUserID, @required String userID});
+  Future<QuerySnapshot> fetchLikedPosts({@required String userID});
+  Future<void> updateProfile({
+    @required String userID,
+    @required Object data,
+  });
+  Future<QuerySnapshot> selectProfile({
+    @required String nickname,
+  });
 }
 
 class ProfileProvider implements IProfileProvider {
-  IClient _client;
+  ProfileRepository _profileRepository;
 
   ProfileProvider() {
-    _client = Injector().currentClient;
+    _profileRepository = ProfileRepository();
   }
 
   @override
-  Future<String> getUserID() {
-    return _client.getUserID();
-  }
-
-  Future<String> getPhoneNumber() {
-    return _client.getPhoneNumber();
+  Future<void> addToFollowers({String postUserID, String userID}) {
+    return _profileRepository.addToFollowers(
+        postUserID: postUserID, userID: userID);
   }
 
   @override
-  Future<bool> isSingedIn() {
-    return _client.isSingedIn();
+  Future<void> addToFollowing({String postUserID, String userID}) {
+    return _profileRepository.addToFollowing(
+        postUserID: postUserID, userID: userID);
   }
 
   @override
-  Future<String> requestAuth({String verificationCode}) {
-    return _client.requestAuth(verificationCode: verificationCode);
+  Future<void> addToLike({String postID, String userID}) {
+    return _profileRepository.addToLike(postID: postID, userID: userID);
   }
 
   @override
-  Future<void> requestSignout() {
-    return _client.requestSignout();
+  Future<QuerySnapshot> fetchLikedPosts({String userID}) {
+    return _profileRepository.fetchLikedPosts(userID: userID);
   }
 
   @override
-  Future<bool> requestVerifyCode(
-      {String phoneNumber, String countryIsoCode}) async {
-    return await _client.requestVerifyCode(
-        phoneNumber: phoneNumber, countryIsoCode: countryIsoCode);
+  Future<DocumentSnapshot> fetchProfile({String userID}) {
+    return _profileRepository.fetchProfile(userID: userID);
+  }
+
+  @override
+  Future<QuerySnapshot> getProfileFollowers({String userID}) {
+    return _profileRepository.getProfileFollowers(userID: userID);
+  }
+
+  @override
+  Future<QuerySnapshot> getProfileFollowing({String userID}) {
+    return _profileRepository.getProfileFollowing(userID: userID);
+  }
+
+  @override
+  Future<DocumentSnapshot> hasProfile({String userID}) {
+    return _profileRepository.hasProfile(userID: userID);
+  }
+
+  @override
+  Future<bool> isFollower({String postUserID, String userID}) {
+    return _profileRepository.isFollower(
+        postUserID: postUserID, userID: userID);
+  }
+
+  @override
+  Future<bool> isFollowing({String postUserID, String userID}) {
+    return _profileRepository.isFollowing(
+        postUserID: postUserID, userID: userID);
+  }
+
+  @override
+  Future<bool> isLikeed({String postID, String userID}) {
+    return _profileRepository.isLikeed(postID: postID, userID: userID);
+  }
+
+  @override
+  Future<void> removeFromFollowers({String postUserID, String userID}) {
+    return _profileRepository.removeFromFollowers(
+        postUserID: postUserID, userID: userID);
+  }
+
+  @override
+  Future<void> removeFromFollowing({String postUserID, String userID}) {
+    return _profileRepository.removeFromFollowing(
+        postUserID: postUserID, userID: userID);
+  }
+
+  @override
+  Future<void> removeFromLike({String postID, String userID}) {
+    return _profileRepository.removeFromLike(postID: postID, userID: userID);
+  }
+
+  @override
+  Future<QuerySnapshot> selectProfile({String nickname}) {
+    return _profileRepository.selectProfile(nickname: nickname);
+  }
+
+  @override
+  Future<void> updateProfile({String userID, Object data}) {
+    return _profileRepository.updateProfile(userID: userID, data: data);
   }
 }
