@@ -12,6 +12,7 @@ abstract class IClient {
       @required CreateVerifyCodeCallback callback});
   Future<String> requestAuth({
     @required String verificationCode,
+    @required String verificationID,
   });
   Future<void> requestSignout();
 }

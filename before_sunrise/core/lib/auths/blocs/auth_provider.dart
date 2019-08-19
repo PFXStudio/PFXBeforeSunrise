@@ -9,7 +9,8 @@ abstract class IAuthProvider {
       {@required String phoneNumber,
       @required String countryIsoCode,
       @required CreateVerifyCodeCallback callback});
-  Future<String> requestAuth({@required String verificationCode});
+  Future<String> requestAuth(
+      {@required String verificationCode, @required String verificationID});
   Future<void> requestSignout();
 }
 
@@ -35,8 +36,9 @@ class AuthProvider implements IAuthProvider {
   }
 
   @override
-  Future<String> requestAuth({String verificationCode}) {
-    return _client.requestAuth(verificationCode: verificationCode);
+  Future<String> requestAuth({String verificationCode, String verificationID}) {
+    return _client.requestAuth(
+        verificationCode: verificationCode, verificationID: verificationID);
   }
 
   @override

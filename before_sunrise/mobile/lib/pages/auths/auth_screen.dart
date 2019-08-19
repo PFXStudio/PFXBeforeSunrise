@@ -20,10 +20,12 @@ class AuthScreenState extends State<AuthScreen> {
   AuthScreenState(this._authBloc);
 
   final _phoneNumberController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _phoneNumberFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _verifyFormKey = GlobalKey<FormState>();
 
   String _selectedCountryCode = "+82";
   String _countryIsoCode = "KR";
+  String _verificationID = "";
 
   final TextEditingController _verificationCodeController =
       TextEditingController();
@@ -43,7 +45,12 @@ class AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return BlocListener(
         bloc: widget._authBloc,
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is InAuthState) {
+            Navigator.pushReplacementNamed(context, ProfileInputPage.routeName);
+            return;
+          }
+        },
         child: BlocBuilder<AuthBloc, AuthState>(
             bloc: widget._authBloc,
             builder: (
@@ -54,10 +61,6 @@ class AuthScreenState extends State<AuthScreen> {
                 return _buildVerifyAuthStateScreen();
               }
 
-              if (currentState is InAuthState) {
-                Navigator.pushNamed(context, ProfileInputPage.routeName);
-                return Container();
-              }
               if (currentState is ErrorAuthState) {
                 return _buildErrorAuthState(currentState.errorMessage);
               }
@@ -83,7 +86,7 @@ class AuthScreenState extends State<AuthScreen> {
                   children: <Widget>[
                 SizedBox(height: 30.0),
                 Form(
-                  key: _formKey,
+                  key: _phoneNumberFormKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -112,7 +115,7 @@ class AuthScreenState extends State<AuthScreen> {
       return;
     }
 
-    if (!_formKey.currentState.validate()) return;
+    if (!_phoneNumberFormKey.currentState.validate()) return;
 
     final String phoneNumberWithCode =
         '$_selectedCountryCode${_phoneNumberController.text}';
@@ -120,11 +123,13 @@ class AuthScreenState extends State<AuthScreen> {
     this._authBloc.dispatch(CreateVerifyCodeEvent(
         phoneNumber: phoneNumberWithCode,
         countryIsoCode: _countryIsoCode,
-        callback: (result) {
-          if (result == null) {
+        callback: (verificationID) {
+          if (verificationID == null) {
             _authBloc.dispatch(ErrorAuthEvent(errorCode: "E122334"));
             return;
           }
+
+          _verificationID = verificationID;
         }));
   }
 
@@ -244,7 +249,7 @@ class AuthScreenState extends State<AuthScreen> {
                   children: <Widget>[
                 SizedBox(height: 30.0),
                 Form(
-                  key: _formKey,
+                  key: _verifyFormKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -265,13 +270,19 @@ class AuthScreenState extends State<AuthScreen> {
   }
 
   Future<void> _touchedVerifyButton() async {
-    if (!_formKey.currentState.validate()) {
+    if (!_verifyFormKey.currentState.validate()) {
       FailSnackbar().show("E22222", () {});
       return;
     }
 
-    this._authBloc.dispatch(
-        VerifyCodeEvent(verificationCode: _verificationCodeController.text));
+    if (_verificationID == null || _verificationID.length <= 0) {
+      FailSnackbar().show("E22223", () {});
+      return;
+    }
+
+    this._authBloc.dispatch(VerifyCodeEvent(
+        verificationCode: _verificationCodeController.text,
+        verificationID: _verificationID));
   }
 
   Widget _buildVerifyFormTitle() {
@@ -427,7 +438,6 @@ class AuthScreenState extends State<AuthScreen> {
                   children: <Widget>[
                 SizedBox(height: 30.0),
                 Form(
-                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[

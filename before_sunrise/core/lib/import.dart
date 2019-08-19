@@ -18,6 +18,7 @@ export 'package:shared_preferences/shared_preferences.dart';
 export 'package:uuid/uuid.dart';
 export 'package:bloc/bloc.dart';
 
+export 'networks/config.dart';
 export 'networks/firebase_client.dart';
 export 'networks/mock_client.dart';
 export 'networks/i_client.dart';

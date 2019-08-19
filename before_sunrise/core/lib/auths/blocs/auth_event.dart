@@ -57,18 +57,19 @@ class CreateVerifyCodeEvent extends AuthEvent {
 }
 
 class VerifyCodeEvent extends AuthEvent {
-  VerifyCodeEvent({@required this.verificationCode, this.verificationId});
+  VerifyCodeEvent(
+      {@required this.verificationCode, @required this.verificationID});
   @override
   String toString() => 'VerifyCodeEvent';
   final IAuthProvider _authProvider = AuthProvider();
   final String verificationCode;
-  final String verificationId;
+  final String verificationID;
 
   @override
   Future<AuthState> applyAsync({AuthState currentState, AuthBloc bloc}) async {
     try {
-      String result =
-          await _authProvider.requestAuth(verificationCode: verificationCode);
+      String result = await _authProvider.requestAuth(
+          verificationCode: verificationCode, verificationID: verificationID);
 
       if (result == null || result.length <= 0) {
         return ErrorAuthState("");

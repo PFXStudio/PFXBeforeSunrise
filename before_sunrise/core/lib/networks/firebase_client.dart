@@ -3,7 +3,14 @@ import 'package:core/networks/i_client.dart';
 
 class FirebaseClient implements IClient {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  String _verificationId;
+  final CollectionReference _profileCollection;
+  final FieldValue _firestoreTimestamp;
+
+  FirebaseClient()
+      : _profileCollection = Firestore.instance
+            .collection(Config().root() + "/account/profiles"),
+        _firestoreTimestamp = FieldValue.serverTimestamp();
+
   Future<bool> isSingedIn() async {
     final FirebaseUser currentUser = await _firebaseAuth.currentUser();
     return currentUser != null ? true : false;
@@ -27,8 +34,6 @@ class FirebaseClient implements IClient {
         throw Exception('Invalid phone number!');
       }
 
-      _verificationId = "";
-
       final PhoneVerificationCompleted verificationCompleted =
           (AuthCredential phoneAuthCredential) {
         _firebaseAuth.signInWithCredential(phoneAuthCredential);
@@ -44,17 +49,15 @@ class FirebaseClient implements IClient {
       };
 
       final PhoneCodeSent codeSent =
-          (String verificationId, [int forceResendingToken]) async {
+          (String verificationID, [int forceResendingToken]) async {
         print('Please check your phone for the verification code.');
 
-        _verificationId = verificationId;
-        print('PhoneCodeSent $_verificationId');
-        callback(_verificationId);
+        print('PhoneCodeSent $verificationID');
+        callback(verificationID);
       };
 
       final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
           (String verificationId) {
-        _verificationId = verificationId;
         callback(null);
       };
 
@@ -75,14 +78,16 @@ class FirebaseClient implements IClient {
     }
   }
 
-  Future<String> requestAuth({@required String verificationCode}) async {
+  Future<String> requestAuth(
+      {@required String verificationCode,
+      @required String verificationID}) async {
     try {
-      if (_verificationId == null || _verificationId.length <= 0) {
-        throw Exception('Invalid _verificationId!');
+      if (verificationID == null || verificationID.length <= 0) {
+        throw Exception('Invalid verificationID!');
       }
 
       final AuthCredential credential = PhoneAuthProvider.getCredential(
-        verificationId: _verificationId,
+        verificationId: verificationID,
         smsCode: verificationCode,
       );
 
@@ -103,4 +108,147 @@ class FirebaseClient implements IClient {
       _firebaseAuth.signOut(),
     ]);
   }
+
+  /////////////////////////////////// Profiles
+  Future<DocumentSnapshot> hasProfile(String userID) async {
+    return _profileCollection.document(userID).get();
+  }
+
+  Future<QuerySnapshot> getProfileFollowers({@required String userID}) {
+    return _profileCollection
+        .document(userID)
+        .collection('followers')
+        .getDocuments();
+  }
+
+  Future<QuerySnapshot> getProfileFollowing({@required String userID}) {
+    return _profileCollection
+        .document(userID)
+        .collection('following')
+        .getDocuments();
+  }
+
+  Future<DocumentSnapshot> fetchProfile({@required String userID}) {
+    return _profileCollection.document(userID).get();
+  }
+
+  Future<bool> isLikeed(
+      {@required String postID, @required String userID}) async {
+    final DocumentSnapshot snapshot = await _profileCollection
+        .document(userID)
+        .collection('likes')
+        .document(postID)
+        .get();
+
+    return snapshot.exists;
+  }
+
+  Future<void> addToLike({@required String postID, @required String userID}) {
+    return _profileCollection
+        .document(userID)
+        .collection('likes')
+        .document(postID)
+        .setData({
+      'isLikeed': true,
+      'lastUpdate': _firestoreTimestamp,
+    });
+  }
+
+  Future<void> removeFromLike(
+      {@required String postID, @required String userID}) {
+    return _profileCollection
+        .document(userID)
+        .collection('likes')
+        .document(postID)
+        .delete();
+  }
+
+  Future<bool> isFollowing(
+      {@required String postUserId, @required String userID}) async {
+    final DocumentSnapshot snapshot = await _profileCollection
+        .document(userID)
+        .collection('following')
+        .document(postUserId)
+        .get();
+
+    return snapshot.exists;
+  }
+
+  Future<void> addToFollowing(
+      {@required String postUserId, @required String userID}) {
+    return _profileCollection
+        .document(userID)
+        .collection('following')
+        .document(postUserId)
+        .setData({'isFollowing': true});
+  }
+
+  Future<void> removeFromFollowing(
+      {@required String postUserId, @required String userID}) {
+    return _profileCollection
+        .document(userID)
+        .collection('following')
+        .document(postUserId)
+        .delete();
+  }
+
+  Future<bool> isFollower(
+      {@required String postUserId, @required String userID}) async {
+    final DocumentSnapshot snapshot = await _profileCollection
+        .document(postUserId)
+        .collection('followers')
+        .document(userID)
+        .get();
+
+    return snapshot.exists;
+  }
+
+  Future<void> addToFollowers(
+      {@required String postUserId, @required String userID}) {
+    return _profileCollection
+        .document(postUserId)
+        .collection('followers')
+        .document(userID)
+        .setData({'isFollowing': true});
+  }
+
+  Future<void> removeFromFollowers(
+      {@required String postUserId, @required String userID}) {
+    return _profileCollection
+        .document(postUserId)
+        .collection('followers')
+        .document(userID)
+        .delete();
+  }
+
+  Future<QuerySnapshot> fetchLikedPosts({@required String userID}) {
+    return _profileCollection
+        .document(userID)
+        .collection('likes')
+        .orderBy('lastUpdate', descending: true)
+        .getDocuments();
+  }
+
+  Future<void> updateProfile({
+    @required String userID,
+    @required Object data,
+  }) {
+    return _profileCollection.document(userID).setData(data, merge: true);
+  }
+
+  Future<QuerySnapshot> selectProfile({
+    @required String nickname,
+  }) async {
+    Query query =
+        _profileCollection.where('nickname', isEqualTo: nickname).limit(1);
+    final QuerySnapshot querySnapshot = await query.getDocuments();
+    if (querySnapshot.documents.length <= 0) {
+      return null;
+    }
+
+    return querySnapshot;
+  }
+
+  /////////////////////////////////// Profiles
+
 }
