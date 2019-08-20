@@ -2,8 +2,12 @@ import 'package:core/import.dart';
 
 class PostRepository {
   final CollectionReference _postCollection;
+  final FieldValue _firestoreTimestamp;
 
-  PostRepository() : _postCollection = Firestore.instance.collection('posts');
+  PostRepository()
+      : _postCollection =
+            Firestore.instance.collection(Config().root() + "/free/posts"),
+        _firestoreTimestamp = FieldValue.serverTimestamp();
 
   Future<bool> isLiked(
       {@required String postID, @required String userID}) async {

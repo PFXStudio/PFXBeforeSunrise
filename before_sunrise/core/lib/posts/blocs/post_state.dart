@@ -1,3 +1,4 @@
+import 'package:core/import.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -9,7 +10,7 @@ abstract class PostState extends Equatable {
   PostState getStateCopy();
 }
 
-/// UnInitialized
+/// 정보 요청
 class UnPostState extends PostState {
   @override
   String toString() => 'UnPostState';
@@ -20,14 +21,16 @@ class UnPostState extends PostState {
   }
 }
 
-/// Initialized
+/// 정보를 불러 온 상태
 class InPostState extends PostState {
+  InPostState({this.posts});
   @override
   String toString() => 'InPostState';
+  final List<Post> posts;
 
   @override
   PostState getStateCopy() {
-    return InPostState();
+    return InPostState(posts: this.posts);
   }
 }
 

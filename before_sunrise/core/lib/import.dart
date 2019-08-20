@@ -44,5 +44,4 @@ export 'repositories/category_repository.dart';
 export 'repositories/image_repository.dart';
 export 'repositories/post_repository.dart';
 export 'repositories/profile_repository.dart';
-export 'repositories/user_repository.dart';
 export 'profiles/blocs/profile_bloc.dart';

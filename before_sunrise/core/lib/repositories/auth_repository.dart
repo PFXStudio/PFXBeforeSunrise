@@ -250,7 +250,4 @@ class AuthRepository {
 
     return querySnapshot;
   }
-
-  /////////////////////////////////// Profiles
-
 }

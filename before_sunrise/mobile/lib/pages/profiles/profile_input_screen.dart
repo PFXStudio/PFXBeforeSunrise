@@ -36,7 +36,7 @@ class ProfileInputScreenState extends State<ProfileInputScreen> {
         bloc: widget._profileBloc,
         listener: (context, state) async {
           if (state is InProfileState) {
-            Navigator.pushReplacementNamed(context, PostPage.routeName);
+            Navigator.pushReplacementNamed(context, HomePage.routeName);
 
             return;
           }

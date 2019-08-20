@@ -3,30 +3,33 @@ import 'package:before_sunrise/import.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
     Key key,
-    @required PostBloc postBloc,
-  })  : _postBloc = postBloc,
+    @required HomeBloc homeBloc,
+    @required PanelController panelController,
+  })  : _homeBloc = homeBloc,
+        _panelController = panelController,
         super(key: key);
 
-  final PostBloc _postBloc;
+  final HomeBloc _homeBloc;
+  final PanelController _panelController;
 
   @override
   HomeScreenState createState() {
-    return new HomeScreenState(_postBloc);
+    return new HomeScreenState(_homeBloc);
   }
+
+  // void changeActivePage(int index) {
+  //   _pageController.animateToPage(index,
+  //       duration: Duration(milliseconds: 500), curve: Curves.ease);
+  // }
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  final PostBloc _postBloc;
-  HomeScreenState(this._postBloc);
+  final HomeBloc _homeBloc;
+  HomeScreenState(this._homeBloc);
 
-  PopupMenu _menu;
-
-  int _activePageIndex = 0;
-  final _pageController = PageController(initialPage: 0, keepPage: false);
   PageView _pageView;
 
-  bool _isRefreshing = false;
-
+  final _pageController = PageController(initialPage: 0, keepPage: false);
   @override
   void initState() {
     super.initState();
@@ -49,42 +52,6 @@ class HomeScreenState extends State<HomeScreen> {
     print('Menu is closed');
   }
 
-  void _openCustomMenu() {
-    _menu = PopupMenu(
-        // backgroundColor: Theme.of(context).primaryColor,
-        // lineColor: Theme.of(context).accentColor,
-        maxColumn: 1,
-        items: [
-          MenuItem(
-              title: 'Profile',
-              image: Icon(
-                Icons.person_outline,
-                color: Colors.white,
-              )),
-          MenuItem(
-              title: 'Categories',
-              image: Icon(
-                Icons.category,
-                color: Colors.white,
-              )),
-          MenuItem(
-              title: 'Settings',
-              image: Icon(
-                Icons.settings,
-                color: Colors.white,
-              )),
-          MenuItem(
-              title: 'Signout',
-              image: Icon(
-                Icons.exit_to_app,
-                color: Colors.white,
-              )),
-        ],
-        onClickMenu: (result) {},
-        onDismiss: onDismiss);
-    // _menu.show(widgetKey: _menuButtonKey);
-  }
-
   Container _buildPageBody(double _deviceHeight, double _deviceWidth) {
     return Container(
       height: _deviceHeight,
@@ -97,101 +64,50 @@ class HomeScreenState extends State<HomeScreen> {
             },
           ),
           SizedBox(height: 10.0),
-          Flexible(child: Container()),
+          Flexible(child: FreePostPage()),
         ],
       ),
     );
   }
 
-  Future<bool> _showExitAlertDialog() {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Close Application'),
-            content: Text('Are you sure of exiting FASHIONet?'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              RaisedButton(
-                  child: Text('Exit'),
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                  }),
-            ],
-          );
-        });
-  }
-
-  @override
   Widget build(BuildContext context) {
     double _deviceHeight = MediaQuery.of(context).size.height;
     double _deviceWidth = MediaQuery.of(context).size.width;
     _pageView = PageView(
       controller: _pageController,
-      onPageChanged: (int index) async {
-        setState(() {
-          _activePageIndex = index;
-
-          _isRefreshing = true;
-        });
-
-        if (index == 0) {
-          // await _profileBloc.fetchUserProfileSubscriptions();
-        }
-        setState(() => _isRefreshing = false);
-      },
+      onPageChanged: (int index) async {},
       children: <Widget>[
         _buildPageBody(_deviceHeight, _deviceWidth),
       ],
     );
-
-    return Consumer<PostBloc>(
-          builder: (BuildContext context, PostBloc postBloc, Widget child) {
-        _postBloc = postBloc;
-        return RefreshIndicator(
-          onRefresh: () async {},
-          child: SlidingUpPanel(
-            minHeight: 50.0,
-            renderPanelSheet: false,
-            controller: _panelController,
-            body: _pageView,
-            panel: Container(),
-          ),
-        );
-      }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: touchedAddButton,
-        tooltip: LocalizableLoader.of(context).text("hint_post"),
-        child: const Icon(Icons.add),
-        backgroundColor: MainTheme.enabledButtonColor,
-      ),
-    );
-  }
-
-  Widget build(BuildContext context) {
     return BlocListener(
-        bloc: widget._postBloc,
+        bloc: widget._homeBloc,
         listener: (context, state) async {},
-        child: BlocBuilder<PostBloc, PostState>(
-            bloc: widget._postBloc,
+        child: BlocBuilder<HomeBloc, HomeState>(
+            bloc: widget._homeBloc,
             builder: (
               BuildContext context,
-              PostState currentState,
+              HomeState currentState,
             ) {
-              if (currentState is UnPostState) {
-                return Center(
-                  child: CircularProgressIndicator(),
+              if (currentState is PostTabState) {
+                return RefreshIndicator(
+                  onRefresh: () async {},
+                  child: SlidingUpPanel(
+                    minHeight: 50.0,
+                    renderPanelSheet: false,
+                    controller: widget._panelController,
+                    body: _pageView,
+                    panel: Container(),
+                  ),
                 );
               }
-              if (currentState is ErrorPostState) {
+              if (currentState is ProfileTabState) {
+                return Container();
+              }
+              if (currentState is ErrorHomeState) {
                 return new Container(
                     child: new Center(
-                  child: new Text(currentState.errorMessage ?? 'Error'),
+                  child: new Text('Error'),
                 ));
               }
               return new Container(
@@ -199,12 +115,5 @@ class HomeScreenState extends State<HomeScreen> {
                 child: new Text("В разработке"),
               ));
             }));
-  }
-
-  Future<void> touchedAddButton() async {
-    // _postBloc.ready();
-    // Navigator.of(context).push(
-    //   MaterialPageRoute<void>(builder: (_) => PostForm()),
-    // );
   }
 }
