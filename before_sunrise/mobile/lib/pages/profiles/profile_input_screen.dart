@@ -1,13 +1,13 @@
 import 'package:before_sunrise/import.dart';
 
 class ProfileInputScreen extends StatefulWidget {
-  const ProfileInputScreen({
-    Key key,
-    @required ProfileBloc profileBloc,
-  })  : _profileBloc = profileBloc,
+  const ProfileInputScreen(
+      {Key key, @required ProfileBloc profileBloc, @required this.userID})
+      : _profileBloc = profileBloc,
         super(key: key);
 
   final ProfileBloc _profileBloc;
+  final String userID;
 
   @override
   ProfileInputScreenState createState() {
@@ -22,7 +22,7 @@ class ProfileInputScreenState extends State<ProfileInputScreen> {
   @override
   void initState() {
     super.initState();
-    this._profileBloc.dispatch(LoadProfileEvent(userID: ""));
+    this._profileBloc.dispatch(LoadProfileEvent(userID: widget.userID));
   }
 
   @override
@@ -32,27 +32,36 @@ class ProfileInputScreenState extends State<ProfileInputScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileBloc, ProfileState>(
+    return BlocListener(
         bloc: widget._profileBloc,
-        builder: (
-          BuildContext context,
-          ProfileState currentState,
-        ) {
-          if (currentState is UnProfileState) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+        listener: (context, state) async {
+          if (state is InProfileState) {
+            Navigator.pushReplacementNamed(context, PostPage.routeName);
+
+            return;
           }
-          if (currentState is ErrorProfileState) {
-            return new Container(
-                child: new Center(
-              child: new Text(currentState.errorMessage ?? 'Error'),
-            ));
-          }
-          return new Container(
-              child: new Center(
-            child: new Text("В разработке"),
-          ));
-        });
+        },
+        child: BlocBuilder<ProfileBloc, ProfileState>(
+            bloc: widget._profileBloc,
+            builder: (
+              BuildContext context,
+              ProfileState currentState,
+            ) {
+              if (currentState is UnProfileState) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (currentState is ErrorProfileState) {
+                return new Container(
+                    child: new Center(
+                  child: new Text(currentState.errorMessage ?? 'Error'),
+                ));
+              }
+              return new Container(
+                  child: new Center(
+                child: new Text("В разработке"),
+              ));
+            }));
   }
 }

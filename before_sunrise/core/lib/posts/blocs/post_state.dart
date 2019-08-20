@@ -35,7 +35,7 @@ class ErrorPostState extends PostState {
   final String errorMessage;
 
   ErrorPostState(this.errorMessage);
-  
+
   @override
   String toString() => 'ErrorPostState';
 

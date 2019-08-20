@@ -30,6 +30,9 @@ abstract class IProfileProvider {
   Future<QuerySnapshot> selectProfile({
     @required String nickname,
   });
+  Future<void> removeProfile({
+    @required String userID,
+  });
 }
 
 class ProfileProvider implements IProfileProvider {
@@ -123,5 +126,10 @@ class ProfileProvider implements IProfileProvider {
   @override
   Future<void> updateProfile({String userID, Object data}) {
     return _profileRepository.updateProfile(userID: userID, data: data);
+  }
+
+  @override
+  Future<void> removeProfile({String userID}) {
+    return _profileRepository.removeProfile(userID: userID);
   }
 }

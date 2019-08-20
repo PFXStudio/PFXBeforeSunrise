@@ -1,34 +1,29 @@
 import 'package:before_sunrise/import.dart';
-import 'package:before_sunrise/pages/homes/home_bottom_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
     Key key,
-  }) : super(key: key);
+    @required PostBloc postBloc,
+  })  : _postBloc = postBloc,
+        super(key: key);
+
+  final PostBloc _postBloc;
 
   @override
   HomeScreenState createState() {
-    return new HomeScreenState();
+    return new HomeScreenState(_postBloc);
   }
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  HomeScreenState();
+  final PostBloc _postBloc;
+  HomeScreenState(this._postBloc);
 
   PopupMenu _menu;
-  GlobalKey _menuButtonKey = GlobalKey();
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  final PanelController _panelController = PanelController();
-
-  // CategoryBloc _categoryBloc;
 
   int _activePageIndex = 0;
   final _pageController = PageController(initialPage: 0, keepPage: false);
   PageView _pageView;
-
-  ProfileBloc _profileBloc;
-  PostBloc _postBloc;
 
   bool _isRefreshing = false;
 
@@ -36,20 +31,11 @@ class HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    // initializing menu
-    _openCustomMenu();
-
-    _profileBloc = Provider.of<ProfileBloc>(context, listen: false);
-    _postBloc = Provider.of<PostBloc>(context, listen: false);
-
-    _onWidgetDidBuild(() {
-      // _profileBloc.fetchUserProfileSubscriptions();
-    });
+    _onWidgetDidBuild(() {});
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
     super.dispose();
   }
 
@@ -99,60 +85,6 @@ class HomeScreenState extends State<HomeScreen> {
     // _menu.show(widgetKey: _menuButtonKey);
   }
 
-  Widget _buildAppbarActionWidgets(
-      {@required BuildContext context,
-      @required int index,
-      @required IconData icon}) {
-    double _deviceWidth = MediaQuery.of(context).size.width;
-
-    return InkWell(
-      key: index == 1 ? _menuButtonKey : null,
-      onTap: () {
-        if (index == 0) {
-          Navigator.of(context).pushNamed('/search');
-        } else if (index == 1) {
-          // _openCustomMenu();
-          Rect rect = PopupMenu.getWidgetGlobalRect(_menuButtonKey);
-          _menu.show(rect: rect, widgetKey: _menuButtonKey);
-        }
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(2.0),
-        child: Icon(
-          icon,
-          size: 30.0,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      elevation: 0.0,
-      automaticallyImplyLeading: false,
-      backgroundColor: MainTheme.appBarColor,
-      leading: IconButton(
-        icon: Icon(
-          Icons.menu,
-          size: 30.0,
-          color: Colors.white,
-        ),
-        onPressed: () => _scaffoldKey.currentState.openDrawer(),
-      ),
-      title: Text(
-        LocalizableLoader.of(context).text("app_title"),
-        style: MainTheme.navTitleTextStyle,
-      ),
-      actions: <Widget>[
-        _buildAppbarActionWidgets(
-            context: context, index: 1, icon: Icons.more_vert),
-        SizedBox(width: 10.0)
-        // _buildAppBarMenuPopUp(),
-      ],
-    );
-  }
-
   Container _buildPageBody(double _deviceHeight, double _deviceWidth) {
     return Container(
       height: _deviceHeight,
@@ -199,10 +131,6 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     double _deviceHeight = MediaQuery.of(context).size.height;
     double _deviceWidth = MediaQuery.of(context).size.width;
-
-    final AuthBloc _authBloc = Provider.of<AuthBloc>(context);
-    // PopupMenu.context = context;
-
     _pageView = PageView(
       controller: _pageController,
       onPageChanged: (int index) async {
@@ -222,59 +150,55 @@ class HomeScreenState extends State<HomeScreen> {
       ],
     );
 
-    return WillPopScope(
-      onWillPop: () {
-        if (_panelController.isPanelOpen()) {
-          _panelController.close();
-          _menu.dismiss();
-        } else {
-          // _menu.dismiss();
-          return _showExitAlertDialog();
-        }
-      },
-      child: Scaffold(
-        key: _scaffoldKey,
-        resizeToAvoidBottomInset: false,
-        appBar: _buildAppBar(context),
-        drawer: Drawer(
-          child: Center(
-            child: RaisedButton(
-                child: Text('Logout'), onPressed: () {} // _authBloc.signout(),
-                ),
+    return Consumer<PostBloc>(
+          builder: (BuildContext context, PostBloc postBloc, Widget child) {
+        _postBloc = postBloc;
+        return RefreshIndicator(
+          onRefresh: () async {},
+          child: SlidingUpPanel(
+            minHeight: 50.0,
+            renderPanelSheet: false,
+            controller: _panelController,
+            body: _pageView,
+            panel: Container(),
           ),
-        ),
-        bottomNavigationBar: HomeBottomBar(
-          activeIndex: _activePageIndex,
-          onActiveIndexChange: (int index) {
-            setState(() {
-              _pageController.animateToPage(index,
-                  duration: Duration(milliseconds: 500), curve: Curves.ease);
-            });
-            // setState(() => _pageController.jumpToPage(index));
-          },
-        ),
-        body: Consumer<PostBloc>(
-            builder: (BuildContext context, PostBloc postBloc, Widget child) {
-          _postBloc = postBloc;
-          return RefreshIndicator(
-            onRefresh: () async {},
-            child: SlidingUpPanel(
-              minHeight: 50.0,
-              renderPanelSheet: false,
-              controller: _panelController,
-              body: _pageView,
-              panel: Container(),
-            ),
-          );
-        }),
-        floatingActionButton: FloatingActionButton(
-          onPressed: touchedAddButton,
-          tooltip: LocalizableLoader.of(context).text("hint_post"),
-          child: const Icon(Icons.add),
-          backgroundColor: MainTheme.enabledButtonColor,
-        ),
+        );
+      }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: touchedAddButton,
+        tooltip: LocalizableLoader.of(context).text("hint_post"),
+        child: const Icon(Icons.add),
+        backgroundColor: MainTheme.enabledButtonColor,
       ),
     );
+  }
+
+  Widget build(BuildContext context) {
+    return BlocListener(
+        bloc: widget._postBloc,
+        listener: (context, state) async {},
+        child: BlocBuilder<PostBloc, PostState>(
+            bloc: widget._postBloc,
+            builder: (
+              BuildContext context,
+              PostState currentState,
+            ) {
+              if (currentState is UnPostState) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (currentState is ErrorPostState) {
+                return new Container(
+                    child: new Center(
+                  child: new Text(currentState.errorMessage ?? 'Error'),
+                ));
+              }
+              return new Container(
+                  child: new Center(
+                child: new Text("В разработке"),
+              ));
+            }));
   }
 
   Future<void> touchedAddButton() async {

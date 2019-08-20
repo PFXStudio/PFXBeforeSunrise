@@ -1,7 +1,9 @@
 import 'package:before_sunrise/import.dart';
 
 class ProfileInputPage extends StatelessWidget {
+  ProfileInputPage(this.userID);
   static const String routeName = "/profileInput";
+  final String userID;
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +12,10 @@ class ProfileInputPage extends StatelessWidget {
       appBar: new AppBar(
         title: new Text("ProfileInput"),
       ),
-      body: new ProfileInputScreen(profileBloc: _profileBloc),
+      body: new ProfileInputScreen(
+        profileBloc: _profileBloc,
+        userID: userID,
+      ),
     );
   }
 }

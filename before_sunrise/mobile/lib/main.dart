@@ -53,8 +53,13 @@ class _MainAppState extends State<MainApp> {
       ],
       supportedLocales: localizableManager.supportedLocales(),
       routes: {
+        HomePage.routeName: (context) => HomePage(),
         AuthPage.routeName: (context) => AuthPage(),
-        ProfileInputPage.routeName: (context) => ProfileInputPage(),
+        ProfileInputPage.routeName: (context) {
+          var value = ModalRoute.of(context).settings.arguments;
+          return ProfileInputPage(value);
+        },
+        PostPage.routeName: (context) => PostPage(),
       },
     );
   }

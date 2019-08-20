@@ -8,6 +8,17 @@ abstract class ProfileState extends Equatable {
   ProfileState getStateCopy();
 }
 
+/// 프로필 불러오기
+class LoadProfileState extends ProfileState {
+  @override
+  String toString() => 'UnProfileState';
+
+  @override
+  ProfileState getStateCopy() {
+    return UnProfileState();
+  }
+}
+
 /// 프로필이 없는 상태(기본)
 class UnProfileState extends ProfileState {
   @override
@@ -19,7 +30,7 @@ class UnProfileState extends ProfileState {
   }
 }
 
-/// Initialized
+/// 프로필 생성 완료
 class InProfileState extends ProfileState {
   @override
   String toString() => 'InProfileState';
@@ -30,6 +41,7 @@ class InProfileState extends ProfileState {
   }
 }
 
+// 프로필 에러
 class ErrorProfileState extends ProfileState {
   final String errorMessage;
 

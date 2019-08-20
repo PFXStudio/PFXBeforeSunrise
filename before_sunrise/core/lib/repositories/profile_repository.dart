@@ -147,4 +147,10 @@ class ProfileRepository {
 
     return querySnapshot;
   }
+
+  Future<void> removeProfile({
+    @required String userID,
+  }) {
+    return _profileCollection.document(userID).delete();
+  }
 }
