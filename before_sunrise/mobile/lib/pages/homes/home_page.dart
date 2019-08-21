@@ -45,7 +45,7 @@ class HomePage extends StatelessWidget {
           body: _homeScreen,
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.pushNamed(context, PostForm.routeName);
+              Navigator.pushNamed(context, PostFormPage.routeName);
             },
             tooltip: LocalizableLoader.of(context).text("hint_post"),
             child: const Icon(Icons.add),

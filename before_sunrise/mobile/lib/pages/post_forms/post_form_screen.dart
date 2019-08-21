@@ -1,128 +1,107 @@
 import 'package:before_sunrise/import.dart';
 
-class PostForm extends StatefulWidget {
-  PostForm({Key key}) : super(key: key);
-  static const String routeName = "/post_form";
+class PostFormScreen extends StatefulWidget {
+  const PostFormScreen({
+    Key key,
+    @required PostBloc postBloc,
+  })  : _postBloc = postBloc,
+        super(key: key);
+
+  final PostBloc _postBloc;
 
   @override
-  PostFormState createState() => new PostFormState();
+  PostFormScreenState createState() {
+    return new PostFormScreenState(_postBloc);
+  }
 }
 
-class PostFormState extends State<PostForm>
-    with SingleTickerProviderStateMixin {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+class PostFormScreenState extends State<PostFormScreen> {
+  final PostBloc _postBloc;
+  PostFormScreenState(this._postBloc);
 
-  final FocusNode titleFocusNode = FocusNode();
-  final FocusNode contentsFocusNode = FocusNode();
-  final FocusNode youtubeFocusNode = FocusNode();
+  final FocusNode _titleFocusNode = FocusNode();
+  final FocusNode _contentsFocusNode = FocusNode();
+  final FocusNode _youtubeFocusNode = FocusNode();
 
-  TextEditingController titleController = new TextEditingController();
-  TextEditingController contentsController = new TextEditingController();
-  TextEditingController youtubeController = new TextEditingController();
+  TextEditingController _titleController = new TextEditingController();
+  TextEditingController _contentsController = new TextEditingController();
+  TextEditingController _youtubeController = new TextEditingController();
 
 // multi image picker 이미지 데이터가 사라짐. 받아오면 바로 백업.
-  final List<ByteData> selectedThumbDatas = List<ByteData>();
-  final List<ByteData> selectedOriginalDatas = List<ByteData>();
-  String _error;
+  final List<ByteData> _selectedThumbDatas = List<ByteData>();
+  final List<ByteData> _selectedOriginalDatas = List<ByteData>();
 
 // 이 값은 초기에 초기화 되기 때문에 재 진입해야 적용 됨.
-  double maxContentsHeight = 1200;
-  final int maxPicturesCount = 20;
-  Post post = Post();
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer(
-        builder: (BuildContext context, PostBloc postBloc, Widget child) {
-      // if (postBloc.postState == PostState.Loading) {
-      //   return ModalProgressHUD(
-      //       child: buildContents(), color: Colors.black, inAsyncCall: true);
-      // }
-
-      // if (postBloc.postState == PostState.Success) {
-      //   SuccessSnackbarWidget().show(_scaffoldKey, "success_post", () {
-      //     Navigator.pop(context);
-      //   });
-      // }
-
-      // if (postBloc.postState == PostState.Failure) {
-      //   ErrorSnackbarWidget().show(_scaffoldKey, "error_post", null);
-      // }
-
-      return buildContents();
-    });
-  }
-
-  Widget buildContents() {
-    return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: PostFormTopBar(),
-        ),
-        key: _scaffoldKey,
-        body: SingleChildScrollView(
-            child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: selectedThumbDatas.length == 0 ? 900 : maxContentsHeight,
-          decoration: new BoxDecoration(
-            gradient: MainTheme.primaryLinearGradient,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Expanded(
-                flex: 3,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints.expand(),
-                  child: _buildHeader(),
-                ),
-              ),
-              Expanded(
-                flex: 10,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints.expand(),
-                  child: _buildContents(context),
-                ),
-              ),
-              Expanded(
-                  flex: selectedThumbDatas.length == 0 ? 8 : 15,
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints.expand(),
-                    child: Column(children: <Widget>[
-                      _buildGalleryFiles(context),
-                      _buildLineDecoration(context),
-                      _buildRegistButton(context),
-                    ]),
-                  )),
-            ],
-          ),
-        )));
-  }
-
-  @override
-  void dispose() {
-    titleFocusNode.dispose();
-    contentsFocusNode.dispose();
-    youtubeFocusNode.dispose();
-    super.dispose();
-  }
-
+  double _maxContentsHeight = 1200;
+  final int _maxPicturesCount = 20;
+  Post _post = Post();
+  Widget _contents;
   @override
   void initState() {
     super.initState();
   }
 
-  void showInSnackBar(String value) {
-    FocusScope.of(context).requestFocus(new FocusNode());
-    _scaffoldKey.currentState?.removeCurrentSnackBar();
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
-      content: new Text(
-        value,
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.white, fontSize: 16.0),
+  @override
+  void dispose() {
+    _titleFocusNode.dispose();
+    _contentsFocusNode.dispose();
+    _youtubeFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _contents = _buildContents();
+    return BlocListener(
+        bloc: widget._postBloc,
+        listener: (context, state) async {},
+        child: BlocBuilder<PostBloc, PostState>(
+            bloc: widget._postBloc,
+            builder: (
+              BuildContext context,
+              PostState currentState,
+            ) {
+              return _contents;
+            }));
+  }
+
+  Widget _buildContents() {
+    return SingleChildScrollView(
+        child: Container(
+      width: MediaQuery.of(context).size.width,
+      height: _selectedThumbDatas.length == 0 ? 900 : _maxContentsHeight,
+      decoration: new BoxDecoration(
+        gradient: MainTheme.primaryLinearGradient,
       ),
-      backgroundColor: Colors.blue,
-      duration: Duration(seconds: 3),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Expanded(
+            flex: 3,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints.expand(),
+              child: _buildHeader(),
+            ),
+          ),
+          Expanded(
+            flex: 10,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints.expand(),
+              child: _buildForms(context),
+            ),
+          ),
+          Expanded(
+              flex: _selectedThumbDatas.length == 0 ? 8 : 15,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints.expand(),
+                child: Column(children: <Widget>[
+                  _buildGalleryFiles(context),
+                  _buildLineDecoration(context),
+                  _buildRegistButton(context),
+                ]),
+              )),
+        ],
+      ),
     ));
   }
 
@@ -132,7 +111,7 @@ class PostFormState extends State<PostForm>
 
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: maxPicturesCount - selectedThumbDatas.length,
+        maxImages: _maxPicturesCount - _selectedThumbDatas.length,
       );
 
       if (resultList.length > 0) {
@@ -142,10 +121,10 @@ class PostFormState extends State<PostForm>
             100,
             quality: 50,
           );
-          selectedThumbDatas.add(data);
+          _selectedThumbDatas.add(data);
 
           ByteData originalData = await asset.requestOriginal();
-          selectedOriginalDatas.add(originalData);
+          _selectedOriginalDatas.add(originalData);
           setState(() {});
         }
       }
@@ -156,14 +135,12 @@ class PostFormState extends State<PostForm>
     if (!mounted) return;
 
     setState(() {
-      if (selectedThumbDatas.length > maxPicturesCount) {
-        int end = selectedThumbDatas.length - maxPicturesCount - 1;
-        selectedThumbDatas.removeRange(0, end);
+      if (_selectedThumbDatas.length > _maxPicturesCount) {
+        int end = _selectedThumbDatas.length - _maxPicturesCount - 1;
+        _selectedThumbDatas.removeRange(0, end);
 
-        selectedOriginalDatas.removeRange(0, end);
+        _selectedOriginalDatas.removeRange(0, end);
       }
-
-      if (error == null) _error = 'No Error Dectected';
     });
   }
 
@@ -199,7 +176,7 @@ class PostFormState extends State<PostForm>
                                   DialogPostType(
                                     callback: (type) {
                                       setState(() {
-                                        post.type = type;
+                                        _post.type = type;
                                       });
                                     },
                                   ),
@@ -214,7 +191,7 @@ class PostFormState extends State<PostForm>
                                   DialogPublishTypeWidget(
                                     callback: (type) {
                                       setState(() {
-                                        post.publishType = type;
+                                        _post.publishType = type;
                                       });
                                     },
                                   ),
@@ -233,10 +210,10 @@ class PostFormState extends State<PostForm>
                               style: TextStyle(color: Colors.black54),
                             ),
                             Checkbox(
-                              value: post.enabledAnonymous,
+                              value: _post.enabledAnonymous,
                               onChanged: (bool value) {
                                 setState(() {
-                                  post.enabledAnonymous = value;
+                                  _post.enabledAnonymous = value;
                                 });
                               },
                             ),
@@ -252,7 +229,7 @@ class PostFormState extends State<PostForm>
     );
   }
 
-  Widget _buildContents(BuildContext context) {
+  Widget _buildForms(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: MainTheme.edgeInsets.top),
       child: Column(
@@ -276,8 +253,8 @@ class PostFormState extends State<PostForm>
                       Padding(
                         padding: EdgeInsets.only(left: 20, top: 5, bottom: 5),
                         child: TextField(
-                          focusNode: titleFocusNode,
-                          controller: titleController,
+                          focusNode: _titleFocusNode,
+                          controller: _titleController,
                           keyboardType: TextInputType.multiline,
                           style: TextStyle(fontSize: 16.0, color: Colors.black),
                           decoration: InputDecoration(
@@ -302,8 +279,8 @@ class PostFormState extends State<PostForm>
                       Padding(
                           padding: EdgeInsets.only(left: 20, top: 5, bottom: 5),
                           child: TextField(
-                            focusNode: contentsFocusNode,
-                            controller: contentsController,
+                            focusNode: _contentsFocusNode,
+                            controller: _contentsController,
                             keyboardType: TextInputType.multiline,
                             maxLines: 15,
                             decoration: InputDecoration(
@@ -347,7 +324,7 @@ class PostFormState extends State<PostForm>
                 child: Container(
                   width: MediaQuery.of(context).size.width -
                       MainTheme.edgeInsets.left,
-                  height: (selectedThumbDatas.length > 0) ? 400 : 114,
+                  height: (_selectedThumbDatas.length > 0) ? 400 : 114,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -364,18 +341,20 @@ class PostFormState extends State<PostForm>
                                     LocalizableLoader.of(context)
                                         .text("add_pictures_button"),
                                     [
-                                      selectedThumbDatas.length,
-                                      maxPicturesCount
+                                      _selectedThumbDatas.length,
+                                      _maxPicturesCount
                                     ]),
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: MainTheme.enabledButtonColor),
                               ),
                               onPressed: () {
-                                if (selectedThumbDatas.length >=
-                                    maxPicturesCount) {
-                                  showInSnackBar(LocalizableLoader.of(context)
-                                      .text("notice_remove_pictures"));
+                                if (_selectedThumbDatas.length >=
+                                    _maxPicturesCount) {
+                                  FailSnackbar().show(
+                                      LocalizableLoader.of(context)
+                                          .text("notice_remove_pictures"),
+                                      null);
                                   return;
                                 }
 
@@ -390,7 +369,7 @@ class PostFormState extends State<PostForm>
                             color: Colors.grey[400],
                           )),
                       Expanded(child: _buildGridView(context)),
-                      selectedThumbDatas.length == 0
+                      _selectedThumbDatas.length == 0
                           ? Container()
                           : Padding(
                               padding: EdgeInsets.only(left: 10),
@@ -403,8 +382,8 @@ class PostFormState extends State<PostForm>
                       Padding(
                         padding: EdgeInsets.only(left: 20, top: 5, bottom: 5),
                         child: TextField(
-                          focusNode: youtubeFocusNode,
-                          controller: youtubeController,
+                          focusNode: _youtubeFocusNode,
+                          controller: _youtubeController,
                           keyboardType: TextInputType.multiline,
                           style: TextStyle(fontSize: 16.0, color: Colors.black),
                           decoration: InputDecoration(
@@ -432,15 +411,15 @@ class PostFormState extends State<PostForm>
   }
 
   Widget _buildGridView(BuildContext context) {
-    if (selectedThumbDatas.length <= 0) {
+    if (_selectedThumbDatas.length <= 0) {
       return Container();
     }
 
     return GridView.count(
       padding: MainTheme.edgeInsets,
       crossAxisCount: 4,
-      children: List.generate(selectedThumbDatas.length, (index) {
-        ByteData data = selectedThumbDatas[index];
+      children: List.generate(_selectedThumbDatas.length, (index) {
+        ByteData data = _selectedThumbDatas[index];
         return Stack(children: <Widget>[
           ThumbnailItem(
             data: data,
@@ -456,8 +435,8 @@ class PostFormState extends State<PostForm>
               ),
               color: MainTheme.enabledIconColor,
               onPressed: () {
-                selectedThumbDatas.removeAt(index);
-                selectedOriginalDatas.removeAt(index);
+                _selectedThumbDatas.removeAt(index);
+                _selectedOriginalDatas.removeAt(index);
                 setState(() {});
                 print("deleted");
               },
@@ -550,30 +529,34 @@ class PostFormState extends State<PostForm>
   }
 
   void _requestRegist() {
-    if (titleController.text.length <= 0) {
+    _titleController.text = "AAAAAA";
+    _contentsController.text = "BBBBBBB";
+    _post.type = "PostType.Free";
+    _post.publishType = "PublishType.All";
+    if (_titleController.text.length <= 0) {
       FailSnackbar().show("error_post_form_empty_title", null);
       return;
     }
 
-    if (contentsController.text.length <= 0) {
+    if (_contentsController.text.length <= 0) {
       FailSnackbar().show("error_post_form_empty_contents", null);
       return;
     }
 
-    if (post.type.length <= 0) {
+    if (_post.type.length <= 0) {
       FailSnackbar().show("error_post_form_empty_type", null);
       return;
     }
 
-    if (post.publishType.length <= 0) {
+    if (_post.publishType.length <= 0) {
       FailSnackbar().show("error_post_form_publish_type", null);
       return;
     }
 
-    post.title = titleController.text;
-    post.contents = contentsController.text;
-    post.youtubeUrl = youtubeController.text;
-    post.created = DateTime.now().millisecondsSinceEpoch;
-    // postBloc.createPost(post: post, datas: selectedOriginalDatas);
+    _post.title = _titleController.text;
+    _post.contents = _contentsController.text;
+    _post.youtubeUrl = _youtubeController.text;
+    _post.created = DateTime.now().millisecondsSinceEpoch;
+    _postBloc.dispatch(CreatePostEvent(post: _post));
   }
 }

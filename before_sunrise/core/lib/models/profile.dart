@@ -26,14 +26,14 @@ class Profile {
   });
 
   void initialize(DocumentSnapshot snapshot) {
-    this.userID = snapshot["userID"];
-    this.nickname = snapshot["nickname"];
-    this.description = snapshot["description"];
-    this.phoneNumber = snapshot["phoneNumber"];
-    this.profileImageUrl = snapshot["profileImageUrl"];
-    this.gender = snapshot["gender"];
-    this.created = snapshot["created"];
-    this.lastUpdate = snapshot["lastUpdate"];
+    this.userID = snapshot.documentID;
+    this.nickname = snapshot.data["nickname"];
+    this.description = snapshot.data["description"];
+    this.phoneNumber = snapshot.data["phoneNumber"];
+    this.profileImageUrl = snapshot.data["profileImageUrl"];
+    this.gender = snapshot.data["gender"];
+    this.created = snapshot.data["created"];
+    this.lastUpdate = snapshot.data["lastUpdate"];
   }
 
   Object data() {

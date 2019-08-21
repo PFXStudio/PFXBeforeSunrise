@@ -43,7 +43,7 @@ class AuthScreenState extends State<AuthScreen> {
               callback: (verificationID) {
                 _verifyAuthScreen.phoneNumber = phoneNumber;
                 if (verificationID == null) {
-                  _authBloc.dispatch(ErrorAuthEvent(errorCode: "E122334"));
+                  _authBloc.dispatch(ErrorAuthEvent(errorCode: "E12334"));
                   return;
                 }
 

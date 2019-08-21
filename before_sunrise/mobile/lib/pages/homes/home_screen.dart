@@ -28,13 +28,14 @@ class HomeScreenState extends State<HomeScreen> {
   HomeScreenState(this._homeBloc);
 
   PageView _pageView;
+  FreePostPage freePostPage = FreePostPage();
 
   final _pageController = PageController(initialPage: 0, keepPage: false);
   @override
   void initState() {
     super.initState();
 
-    _onWidgetDidBuild(() {});
+    // _onWidgetDidBuild(() {});
   }
 
   @override
@@ -64,7 +65,7 @@ class HomeScreenState extends State<HomeScreen> {
             },
           ),
           SizedBox(height: 10.0),
-          Flexible(child: FreePostPage()),
+          Flexible(child: freePostPage),
         ],
       ),
     );

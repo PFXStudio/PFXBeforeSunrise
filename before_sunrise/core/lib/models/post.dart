@@ -36,16 +36,16 @@ class Post {
 
   void initialize(DocumentSnapshot snapshot) {
     this.postID = snapshot.documentID;
-    this.userID = snapshot["userID"];
-    this.type = snapshot["type"];
-    this.title = snapshot["title"];
-    this.contents = snapshot["contents"];
-    this.imageUrls = snapshot["imageUrls"];
-    this.youtubeUrl = snapshot["youtubeUrl"];
-    this.publishType = snapshot["publishType"];
-    this.enabledAnonymous = snapshot["enabledAnonymous"];
-    this.created = snapshot["created"];
-    this.lastUpdate = snapshot["lastUpdate"];
+    this.userID = snapshot.data["userID"];
+    this.type = snapshot.data["type"];
+    this.title = snapshot.data["title"];
+    this.contents = snapshot.data["contents"];
+    this.imageUrls = snapshot.data["imageUrls"];
+    this.youtubeUrl = snapshot.data["youtubeUrl"];
+    this.publishType = snapshot.data["publishType"];
+    this.enabledAnonymous = snapshot.data["enabledAnonymous"];
+    this.created = snapshot.data["created"];
+    this.lastUpdate = snapshot.data["lastUpdate"];
   }
 
   Object data() {

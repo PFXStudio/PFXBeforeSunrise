@@ -1,26 +1,20 @@
 import 'package:before_sunrise/import.dart';
 
-class PostFormTopBar extends StatefulWidget {
+class PostFormTopBar extends StatefulWidget implements PreferredSizeWidget {
+  PostFormTopBar({Key key, this.scaffoldKey})
+      : preferredSize = Size.fromHeight(kToolbarHeight),
+        super(key: key);
+
   @override
-  PostFormTopBarState createState() => PostFormTopBarState();
+  final Size preferredSize; // default is 56.0
+
+  @override
+  _PostFormTopBarState createState() => _PostFormTopBarState();
+  final GlobalKey<ScaffoldState> scaffoldKey;
 }
 
-class PostFormTopBarState extends State<PostFormTopBar>
+class _PostFormTopBarState extends State<PostFormTopBar>
     with SingleTickerProviderStateMixin {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  void _touchedCloseButton() {
-    Navigator.pop(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return AppBar(

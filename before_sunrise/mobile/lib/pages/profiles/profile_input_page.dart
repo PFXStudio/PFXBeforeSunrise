@@ -10,7 +10,7 @@ class ProfileInputPage extends StatelessWidget {
     var _profileBloc = new ProfileBloc();
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("ProfileInput"),
+        title: new Text("Profile"),
       ),
       body: new ProfileInputScreen(
         profileBloc: _profileBloc,

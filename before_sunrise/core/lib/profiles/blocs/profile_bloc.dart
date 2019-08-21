@@ -8,6 +8,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc._internal();
 
   ProfileState get initialState => new UnProfileState();
+  Profile signedProfile;
 
   @override
   Stream<ProfileState> mapEventToState(

@@ -11,6 +11,7 @@ class LoadPostEvent extends PostEvent {
   @override
   String toString() => 'LoadPostEvent';
   final IPostProvider _postProvider = PostProvider();
+  final IProfileProvider _profileProvider = ProfileProvider();
   Post post;
 
   @override
@@ -29,10 +30,46 @@ class LoadPostEvent extends PostEvent {
       for (var document in snapshot.documents) {
         Post post = Post();
         post.initialize(document);
+        DocumentSnapshot snapshot =
+            await _profileProvider.fetchProfile(userID: post.userID);
+        Profile profile = Profile();
+        profile.initialize(snapshot);
+        post.profile = profile;
         posts.add(post);
       }
 
       return new InPostState(posts: posts);
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorPostState(_?.toString());
+    }
+  }
+}
+
+class CreatePostEvent extends PostEvent {
+  CreatePostEvent({@required this.post})
+      : _firestoreTimestamp = FieldValue.serverTimestamp();
+  @override
+  String toString() => 'CreatePostEvent';
+  final IPostProvider _postProvider = PostProvider();
+  final IAuthProvider _authProvider = AuthProvider();
+  FieldValue _firestoreTimestamp;
+
+  Post post;
+
+  @override
+  Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
+    try {
+      post.userID = await _authProvider.getUserID();
+      post.created = _firestoreTimestamp;
+      post.lastUpdate = _firestoreTimestamp;
+      DocumentReference reference =
+          await _postProvider.createPost(data: post.data());
+      if (reference == null) {
+        return ErrorPostState("error");
+      }
+
+      return new IdlePostState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorPostState(_?.toString());

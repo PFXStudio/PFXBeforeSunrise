@@ -170,7 +170,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
       alignment: Alignment.center,
       children: <Widget>[
         Container(
-          child: _post.imageUrls.length > 0
+          child: _post.imageUrls != null && _post.imageUrls.length > 0
               ? _buildPostImageCarousel()
               : Image.asset('assets/avatars/bg-avatar.png', fit: BoxFit.cover),
         ),
@@ -247,7 +247,9 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
       leading: Container(
         height: 50.0,
         width: 50.0,
-        child: _post != null && _post.profile.profileImageUrl.isNotEmpty
+        child: _post != null &&
+                _post.profile.profileImageUrl != null &&
+                _post.profile.profileImageUrl.isNotEmpty
             ? CachedNetworkImage(
                 imageUrl: '${_post.profile.profileImageUrl}',
                 placeholder: (context, imageUrl) =>

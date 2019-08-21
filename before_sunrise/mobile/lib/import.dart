@@ -79,10 +79,9 @@ export 'pages/homes/home_screen.dart';
 export 'pages/homes/home_category_bar.dart';
 export 'pages/homes/home_app_bar.dart';
 export 'pages/post_forms/post_form_top_bar.dart';
-export 'pages/post_forms/post_form.dart';
+export 'pages/post_forms/post_form_screen.dart';
+export 'pages/post_forms/post_form_page.dart';
 
-export 'pages/posts/post_page.dart';
-export 'pages/posts/post_screen.dart';
 export 'pages/posts/free_post_screen.dart';
 export 'pages/posts/free_post_page.dart';
 export 'pages/posts/post_item_card_default.dart';
@@ -95,3 +94,4 @@ export 'widgets/dialogs/dialog_bottom_widget.dart';
 export 'widgets/dialogs/dialog_publish_type_widget.dart';
 export 'widgets/dialogs/dialog_header_widget.dart';
 export 'widgets/dialogs/dialog_post_type.dart';
+export 'widgets/dialogs/dialog_gender_type_widget.dart';

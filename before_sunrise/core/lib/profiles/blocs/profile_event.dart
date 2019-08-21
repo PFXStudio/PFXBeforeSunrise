@@ -19,19 +19,29 @@ class LoadProfileEvent extends ProfileEvent {
   Future<ProfileState> applyAsync(
       {ProfileState currentState, ProfileBloc bloc}) async {
     try {
-      await _profileProvider.hasProfile(userID: userID);
-      return new InProfileState();
+      DocumentSnapshot snapshot =
+          await _profileProvider.hasProfile(userID: userID);
+      if (snapshot == null) {
+        return UnProfileState();
+      }
+
+      Profile profile = Profile();
+      profile.initialize(snapshot);
+      return new InProfileState(profile: profile);
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
-      return new ErrorProfileState(_?.toString());
+      return new UnProfileState();
     }
   }
 }
 
 class UpdateProfileEvent extends ProfileEvent {
-  UpdateProfileEvent({@required this.profile});
+  UpdateProfileEvent({@required this.profile})
+      : _firestoreTimestamp = FieldValue.serverTimestamp();
+
   @override
   String toString() => 'UpdateProfileEvent';
+  FieldValue _firestoreTimestamp;
   final IProfileProvider _profileProvider = ProfileProvider();
 
   final Profile profile;
@@ -40,6 +50,8 @@ class UpdateProfileEvent extends ProfileEvent {
   Future<ProfileState> applyAsync(
       {ProfileState currentState, ProfileBloc bloc}) async {
     try {
+      profile.created = _firestoreTimestamp;
+      profile.lastUpdate = _firestoreTimestamp;
       await _profileProvider.updateProfile(
           userID: profile.userID, data: profile.data());
       return new InProfileState();

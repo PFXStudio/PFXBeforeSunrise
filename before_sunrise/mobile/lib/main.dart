@@ -62,8 +62,7 @@ class _MainAppState extends State<MainApp> {
           var value = ModalRoute.of(context).settings.arguments;
           return ProfileInputPage(value);
         },
-        PostPage.routeName: (context) => PostPage(),
-        PostForm.routeName: (context) => PostForm(),
+        PostFormPage.routeName: (context) => PostFormPage(),
       },
     );
   }

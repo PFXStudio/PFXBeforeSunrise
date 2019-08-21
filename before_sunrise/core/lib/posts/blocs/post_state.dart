@@ -34,6 +34,17 @@ class InPostState extends PostState {
   }
 }
 
+class IdlePostState extends PostState {
+  IdlePostState();
+  @override
+  String toString() => 'IdlePostState';
+
+  @override
+  PostState getStateCopy() {
+    return IdlePostState();
+  }
+}
+
 class ErrorPostState extends PostState {
   final String errorMessage;
 

@@ -66,6 +66,7 @@ class FreePostScreenState extends State<FreePostScreen> {
           }
 
           if (currentState is InPostState) {
+            _posts.addAll(currentState.posts);
             return RefreshIndicator(
                 onRefresh: () async {
                   this._postBloc.dispatch(LoadPostEvent(post: null));

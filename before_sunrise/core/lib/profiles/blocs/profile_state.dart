@@ -32,12 +32,14 @@ class UnProfileState extends ProfileState {
 
 /// 프로필 생성 완료
 class InProfileState extends ProfileState {
+  InProfileState({@required this.profile});
   @override
   String toString() => 'InProfileState';
+  Profile profile;
 
   @override
   ProfileState getStateCopy() {
-    return InProfileState();
+    return InProfileState(profile: profile);
   }
 }
 
