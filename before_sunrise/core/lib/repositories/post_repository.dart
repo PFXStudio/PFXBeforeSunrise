@@ -57,12 +57,12 @@ class PostRepository {
     return lastVisiblePost == null
         ? _postCollection
             .orderBy('lastUpdate', descending: true)
-            .limit(5)
+            .limit(CoreConst.maxLoadPostCount)
             .getDocuments()
         : _postCollection
             .orderBy('lastUpdate', descending: true)
             .startAfter([lastVisiblePost.lastUpdate])
-            .limit(5)
+            .limit(CoreConst.maxLoadPostCount)
             .getDocuments();
   }
 
@@ -72,13 +72,13 @@ class PostRepository {
         ? _postCollection
             .where('userID', isEqualTo: userID)
             .orderBy('lastUpdate', descending: true)
-            .limit(5)
+            .limit(CoreConst.maxLoadPostCount)
             .getDocuments()
         : _postCollection
             .where('userID', isEqualTo: userID)
             .orderBy('lastUpdate', descending: true)
             .startAfter([lastVisiblePost.lastUpdate])
-            .limit(5)
+            .limit(CoreConst.maxLoadPostCount)
             .getDocuments();
   }
 

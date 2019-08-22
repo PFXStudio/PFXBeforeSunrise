@@ -18,11 +18,13 @@ export 'package:shared_preferences/shared_preferences.dart';
 export 'package:uuid/uuid.dart';
 export 'package:bloc/bloc.dart';
 
+export 'consts/core_const.dart';
 export 'networks/config.dart';
 export 'networks/mock_client.dart';
 export 'networks/i_client.dart';
 export 'delegates/simple_bloc_delegate.dart';
 
+export 'images/blocs/fimage_provider.dart';
 export 'auths/blocs/auth_bloc.dart';
 export 'auths/blocs/auth_event.dart';
 export 'auths/blocs/auth_provider.dart';

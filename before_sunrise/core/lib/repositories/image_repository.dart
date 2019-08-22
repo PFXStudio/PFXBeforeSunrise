@@ -15,7 +15,7 @@ class ImageRepository {
 
   Future<String> saveProfileImage(
       {@required String userID, @required ByteData imageData}) async {
-    final String fileName = 'profiles/$userID/$userID';
+    final String fileName = Config().root() + "/profiles/$userID/$userID";
 
     List<int> listData = imageData.buffer.asUint8List();
 
@@ -44,8 +44,7 @@ class ImageRepository {
 
   Future<String> uploadCategoryImage({@required ByteData imageData}) async {
     final uuid = Uuid();
-    final String fileName = 'categories/${uuid.v1()}';
-
+    final String fileName = Config().root() + "/categories/${uuid.v1()}";
     List<int> listData = imageData.buffer.asUint8List();
 
     // compress file
@@ -74,12 +73,12 @@ class ImageRepository {
 
   Future<List<String>> uploadPostImages({
     @required String fileLocation,
-    @required List<ByteData> datas,
+    @required List<ByteData> byteDatas,
   }) async {
     List<String> uploadUrls = [];
 
     await Future.wait(
-            datas.map((ByteData byteData) async {
+            byteDatas.map((ByteData byteData) async {
               List<int> listData = byteData.buffer.asUint8List();
 
               // compress file
@@ -87,7 +86,8 @@ class ImageRepository {
                   await _compressFile(listData: listData);
 
               final uuid = Uuid();
-              final fileName = 'posts/$fileLocation/${uuid.v1()}';
+              final String fileName =
+                  Config().root() + "/posts/$fileLocation/${uuid.v1()}";
 
               StorageReference reference =
                   FirebaseStorage.instance.ref().child(fileName);

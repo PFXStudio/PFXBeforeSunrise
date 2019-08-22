@@ -14,6 +14,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     PostEvent event,
   ) async* {
     try {
+      yield UnPostState();
       yield await event.applyAsync(currentState: currentState, bloc: this);
     } catch (_, stackTrace) {
       print('$_ $stackTrace');

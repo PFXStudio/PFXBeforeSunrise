@@ -47,22 +47,33 @@ class LoadPostEvent extends PostEvent {
 }
 
 class CreatePostEvent extends PostEvent {
-  CreatePostEvent({@required this.post})
+  CreatePostEvent({@required this.post, @required this.byteDatas})
       : _firestoreTimestamp = FieldValue.serverTimestamp();
   @override
   String toString() => 'CreatePostEvent';
   final IPostProvider _postProvider = PostProvider();
   final IAuthProvider _authProvider = AuthProvider();
+  final IFImageProvider _imageProvider = FImageProvider();
   FieldValue _firestoreTimestamp;
+  List<ByteData> byteDatas;
 
   Post post;
 
   @override
   Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
     try {
-      post.userID = await _authProvider.getUserID();
+      String userID = await _authProvider.getUserID();
+      List<String> imageUrls = List<String>();
+      if (byteDatas != null) {
+        final String fileLocation = '$userID/posts';
+
+        imageUrls = await _imageProvider.uploadPostImages(
+            fileLocation: fileLocation, byteDatas: byteDatas);
+      }
+      post.userID = userID;
       post.created = _firestoreTimestamp;
       post.lastUpdate = _firestoreTimestamp;
+      post.imageUrls = imageUrls;
       DocumentReference reference =
           await _postProvider.createPost(data: post.data());
       if (reference == null) {

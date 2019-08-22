@@ -16,6 +16,7 @@ class HomePage extends StatelessWidget {
       panelController: _panelController,
       homeBloc: _homeBloc,
     );
+
     return WillPopScope(
         onWillPop: () {
           if (_panelController.isPanelOpen()) {

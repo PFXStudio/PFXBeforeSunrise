@@ -22,14 +22,14 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
   initState() {
     super.initState();
 
-// TODO :
-    // if (_profileBloc.userProfile != null) {
-    //   setState(() {
-    //     _profileBloc.userProfile.userID == _post.profile.userID
-    //         ? _isCurrentUserProfile = true
-    //         : _isCurrentUserProfile = false;
-    //   });
-    // }
+    Profile signedProfile = ProfileBloc().signedProfile;
+    if (signedProfile != null) {
+      setState(() {
+        signedProfile.userID == _post.profile.userID
+            ? _isCurrentUserProfile = true
+            : _isCurrentUserProfile = false;
+      });
+    }
   }
 
   void _navigateToPostDetailsPage() {
@@ -187,61 +187,58 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
     final double _containerHeight = _post.profile.isFollowing ? 40.0 : 30.0;
     final double _containerWidth = _post.profile.isFollowing ? 40.0 : 100.0;
 
-    return Consumer<PostBloc>(
-      builder: (BuildContext context, PostBloc postBloc, Widget child) {
-        return InkWell(
-          onTap: () {
-            // TODO :
-            // postBloc.toggleFollowProfilePageStatus(
-            //     currentPostProfile: _post.profile);
-          },
-          splashColor: Colors.black38,
-          borderRadius: BorderRadius.circular(15.0),
-          child: AnimatedContainer(
-            height: _containerHeight,
-            width: _containerWidth,
-            duration: Duration(milliseconds: 100),
-            padding: EdgeInsets.symmetric(vertical: 3.0, horizontal: 10.0),
-            decoration: BoxDecoration(
-              color: Colors.black12,
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                _post.profile.isFollowing
-                    ? Container()
-                    : Flexible(
-                        flex: 2,
-                        child: Text(
-                          'FOLLOW',
-                          style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.w900),
-                        ),
-                      ),
-                SizedBox(width: _post.profile.isFollowing ? 0.0 : 5.0),
-                Flexible(
-                  child: Center(
-                    child: Icon(
-                      _post.profile.isFollowing
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      size: 20.0,
-                      color: Colors.red,
+    return InkWell(
+      onTap: () {
+        // TODO :
+        // postBloc.toggleFollowProfilePageStatus(
+        //     currentPostProfile: _post.profile);
+      },
+      splashColor: Colors.black38,
+      borderRadius: BorderRadius.circular(15.0),
+      child: AnimatedContainer(
+        height: _containerHeight,
+        width: _containerWidth,
+        duration: Duration(milliseconds: 100),
+        padding: EdgeInsets.symmetric(vertical: 3.0, horizontal: 10.0),
+        decoration: BoxDecoration(
+          color: Colors.black12,
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _post.profile.isFollowing
+                ? Container()
+                : Flexible(
+                    flex: 2,
+                    child: Text(
+                      'FOLLOW',
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w900),
                     ),
                   ),
-                )
-              ],
-            ),
-          ),
-        );
-      },
+            SizedBox(width: _post.profile.isFollowing ? 0.0 : 5.0),
+            Flexible(
+              child: Center(
+                child: Icon(
+                  _post.profile.isFollowing
+                      ? Icons.favorite
+                      : Icons.favorite_border,
+                  size: 20.0,
+                  color: Colors.red,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 
   Widget _buildUserListTile() {
+    Post post = _post;
     return ListTile(
       onTap: _isProfilePost ? null : () => _navigateToProfilePage(),
       leading: Container(
@@ -276,11 +273,10 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
                     fit: BoxFit.cover),
               ),
       ),
-      // TODO :
-      // title: Text('${_post.profile.firstName} ${_post.profile.lastName}',
-      //     style: TextStyle(fontWeight: FontWeight.bold)),
-      // subtitle:
-      //     Text('${DateFormat.yMMMMEEEEd().format(_post.lastUpdate.toDate())}'),
+      title: Text('${_post.profile.nickname}',
+          style: TextStyle(fontWeight: FontWeight.bold)),
+      subtitle:
+          Text('${DateFormat.yMMMMEEEEd().format(_post.lastUpdate.toDate())}'),
       trailing: _isCurrentUserProfile
           ? null
           : _isProfilePost ? null : _buildFollowTrailingButton(),
@@ -289,12 +285,10 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
 
   Widget _buildPostListTile() {
     return ListTile(
-      title:
-          Text('${_post.title}', style: TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text('${_post.contents}', overflow: TextOverflow.ellipsis),
-      trailing: Consumer<PostBloc>(
-          builder: (BuildContext context, PostBloc postBloc, Widget child) {
-        return IconButton(
+        title: Text('${_post.title}',
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text('${_post.contents}', overflow: TextOverflow.ellipsis),
+        trailing: IconButton(
           tooltip: 'Save this post',
           icon: Icon(
             _post.isLiked ? Icons.favorite : Icons.favorite_border,
@@ -304,9 +298,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
             // TODO :
             // postBloc.toggleLikeStatus(post: _post);
           },
-        );
-      }),
-    );
+        ));
   }
 
   Widget _buildPostDetails() {
