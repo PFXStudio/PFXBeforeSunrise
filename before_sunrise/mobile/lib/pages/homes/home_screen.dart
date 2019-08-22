@@ -81,40 +81,40 @@ class HomeScreenState extends State<HomeScreen> {
         _buildPageBody(_deviceHeight, _deviceWidth),
       ],
     );
-    return BlocListener(
-        bloc: widget._homeBloc,
-        listener: (context, state) async {},
-        child: BlocBuilder<HomeBloc, HomeState>(
-            bloc: widget._homeBloc,
-            builder: (
-              BuildContext context,
-              HomeState currentState,
-            ) {
-              if (currentState is PostTabState) {
-                return RefreshIndicator(
-                  onRefresh: () async {},
-                  child: SlidingUpPanel(
-                    minHeight: 50.0,
-                    renderPanelSheet: false,
-                    controller: widget._panelController,
-                    body: _pageView,
-                    panel: Container(),
-                  ),
-                );
-              }
-              if (currentState is ProfileTabState) {
-                return Container();
-              }
-              if (currentState is ErrorHomeState) {
-                return new Container(
-                    child: new Center(
-                  child: new Text('Error'),
-                ));
-              }
-              return new Container(
-                  child: new Center(
-                child: new Text("В разработке"),
-              ));
-            }));
+    return RefreshIndicator(
+        onRefresh: () async {},
+        child: SlidingUpPanel(
+          minHeight: 50.0,
+          renderPanelSheet: false,
+          controller: widget._panelController,
+          body: BlocListener(
+              bloc: widget._homeBloc,
+              listener: (context, state) async {},
+              child: BlocBuilder<HomeBloc, HomeState>(
+                  bloc: widget._homeBloc,
+                  builder: (
+                    BuildContext context,
+                    HomeState currentState,
+                  ) {
+                    if (currentState is PostTabState) {
+                      return _pageView;
+                    }
+
+                    if (currentState is ProfileTabState) {
+                      return Container();
+                    }
+                    if (currentState is ErrorHomeState) {
+                      return new Container(
+                          child: new Center(
+                        child: new Text('Error'),
+                      ));
+                    }
+                    return new Container(
+                        child: new Center(
+                      child: new Text("В разработке"),
+                    ));
+                  })),
+          panel: Container(),
+        ));
   }
 }
