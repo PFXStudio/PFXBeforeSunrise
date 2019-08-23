@@ -36,6 +36,7 @@ export 'package:modal_progress_hud/modal_progress_hud.dart';
 export 'package:progress_dialog/progress_dialog.dart';
 export 'package:keyboard_visibility/keyboard_visibility.dart';
 export 'package:flutter/rendering.dart';
+export 'package:medium_clap_flutter/medium_clap_flutter.dart';
 
 export 'package:core/import.dart';
 

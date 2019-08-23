@@ -97,30 +97,38 @@ class PostFormScreenState extends State<PostFormScreen> {
   }
 
   Future<void> _loadAssets() async {
-    List<Asset> resultList;
+    List<Asset> resultList = List<Asset>();
     String error;
 
     try {
       resultList = await MultiImagePicker.pickImages(
         maxImages: _maxPicturesCount - _selectedThumbDatas.length,
+        enableCamera: true,
       );
 
-      if (resultList.length > 0) {
-        for (Asset asset in resultList) {
-          ByteData data = await asset.getThumbByteData(
-            100,
-            100,
-            quality: 50,
-          );
-          _selectedThumbDatas.add(data);
-
-          ByteData originalData = await asset.getByteData();
-          _selectedOriginalDatas.add(originalData);
-          setState(() {});
-        }
+      if (resultList == null) {
+        return;
       }
-    } on PlatformException catch (e) {
+
+      if (resultList.length <= 0) {
+        return;
+      }
+
+      for (Asset asset in resultList) {
+        ByteData data = await asset.getThumbByteData(
+          100,
+          100,
+          quality: 50,
+        );
+        _selectedThumbDatas.add(data);
+
+        ByteData originalData = await asset.getByteData();
+        _selectedOriginalDatas.add(originalData);
+        setState(() {});
+      }
+    } catch (e) {
       error = e.message;
+      print(e.message);
     }
 
     if (!mounted) return;

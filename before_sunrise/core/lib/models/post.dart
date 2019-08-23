@@ -15,6 +15,7 @@ class Post {
     this.lastUpdate,
     this.isLiked = false,
     this.likeCount = 0,
+    this.warningCount = 0,
     this.profile,
   });
 
@@ -32,6 +33,7 @@ class Post {
   // other database.
   bool isLiked;
   int likeCount;
+  int warningCount;
   Profile profile;
 
   void initialize(DocumentSnapshot snapshot) {

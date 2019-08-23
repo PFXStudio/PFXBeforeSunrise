@@ -1,5 +1,7 @@
 import 'package:before_sunrise/import.dart';
+import 'package:before_sunrise/import.dart' as prefix0;
 import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class PostItemCardDefault extends StatefulWidget {
   final Post post;
@@ -269,14 +271,13 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
               )
             : ClipRRect(
                 borderRadius: BorderRadius.circular(25.0),
-                child: Image.asset('assets/avatars/ps-avatar.png',
-                    fit: BoxFit.cover),
+                child:
+                    Image.asset('assets/avatars/avatar.png', fit: BoxFit.fill),
               ),
       ),
       title: Text('${_post.profile.nickname}',
           style: TextStyle(fontWeight: FontWeight.bold)),
-      subtitle:
-          Text('${DateFormat.yMMMMEEEEd().format(_post.lastUpdate.toDate())}'),
+      subtitle: Text(timeago.format(_post.lastUpdate.toDate(), locale: 'ko')),
       trailing: _isCurrentUserProfile
           ? null
           : _isProfilePost ? null : _buildFollowTrailingButton(),
@@ -285,26 +286,50 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
 
   Widget _buildPostListTile() {
     return ListTile(
-        title: Text('${_post.title}',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text('${_post.contents}', overflow: TextOverflow.ellipsis),
-        trailing: IconButton(
-          tooltip: 'Save this post',
-          icon: Icon(
-            _post.isLiked ? Icons.favorite : Icons.favorite_border,
-            color: Theme.of(context).accentColor,
-          ),
-          onPressed: () {
-            // TODO :
-            // postBloc.toggleLikeStatus(post: _post);
-          },
-        ));
+      title:
+          Text('${_post.title}', style: TextStyle(fontWeight: FontWeight.bold)),
+      subtitle: Text('${_post.contents}', overflow: TextOverflow.ellipsis),
+      trailing: ClapFAB.icon(
+        counter: _post.likeCount,
+        defaultIcon: FontAwesomeIcons.heart,
+        filledIcon: FontAwesomeIcons.solidHeart,
+        countCircleColor: MainTheme.enabledButtonColor,
+        defaultIconColor: MainTheme.enabledButtonColor,
+        hasShadow: true,
+        sparkleColor: MainTheme.pivotColor,
+        shadowColor: MainTheme.enabledButtonColor,
+        filledIconColor: MainTheme.enabledButtonColor,
+        isDecrement: false,
+        clapFabCallback: (result) {
+          PostBloc().dispatch(LikePostEvent(postID: _post.postID));
+        },
+      ),
+      // IconButton(
+      //   tooltip: 'Save this post',
+      //   icon: Icon(
+      //     _post.isLiked ? Icons.favorite : Icons.favorite_border,
+      //     color: Theme.of(context).accentColor,
+      //   ),
+      //   onPressed: () {
+      //     // TODO :
+      //     // postBloc.toggleLikeStatus(post: _post);
+      //   },
+      // )
+    );
   }
 
   Widget _buildPostDetails() {
     return Column(
       children: <Widget>[
         _buildUserListTile(),
+        Padding(
+            padding: EdgeInsets.all(5),
+            child: Container(
+              width: MediaQuery.of(context).size.width -
+                  MainTheme.edgeInsets.left * 2,
+              height: 1.0,
+              color: Colors.grey[300],
+            )),
         _buildPostListTile(),
       ],
     );
@@ -317,7 +342,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
     return Column(
       children: <Widget>[
         Card(
-          margin: EdgeInsets.all(10),
+          margin: EdgeInsets.only(left: 10, right: 10),
           elevation: 8.0,
           child: InkWell(
             onTap: () => _navigateToPostDetailsPage(),

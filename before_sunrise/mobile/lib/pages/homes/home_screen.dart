@@ -22,7 +22,7 @@ class HomeScreenState extends State<HomeScreen> {
   PanelController _panelController = PanelController();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  int _activePageIndex;
+  int _activePageIndex = 0;
   final _homeBloc = new HomeBloc();
 
   PageView _pageView;
@@ -32,19 +32,12 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
-    // _onWidgetDidBuild(() {});
+    this._homeBloc.dispatch(LoadTabEvent(index: 0));
   }
 
   @override
   void dispose() {
     super.dispose();
-  }
-
-  void _onWidgetDidBuild(Function callback) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      callback();
-    });
   }
 
   void onDismiss() {

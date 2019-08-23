@@ -87,3 +87,26 @@ class CreatePostEvent extends PostEvent {
     }
   }
 }
+
+class LikePostEvent extends PostEvent {
+  LikePostEvent({@required this.postID});
+  @override
+  String toString() => 'LikePostEvent';
+  final IPostProvider _postProvider = PostProvider();
+  final IAuthProvider _authProvider = AuthProvider();
+
+  String postID;
+
+  @override
+  Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
+    try {
+      String userID = await _authProvider.getUserID();
+      await _postProvider.addToLike(postID: postID, userID: userID);
+
+      return currentState;
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorPostState(_?.toString());
+    }
+  }
+}
