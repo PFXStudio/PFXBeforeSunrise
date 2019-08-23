@@ -21,10 +21,10 @@ class LoadPostEvent extends PostEvent {
           await _postProvider.fetchPosts(lastVisiblePost: post);
       List<Post> posts = List<Post>();
       if (snapshot == null) {
-        return InPostState(posts: posts);
+        return EmptyPostState();
       }
       if (snapshot.documents.length <= 0) {
-        return InPostState(posts: posts);
+        return EmptyPostState();
       }
 
       for (var document in snapshot.documents) {
@@ -38,7 +38,7 @@ class LoadPostEvent extends PostEvent {
         posts.add(post);
       }
 
-      return new InPostState(posts: posts);
+      return new FetchedPostState(posts: posts);
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorPostState(_?.toString());
@@ -80,7 +80,7 @@ class CreatePostEvent extends PostEvent {
         return ErrorPostState("error");
       }
 
-      return new IdlePostState();
+      return new SuccessPostState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorPostState(_?.toString());

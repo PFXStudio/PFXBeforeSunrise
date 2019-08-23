@@ -41,6 +41,17 @@ class PostTabState extends HomeState {
   }
 }
 
+/// InfoTab
+class InfoTabState extends HomeState {
+  @override
+  String toString() => 'InfoTabState';
+
+  @override
+  HomeState getStateCopy() {
+    return InfoTabState();
+  }
+}
+
 /// ProfileTab
 class ProfileTabState extends HomeState {
   @override

@@ -1,7 +1,7 @@
 import 'package:before_sunrise/import.dart';
 
-class FreePostScreen extends StatefulWidget {
-  const FreePostScreen({
+class LatestPostScreen extends StatefulWidget {
+  const LatestPostScreen({
     Key key,
     @required PostBloc postBloc,
   })  : _postBloc = postBloc,
@@ -10,14 +10,14 @@ class FreePostScreen extends StatefulWidget {
   final PostBloc _postBloc;
 
   @override
-  FreePostScreenState createState() {
-    return new FreePostScreenState(_postBloc);
+  LatestPostScreenState createState() {
+    return new LatestPostScreenState(_postBloc);
   }
 }
 
-class FreePostScreenState extends State<FreePostScreen> {
+class LatestPostScreenState extends State<LatestPostScreen> {
   final PostBloc _postBloc;
-  FreePostScreenState(this._postBloc);
+  LatestPostScreenState(this._postBloc);
   List<Post> _posts = List<Post>();
   bool _enabeldMorePosts = false;
 
@@ -40,6 +40,10 @@ class FreePostScreenState extends State<FreePostScreen> {
           BuildContext context,
           PostState currentState,
         ) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+          /*
           if (currentState is FetchingPostState) {
             if (_posts.length == 0) {
               return Center(
@@ -55,6 +59,7 @@ class FreePostScreenState extends State<FreePostScreen> {
           }
 
           return _buildPosts(null);
+          */
         });
   }
 
@@ -116,4 +121,20 @@ class FreePostScreenState extends State<FreePostScreen> {
       return;
     }
   }
+
+  // Widget _buildSliverList() {
+  //   return SliverList(
+  //     delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+  //       if (_enabeldMorePosts == true && index >= _posts.length) {
+  //         return BottomLoader();
+  //       }
+
+  //       if (index < _posts.length) {
+  //         return PostItemCardDefault(post: _posts[index]);
+  //       }
+
+  //       return Container();
+  //     }, childCount: _posts.length + 1),
+  //   );
+  // }
 }

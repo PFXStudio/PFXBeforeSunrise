@@ -10,7 +10,6 @@ abstract class PostState extends Equatable {
   PostState getStateCopy();
 }
 
-/// 정보 요청
 class UnPostState extends PostState {
   @override
   String toString() => 'UnPostState';
@@ -21,27 +20,38 @@ class UnPostState extends PostState {
   }
 }
 
-/// 정보를 불러 온 상태
-class InPostState extends PostState {
-  InPostState({this.posts});
+/// 정보 요청
+class FetchingPostState extends PostState {
   @override
-  String toString() => 'InPostState';
+  String toString() => 'FetchingPostState';
+
+  @override
+  PostState getStateCopy() {
+    return FetchingPostState();
+  }
+}
+
+/// 정보를 불러 온 상태
+class FetchedPostState extends PostState {
+  FetchedPostState({this.posts});
+  @override
+  String toString() => 'FetchedPostState';
   final List<Post> posts;
 
   @override
   PostState getStateCopy() {
-    return InPostState(posts: this.posts);
+    return FetchedPostState(posts: this.posts);
   }
 }
 
-class IdlePostState extends PostState {
-  IdlePostState();
+class EmptyPostState extends PostState {
+  EmptyPostState();
   @override
-  String toString() => 'IdlePostState';
+  String toString() => 'EmptyPostState';
 
   @override
   PostState getStateCopy() {
-    return IdlePostState();
+    return EmptyPostState();
   }
 }
 
@@ -56,5 +66,17 @@ class ErrorPostState extends PostState {
   @override
   PostState getStateCopy() {
     return ErrorPostState(this.errorMessage);
+  }
+}
+
+class SuccessPostState extends PostState {
+  SuccessPostState();
+
+  @override
+  String toString() => 'SuccessPostState';
+
+  @override
+  PostState getStateCopy() {
+    return SuccessPostState();
   }
 }

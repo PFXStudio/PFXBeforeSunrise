@@ -1,20 +1,15 @@
 import 'package:before_sunrise/import.dart';
+import 'package:before_sunrise/pages/homes/home_bottom_bar.dart';
 
 class HomeScreen extends StatefulWidget {
+  static const String routeName = "/home";
   const HomeScreen({
     Key key,
-    @required HomeBloc homeBloc,
-    @required PanelController panelController,
-  })  : _homeBloc = homeBloc,
-        _panelController = panelController,
-        super(key: key);
-
-  final HomeBloc _homeBloc;
-  final PanelController _panelController;
+  }) : super(key: key);
 
   @override
   HomeScreenState createState() {
-    return new HomeScreenState(_homeBloc);
+    return new HomeScreenState();
   }
 
   // void changeActivePage(int index) {
@@ -24,11 +19,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  final HomeBloc _homeBloc;
-  HomeScreenState(this._homeBloc);
+  PanelController _panelController = PanelController();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  int _activePageIndex;
+  final _homeBloc = new HomeBloc();
 
   PageView _pageView;
-  FreePostPage freePostPage = FreePostPage();
+  Widget postPage = FreePostPage();
 
   final _pageController = PageController(initialPage: 0, keepPage: false);
   @override
@@ -62,10 +60,30 @@ class HomeScreenState extends State<HomeScreen> {
           HomeCategoryBar(
             onActiveCategoryChange: (String categoryId) {
               print(categoryId);
+              if (categoryId == "0") {
+                setState(() {
+                  postPage = FreePostPage();
+                });
+                return;
+              }
+
+              if (categoryId == "1") {
+                setState(() {
+                  postPage = RealtimePostPage();
+                });
+                return;
+              }
+
+              if (categoryId == "2") {
+                setState(() {
+                  postPage = LatestPostPage();
+                });
+                return;
+              }
             },
           ),
           SizedBox(height: 10.0),
-          Flexible(child: freePostPage),
+          Flexible(child: postPage),
         ],
       ),
     );
@@ -81,40 +99,106 @@ class HomeScreenState extends State<HomeScreen> {
         _buildPageBody(_deviceHeight, _deviceWidth),
       ],
     );
-    return RefreshIndicator(
-        onRefresh: () async {},
-        child: SlidingUpPanel(
-          minHeight: 50.0,
-          renderPanelSheet: false,
-          controller: widget._panelController,
-          body: BlocListener(
-              bloc: widget._homeBloc,
-              listener: (context, state) async {},
-              child: BlocBuilder<HomeBloc, HomeState>(
-                  bloc: widget._homeBloc,
-                  builder: (
-                    BuildContext context,
-                    HomeState currentState,
-                  ) {
-                    if (currentState is PostTabState) {
-                      return _pageView;
-                    }
+    return WillPopScope(
+        onWillPop: () {
+          if (_panelController.isPanelOpen()) {
+            _panelController.close();
+          } else {
+            return _showExitAlertDialog(context);
+          }
+        },
+        child: Scaffold(
+          key: _scaffoldKey,
+          resizeToAvoidBottomInset: false,
+          appBar: HomeAppBar(scaffoldKey: _scaffoldKey),
+          drawer: Drawer(
+            child: Center(
+              child: RaisedButton(
+                  child: Text('Logout'),
+                  onPressed: () {} // _authBloc.signout(),
+                  ),
+            ),
+          ),
+          bottomNavigationBar: HomeBottomBar(
+            activeIndex: _activePageIndex,
+            onActiveIndexChange: (int index) {
+              _activePageIndex = index;
+              _homeBloc.dispatch(LoadTabEvent(index: _activePageIndex));
+            },
+          ),
+          body: RefreshIndicator(
+              onRefresh: () async {},
+              child: SlidingUpPanel(
+                minHeight: 50.0,
+                renderPanelSheet: false,
+                controller: _panelController,
+                body: BlocListener(
+                    bloc: _homeBloc,
+                    listener: (context, state) async {},
+                    child: BlocBuilder<HomeBloc, HomeState>(
+                        bloc: _homeBloc,
+                        builder: (
+                          BuildContext context,
+                          HomeState currentState,
+                        ) {
+                          if (currentState is PostTabState) {
+                            return _pageView;
+                          }
 
-                    if (currentState is ProfileTabState) {
-                      return Container();
-                    }
-                    if (currentState is ErrorHomeState) {
-                      return new Container(
-                          child: new Center(
-                        child: new Text('Error'),
-                      ));
-                    }
-                    return new Container(
-                        child: new Center(
-                      child: new Text("В разработке"),
-                    ));
-                  })),
-          panel: Container(),
+                          if (currentState is InfoTabState) {
+                            return InfoScreen(
+                              infoBloc: InfoBloc(),
+                            );
+                          }
+
+                          if (currentState is ProfileTabState) {
+                            return Container();
+                          }
+                          if (currentState is ErrorHomeState) {
+                            return new Container(
+                                child: new Center(
+                              child: new Text('Error'),
+                            ));
+                          }
+                          return new Container(
+                              child: new Center(
+                            child: new Text("В разработке"),
+                          ));
+                        })),
+                panel: Container(),
+              )),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.pushNamed(context, PostFormScreen.routeName);
+            },
+            tooltip: LocalizableLoader.of(context).text("hint_post"),
+            child: const Icon(Icons.add),
+            backgroundColor: MainTheme.enabledButtonColor,
+          ),
         ));
+  }
+
+  Future<bool> _showExitAlertDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Close Application'),
+            content: Text('Are you sure of exiting Before Sunrise?'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              RaisedButton(
+                  child: Text('Exit'),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  }),
+            ],
+          );
+        });
   }
 }

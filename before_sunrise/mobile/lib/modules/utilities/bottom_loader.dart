@@ -8,12 +8,19 @@ class BottomLoader extends StatelessWidget {
       padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
       child: Center(
         child: SizedBox(
-          width: 33,
-          height: 33,
-          child: CircularProgressIndicator(
-            strokeWidth: 1.5,
-          ),
-        ),
+            width: 120,
+            height: 33,
+            child: Row(
+              children: <Widget>[
+                CircularProgressIndicator(
+                  strokeWidth: 1.5,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10),
+                ),
+                Text(LocalizableLoader.of(context).text("loading")),
+              ],
+            )),
       ),
     );
   }

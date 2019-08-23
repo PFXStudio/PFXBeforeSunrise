@@ -15,7 +15,7 @@ abstract class IFImageProvider {
 class FImageProvider implements IFImageProvider {
   ImageRepository _imageRepository;
 
-  PostProvider() {
+  FImageProvider() {
     _imageRepository = ImageRepository();
   }
 

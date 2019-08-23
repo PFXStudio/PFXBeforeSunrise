@@ -51,7 +51,7 @@ class Post {
   Object data() {
     return {
       "userID": userID,
-      // "postID": postID,
+      // "postID": postID, // 저장 할 이유 없음.
       "type": type,
       "title": title,
       "contents": contents,

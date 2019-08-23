@@ -1,24 +1,19 @@
 import 'package:before_sunrise/import.dart';
 
 class PostFormScreen extends StatefulWidget {
+  static const String routeName = "/postForm";
   const PostFormScreen({
     Key key,
-    @required PostBloc postBloc,
-  })  : _postBloc = postBloc,
-        super(key: key);
-
-  final PostBloc _postBloc;
+  }) : super(key: key);
 
   @override
   PostFormScreenState createState() {
-    return new PostFormScreenState(_postBloc);
+    return new PostFormScreenState();
   }
 }
 
 class PostFormScreenState extends State<PostFormScreen> {
-  final PostBloc _postBloc;
-  PostFormScreenState(this._postBloc);
-
+  PostBloc _postBloc = PostBloc();
   final FocusNode _titleFocusNode = FocusNode();
   final FocusNode _contentsFocusNode = FocusNode();
   final FocusNode _youtubeFocusNode = FocusNode();
@@ -30,12 +25,14 @@ class PostFormScreenState extends State<PostFormScreen> {
 // multi image picker 이미지 데이터가 사라짐. 받아오면 바로 백업.
   final List<ByteData> _selectedThumbDatas = List<ByteData>();
   final List<ByteData> _selectedOriginalDatas = List<ByteData>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
 // 이 값은 초기에 초기화 되기 때문에 재 진입해야 적용 됨.
   double _maxContentsHeight = 1200;
   final int _maxPicturesCount = 20;
   Post _post = Post();
-  Widget _contents;
   @override
   void initState() {
     super.initState();
@@ -51,18 +48,12 @@ class PostFormScreenState extends State<PostFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _contents = _buildContents();
-    return BlocListener(
-        bloc: widget._postBloc,
-        listener: (context, state) async {},
-        child: BlocBuilder<PostBloc, PostState>(
-            bloc: widget._postBloc,
-            builder: (
-              BuildContext context,
-              PostState currentState,
-            ) {
-              return _contents;
-            }));
+    final _contents = _buildContents();
+    return Scaffold(
+      appBar: PostFormTopBar(),
+      key: _scaffoldKey,
+      body: _contents,
+    );
   }
 
   Widget _buildContents() {
@@ -116,14 +107,14 @@ class PostFormScreenState extends State<PostFormScreen> {
 
       if (resultList.length > 0) {
         for (Asset asset in resultList) {
-          ByteData data = await asset.requestThumbnail(
+          ByteData data = await asset.getThumbByteData(
             100,
             100,
             quality: 50,
           );
           _selectedThumbDatas.add(data);
 
-          ByteData originalData = await asset.requestOriginal();
+          ByteData originalData = await asset.getByteData();
           _selectedOriginalDatas.add(originalData);
           setState(() {});
         }
@@ -230,80 +221,87 @@ class PostFormScreenState extends State<PostFormScreen> {
   }
 
   Widget _buildForms(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: MainTheme.edgeInsets.top),
-      child: Column(
-        children: <Widget>[
-          Stack(
-            alignment: Alignment.topCenter,
-            overflow: Overflow.visible,
+    return Form(
+        key: _formKey,
+        child: Container(
+          padding: EdgeInsets.only(top: MainTheme.edgeInsets.top),
+          child: Column(
             children: <Widget>[
-              Card(
-                elevation: 2.0,
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Container(
-                  width: MediaQuery.of(context).size.width -
-                      MainTheme.edgeInsets.left,
-                  height: 400,
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 20, top: 5, bottom: 5),
-                        child: TextField(
-                          focusNode: _titleFocusNode,
-                          controller: _titleController,
-                          keyboardType: TextInputType.multiline,
-                          style: TextStyle(fontSize: 16.0, color: Colors.black),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            icon: Icon(
-                              FontAwesomeIcons.pencilAlt,
-                              color: Colors.black54,
-                              size: 18.0,
-                            ),
-                            hintText: LocalizableLoader.of(context)
-                                .text("board_title_hint_text"),
-                            hintStyle: TextStyle(fontSize: 17.0),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width -
-                            MainTheme.edgeInsets.left * 2,
-                        height: 1.0,
-                        color: Colors.grey[400],
-                      ),
-                      Padding(
-                          padding: EdgeInsets.only(left: 20, top: 5, bottom: 5),
-                          child: TextField(
-                            focusNode: _contentsFocusNode,
-                            controller: _contentsController,
-                            keyboardType: TextInputType.multiline,
-                            maxLines: 15,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              icon: Icon(
-                                FontAwesomeIcons.alignJustify,
-                                size: 18.0,
-                                color: Colors.black54,
+              Stack(
+                alignment: Alignment.topCenter,
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  Card(
+                    elevation: 2.0,
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width -
+                          MainTheme.edgeInsets.left,
+                      height: 400,
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding:
+                                EdgeInsets.only(left: 20, top: 5, bottom: 5),
+                            child: TextFormField(
+                              // TextField(
+                              focusNode: _titleFocusNode,
+                              controller: _titleController,
+                              keyboardType: TextInputType.multiline,
+                              style: TextStyle(
+                                  fontSize: 16.0, color: Colors.black),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                icon: Icon(
+                                  FontAwesomeIcons.pencilAlt,
+                                  color: Colors.black54,
+                                  size: 18.0,
+                                ),
+                                hintText: LocalizableLoader.of(context)
+                                    .text("board_title_hint_text"),
+                                hintStyle: TextStyle(fontSize: 17.0),
                               ),
-                              hintText: LocalizableLoader.of(context)
-                                  .text("board_contents_hint_text"),
-                              hintStyle: TextStyle(fontSize: 17.0),
                             ),
-                          )),
-                    ],
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width -
+                                MainTheme.edgeInsets.left * 2,
+                            height: 1.0,
+                            color: Colors.grey[400],
+                          ),
+                          Padding(
+                              padding:
+                                  EdgeInsets.only(left: 20, top: 5, bottom: 5),
+                              child: TextFormField(
+                                // TextField(
+                                focusNode: _contentsFocusNode,
+                                controller: _contentsController,
+                                keyboardType: TextInputType.multiline,
+                                maxLines: 15,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  icon: Icon(
+                                    FontAwesomeIcons.alignJustify,
+                                    size: 18.0,
+                                    color: Colors.black54,
+                                  ),
+                                  hintText: LocalizableLoader.of(context)
+                                      .text("board_contents_hint_text"),
+                                  hintStyle: TextStyle(fontSize: 17.0),
+                                ),
+                              )),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 
   Widget _buildGalleryFiles(BuildContext context) {
@@ -489,50 +487,58 @@ class PostFormScreenState extends State<PostFormScreen> {
   }
 
   Widget _buildRegistButton(BuildContext context) {
-    return Container(
-      margin: MainTheme.edgeInsets,
-      decoration: new BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: MainTheme.gradientStartColor,
-            offset: Offset(1.0, 6.0),
-            blurRadius: 20.0,
-          ),
-          BoxShadow(
-            color: MainTheme.gradientEndColor,
-            offset: Offset(1.0, 6.0),
-            blurRadius: 20.0,
-          ),
-        ],
-        gradient: MainTheme.buttonLinearGradient,
-      ),
-      child: MaterialButton(
-          highlightColor: Colors.transparent,
-          splashColor: Colors.red,
-          //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 42.0),
-            child: Text(
-              LocalizableLoader.of(context).text("board_regist_button"),
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20.0,
-              ),
-            ),
-          ),
-          onPressed: () {
-            _requestRegist();
-          }),
-    );
+    return BlocListener(
+        bloc: _postBloc,
+        listener: (context, state) async {},
+        child: BlocBuilder<PostBloc, PostState>(
+            bloc: _postBloc,
+            builder: (
+              BuildContext context,
+              PostState currentState,
+            ) {
+              return Container(
+                margin: MainTheme.edgeInsets,
+                decoration: new BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: MainTheme.gradientStartColor,
+                      offset: Offset(1.0, 6.0),
+                      blurRadius: 20.0,
+                    ),
+                    BoxShadow(
+                      color: MainTheme.gradientEndColor,
+                      offset: Offset(1.0, 6.0),
+                      blurRadius: 20.0,
+                    ),
+                  ],
+                  gradient: MainTheme.buttonLinearGradient,
+                ),
+                child: MaterialButton(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.red,
+                    //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 42.0),
+                      child: Text(
+                        LocalizableLoader.of(context)
+                            .text("board_regist_button"),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      _requestRegist();
+                    }),
+              );
+              ;
+            }));
   }
 
   void _requestRegist() {
-    _titleController.text = "AAAAAA";
-    _contentsController.text = "BBBBBBB";
-    _post.type = "PostType.Free";
-    _post.publishType = "PublishType.All";
     if (_titleController.text.length <= 0) {
       FailSnackbar().show("error_post_form_empty_title", null);
       return;
@@ -557,6 +563,7 @@ class PostFormScreenState extends State<PostFormScreen> {
     _post.contents = _contentsController.text;
     _post.youtubeUrl = _youtubeController.text;
     _post.created = DateTime.now().millisecondsSinceEpoch;
-    _postBloc.dispatch(CreatePostEvent(post: _post));
+    _postBloc.dispatch(
+        CreatePostEvent(post: _post, byteDatas: _selectedOriginalDatas));
   }
 }

@@ -44,7 +44,7 @@ class ProfileInputScreenState extends State<ProfileInputScreen> {
         listener: (context, state) async {
           if (state is InProfileState) {
             ProfileBloc().signedProfile = state.profile.copyWith();
-            Navigator.pushReplacementNamed(context, HomePage.routeName);
+            Navigator.pushReplacementNamed(context, HomeScreen.routeName);
 
             return;
           }

@@ -65,7 +65,6 @@ export 'dialogs/error_dialog.dart';
 // pages
 export 'pages/auths/un_auth_screen.dart';
 export 'pages/auths/verify_auth_screen.dart';
-export 'pages/auths/auth_page.dart';
 export 'pages/auths/auth_screen.dart';
 export 'pages/snacks/success_snackbar.dart';
 export 'pages/snacks/fail_snackbar.dart';
@@ -74,17 +73,21 @@ export 'pages/profiles/profile_input_screen.dart';
 export 'pages/homes/blocs/home_bloc.dart';
 export 'pages/homes/blocs/home_event.dart';
 export 'pages/homes/blocs/home_state.dart';
-export 'pages/homes/home_page.dart';
 export 'pages/homes/home_screen.dart';
 export 'pages/homes/home_category_bar.dart';
 export 'pages/homes/home_app_bar.dart';
 export 'pages/post_forms/post_form_top_bar.dart';
 export 'pages/post_forms/post_form_screen.dart';
-export 'pages/post_forms/post_form_page.dart';
 
 export 'pages/posts/free_post_screen.dart';
 export 'pages/posts/free_post_page.dart';
+export 'pages/posts/realtime_post_screen.dart';
+export 'pages/posts/realtime_post_page.dart';
+export 'pages/posts/latest_post_screen.dart';
+export 'pages/posts/latest_post_page.dart';
 export 'pages/posts/post_item_card_default.dart';
+
+export 'pages/infos/info_screen.dart';
 
 export 'widgets/loadings/loading_contents.dart';
 export 'widgets/loadings/platform_adaptive_progress_indicator.dart';

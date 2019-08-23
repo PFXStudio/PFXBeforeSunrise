@@ -154,7 +154,6 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(15.0),
               bottomLeft: Radius.circular(15.0)),
-          // borderRadius: BorderRadius.circular(25.0),
         ),
         child: Text(
           'GHC ${_post.likeCount}',
@@ -172,7 +171,8 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
         Container(
           child: _post.imageUrls != null && _post.imageUrls.length > 0
               ? _buildPostImageCarousel()
-              : Image.asset('assets/avatars/bg-avatar.png', fit: BoxFit.cover),
+              : Container(),
+          // Image.asset('assets/avatars/bg-avatar.png', fit: BoxFit.cover),
         ),
         _buildPostImageSynopsis(),
         _post.imageUrls.length > 1
@@ -317,6 +317,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
     return Column(
       children: <Widget>[
         Card(
+          margin: EdgeInsets.all(10),
           elevation: 8.0,
           child: InkWell(
             onTap: () => _navigateToPostDetailsPage(),

@@ -2,28 +2,26 @@ import 'package:before_sunrise/import.dart';
 import 'package:before_sunrise/pages/auths/error_auth_screen.dart';
 
 class AuthScreen extends StatefulWidget {
+  static const String routeName = "/auth";
   const AuthScreen({
     Key key,
-    @required AuthBloc authBloc,
-  })  : _authBloc = authBloc,
-        super(key: key);
-
-  final AuthBloc _authBloc;
+  }) : super(key: key);
 
   @override
   AuthScreenState createState() {
-    return new AuthScreenState(_authBloc);
+    return new AuthScreenState();
   }
 }
 
 class AuthScreenState extends State<AuthScreen> {
-  final AuthBloc _authBloc;
-  AuthScreenState(this._authBloc);
+  final AuthBloc _authBloc = AuthBloc();
   String _verificationID = "";
 
   ErrorAuthScreen _errorAuthScreen;
   UnAuthScreen _unAuthScreen;
   VerifyAuthScreen _verifyAuthScreen;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -70,33 +68,36 @@ class AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener(
-        bloc: widget._authBloc,
-        listener: (context, state) async {
-          if (state is InAuthState) {
-            String userID = await _authBloc.getUserID();
-            Navigator.pushReplacementNamed(context, ProfileInputPage.routeName,
-                arguments: userID);
+    return Scaffold(
+        key: _scaffoldKey,
+        body: BlocListener(
+            bloc: _authBloc,
+            listener: (context, state) async {
+              if (state is InAuthState) {
+                String userID = await _authBloc.getUserID();
+                Navigator.pushReplacementNamed(
+                    context, ProfileInputPage.routeName,
+                    arguments: userID);
 
-            return;
-          }
-        },
-        child: BlocBuilder<AuthBloc, AuthState>(
-            bloc: widget._authBloc,
-            builder: (
-              BuildContext context,
-              AuthState currentState,
-            ) {
-              if (currentState is VerifyAuthState) {
-                return _verifyAuthScreen;
+                return;
               }
+            },
+            child: BlocBuilder<AuthBloc, AuthState>(
+                bloc: _authBloc,
+                builder: (
+                  BuildContext context,
+                  AuthState currentState,
+                ) {
+                  if (currentState is VerifyAuthState) {
+                    return _verifyAuthScreen;
+                  }
 
-              if (currentState is ErrorAuthState) {
-                _errorAuthScreen.message = currentState.errorMessage;
-                return _errorAuthScreen;
-              }
+                  if (currentState is ErrorAuthState) {
+                    _errorAuthScreen.message = currentState.errorMessage;
+                    return _errorAuthScreen;
+                  }
 
-              return _unAuthScreen;
-            }));
+                  return _unAuthScreen;
+                })));
   }
 }

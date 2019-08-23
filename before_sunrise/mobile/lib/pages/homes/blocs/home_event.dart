@@ -19,7 +19,7 @@ class LoadTabEvent extends HomeEvent {
       }
 
       if (this.index == 1) {
-        return ProfileTabState();
+        return InfoTabState();
       }
 
       return new InHomeState();
