@@ -12,6 +12,8 @@ class LoadPostEvent extends PostEvent {
   String toString() => 'LoadPostEvent';
   final IPostProvider _postProvider = PostProvider();
   final IProfileProvider _profileProvider = ProfileProvider();
+  final IAuthProvider _authProvider = AuthProvider();
+  final IShardsProvider _shardsProvider = ShardsProvider();
   Post post;
 
   @override
@@ -27,6 +29,7 @@ class LoadPostEvent extends PostEvent {
         return EmptyPostState();
       }
 
+      String userID = await _authProvider.getUserID();
       for (var document in snapshot.documents) {
         Post post = Post();
         post.initialize(document);
@@ -35,10 +38,50 @@ class LoadPostEvent extends PostEvent {
         Profile profile = Profile();
         profile.initialize(snapshot);
         post.profile = profile;
+
+        post.isLiked =
+            await _postProvider.isLiked(postID: post.postID, userID: userID);
+        DocumentSnapshot shardsSnapshot =
+            await _shardsProvider.likedCount(postID: post.postID);
+        if (shardsSnapshot != null && shardsSnapshot.data != null) {
+          post.likeCount = shardsSnapshot.data["count"];
+        }
+
         posts.add(post);
       }
 
       return new FetchedPostState(posts: posts);
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorPostState(_?.toString());
+    }
+  }
+}
+
+class ToggleLikePostEvent extends PostEvent {
+  ToggleLikePostEvent({@required this.postID, this.isLike});
+  @override
+  String toString() => 'ToggleLikePostEvent';
+  final IPostProvider _postProvider = PostProvider();
+  final IAuthProvider _authProvider = AuthProvider();
+  final IShardsProvider _shardsProvider = ShardsProvider();
+
+  String postID;
+  bool isLike;
+
+  @override
+  Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
+    try {
+      String userID = await _authProvider.getUserID();
+      if (isLike == true) {
+        await _postProvider.addToLike(postID: postID, userID: userID);
+        await _shardsProvider.increaseLikeCount(postID: postID);
+      } else {
+        await _postProvider.removeFromLike(postID: postID, userID: userID);
+        await _shardsProvider.decreaseLikeCount(postID: postID);
+      }
+
+      return currentState;
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorPostState(_?.toString());
@@ -81,29 +124,6 @@ class CreatePostEvent extends PostEvent {
       }
 
       return new SuccessPostState();
-    } catch (_, stackTrace) {
-      print('$_ $stackTrace');
-      return new ErrorPostState(_?.toString());
-    }
-  }
-}
-
-class LikePostEvent extends PostEvent {
-  LikePostEvent({@required this.postID});
-  @override
-  String toString() => 'LikePostEvent';
-  final IPostProvider _postProvider = PostProvider();
-  final IAuthProvider _authProvider = AuthProvider();
-
-  String postID;
-
-  @override
-  Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
-    try {
-      String userID = await _authProvider.getUserID();
-      await _postProvider.addToLike(postID: postID, userID: userID);
-
-      return currentState;
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorPostState(_?.toString());

@@ -1,5 +1,4 @@
 import 'package:before_sunrise/import.dart';
-import 'package:before_sunrise/import.dart' as prefix0;
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -289,7 +288,8 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
       title:
           Text('${_post.title}', style: TextStyle(fontWeight: FontWeight.bold)),
       subtitle: Text('${_post.contents}', overflow: TextOverflow.ellipsis),
-      trailing: ClapFAB.icon(
+      trailing: LikePostWidget.icon(
+        isLiked: _post.isLiked,
         counter: _post.likeCount,
         defaultIcon: FontAwesomeIcons.heart,
         filledIcon: FontAwesomeIcons.solidHeart,
@@ -299,9 +299,24 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
         sparkleColor: MainTheme.pivotColor,
         shadowColor: MainTheme.enabledButtonColor,
         filledIconColor: MainTheme.enabledButtonColor,
-        isDecrement: false,
-        clapFabCallback: (result) {
-          PostBloc().dispatch(LikePostEvent(postID: _post.postID));
+        clapFabCallback: (callback) {
+          PostBloc().dispatch(ToggleLikePostEvent(
+              postID: _post.postID, isLike: !_post.isLiked));
+          _post.isLiked = !_post.isLiked;
+          if (_post.isLiked == true) {
+            _post.likeCount++;
+          } else {
+            _post.likeCount--;
+          }
+
+          if (callback == null) {
+            return;
+          }
+
+          print("isLiked : ${_post.isLiked}, count : ${_post.likeCount}");
+          callback(_post.isLiked, _post.likeCount);
+
+          // });
         },
       ),
       // IconButton(

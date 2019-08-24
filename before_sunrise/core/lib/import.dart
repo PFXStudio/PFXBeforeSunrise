@@ -24,6 +24,16 @@ export 'networks/mock_client.dart';
 export 'networks/i_client.dart';
 export 'delegates/simple_bloc_delegate.dart';
 
+export 'models/post_category.dart';
+export 'models/post.dart';
+export 'models/profile.dart';
+export 'repositories/auth_repository.dart';
+export 'repositories/category_repository.dart';
+export 'repositories/image_repository.dart';
+export 'repositories/post_repository.dart';
+export 'repositories/profile_repository.dart';
+export 'repositories/shards_repository.dart';
+
 export 'images/fimage_provider.dart';
 export 'auths/auth_bloc.dart';
 export 'auths/auth_event.dart';
@@ -38,15 +48,10 @@ export 'posts/post_bloc.dart';
 export 'posts/post_event.dart';
 export 'posts/post_provider.dart';
 export 'posts/post_state.dart';
+export 'shards/shards_bloc.dart';
+export 'shards/shards_event.dart';
+export 'shards/shards_provider.dart';
+export 'shards/shards_state.dart';
 export 'infos/info_bloc.dart';
 export 'infos/info_event.dart';
 export 'infos/info_state.dart';
-
-export 'models/post_category.dart';
-export 'models/post.dart';
-export 'models/profile.dart';
-export 'repositories/auth_repository.dart';
-export 'repositories/category_repository.dart';
-export 'repositories/image_repository.dart';
-export 'repositories/post_repository.dart';
-export 'repositories/profile_repository.dart';
