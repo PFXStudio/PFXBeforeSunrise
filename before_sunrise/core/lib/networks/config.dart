@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 class Config {
   Config._internal();
   static final Config _instance = new Config._internal();

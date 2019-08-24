@@ -74,6 +74,10 @@ export 'pages/snacks/success_snackbar.dart';
 export 'pages/snacks/fail_snackbar.dart';
 export 'pages/profiles/profile_input_page.dart';
 export 'pages/profiles/profile_input_screen.dart';
+export 'pages/profiles/profile_screen.dart';
+export 'pages/profiles/profile_navbar.dart';
+export 'pages/profiles/profile_tab_page.dart';
+export 'pages/profiles/timeline_tab_page.dart';
 export 'pages/homes/blocs/home_bloc.dart';
 export 'pages/homes/blocs/home_event.dart';
 export 'pages/homes/blocs/home_state.dart';
@@ -90,6 +94,7 @@ export 'pages/posts/realtime_post_page.dart';
 export 'pages/posts/latest_post_screen.dart';
 export 'pages/posts/latest_post_page.dart';
 export 'pages/posts/post_item_card_default.dart';
+export 'pages/post_details/post_detail_screen.dart';
 
 export 'pages/infos/info_screen.dart';
 

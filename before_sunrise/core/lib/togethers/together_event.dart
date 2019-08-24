@@ -1,31 +1,33 @@
 import 'package:core/import.dart';
 
 @immutable
-abstract class PostEvent {
-  Future<PostState> applyAsync({PostState currentState, PostBloc bloc});
+abstract class TogetherEvent {
+  Future<TogetherState> applyAsync(
+      {TogetherState currentState, TogetherBloc bloc});
 }
 
-class LoadPostEvent extends PostEvent {
-  LoadPostEvent({@required this.post});
+class LoadTogetherEvent extends TogetherEvent {
+  LoadTogetherEvent({@required this.post});
   @override
-  String toString() => 'LoadPostEvent';
-  final IPostProvider _postProvider = PostProvider();
+  String toString() => 'LoadTogetherEvent';
+  final ITogetherProvider _postProvider = TogetherProvider();
   final IProfileProvider _profileProvider = ProfileProvider();
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
   Post post;
 
   @override
-  Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
+  Future<TogetherState> applyAsync(
+      {TogetherState currentState, TogetherBloc bloc}) async {
     try {
       QuerySnapshot snapshot =
-          await _postProvider.fetchPosts(lastVisiblePost: post);
+          await _postProvider.fetchTogethers(lastVisibleTogether: post);
       List<Post> posts = List<Post>();
       if (snapshot == null) {
-        return EmptyPostState();
+        return EmptyTogetherState();
       }
       if (snapshot.documents.length <= 0) {
-        return EmptyPostState();
+        return EmptyTogetherState();
       }
 
       String userID = await _authProvider.getUserID();
@@ -49,19 +51,19 @@ class LoadPostEvent extends PostEvent {
         posts.add(post);
       }
 
-      return new FetchedPostState(posts: posts);
+      return new FetchedTogetherState(posts: posts);
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
-      return new ErrorPostState(_?.toString());
+      return new ErrorTogetherState(_?.toString());
     }
   }
 }
 
-class ToggleLikePostEvent extends PostEvent {
-  ToggleLikePostEvent({@required this.postID, this.isLike});
+class ToggleLikeTogetherEvent extends TogetherEvent {
+  ToggleLikeTogetherEvent({@required this.postID, this.isLike});
   @override
-  String toString() => 'ToggleLikePostEvent';
-  final IPostProvider _postProvider = PostProvider();
+  String toString() => 'ToggleLikeTogetherEvent';
+  final ITogetherProvider _postProvider = TogetherProvider();
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
 
@@ -69,7 +71,8 @@ class ToggleLikePostEvent extends PostEvent {
   bool isLike;
 
   @override
-  Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
+  Future<TogetherState> applyAsync(
+      {TogetherState currentState, TogetherBloc bloc}) async {
     try {
       String userID = await _authProvider.getUserID();
       if (isLike == true) {
@@ -83,17 +86,17 @@ class ToggleLikePostEvent extends PostEvent {
       return currentState;
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
-      return new ErrorPostState(_?.toString());
+      return new ErrorTogetherState(_?.toString());
     }
   }
 }
 
-class CreatePostEvent extends PostEvent {
-  CreatePostEvent({@required this.post, @required this.byteDatas})
+class CreateTogetherEvent extends TogetherEvent {
+  CreateTogetherEvent({@required this.post, @required this.byteDatas})
       : _firestoreTimestamp = FieldValue.serverTimestamp();
   @override
-  String toString() => 'CreatePostEvent';
-  final IPostProvider _postProvider = PostProvider();
+  String toString() => 'CreateTogetherEvent';
+  final ITogetherProvider _postProvider = TogetherProvider();
   final IAuthProvider _authProvider = AuthProvider();
   final IFImageProvider _imageProvider = FImageProvider();
   FieldValue _firestoreTimestamp;
@@ -102,7 +105,8 @@ class CreatePostEvent extends PostEvent {
   Post post;
 
   @override
-  Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
+  Future<TogetherState> applyAsync(
+      {TogetherState currentState, TogetherBloc bloc}) async {
     try {
       String userID = await _authProvider.getUserID();
       List<String> imageUrls = List<String>();
@@ -117,15 +121,15 @@ class CreatePostEvent extends PostEvent {
       post.lastUpdate = _firestoreTimestamp;
       post.imageUrls = imageUrls;
       DocumentReference reference =
-          await _postProvider.createPost(data: post.data());
+          await _postProvider.createTogether(data: post.data());
       if (reference == null) {
-        return ErrorPostState("error");
+        return ErrorTogetherState("error");
       }
 
-      return new SuccessPostState();
+      return new SuccessTogetherState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
-      return new ErrorPostState(_?.toString());
+      return new ErrorTogetherState(_?.toString());
     }
   }
 }

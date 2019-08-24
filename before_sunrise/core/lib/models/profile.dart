@@ -13,14 +13,14 @@ class Profile {
   int followersCount;
 
   Profile({
-    @required this.userID,
-    @required this.nickname,
-    @required this.description,
-    @required this.phoneNumber,
-    @required this.profileImageUrl,
-    @required this.gender,
-    @required this.created,
-    @required this.lastUpdate,
+    this.userID,
+    this.nickname,
+    this.description,
+    this.phoneNumber,
+    this.profileImageUrl,
+    this.gender,
+    this.created,
+    this.lastUpdate,
     this.isFollowing = false,
     this.followersCount = 0,
   });

@@ -34,19 +34,12 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
   }
 
   void _navigateToPostDetailsPage() {
-    if (_isProfilePost) {
-      Navigator.of(context).pushNamed('/profile-post/${_post.postID}');
-    } else {
-      Navigator.of(context).pushNamed('/post/${_post.postID}');
-    }
+    Navigator.pushNamed(context, PostDetailScreen.routeName, arguments: _post);
   }
 
   void _navigateToProfilePage() {
-    // TODO :
-    // Navigator.of(context).pushNamed('/post-profile/${_post.postID}').then((_) {
-    //   final _postFormKey = UniqueKey();
-    //   _postBloc.postFormKey = _postFormKey;
-    // });
+    Navigator.pushNamed(context, ProfileScreen.routeName,
+        arguments: _post.profile);
   }
 
   Widget _buildActivePostImage() {
@@ -270,8 +263,16 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
               )
             : ClipRRect(
                 borderRadius: BorderRadius.circular(25.0),
-                child:
-                    Image.asset('assets/avatars/avatar.png', fit: BoxFit.fill),
+                child: Container(
+                    height: 40.0,
+                    width: 40.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.black12, width: 1.0),
+                      image: DecorationImage(
+                          image: ExactAssetImage('assets/avatars/avatar.png'),
+                          fit: BoxFit.fill),
+                    )),
               ),
       ),
       title: Text('${_post.profile.nickname}',
@@ -291,8 +292,8 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
       trailing: LikePostWidget.icon(
         isLiked: _post.isLiked,
         counter: _post.likeCount,
-        defaultIcon: FontAwesomeIcons.heart,
-        filledIcon: FontAwesomeIcons.solidHeart,
+        defaultIcon: FontAwesomeIcons.handPeace,
+        filledIcon: FontAwesomeIcons.solidHandPeace,
         countCircleColor: MainTheme.enabledButtonColor,
         defaultIconColor: MainTheme.enabledButtonColor,
         hasShadow: true,

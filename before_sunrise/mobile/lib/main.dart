@@ -63,6 +63,18 @@ class _MainAppState extends State<MainApp> {
           return ProfileInputPage(value);
         },
         PostFormScreen.routeName: (context) => PostFormScreen(),
+        PostDetailScreen.routeName: (context) {
+          var post = ModalRoute.of(context).settings.arguments;
+          return PostDetailScreen(
+            post: post,
+          );
+        },
+        ProfileScreen.routeName: (context) {
+          Profile profile = ModalRoute.of(context).settings.arguments;
+          return ProfileScreen(
+            profile: profile,
+          );
+        },
       },
     );
   }

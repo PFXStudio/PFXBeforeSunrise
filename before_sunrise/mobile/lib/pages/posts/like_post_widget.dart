@@ -1,6 +1,7 @@
 import 'package:before_sunrise/import.dart';
 
 class LikePostWidget extends StatefulWidget {
+  bool isSparkleStay;
   bool isLiked;
   int counter;
   final countCircleColor;
@@ -21,7 +22,8 @@ class LikePostWidget extends StatefulWidget {
   final filledImageColor;
 
   LikePostWidget.icon(
-      {this.isLiked,
+      {this.isSparkleStay,
+      this.isLiked,
       this.counter,
       this.countCircleColor = Colors.blue,
       this.countTextColor = Colors.white,
@@ -41,7 +43,8 @@ class LikePostWidget extends StatefulWidget {
         filledImageColor = null;
 
   LikePostWidget.image(
-      {this.isLiked,
+      {this.isSparkleStay,
+      this.isLiked,
       this.counter,
       this.countCircleColor = Colors.blue,
       this.countTextColor = Colors.white,
@@ -91,7 +94,8 @@ class _LikePostWidgetState extends State<LikePostWidget>
 
     scoreOutAnimationController =
         AnimationController(vsync: this, duration: duration);
-    scoreOutPositionAnimation = Tween(begin: 50.0, end: 80.0).animate(
+    double end = 80;
+    scoreOutPositionAnimation = Tween(begin: 50.0, end: end).animate(
         CurvedAnimation(
             parent: scoreOutAnimationController, curve: Curves.easeOut));
     scoreOutPositionAnimation.addListener(() {
@@ -130,7 +134,6 @@ class _LikePostWidgetState extends State<LikePostWidget>
   }
 
   void increment(Timer t) {
-    print("decrement");
     scoreSizeAnimationController.forward(from: 0.0);
     sparklesAnimationController.forward(from: 0.0);
     setState(() {
@@ -139,7 +142,6 @@ class _LikePostWidgetState extends State<LikePostWidget>
   }
 
   void decrement(Timer t) {
-    print("decrement");
     scoreSizeAnimationController.forward(from: 0.0);
     sparklesAnimationController.forward(from: 0.0);
     setState(() {
@@ -215,7 +217,7 @@ class _LikePostWidgetState extends State<LikePostWidget>
                   color: widget.isLiked == true
                       ? widget.filledIconColor
                       : widget.defaultIconColor,
-                  size: 15.0,
+                  size: 18.0,
                 )
               : ImageIcon(
                   new AssetImage(widget.isLiked == true
@@ -278,7 +280,9 @@ class _LikePostWidgetState extends State<LikePostWidget>
             width: 40.0 + extraSize,
             decoration: ShapeDecoration(
               shape: CircleBorder(side: BorderSide.none),
-              color: widget.countCircleColor,
+              color: widget.isSparkleStay == true
+                  ? Colors.transparent
+                  : widget.countCircleColor,
             ),
             child: Center(
                 child: Text(
@@ -295,8 +299,29 @@ class _LikePostWidgetState extends State<LikePostWidget>
           overflow: Overflow.visible,
           children: stackChildren,
         ),
-        bottom: scorePosition);
+        bottom: scorePosition * (widget.isSparkleStay == true ? 0 : 1));
     return _currentWidget;
+  }
+
+  Widget countText() {
+    var scorePosition = -7.0;
+    if (widget.counter <= 0) {
+      return SizedBox(height: 0, width: 0);
+    }
+
+    return Positioned(
+        child: Stack(
+          alignment: FractionalOffset.center,
+          overflow: Overflow.visible,
+          children: [
+            Text("+${widget.counter}",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: MainTheme.enabledButtonColor,
+                    fontSize: 12)),
+          ],
+        ),
+        bottom: (widget.isSparkleStay == true ? 6 : -7));
   }
 
   @override
@@ -309,6 +334,7 @@ class _LikePostWidgetState extends State<LikePostWidget>
         children: <Widget>[
           getScoreButton(),
           getClapButton(),
+          countText(),
         ],
       ),
     );
