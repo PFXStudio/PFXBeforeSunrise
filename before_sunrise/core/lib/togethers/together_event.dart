@@ -1,4 +1,5 @@
 import 'package:core/import.dart';
+import 'package:intl/intl.dart';
 
 @immutable
 abstract class TogetherEvent {
@@ -7,22 +8,40 @@ abstract class TogetherEvent {
 }
 
 class LoadTogetherEvent extends TogetherEvent {
-  LoadTogetherEvent({@required this.post});
+  LoadTogetherEvent({@required this.dateTime});
   @override
   String toString() => 'LoadTogetherEvent';
-  final ITogetherProvider _postProvider = TogetherProvider();
+  final ITogetherProvider _togetherProvider = TogetherProvider();
   final IProfileProvider _profileProvider = ProfileProvider();
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
-  Post post;
+  DateTime dateTime;
 
   @override
   Future<TogetherState> applyAsync(
       {TogetherState currentState, TogetherBloc bloc}) async {
     try {
+      String dateString = DateFormat('yyyy-MM-dd').format(dateTime);
       QuerySnapshot snapshot =
-          await _postProvider.fetchTogethers(lastVisibleTogether: post);
-      List<Post> posts = List<Post>();
+          await _togetherProvider.fetchTogethers(dateString: dateString);
+
+      List<DateTime> dates = List<DateTime>();
+      DateTime currentDateTime = DateTime.now();
+      DateTime selectedDate;
+      for (int i = 0; i < 6; i++) {
+        var addDateTime = currentDateTime.add(Duration(days: i));
+        dates.add(addDateTime);
+        if (currentDateTime.year == dateTime.year &&
+            currentDateTime.month == dateTime.month &&
+            currentDateTime.day == dateTime.day) {
+          selectedDate = currentDateTime;
+        }
+      }
+
+      List<Together> togethers = List<Together>();
+      TogetherCollection collection = TogetherCollection(
+          dates: dates, togethers: togethers, selectedDate: selectedDate);
+
       if (snapshot == null) {
         return EmptyTogetherState();
       }
@@ -31,27 +50,7 @@ class LoadTogetherEvent extends TogetherEvent {
       }
 
       String userID = await _authProvider.getUserID();
-      for (var document in snapshot.documents) {
-        Post post = Post();
-        post.initialize(document);
-        DocumentSnapshot snapshot =
-            await _profileProvider.fetchProfile(userID: post.userID);
-        Profile profile = Profile();
-        profile.initialize(snapshot);
-        post.profile = profile;
-
-        post.isLiked =
-            await _postProvider.isLiked(postID: post.postID, userID: userID);
-        DocumentSnapshot shardsSnapshot =
-            await _shardsProvider.likedCount(postID: post.postID);
-        if (shardsSnapshot != null && shardsSnapshot.data != null) {
-          post.likeCount = shardsSnapshot.data["count"];
-        }
-
-        posts.add(post);
-      }
-
-      return new FetchedTogetherState(posts: posts);
+      return new FetchedTogetherState(togetherCollection: collection);
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorTogetherState(_?.toString());
@@ -63,7 +62,7 @@ class ToggleLikeTogetherEvent extends TogetherEvent {
   ToggleLikeTogetherEvent({@required this.postID, this.isLike});
   @override
   String toString() => 'ToggleLikeTogetherEvent';
-  final ITogetherProvider _postProvider = TogetherProvider();
+  final ITogetherProvider _togetherProvider = TogetherProvider();
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
 
@@ -76,10 +75,10 @@ class ToggleLikeTogetherEvent extends TogetherEvent {
     try {
       String userID = await _authProvider.getUserID();
       if (isLike == true) {
-        await _postProvider.addToLike(postID: postID, userID: userID);
+        await _togetherProvider.addToLike(postID: postID, userID: userID);
         await _shardsProvider.increaseLikeCount(postID: postID);
       } else {
-        await _postProvider.removeFromLike(postID: postID, userID: userID);
+        await _togetherProvider.removeFromLike(postID: postID, userID: userID);
         await _shardsProvider.decreaseLikeCount(postID: postID);
       }
 
@@ -96,7 +95,7 @@ class CreateTogetherEvent extends TogetherEvent {
       : _firestoreTimestamp = FieldValue.serverTimestamp();
   @override
   String toString() => 'CreateTogetherEvent';
-  final ITogetherProvider _postProvider = TogetherProvider();
+  final ITogetherProvider _togetherProvider = TogetherProvider();
   final IAuthProvider _authProvider = AuthProvider();
   final IFImageProvider _imageProvider = FImageProvider();
   FieldValue _firestoreTimestamp;
@@ -121,7 +120,7 @@ class CreateTogetherEvent extends TogetherEvent {
       post.lastUpdate = _firestoreTimestamp;
       post.imageUrls = imageUrls;
       DocumentReference reference =
-          await _postProvider.createTogether(data: post.data());
+          await _togetherProvider.createTogether(data: post.data());
       if (reference == null) {
         return ErrorTogetherState("error");
       }

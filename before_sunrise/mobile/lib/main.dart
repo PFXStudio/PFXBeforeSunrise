@@ -75,6 +75,7 @@ class _MainAppState extends State<MainApp> {
             profile: profile,
           );
         },
+        TogetherForm.routeName: (context) => TogetherForm(),
       },
     );
   }

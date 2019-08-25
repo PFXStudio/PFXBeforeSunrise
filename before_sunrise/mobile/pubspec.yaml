@@ -46,6 +46,7 @@ dependencies:
   flutter_bloc: ^0.20.1
   keyboard_visibility: ^0.5.6
   timeago: ^2.0.18
+  url_launcher: ^3.0.0
 
 dev_dependencies:
   flutter_test:

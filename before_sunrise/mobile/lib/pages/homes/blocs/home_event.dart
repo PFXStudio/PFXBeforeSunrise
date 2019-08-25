@@ -19,6 +19,10 @@ class LoadTabEvent extends HomeEvent {
       }
 
       if (this.index == 1) {
+        return TogetherTabState();
+      }
+
+      if (this.index == 2) {
         return InfoTabState();
       }
 

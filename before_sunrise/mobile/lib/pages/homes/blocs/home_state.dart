@@ -41,6 +41,17 @@ class PostTabState extends HomeState {
   }
 }
 
+/// TogetherTab
+class TogetherTabState extends HomeState {
+  @override
+  String toString() => 'TogetherTabState';
+
+  @override
+  HomeState getStateCopy() {
+    return TogetherTabState();
+  }
+}
+
 /// InfoTab
 class InfoTabState extends HomeState {
   @override

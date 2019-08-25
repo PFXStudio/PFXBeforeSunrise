@@ -161,7 +161,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
       alignment: Alignment.center,
       children: <Widget>[
         Container(
-          color: Colors.white,
+          color: MainTheme.bgndColor,
           child: _post.imageUrls.length > 0
               ? _buildPostImageCarousel()
               : Image.asset('assets/avatars/bg-avatar.png', fit: BoxFit.cover),
@@ -501,6 +501,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
 
     return Scaffold(
         floatingActionButton: _buildControlFAB(),
+        backgroundColor: MainTheme.bgndColor,
         body: SafeArea(
           child: CustomScrollView(
             slivers: <Widget>[

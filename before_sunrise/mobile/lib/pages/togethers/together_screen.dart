@@ -1,4 +1,5 @@
 import 'package:before_sunrise/import.dart';
+import 'package:before_sunrise/pages/togethers/together_list_page.dart';
 
 class TogetherScreen extends StatefulWidget {
   const TogetherScreen({
@@ -22,7 +23,7 @@ class TogetherScreenState extends State<TogetherScreen> {
   @override
   void initState() {
     super.initState();
-    this._togetherBloc.dispatch(LoadTogetherEvent(post: null));
+    this._togetherBloc.dispatch(LoadTogetherEvent(dateTime: DateTime.now()));
   }
 
   @override
@@ -38,21 +39,30 @@ class TogetherScreenState extends State<TogetherScreen> {
           BuildContext context,
           TogetherState currentState,
         ) {
-          if (currentState is UnTogetherState) {
-            return Center(
-              child: CircularProgressIndicator(),
+          if (currentState is FetchedTogetherState) {
+            TogetherCollection togetherCollection =
+                currentState.togetherCollection;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TogetherDateSelector(togetherCollection, (dateTime) {
+                  print(dateTime);
+                  widget._togetherBloc
+                      .dispatch(LoadTogetherEvent(dateTime: dateTime));
+                }),
+                Expanded(
+                  child:
+                      TogetherListPage(togethers: togetherCollection.togethers),
+                ),
+              ],
             );
           }
+
           if (currentState is ErrorTogetherState) {
-            return new Container(
-                child: new Center(
-              child: new Text(currentState.errorMessage ?? 'Error'),
-            ));
+            return Container(child: Text(currentState.errorMessage.toString()));
           }
-          return new Container(
-              child: new Center(
-            child: new Text("В разработке"),
-          ));
+
+          return Container();
         });
   }
 }

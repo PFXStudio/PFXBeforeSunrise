@@ -33,14 +33,14 @@ class FetchingTogetherState extends TogetherState {
 
 /// 정보를 불러 온 상태
 class FetchedTogetherState extends TogetherState {
-  FetchedTogetherState({this.posts});
+  FetchedTogetherState({this.togetherCollection});
   @override
   String toString() => 'FetchedTogetherState';
-  final List<Post> posts;
+  final TogetherCollection togetherCollection;
 
   @override
   TogetherState getStateCopy() {
-    return FetchedTogetherState(posts: this.posts);
+    return FetchedTogetherState(togetherCollection: this.togetherCollection);
   }
 }
 

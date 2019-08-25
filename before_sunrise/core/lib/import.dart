@@ -8,7 +8,7 @@ export 'package:flutter/material.dart';
 export 'package:flutter/services.dart';
 export 'package:equatable/equatable.dart';
 export 'package:http/http.dart';
-
+export 'package:kt_dart/kt.dart';
 export 'package:cloud_firestore/cloud_firestore.dart';
 export 'package:firebase_storage/firebase_storage.dart';
 export 'package:firebase_auth/firebase_auth.dart';
@@ -27,12 +27,15 @@ export 'delegates/simple_bloc_delegate.dart';
 export 'models/post_category.dart';
 export 'models/post.dart';
 export 'models/profile.dart';
+export 'models/together.dart';
+export 'models/together_collection.dart';
 export 'repositories/auth_repository.dart';
 export 'repositories/category_repository.dart';
 export 'repositories/image_repository.dart';
 export 'repositories/post_repository.dart';
 export 'repositories/profile_repository.dart';
 export 'repositories/shards_repository.dart';
+export 'repositories/together_repository.dart';
 
 export 'images/fimage_provider.dart';
 export 'auths/auth_bloc.dart';

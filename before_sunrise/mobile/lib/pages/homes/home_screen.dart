@@ -138,6 +138,12 @@ class HomeScreenState extends State<HomeScreen> {
                             return _pageView;
                           }
 
+                          if (currentState is TogetherTabState) {
+                            return TogetherScreen(
+                              togetherBloc: TogetherBloc(),
+                            );
+                          }
+
                           if (currentState is InfoTabState) {
                             return InfoScreen(
                               infoBloc: InfoBloc(),
@@ -162,7 +168,13 @@ class HomeScreenState extends State<HomeScreen> {
               )),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.pushNamed(context, PostFormScreen.routeName);
+              if (_homeBloc.currentState is PostTabState) {
+                Navigator.pushNamed(context, PostFormScreen.routeName);
+              }
+
+              if (_homeBloc.currentState is TogetherTabState) {
+                Navigator.pushNamed(context, TogetherForm.routeName);
+              }
             },
             tooltip: LocalizableLoader.of(context).text("hint_post"),
             child: const Icon(Icons.add),

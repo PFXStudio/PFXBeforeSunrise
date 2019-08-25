@@ -10,62 +10,62 @@ abstract class ITogetherProvider {
   Future<QuerySnapshot> fetchSubscribedLatestTogethers(
       {@required String userID});
   Future<QuerySnapshot> fetchTogetherLikes({@required String postID});
-  Future<QuerySnapshot> fetchTogethers({@required Post lastVisibleTogether});
+  Future<QuerySnapshot> fetchTogethers({@required String dateString});
   Future<QuerySnapshot> fetchProfileTogethers(
-      {@required Post lastVisibleTogether, @required String userID});
+      {@required Together lastVisibleTogether, @required String userID});
   Future<DocumentReference> createTogether(
       {@required Map<String, dynamic> data});
 }
 
 class TogetherProvider implements ITogetherProvider {
-  PostRepository _postRepository;
+  TogetherRepository _togetherRepository;
 
   TogetherProvider() {
-    _postRepository = PostRepository();
+    _togetherRepository = TogetherRepository();
   }
 
   Future<bool> isLiked(
       {@required String postID, @required String userID}) async {
-    return await _postRepository.isLiked(postID: postID, userID: userID);
+    return await _togetherRepository.isLiked(postID: postID, userID: userID);
   }
 
   Future<void> addToLike(
       {@required String postID, @required String userID}) async {
-    return await _postRepository.addToLike(postID: postID, userID: userID);
+    return await _togetherRepository.addToLike(postID: postID, userID: userID);
   }
 
   Future<void> removeFromLike(
       {@required String postID, @required String userID}) async {
-    return await _postRepository.removeFromLike(postID: postID, userID: userID);
+    return await _togetherRepository.removeFromLike(
+        postID: postID, userID: userID);
   }
 
   Future<DocumentSnapshot> fetchTogether({@required String postID}) async {
-    return await _postRepository.fetchPost(postID: postID);
+    return await _togetherRepository.fetchTogether(postID: postID);
   }
 
   Future<QuerySnapshot> fetchSubscribedLatestTogethers(
       {@required String userID}) async {
-    return await _postRepository.fetchSubscribedLatestPosts(userID: userID);
+    return await _togetherRepository.fetchSubscribedLatestTogethers(
+        userID: userID);
   }
 
   Future<QuerySnapshot> fetchTogetherLikes({@required String postID}) async {
-    return await _postRepository.fetchPostLikes(postID: postID);
+    return await _togetherRepository.fetchTogetherLikes(postID: postID);
   }
 
-  Future<QuerySnapshot> fetchTogethers(
-      {@required Post lastVisibleTogether}) async {
-    return await _postRepository.fetchPosts(
-        lastVisiblePost: lastVisibleTogether);
+  Future<QuerySnapshot> fetchTogethers({@required String dateString}) async {
+    return await _togetherRepository.fetchTogethers(dateString: dateString);
   }
 
   Future<QuerySnapshot> fetchProfileTogethers(
-      {@required Post lastVisibleTogether, @required String userID}) async {
-    return await _postRepository.fetchProfilePosts(
-        lastVisiblePost: lastVisibleTogether, userID: userID);
+      {@required Together lastVisibleTogether, @required String userID}) async {
+    return await _togetherRepository.fetchProfileTogethers(
+        lastVisibleTogether: lastVisibleTogether, userID: userID);
   }
 
   Future<DocumentReference> createTogether(
       {@required Map<String, dynamic> data}) async {
-    return await _postRepository.createPost(data: data);
+    return await _togetherRepository.createTogether(data: data);
   }
 }

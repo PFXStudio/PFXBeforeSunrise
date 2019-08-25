@@ -1,4 +1,5 @@
 import 'package:before_sunrise/import.dart';
+import 'package:before_sunrise/widgets/dialogs/dialog_gender_type_widget.dart';
 
 class ProfileInputScreen extends StatefulWidget {
   const ProfileInputScreen(
