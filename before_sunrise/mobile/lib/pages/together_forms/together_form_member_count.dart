@@ -1,14 +1,15 @@
 import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart' as intl;
 
-typedef TogetherFormMemberCountCallback = void Function(int index);
+typedef TogetherFormMemberCountCallback = void Function(
+    double totalCount, double restCount);
 
 class TogetherFormMemberCount extends StatefulWidget {
-  TogetherFormMemberCount({this.callback = null});
+  TogetherFormMemberCount({this.callback});
   @override
   _TogetherFormMemberCountState createState() =>
       _TogetherFormMemberCountState();
-  TogetherFormMemberCountCallback callback;
+  final TogetherFormMemberCountCallback callback;
 }
 
 class _TogetherFormMemberCountState extends State<TogetherFormMemberCount> {

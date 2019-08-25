@@ -21,7 +21,7 @@ class LoadTogetherEvent extends TogetherEvent {
   Future<TogetherState> applyAsync(
       {TogetherState currentState, TogetherBloc bloc}) async {
     try {
-      String dateString = DateFormat('yyyy-MM-dd').format(dateTime);
+      String dateString = CoreConst.togetherDateFormat.format(dateTime);
       QuerySnapshot snapshot =
           await _togetherProvider.fetchTogethers(dateString: dateString);
 

@@ -4,6 +4,9 @@ class Together {
   Together({
     this.userID = "",
     this.postID = "",
+    this.dateString = "",
+    this.totalCount = 0,
+    this.restCount = 0,
     this.title = "",
     this.contents = "",
     this.imageUrls,
@@ -18,6 +21,9 @@ class Together {
 
   String userID;
   String postID;
+  String dateString;
+  double totalCount;
+  double restCount;
   String title;
   String contents;
   List<dynamic> imageUrls;
@@ -33,6 +39,9 @@ class Together {
   void initialize(DocumentSnapshot snapshot) {
     this.postID = snapshot.documentID;
     this.userID = snapshot.data["userID"];
+    this.dateString = snapshot.data["dateString"];
+    this.totalCount = snapshot.data["totalCount"];
+    this.restCount = snapshot.data["restCount"];
     this.title = snapshot.data["title"];
     this.contents = snapshot.data["contents"];
     this.imageUrls = snapshot.data["imageUrls"];
@@ -45,6 +54,9 @@ class Together {
     return {
       "userID": userID,
       // "postID": postID, // 저장 할 이유 없음.
+      "dateString": dateString,
+      "totalCount": totalCount,
+      "restCount": restCount,
       "title": title,
       "contents": contents,
       "imageUrls": imageUrls,
@@ -57,6 +69,9 @@ class Together {
   Together copyWith({
     String userID,
     String postID,
+    String dateString,
+    double totalCount,
+    double restCount,
     String title,
     String contents,
     List<dynamic> imageUrls,
@@ -70,6 +85,9 @@ class Together {
     return Together(
       userID: userID ?? this.userID,
       postID: postID ?? this.postID,
+      dateString: dateString ?? this.dateString,
+      totalCount: totalCount ?? this.totalCount,
+      restCount: restCount ?? this.restCount,
       title: title ?? this.title,
       contents: contents ?? this.contents,
       imageUrls: imageUrls ?? this.imageUrls,
@@ -93,6 +111,9 @@ class Together {
   int get hashCode =>
       postID.hashCode ^
       userID.hashCode ^
+      dateString.hashCode ^
+      totalCount.hashCode ^
+      restCount.hashCode ^
       title.hashCode ^
       contents.hashCode ^
       imageUrls.hashCode ^

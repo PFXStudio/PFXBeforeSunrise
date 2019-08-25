@@ -1,34 +1,41 @@
 import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart';
 
-typedef TogetherFormDateCallback = void Function(DateTime dateTime);
+typedef TogetherFormDateCallback = void Function(String dateString);
 
 class TogetherFormDate extends StatefulWidget {
-  TogetherFormDate({this.callback = null});
+  TogetherFormDate({this.callback});
   @override
   _TogetherFormDateState createState() => _TogetherFormDateState();
-  TogetherFormDateCallback callback;
+  final TogetherFormDateCallback callback;
 }
 
 class _TogetherFormDateState extends State<TogetherFormDate> {
-  final format = DateFormat("yyyy-MM-dd");
   DateTime selectedDate;
   @override
   Widget build(BuildContext context) {
-    print(selectedDate);
     DateTime now = DateTime.now();
     return FlatIconTextButton(
       iconData: FontAwesomeIcons.calendar,
       color: MainTheme.enabledButtonColor,
       width: 150,
-      text: LocalizableLoader.of(context).text("date_select"),
+      text: selectedDate != null
+          ? CoreConst.togetherDateFormat.format(selectedDate)
+          : LocalizableLoader.of(context).text("date_select"),
       onPressed: () async {
         final date = await showDatePicker(
             context: context,
-            firstDate: now,
+            firstDate: now.add(Duration(days: -1)),
             initialDate: now,
-            lastDate: now.add(Duration(days: 6)));
-        selectedDate = date;
+            lastDate: now.add(Duration(days: 5)));
+        setState(() {
+          selectedDate = date;
+        });
+        if (widget.callback == null) {
+          return;
+        }
+
+        widget.callback(CoreConst.togetherDateFormat.format(selectedDate));
       },
     );
   }

@@ -30,6 +30,7 @@ class _TogetherFormState extends State<TogetherForm>
 // 이 값은 초기에 초기화 되기 때문에 재 진입해야 적용 됨.
   double maxContentsHeight = 1200;
   final int maxPicturesCount = 20;
+  final Together together = Together();
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,7 @@ class _TogetherFormState extends State<TogetherForm>
                 flex: 4,
                 child: ConstrainedBox(
                   constraints: const BoxConstraints.expand(),
-                  child: _buildAngel(context),
+                  child: _buildTogether(context),
                 ),
               ),
               Expanded(
@@ -118,14 +119,14 @@ class _TogetherFormState extends State<TogetherForm>
 
       if (resultList.length > 0) {
         for (Asset asset in resultList) {
-          ByteData data = await asset.requestThumbnail(
+          ByteData data = await asset.getThumbByteData(
             100,
             100,
             quality: 50,
           );
           selectedThumbDatas.add(data);
 
-          ByteData originalData = await asset.requestOriginal();
+          ByteData originalData = await asset.getByteData();
           selectedOriginalDatas.add(originalData);
         }
       }
@@ -147,7 +148,7 @@ class _TogetherFormState extends State<TogetherForm>
     });
   }
 
-  Widget _buildAngel(BuildContext context) {
+  Widget _buildTogether(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: MainTheme.edgeInsets.top),
       child: Column(
@@ -176,8 +177,8 @@ class _TogetherFormState extends State<TogetherForm>
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  TogetherFormDate(callback: (dateTime) {
-                                    print(dateTime);
+                                  TogetherFormDate(callback: (dateString) {
+                                    together.dateString = dateString;
                                   }),
                                   TogetherFormClub(
                                     callback: (index) {
@@ -193,7 +194,11 @@ class _TogetherFormState extends State<TogetherForm>
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    TogetherFormMemberCount(),
+                                    TogetherFormMemberCount(
+                                        callback: (totalCount, restCount) {
+                                      together.totalCount = totalCount;
+                                      together.totalCount = restCount;
+                                    }),
                                     TogetherFormCocktailCount(),
                                     TogetherFormPrice(callback: (index) {})
                                   ],
