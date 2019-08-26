@@ -1,6 +1,7 @@
 import 'package:before_sunrise/import.dart';
 
-typedef TogetherFormClubCallback = void Function(int index);
+String togetherClubID = "";
+typedef TogetherFormClubCallback = void Function(String clubID);
 
 class TogetherFormClub extends StatefulWidget {
   TogetherFormClub({this.callback = null});
@@ -23,16 +24,28 @@ class _TogetherFormClubState extends State<TogetherFormClub> {
             scrollDirection: Axis.vertical,
             itemCount: DefineStrings.clubNames.length,
             itemBuilder: (context, index) {
-              return Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    DefineStrings.clubNames[index],
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black54,
-                        fontWeight: FontWeight.bold),
-                  ));
+              return GestureDetector(
+                child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      DefineStrings.clubNames[index],
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.bold),
+                    )),
+                onTap: () {
+                  togetherClubID = DefineStrings.clubNames[index];
+                  Navigator.pop(context);
+                  if (widget.callback == null) {
+                    return;
+                  }
+
+                  widget.callback(togetherClubID);
+                  setState(() {});
+                },
+              );
             }));
   }
 
@@ -42,7 +55,9 @@ class _TogetherFormClubState extends State<TogetherFormClub> {
         iconData: FontAwesomeIcons.mapMarkerAlt,
         color: MainTheme.enabledButtonColor,
         width: 170,
-        text: LocalizableLoader.of(context).text("club_name_select"),
+        text: togetherClubID != null && togetherClubID.length > 0
+            ? togetherClubID
+            : LocalizableLoader.of(context).text("club_name_select"),
         onPressed: () {
           showDialog(
               context: context,
@@ -66,6 +81,12 @@ class _TogetherFormClubState extends State<TogetherFormClub> {
                           },
                           confirmCallback: () {
                             Navigator.pop(context);
+                            if (widget.callback == null) {
+                              return;
+                            }
+
+                            widget.callback(togetherClubID);
+                            setState(() {});
                           },
                         )
                       ])));

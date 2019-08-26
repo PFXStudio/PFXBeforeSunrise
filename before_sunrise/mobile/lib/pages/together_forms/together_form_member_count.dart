@@ -1,8 +1,10 @@
 import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart' as intl;
 
+double togetherTotalCount = 2;
+double togetherRestCount = 1;
 typedef TogetherFormMemberCountCallback = void Function(
-    double totalCount, double restCount);
+    int totalCount, int restCount);
 
 class TogetherFormMemberCount extends StatefulWidget {
   TogetherFormMemberCount({this.callback});
@@ -30,7 +32,9 @@ class _TogetherFormMemberCountState extends State<TogetherFormMemberCount> {
         iconData: FontAwesomeIcons.users,
         color: MainTheme.enabledButtonColor,
         width: 180,
-        text: LocalizableLoader.of(context).text("member_count_select"),
+        text: togetherTotalCount > 2
+            ? "총 인원 : ${togetherTotalCount.toInt()}, 남은 인원 : ${togetherRestCount.toInt()}"
+            : LocalizableLoader.of(context).text("member_count_select"),
         onPressed: () {
           showDialog(
               context: context,
@@ -54,6 +58,13 @@ class _TogetherFormMemberCountState extends State<TogetherFormMemberCount> {
                           },
                           confirmCallback: () {
                             Navigator.pop(context);
+                            if (widget.callback == null) {
+                              return;
+                            }
+
+                            widget.callback(togetherTotalCount.toInt(),
+                                togetherRestCount.toInt());
+                            setState(() {});
                           },
                         )
                       ])));
@@ -98,8 +109,6 @@ class TogetherFormMemberCountContentsWidget extends StatefulWidget {
 
 class _TogetherFormMemberCountContentsWidgetState
     extends State<TogetherFormMemberCountContentsWidget> {
-  double totalCount = 2;
-  double restCount = 1;
   final double maxCount = 30;
 
   Widget build(BuildContext context) {
@@ -122,10 +131,10 @@ class _TogetherFormMemberCountContentsWidgetState
                     color: Colors.blueAccent,
                     onPressed: () {
                       setState(() {
-                        if (totalCount > 2) {
-                          totalCount = totalCount - 1;
-                          if (restCount > totalCount) {
-                            restCount = totalCount;
+                        if (togetherTotalCount > 2) {
+                          togetherTotalCount = togetherTotalCount - 1;
+                          if (togetherRestCount > togetherTotalCount) {
+                            togetherRestCount = togetherTotalCount;
                           }
                         }
                       });
@@ -135,7 +144,7 @@ class _TogetherFormMemberCountContentsWidgetState
                 Expanded(
                     flex: 10,
                     child: FlutterSlider(
-                      values: [totalCount],
+                      values: [togetherTotalCount],
                       rangeSlider: false,
                       max: maxCount,
                       min: 2,
@@ -165,9 +174,9 @@ class _TogetherFormMemberCountContentsWidgetState
                       ),
                       onDragging: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
-                          totalCount = lowerValue;
-                          if (restCount > totalCount) {
-                            restCount = totalCount;
+                          togetherTotalCount = lowerValue;
+                          if (togetherRestCount > togetherTotalCount) {
+                            togetherRestCount = togetherTotalCount;
                           }
                         });
                       },
@@ -180,8 +189,8 @@ class _TogetherFormMemberCountContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (totalCount < maxCount) {
-                            totalCount = totalCount + 1;
+                          if (togetherTotalCount < maxCount) {
+                            togetherTotalCount = togetherTotalCount + 1;
                           }
                         });
                       },
@@ -202,8 +211,8 @@ class _TogetherFormMemberCountContentsWidgetState
                     color: Colors.blueAccent,
                     onPressed: () {
                       setState(() {
-                        if (restCount > 1) {
-                          restCount = restCount - 1;
+                        if (togetherRestCount > 1) {
+                          togetherRestCount = togetherRestCount - 1;
                         }
                       });
                     },
@@ -212,9 +221,9 @@ class _TogetherFormMemberCountContentsWidgetState
                 Expanded(
                     flex: 10,
                     child: FlutterSlider(
-                      values: [restCount],
+                      values: [togetherRestCount],
                       rangeSlider: false,
-                      max: totalCount,
+                      max: togetherTotalCount,
                       min: 1,
                       step: 1,
                       jump: true,
@@ -242,7 +251,7 @@ class _TogetherFormMemberCountContentsWidgetState
                       ),
                       onDragging: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
-                          restCount = lowerValue;
+                          togetherRestCount = lowerValue;
                         });
                       },
                     )),
@@ -254,8 +263,8 @@ class _TogetherFormMemberCountContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (restCount < totalCount) {
-                            restCount = restCount + 1;
+                          if (togetherRestCount < togetherTotalCount) {
+                            togetherRestCount = togetherRestCount + 1;
                           }
                         });
                       },

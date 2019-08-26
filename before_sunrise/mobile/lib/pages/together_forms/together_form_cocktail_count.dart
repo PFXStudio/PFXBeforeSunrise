@@ -1,7 +1,11 @@
 import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart' as intl;
 
-typedef TogetherFormCocktailCountCallback = void Function(int index);
+double togetherHardCount = 0;
+double togetherChampagneCount = 0;
+double togetherServiceCount = 0;
+typedef TogetherFormCocktailCountCallback = void Function(
+    int hardCount, int champagneCount, int serviceCount);
 
 class TogetherFormCocktailCount extends StatefulWidget {
   TogetherFormCocktailCount({this.callback = null});
@@ -22,7 +26,9 @@ class _TogetherFormCocktailCountState extends State<TogetherFormCocktailCount> {
         iconData: FontAwesomeIcons.cocktail,
         color: MainTheme.enabledButtonColor,
         width: 180,
-        text: LocalizableLoader.of(context).text("cocktail_count_select"),
+        text: togetherHardCount != 0 || togetherChampagneCount != 0
+            ? "${togetherHardCount.toInt()}H, ${togetherChampagneCount.toInt()}C, ${togetherServiceCount.toInt()}s"
+            : LocalizableLoader.of(context).text("cocktail_count_select"),
         onPressed: () {
           showDialog(
               context: context,
@@ -46,6 +52,15 @@ class _TogetherFormCocktailCountState extends State<TogetherFormCocktailCount> {
                           },
                           confirmCallback: () {
                             Navigator.pop(context);
+                            if (widget.callback == null) {
+                              return;
+                            }
+
+                            widget.callback(
+                                togetherHardCount.toInt(),
+                                togetherChampagneCount.toInt(),
+                                togetherServiceCount.toInt());
+                            setState(() {});
                           },
                         )
                       ])));
@@ -62,9 +77,6 @@ class TogetherFormCocktailCountContentsWidget extends StatefulWidget {
 class _TogetherFormCocktailCountContentsWidgetState
     extends State<TogetherFormCocktailCountContentsWidget> {
   @override
-  double hardCount = 0;
-  double champagneCount = 0;
-  double serviceCount = 0;
   final double maxCount = 30;
 
   Widget build(BuildContext context) {
@@ -87,8 +99,8 @@ class _TogetherFormCocktailCountContentsWidgetState
                     color: Colors.blueAccent,
                     onPressed: () {
                       setState(() {
-                        if (hardCount > 0) {
-                          hardCount = hardCount - 1;
+                        if (togetherHardCount > 0) {
+                          togetherHardCount = togetherHardCount - 1;
                         }
                       });
                     },
@@ -97,7 +109,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                 Expanded(
                     flex: 10,
                     child: FlutterSlider(
-                      values: [hardCount],
+                      values: [togetherHardCount],
                       rangeSlider: false,
                       max: maxCount,
                       min: 0,
@@ -127,7 +139,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                       ),
                       onDragging: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
-                          hardCount = lowerValue;
+                          togetherHardCount = lowerValue;
                         });
                       },
                     )),
@@ -139,8 +151,8 @@ class _TogetherFormCocktailCountContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (hardCount < maxCount) {
-                            hardCount = hardCount + 1;
+                          if (togetherHardCount < maxCount) {
+                            togetherHardCount = togetherHardCount + 1;
                           }
                         });
                       },
@@ -161,8 +173,8 @@ class _TogetherFormCocktailCountContentsWidgetState
                     color: Colors.blueAccent,
                     onPressed: () {
                       setState(() {
-                        if (champagneCount > 0) {
-                          champagneCount = champagneCount - 1;
+                        if (togetherChampagneCount > 0) {
+                          togetherChampagneCount = togetherChampagneCount - 1;
                         }
                       });
                     },
@@ -171,7 +183,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                 Expanded(
                     flex: 10,
                     child: FlutterSlider(
-                      values: [champagneCount],
+                      values: [togetherChampagneCount],
                       rangeSlider: false,
                       max: maxCount,
                       min: 0,
@@ -201,7 +213,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                       ),
                       onDragging: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
-                          champagneCount = lowerValue;
+                          togetherChampagneCount = lowerValue;
                         });
                       },
                     )),
@@ -213,8 +225,8 @@ class _TogetherFormCocktailCountContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (champagneCount < maxCount) {
-                            champagneCount = champagneCount + 1;
+                          if (togetherChampagneCount < maxCount) {
+                            togetherChampagneCount = togetherChampagneCount + 1;
                           }
                         });
                       },
@@ -235,8 +247,8 @@ class _TogetherFormCocktailCountContentsWidgetState
                     color: Colors.blueAccent,
                     onPressed: () {
                       setState(() {
-                        if (serviceCount > 0) {
-                          serviceCount = serviceCount - 1;
+                        if (togetherServiceCount > 0) {
+                          togetherServiceCount = togetherServiceCount - 1;
                         }
                       });
                     },
@@ -245,7 +257,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                 Expanded(
                     flex: 10,
                     child: FlutterSlider(
-                      values: [serviceCount],
+                      values: [togetherServiceCount],
                       rangeSlider: false,
                       max: maxCount,
                       min: 0,
@@ -275,7 +287,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                       ),
                       onDragging: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
-                          serviceCount = lowerValue;
+                          togetherServiceCount = lowerValue;
                         });
                       },
                     )),
@@ -287,8 +299,8 @@ class _TogetherFormCocktailCountContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (serviceCount < maxCount) {
-                            serviceCount = serviceCount + 1;
+                          if (togetherServiceCount < maxCount) {
+                            togetherServiceCount = togetherServiceCount + 1;
                           }
                         });
                       },

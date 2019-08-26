@@ -39,30 +39,37 @@ class TogetherScreenState extends State<TogetherScreen> {
           BuildContext context,
           TogetherState currentState,
         ) {
-          if (currentState is FetchedTogetherState) {
-            TogetherCollection togetherCollection =
-                currentState.togetherCollection;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TogetherDateSelector(togetherCollection, (dateTime) {
-                  print(dateTime);
-                  widget._togetherBloc
-                      .dispatch(LoadTogetherEvent(dateTime: dateTime));
-                }),
-                Expanded(
-                  child:
-                      TogetherListPage(togethers: togetherCollection.togethers),
-                ),
-              ],
-            );
-          }
-
           if (currentState is ErrorTogetherState) {
             return Container(child: Text(currentState.errorMessage.toString()));
           }
 
-          return Container();
+          TogetherCollection togetherCollection;
+          if (currentState is FetchedTogetherState) {
+            togetherCollection = currentState.togetherCollection;
+          }
+
+          if (currentState is EmptyTogetherState) {
+            togetherCollection = currentState.togetherCollection;
+          }
+
+          if (togetherCollection == null) {
+            return Container();
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TogetherDateSelector(togetherCollection, (dateTime) {
+                print(dateTime);
+                widget._togetherBloc
+                    .dispatch(LoadTogetherEvent(dateTime: dateTime));
+              }),
+              Expanded(
+                child:
+                    TogetherListPage(togethers: togetherCollection.togethers),
+              ),
+            ],
+          );
         });
   }
 }

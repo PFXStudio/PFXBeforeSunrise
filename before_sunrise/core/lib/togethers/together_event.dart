@@ -43,10 +43,10 @@ class LoadTogetherEvent extends TogetherEvent {
           dates: dates, togethers: togethers, selectedDate: selectedDate);
 
       if (snapshot == null) {
-        return EmptyTogetherState();
+        return EmptyTogetherState(togetherCollection: collection);
       }
       if (snapshot.documents.length <= 0) {
-        return EmptyTogetherState();
+        return EmptyTogetherState(togetherCollection: collection);
       }
 
       String userID = await _authProvider.getUserID();

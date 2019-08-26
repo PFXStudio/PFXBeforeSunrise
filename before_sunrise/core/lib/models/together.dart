@@ -4,9 +4,11 @@ class Together {
   Together({
     this.userID = "",
     this.postID = "",
+    this.clubID = "",
     this.dateString = "",
     this.totalCount = 0,
     this.restCount = 0,
+    this.price = 0,
     this.title = "",
     this.contents = "",
     this.imageUrls,
@@ -21,9 +23,14 @@ class Together {
 
   String userID;
   String postID;
+  String clubID;
   String dateString;
-  double totalCount;
-  double restCount;
+  int totalCount;
+  int restCount;
+  int hardCount;
+  int champagneCount;
+  int serviceCount;
+  int price;
   String title;
   String contents;
   List<dynamic> imageUrls;
@@ -39,9 +46,11 @@ class Together {
   void initialize(DocumentSnapshot snapshot) {
     this.postID = snapshot.documentID;
     this.userID = snapshot.data["userID"];
+    this.clubID = snapshot.data["clubID"];
     this.dateString = snapshot.data["dateString"];
     this.totalCount = snapshot.data["totalCount"];
     this.restCount = snapshot.data["restCount"];
+    this.price = snapshot.data["price"];
     this.title = snapshot.data["title"];
     this.contents = snapshot.data["contents"];
     this.imageUrls = snapshot.data["imageUrls"];
@@ -54,9 +63,11 @@ class Together {
     return {
       "userID": userID,
       // "postID": postID, // 저장 할 이유 없음.
+      "clubID": clubID,
       "dateString": dateString,
       "totalCount": totalCount,
       "restCount": restCount,
+      "price": price,
       "title": title,
       "contents": contents,
       "imageUrls": imageUrls,
@@ -69,9 +80,11 @@ class Together {
   Together copyWith({
     String userID,
     String postID,
+    String clubID,
     String dateString,
     double totalCount,
     double restCount,
+    double price,
     String title,
     String contents,
     List<dynamic> imageUrls,
@@ -85,9 +98,11 @@ class Together {
     return Together(
       userID: userID ?? this.userID,
       postID: postID ?? this.postID,
+      clubID: postID ?? this.clubID,
       dateString: dateString ?? this.dateString,
       totalCount: totalCount ?? this.totalCount,
       restCount: restCount ?? this.restCount,
+      price: price ?? this.price,
       title: title ?? this.title,
       contents: contents ?? this.contents,
       imageUrls: imageUrls ?? this.imageUrls,
@@ -111,9 +126,11 @@ class Together {
   int get hashCode =>
       postID.hashCode ^
       userID.hashCode ^
+      clubID.hashCode ^
       dateString.hashCode ^
       totalCount.hashCode ^
       restCount.hashCode ^
+      price.hashCode ^
       title.hashCode ^
       contents.hashCode ^
       imageUrls.hashCode ^

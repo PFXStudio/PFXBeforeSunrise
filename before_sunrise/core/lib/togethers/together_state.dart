@@ -45,9 +45,10 @@ class FetchedTogetherState extends TogetherState {
 }
 
 class EmptyTogetherState extends TogetherState {
-  EmptyTogetherState();
+  EmptyTogetherState({this.togetherCollection});
   @override
   String toString() => 'EmptyTogetherState';
+  final TogetherCollection togetherCollection;
 
   @override
   TogetherState getStateCopy() {

@@ -38,13 +38,13 @@ class _FlatIconTextButtonState extends State<FlatIconTextButton> {
               size: 16,
             ),
             Padding(
-              padding: EdgeInsets.only(left: 5),
+              padding: EdgeInsets.only(left: 10),
             ),
             Text(
               widget.text,
               style: TextStyle(
                   color: widget.color,
-                  fontSize: 13,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold),
             ),
           ],

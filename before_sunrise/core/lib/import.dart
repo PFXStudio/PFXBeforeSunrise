@@ -29,6 +29,8 @@ export 'models/post.dart';
 export 'models/profile.dart';
 export 'models/together.dart';
 export 'models/together_collection.dart';
+export 'models/club_info.dart';
+
 export 'repositories/auth_repository.dart';
 export 'repositories/category_repository.dart';
 export 'repositories/image_repository.dart';
@@ -36,6 +38,7 @@ export 'repositories/post_repository.dart';
 export 'repositories/profile_repository.dart';
 export 'repositories/shards_repository.dart';
 export 'repositories/together_repository.dart';
+export 'repositories/info_repository.dart';
 
 export 'images/fimage_provider.dart';
 export 'auths/auth_bloc.dart';
@@ -62,6 +65,7 @@ export 'shards/shards_state.dart';
 export 'infos/info_bloc.dart';
 export 'infos/info_event.dart';
 export 'infos/info_state.dart';
+export 'infos/info_provider.dart';
 export 'togethers/together_bloc.dart';
 export 'togethers/together_event.dart';
 export 'togethers/together_provider.dart';

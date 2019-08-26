@@ -1,7 +1,8 @@
 import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart' as intl;
 
-typedef TogetherFormPriceCallback = void Function(int index);
+double togetherPrice = 0;
+typedef TogetherFormPriceCallback = void Function(int price);
 
 class TogetherFormPrice extends StatefulWidget {
   TogetherFormPrice({this.callback = null});
@@ -19,7 +20,6 @@ class TogetherFormPriceContentsWidget extends StatefulWidget {
 class _TogetherFormPriceContentsWidgetState
     extends State<TogetherFormPriceContentsWidget> {
   @override
-  double selectedPrice = 10;
   final double maxPrice = 1000;
   Widget build(BuildContext context) {
     return Container(
@@ -41,8 +41,8 @@ class _TogetherFormPriceContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (selectedPrice > 10) {
-                            selectedPrice = selectedPrice - 1;
+                          if (togetherPrice > 10) {
+                            togetherPrice = togetherPrice - 1;
                           }
                         });
                       },
@@ -50,10 +50,10 @@ class _TogetherFormPriceContentsWidgetState
                 Expanded(
                     flex: 10,
                     child: FlutterSlider(
-                      values: [selectedPrice],
+                      values: [togetherPrice],
                       rangeSlider: false,
                       max: maxPrice,
-                      min: 10,
+                      min: 0,
                       step: 1,
                       jump: true,
                       trackBar: FlutterSliderTrackBar(
@@ -86,7 +86,7 @@ class _TogetherFormPriceContentsWidgetState
                       ),
                       onDragging: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
-                          selectedPrice = lowerValue;
+                          togetherPrice = lowerValue;
                         });
                       },
                     )),
@@ -98,8 +98,8 @@ class _TogetherFormPriceContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (selectedPrice < maxPrice) {
-                            selectedPrice = selectedPrice + 1;
+                          if (togetherPrice < maxPrice) {
+                            togetherPrice = togetherPrice + 1;
                           }
                         });
                       },
@@ -118,7 +118,9 @@ class _TogetherFormPriceState extends State<TogetherFormPrice> {
         iconData: FontAwesomeIcons.wonSign,
         color: MainTheme.enabledButtonColor,
         width: 170,
-        text: LocalizableLoader.of(context).text("price_select"),
+        text: togetherPrice != 0
+            ? "${togetherPrice.toInt()} 만원"
+            : LocalizableLoader.of(context).text("price_select"),
         onPressed: () {
           showDialog(
               context: context,
@@ -142,6 +144,12 @@ class _TogetherFormPriceState extends State<TogetherFormPrice> {
                           },
                           confirmCallback: () {
                             Navigator.pop(context);
+                            if (widget.callback == null) {
+                              return;
+                            }
+
+                            widget.callback(togetherPrice.toInt());
+                            setState(() {});
                           },
                         )
                       ])));

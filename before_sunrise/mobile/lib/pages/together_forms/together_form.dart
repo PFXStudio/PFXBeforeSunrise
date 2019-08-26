@@ -181,11 +181,15 @@ class _TogetherFormState extends State<TogetherForm>
                                     together.dateString = dateString;
                                   }),
                                   TogetherFormClub(
-                                    callback: (index) {
-                                      print(index);
+                                    callback: (clubID) {
+                                      print(clubID);
+                                      together.clubID = clubID;
                                     },
                                   ),
-                                  DialogPublishTypeWidget(callback: (index) {}),
+                                  TogetherFormPrice(callback: (price) {
+                                    together.price = price;
+                                    setState(() {});
+                                  })
                                 ],
                               ),
                             ),
@@ -197,10 +201,26 @@ class _TogetherFormState extends State<TogetherForm>
                                     TogetherFormMemberCount(
                                         callback: (totalCount, restCount) {
                                       together.totalCount = totalCount;
-                                      together.totalCount = restCount;
+                                      together.restCount = restCount;
+                                      setState(() {});
                                     }),
-                                    TogetherFormCocktailCount(),
-                                    TogetherFormPrice(callback: (index) {})
+                                    TogetherFormCocktailCount(
+                                      callback: (hardCount, champagneCount,
+                                          serviceCount) {
+                                        together.hardCount = hardCount;
+                                        together.champagneCount =
+                                            champagneCount;
+                                        together.serviceCount = serviceCount;
+                                      },
+                                    ),
+                                    FlatIconTextButton(
+                                        width: 200,
+                                        color: MainTheme.enabledButtonColor,
+                                        iconData: FontAwesomeIcons.paypal,
+                                        text: (together.totalCount != 0 &&
+                                                together.price != 0)
+                                            ? "${together.price}만원 / ${together.totalCount}명 = ${(together.price.toDouble() / together.totalCount.toDouble()).toStringAsFixed(1)} 만원"
+                                            : ""),
                                   ],
                                 )),
                           ],
