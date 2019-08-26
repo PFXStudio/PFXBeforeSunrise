@@ -8,7 +8,8 @@ class Together {
     this.dateString = "",
     this.totalCount = 0,
     this.restCount = 0,
-    this.price = 0,
+    this.tablePrice = 0,
+    this.tipPrice = 0,
     this.title = "",
     this.contents = "",
     this.imageUrls,
@@ -30,7 +31,8 @@ class Together {
   int hardCount;
   int champagneCount;
   int serviceCount;
-  int price;
+  int tablePrice;
+  int tipPrice;
   String title;
   String contents;
   List<dynamic> imageUrls;
@@ -50,7 +52,8 @@ class Together {
     this.dateString = snapshot.data["dateString"];
     this.totalCount = snapshot.data["totalCount"];
     this.restCount = snapshot.data["restCount"];
-    this.price = snapshot.data["price"];
+    this.tablePrice = snapshot.data["tablePrice"];
+    this.tipPrice = snapshot.data["tipPrice"];
     this.title = snapshot.data["title"];
     this.contents = snapshot.data["contents"];
     this.imageUrls = snapshot.data["imageUrls"];
@@ -67,7 +70,8 @@ class Together {
       "dateString": dateString,
       "totalCount": totalCount,
       "restCount": restCount,
-      "price": price,
+      "tablePrice": tablePrice,
+      "tipPrice": tipPrice,
       "title": title,
       "contents": contents,
       "imageUrls": imageUrls,
@@ -82,9 +86,10 @@ class Together {
     String postID,
     String clubID,
     String dateString,
-    double totalCount,
-    double restCount,
-    double price,
+    int totalCount,
+    int restCount,
+    int tablePrice,
+    int tipPrice,
     String title,
     String contents,
     List<dynamic> imageUrls,
@@ -102,7 +107,8 @@ class Together {
       dateString: dateString ?? this.dateString,
       totalCount: totalCount ?? this.totalCount,
       restCount: restCount ?? this.restCount,
-      price: price ?? this.price,
+      tablePrice: tablePrice ?? this.tablePrice,
+      tipPrice: tipPrice ?? this.tipPrice,
       title: title ?? this.title,
       contents: contents ?? this.contents,
       imageUrls: imageUrls ?? this.imageUrls,
@@ -130,7 +136,8 @@ class Together {
       dateString.hashCode ^
       totalCount.hashCode ^
       restCount.hashCode ^
-      price.hashCode ^
+      tablePrice.hashCode ^
+      tipPrice.hashCode ^
       title.hashCode ^
       contents.hashCode ^
       imageUrls.hashCode ^

@@ -19,6 +19,7 @@ class TogetherScreen extends StatefulWidget {
 class TogetherScreenState extends State<TogetherScreen> {
   final TogetherBloc _togetherBloc;
   TogetherScreenState(this._togetherBloc);
+  DateTime selectedDate;
 
   @override
   void initState() {
@@ -33,43 +34,50 @@ class TogetherScreenState extends State<TogetherScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TogetherBloc, TogetherState>(
-        bloc: widget._togetherBloc,
-        builder: (
-          BuildContext context,
-          TogetherState currentState,
-        ) {
-          if (currentState is ErrorTogetherState) {
-            return Container(child: Text(currentState.errorMessage.toString()));
-          }
+    DateTime currentDateTime = DateTime.now();
+    List<DateTime> dates = List<DateTime>();
+    for (int i = 0; i < 6; i++) {
+      var addDateTime = currentDateTime.add(Duration(days: i));
+      dates.add(addDateTime);
+    }
 
-          TogetherCollection togetherCollection;
-          if (currentState is FetchedTogetherState) {
-            togetherCollection = currentState.togetherCollection;
-          }
+    if (selectedDate == null) {
+      selectedDate = dates.first;
+    }
 
-          if (currentState is EmptyTogetherState) {
-            togetherCollection = currentState.togetherCollection;
-          }
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      TogetherDateSelector(dates, selectedDate, (dateTime) {
+        selectedDate = dateTime;
+        widget._togetherBloc.dispatch(LoadTogetherEvent(dateTime: dateTime));
+      }),
+      Expanded(
+        child: BlocBuilder<TogetherBloc, TogetherState>(
+            bloc: widget._togetherBloc,
+            builder: (
+              BuildContext context,
+              TogetherState currentState,
+            ) {
+              if (currentState is ErrorTogetherState) {
+                return Container(
+                    child: Text(currentState.errorMessage.toString()));
+              }
 
-          if (togetherCollection == null) {
-            return Container();
-          }
+              TogetherCollection togetherCollection;
+              if (currentState is FetchedTogetherState) {
+                togetherCollection = currentState.togetherCollection;
+              }
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TogetherDateSelector(togetherCollection, (dateTime) {
-                print(dateTime);
-                widget._togetherBloc
-                    .dispatch(LoadTogetherEvent(dateTime: dateTime));
-              }),
-              Expanded(
-                child:
-                    TogetherListPage(togethers: togetherCollection.togethers),
-              ),
-            ],
-          );
-        });
+              if (currentState is EmptyTogetherState) {
+                togetherCollection = currentState.togetherCollection;
+              }
+
+              if (togetherCollection == null) {
+                return Container();
+              }
+
+              return TogetherListPage(togethers: togetherCollection.togethers);
+            }),
+      )
+    ]);
   }
 }

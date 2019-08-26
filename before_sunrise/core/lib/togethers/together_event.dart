@@ -25,28 +25,21 @@ class LoadTogetherEvent extends TogetherEvent {
       QuerySnapshot snapshot =
           await _togetherProvider.fetchTogethers(dateString: dateString);
 
-      List<DateTime> dates = List<DateTime>();
-      DateTime currentDateTime = DateTime.now();
-      DateTime selectedDate;
-      for (int i = 0; i < 6; i++) {
-        var addDateTime = currentDateTime.add(Duration(days: i));
-        dates.add(addDateTime);
-        if (currentDateTime.year == dateTime.year &&
-            currentDateTime.month == dateTime.month &&
-            currentDateTime.day == dateTime.day) {
-          selectedDate = currentDateTime;
-        }
-      }
-
       List<Together> togethers = List<Together>();
-      TogetherCollection collection = TogetherCollection(
-          dates: dates, togethers: togethers, selectedDate: selectedDate);
+      TogetherCollection collection =
+          TogetherCollection(togethers: togethers, selectedDate: dateTime);
 
       if (snapshot == null) {
         return EmptyTogetherState(togetherCollection: collection);
       }
       if (snapshot.documents.length <= 0) {
         return EmptyTogetherState(togetherCollection: collection);
+      }
+
+      for (var document in snapshot.documents) {
+        Together together = Together();
+        together.initialize(document);
+        collection.togethers.add(together);
       }
 
       String userID = await _authProvider.getUserID();
@@ -91,7 +84,7 @@ class ToggleLikeTogetherEvent extends TogetherEvent {
 }
 
 class CreateTogetherEvent extends TogetherEvent {
-  CreateTogetherEvent({@required this.post, @required this.byteDatas})
+  CreateTogetherEvent({@required this.together, @required this.byteDatas})
       : _firestoreTimestamp = FieldValue.serverTimestamp();
   @override
   String toString() => 'CreateTogetherEvent';
@@ -101,7 +94,7 @@ class CreateTogetherEvent extends TogetherEvent {
   FieldValue _firestoreTimestamp;
   List<ByteData> byteDatas;
 
-  Post post;
+  Together together;
 
   @override
   Future<TogetherState> applyAsync(
@@ -115,12 +108,12 @@ class CreateTogetherEvent extends TogetherEvent {
         imageUrls = await _imageProvider.uploadPostImages(
             fileLocation: fileLocation, byteDatas: byteDatas);
       }
-      post.userID = userID;
-      post.created = _firestoreTimestamp;
-      post.lastUpdate = _firestoreTimestamp;
-      post.imageUrls = imageUrls;
+      together.userID = userID;
+      together.created = _firestoreTimestamp;
+      together.lastUpdate = _firestoreTimestamp;
+      together.imageUrls = imageUrls;
       DocumentReference reference =
-          await _togetherProvider.createTogether(data: post.data());
+          await _togetherProvider.createTogether(data: together.data());
       if (reference == null) {
         return ErrorTogetherState("error");
       }

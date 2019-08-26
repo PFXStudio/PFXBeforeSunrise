@@ -57,7 +57,7 @@ class TogetherRepository {
   Future<QuerySnapshot> fetchTogethers({@required String dateString}) {
     return _postCollection
         // .orderBy('lastUpdate', descending: true)
-        .where('dateTime', isEqualTo: dateString)
+        .where('dateString', isEqualTo: dateString)
         .getDocuments();
   }
 

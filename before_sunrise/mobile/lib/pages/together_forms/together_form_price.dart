@@ -1,8 +1,9 @@
 import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart' as intl;
 
-double togetherPrice = 0;
-typedef TogetherFormPriceCallback = void Function(int price);
+double togetherTablePrice = 0;
+double togetherTipPrice = 0;
+typedef TogetherFormPriceCallback = void Function(int tablePrice, int tipPrice);
 
 class TogetherFormPrice extends StatefulWidget {
   TogetherFormPrice({this.callback = null});
@@ -41,8 +42,8 @@ class _TogetherFormPriceContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (togetherPrice > 10) {
-                            togetherPrice = togetherPrice - 1;
+                          if (togetherTablePrice > 10) {
+                            togetherTablePrice = togetherTablePrice - 1;
                           }
                         });
                       },
@@ -50,7 +51,7 @@ class _TogetherFormPriceContentsWidgetState
                 Expanded(
                     flex: 10,
                     child: FlutterSlider(
-                      values: [togetherPrice],
+                      values: [togetherTablePrice],
                       rangeSlider: false,
                       max: maxPrice,
                       min: 0,
@@ -86,7 +87,7 @@ class _TogetherFormPriceContentsWidgetState
                       ),
                       onDragging: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
-                          togetherPrice = lowerValue;
+                          togetherTablePrice = lowerValue;
                         });
                       },
                     )),
@@ -98,8 +99,87 @@ class _TogetherFormPriceContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (togetherPrice < maxPrice) {
-                            togetherPrice = togetherPrice + 1;
+                          if (togetherTablePrice < maxPrice) {
+                            togetherTablePrice = togetherTablePrice + 1;
+                          }
+                        });
+                      },
+                    )),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.all(10),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      padding: EdgeInsets.only(top: 28),
+                      icon: Icon(FontAwesomeIcons.caretLeft),
+                      color: Colors.blue,
+                      onPressed: () {
+                        setState(() {
+                          if (togetherTipPrice > 0) {
+                            togetherTipPrice = togetherTipPrice - 1;
+                          }
+                        });
+                      },
+                    )),
+                Expanded(
+                    flex: 10,
+                    child: FlutterSlider(
+                      values: [togetherTipPrice],
+                      rangeSlider: false,
+                      max: 10,
+                      min: 0,
+                      step: 1,
+                      jump: true,
+                      trackBar: FlutterSliderTrackBar(
+                        inactiveTrackBarHeight: 2,
+                        activeTrackBarHeight: 3,
+                      ),
+                      disabled: false,
+                      handler: customHandler(Icons.chevron_right),
+                      rightHandler: customHandler(Icons.chevron_left),
+                      tooltip: FlutterSliderTooltip(
+                        alwaysShowTooltip: true,
+                        numberFormat: intl.NumberFormat(),
+                        // leftPrefix: Icon(
+                        //   FontAwesomeIcons.wonSign,
+                        //   size: 14,
+                        //   color: Colors.black45,
+                        // ),
+                        rightSuffix: Padding(
+                            padding: EdgeInsets.only(left: 5),
+                            child: Text(
+                                LocalizableLoader.of(context).text("manwon"),
+                                style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold))),
+                        textStyle: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onDragging: (handlerIndex, lowerValue, upperValue) {
+                        setState(() {
+                          togetherTipPrice = lowerValue;
+                        });
+                      },
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      padding: EdgeInsets.only(top: 28),
+                      icon: Icon(FontAwesomeIcons.caretRight),
+                      color: Colors.blue,
+                      onPressed: () {
+                        setState(() {
+                          if (togetherTipPrice < maxPrice) {
+                            togetherTipPrice = togetherTipPrice + 1;
                           }
                         });
                       },
@@ -118,8 +198,8 @@ class _TogetherFormPriceState extends State<TogetherFormPrice> {
         iconData: FontAwesomeIcons.wonSign,
         color: MainTheme.enabledButtonColor,
         width: 170,
-        text: togetherPrice != 0
-            ? "${togetherPrice.toInt()} 만원"
+        text: togetherTablePrice != 0
+            ? "${togetherTablePrice.toInt()} + ${togetherTipPrice.toInt()} 만원"
             : LocalizableLoader.of(context).text("price_select"),
         onPressed: () {
           showDialog(
@@ -148,7 +228,8 @@ class _TogetherFormPriceState extends State<TogetherFormPrice> {
                               return;
                             }
 
-                            widget.callback(togetherPrice.toInt());
+                            widget.callback(togetherTablePrice.toInt(),
+                                togetherTipPrice.toInt());
                             setState(() {});
                           },
                         )

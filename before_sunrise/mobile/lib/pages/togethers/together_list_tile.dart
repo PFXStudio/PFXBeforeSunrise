@@ -1,5 +1,6 @@
 import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 // @visibleForTesting
 // Function(String) launchTicketsUrl = (url) async {
@@ -49,7 +50,7 @@ class TogetherListTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 1.0),
       child: Material(
-        color: const Color(0xE00D1736),
+        color: Colors.white,
         child: InkWell(
           onTap: onTap,
           child: content,
@@ -70,15 +71,12 @@ class _TogethertimesInfo extends StatelessWidget {
     return Column(
       children: [
         Text(
-          hoursAndMins.format(together.lastUpdate),
-          style: const TextStyle(
-            fontSize: 18.0,
-            color: const Color(0xFFFEFEFE),
-          ),
+          together.clubID,
+          style: const TextStyle(fontSize: 18.0, color: Colors.black54),
         ),
         const SizedBox(height: 4.0),
         Text(
-          hoursAndMins.format(together.lastUpdate),
+          timeago.format(together.lastUpdate.toDate(), locale: 'ko'),
           style: const TextStyle(
             fontSize: 14.0,
             color: const Color(0xFF717DAD),
@@ -98,7 +96,7 @@ class _DetailedInfo extends StatelessWidget {
     final decoration = const BoxDecoration(
       border: Border(
         left: BorderSide(
-          color: Color(0xFF717DAD),
+          color: MainTheme.disabledButtonColor,
         ),
       ),
     );
@@ -107,10 +105,7 @@ class _DetailedInfo extends StatelessWidget {
       Text(
         together.title,
         style: const TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 14.0,
-          color: const Color(0xFFFEFEFE),
-        ),
+            fontWeight: FontWeight.w500, fontSize: 14.0, color: Colors.black45),
       ),
       const SizedBox(height: 4.0),
       Text(

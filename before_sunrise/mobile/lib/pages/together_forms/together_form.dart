@@ -13,6 +13,7 @@ class TogetherForm extends StatefulWidget {
 class _TogetherFormState extends State<TogetherForm>
     with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  TogetherBloc _togetherBloc = TogetherBloc();
 
   final FocusNode titleFocusNode = FocusNode();
   final FocusNode contentsFocusNode = FocusNode();
@@ -34,49 +35,69 @@ class _TogetherFormState extends State<TogetherForm>
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: TogetherFormTopBar(),
-        ),
-        key: _scaffoldKey,
-        body: SingleChildScrollView(
-            child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: selectedThumbDatas.length == 0 ? 900 : maxContentsHeight,
-          decoration: new BoxDecoration(
-            gradient: MainTheme.primaryLinearGradient,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Expanded(
-                flex: 4,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints.expand(),
-                  child: _buildTogether(context),
-                ),
-              ),
-              Expanded(
-                flex: 11,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints.expand(),
-                  child: _buildContents(context),
-                ),
-              ),
-              Expanded(
-                  flex: selectedThumbDatas.length == 0 ? 7 : 14,
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints.expand(),
-                    child: Column(children: <Widget>[
-                      _buildGalleryFiles(context),
-                      _buildLineDecoration(context),
-                      _buildRegistButton(context),
-                    ]),
-                  )),
-            ],
-          ),
-        )));
+    return BlocListener(
+        bloc: _togetherBloc,
+        listener: (context, state) async {
+          if (state is SuccessTogetherState) {
+            SuccessSnackbar().show("success_post", () {
+              Navigator.pop(context);
+            });
+
+            return;
+          }
+        },
+        child: BlocBuilder<TogetherBloc, TogetherState>(
+            bloc: _togetherBloc,
+            builder: (
+              BuildContext context,
+              TogetherState currentState,
+            ) {
+              return Scaffold(
+                  appBar: PreferredSize(
+                    preferredSize: const Size.fromHeight(kToolbarHeight),
+                    child: TogetherFormTopBar(),
+                  ),
+                  key: _scaffoldKey,
+                  body: SingleChildScrollView(
+                      child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: selectedThumbDatas.length == 0
+                        ? 900
+                        : maxContentsHeight,
+                    decoration: new BoxDecoration(
+                      gradient: MainTheme.primaryLinearGradient,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        Expanded(
+                          flex: 4,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints.expand(),
+                            child: _buildTogether(context),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 11,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints.expand(),
+                            child: _buildContents(context),
+                          ),
+                        ),
+                        Expanded(
+                            flex: selectedThumbDatas.length == 0 ? 7 : 14,
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints.expand(),
+                              child: Column(children: <Widget>[
+                                _buildGalleryFiles(context),
+                                _buildLineDecoration(context),
+                                _buildRegistButton(context),
+                              ]),
+                            )),
+                      ],
+                    ),
+                  )));
+            }));
   }
 
   @override
@@ -173,7 +194,7 @@ class _TogetherFormState extends State<TogetherForm>
                         Row(
                           children: <Widget>[
                             Expanded(
-                              flex: 1,
+                              flex: 6,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
@@ -186,15 +207,17 @@ class _TogetherFormState extends State<TogetherForm>
                                       together.clubID = clubID;
                                     },
                                   ),
-                                  TogetherFormPrice(callback: (price) {
-                                    together.price = price;
+                                  TogetherFormPrice(
+                                      callback: (tablePrice, tipPrice) {
+                                    together.tablePrice = tablePrice;
+                                    together.tipPrice = tipPrice;
                                     setState(() {});
                                   })
                                 ],
                               ),
                             ),
                             Expanded(
-                                flex: 1,
+                                flex: 10,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
@@ -215,11 +238,12 @@ class _TogetherFormState extends State<TogetherForm>
                                     ),
                                     FlatIconTextButton(
                                         width: 200,
-                                        color: MainTheme.enabledButtonColor,
-                                        iconData: FontAwesomeIcons.paypal,
+                                        color: Colors.orange,
+                                        iconData:
+                                            FontAwesomeIcons.moneyBillWave,
                                         text: (together.totalCount != 0 &&
-                                                together.price != 0)
-                                            ? "${together.price}만원 / ${together.totalCount}명 = ${(together.price.toDouble() / together.totalCount.toDouble()).toStringAsFixed(1)} 만원"
+                                                together.tablePrice != 0)
+                                            ? "${together.tablePrice + together.tipPrice}만원 / ${together.totalCount}명 = ${((together.tablePrice + together.tipPrice) / together.totalCount.toDouble()).toStringAsFixed(1)} 만원"
                                             : ""),
                                   ],
                                 )),
@@ -533,9 +557,48 @@ class _TogetherFormState extends State<TogetherForm>
   }
 
   void _requestRegist(BuildContext context) {
-    showInSnackBar("Registed your contents.");
-    Future.delayed(new Duration(seconds: 2), () {
-      Navigator.of(context).pop();
-    });
+    if (together.dateString == null || together.dateString.length <= 0) {
+      FailSnackbar().show("error_together_form_date", null);
+      return;
+    }
+
+    if (together.totalCount < 2 || together.restCount < 1) {
+      FailSnackbar().show("error_together_form_count", null);
+      return;
+    }
+
+    if (together.clubID == null || together.clubID.length <= 0) {
+      FailSnackbar().show("error_together_form_club", null);
+      return;
+    }
+
+    if (together.hardCount == 0 && together.champagneCount == 0) {
+      FailSnackbar().show("error_together_form_cocktail", null);
+      return;
+    }
+
+    if (together.tablePrice <= 0) {
+      FailSnackbar().show("error_together_form_price", null);
+      return;
+    }
+
+    if (titleController.text.length <= 0) {
+      FailSnackbar().show("error_together_form_title", null);
+      return;
+    }
+
+    if (contentsController.text.length <= 0) {
+      FailSnackbar().show("error_together_form_title", null);
+      return;
+    }
+
+    together.title = titleController.text;
+    together.contents = contentsController.text;
+    together.youtubeUrl = youtubeController.text;
+
+    _togetherBloc.dispatch(CreateTogetherEvent(
+        together: together, byteDatas: selectedOriginalDatas));
+
+    return;
   }
 }

@@ -2,8 +2,9 @@ import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart';
 
 class TogetherDateSelector extends StatelessWidget {
-  TogetherDateSelector(this.togetherCollection, this.changedDateTime);
-  final TogetherCollection togetherCollection;
+  TogetherDateSelector(this.dates, this.selectedDate, this.changedDateTime);
+  final List<DateTime> dates;
+  final DateTime selectedDate;
   final Function(DateTime) changedDateTime;
 
   @override
@@ -24,8 +25,8 @@ class TogetherDateSelector extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: togetherCollection.dates.map((date) {
-            return _DateSelectorItem(date, togetherCollection, changedDateTime);
+          children: dates.map((date) {
+            return _DateSelectorItem(date, selectedDate, changedDateTime);
           }).toList(),
         ),
       ),
@@ -36,17 +37,17 @@ class TogetherDateSelector extends StatelessWidget {
 class _DateSelectorItem extends StatelessWidget {
   _DateSelectorItem(
     this.date,
-    this.viewModel,
+    this.selectedDate,
     this.changedDateTime,
   );
 
   final DateTime date;
-  final TogetherCollection viewModel;
+  DateTime selectedDate;
   final Function(DateTime) changedDateTime;
 
   @override
   Widget build(BuildContext context) {
-    final isSelected = date == viewModel.selectedDate;
+    final isSelected = date == selectedDate;
     final backgroundColor =
         isSelected ? MainTheme.enabledButtonColor : Colors.transparent;
 
@@ -57,7 +58,7 @@ class _DateSelectorItem extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            // TODO :
+            selectedDate = date;
             changedDateTime(date);
           },
           radius: 56.0,

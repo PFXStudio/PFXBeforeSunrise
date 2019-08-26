@@ -570,7 +570,6 @@ class PostFormScreenState extends State<PostFormScreen> {
     _post.title = _titleController.text;
     _post.contents = _contentsController.text;
     _post.youtubeUrl = _youtubeController.text;
-    _post.created = DateTime.now().millisecondsSinceEpoch;
     _postBloc.dispatch(
         CreatePostEvent(post: _post, byteDatas: _selectedOriginalDatas));
   }

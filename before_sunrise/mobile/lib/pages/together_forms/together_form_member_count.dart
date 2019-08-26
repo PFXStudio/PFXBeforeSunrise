@@ -33,7 +33,7 @@ class _TogetherFormMemberCountState extends State<TogetherFormMemberCount> {
         color: MainTheme.enabledButtonColor,
         width: 180,
         text: togetherTotalCount > 2
-            ? "총 인원 : ${togetherTotalCount.toInt()}, 남은 인원 : ${togetherRestCount.toInt()}"
+            ? "총 인원 : ${togetherTotalCount.toInt()}, 모집 인원 : ${togetherRestCount.toInt()}"
             : LocalizableLoader.of(context).text("member_count_select"),
         onPressed: () {
           showDialog(

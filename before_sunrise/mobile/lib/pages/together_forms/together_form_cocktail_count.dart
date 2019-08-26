@@ -27,7 +27,7 @@ class _TogetherFormCocktailCountState extends State<TogetherFormCocktailCount> {
         color: MainTheme.enabledButtonColor,
         width: 180,
         text: togetherHardCount != 0 || togetherChampagneCount != 0
-            ? "${togetherHardCount.toInt()}H, ${togetherChampagneCount.toInt()}C, ${togetherServiceCount.toInt()}s"
+            ? "${togetherHardCount.toInt()}하드, ${togetherChampagneCount.toInt()}샴, ${togetherServiceCount.toInt()}서비스"
             : LocalizableLoader.of(context).text("cocktail_count_select"),
         onPressed: () {
           showDialog(
