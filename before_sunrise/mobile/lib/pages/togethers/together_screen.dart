@@ -45,6 +45,7 @@ class TogetherScreenState extends State<TogetherScreen> {
       selectedDate = dates.first;
     }
 
+    print(selectedDate);
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       TogetherDateSelector(dates, selectedDate, (dateTime) {
         selectedDate = dateTime;

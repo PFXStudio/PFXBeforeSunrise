@@ -1,12 +1,17 @@
 import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart';
 
-class TogetherDateSelector extends StatelessWidget {
+class TogetherDateSelector extends StatefulWidget {
   TogetherDateSelector(this.dates, this.selectedDate, this.changedDateTime);
   final List<DateTime> dates;
-  final DateTime selectedDate;
+  DateTime selectedDate;
   final Function(DateTime) changedDateTime;
 
+  @override
+  _TogetherDateSelectorState createState() => _TogetherDateSelectorState();
+}
+
+class _TogetherDateSelectorState extends State<TogetherDateSelector> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,47 +30,31 @@ class TogetherDateSelector extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: dates.map((date) {
-            return _DateSelectorItem(date, selectedDate, changedDateTime);
+          children: widget.dates.map((date) {
+            final isSelected = date == widget.selectedDate;
+            final backgroundColor =
+                isSelected ? MainTheme.enabledButtonColor : Colors.transparent;
+
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 100),
+              color: backgroundColor,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    widget.selectedDate = date;
+                    widget.changedDateTime(date);
+                    setState(() {});
+                  },
+                  radius: 56.0,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: _ItemContent(date, isSelected),
+                  ),
+                ),
+              ),
+            );
           }).toList(),
-        ),
-      ),
-    );
-  }
-}
-
-class _DateSelectorItem extends StatelessWidget {
-  _DateSelectorItem(
-    this.date,
-    this.selectedDate,
-    this.changedDateTime,
-  );
-
-  final DateTime date;
-  DateTime selectedDate;
-  final Function(DateTime) changedDateTime;
-
-  @override
-  Widget build(BuildContext context) {
-    final isSelected = date == selectedDate;
-    final backgroundColor =
-        isSelected ? MainTheme.enabledButtonColor : Colors.transparent;
-
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 100),
-      color: backgroundColor,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
-            selectedDate = date;
-            changedDateTime(date);
-          },
-          radius: 56.0,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: _ItemContent(date, isSelected),
-          ),
         ),
       ),
     );

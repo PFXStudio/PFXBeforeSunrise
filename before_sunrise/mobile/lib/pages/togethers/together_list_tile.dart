@@ -50,7 +50,7 @@ class TogetherListTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 1.0),
       child: Material(
-        color: Colors.white,
+        color: Colors.white70,
         child: InkWell(
           onTap: onTap,
           child: content,
@@ -61,8 +61,6 @@ class TogetherListTile extends StatelessWidget {
 }
 
 class _TogethertimesInfo extends StatelessWidget {
-  static final hoursAndMins = DateFormat('HH:mm');
-
   _TogethertimesInfo(this.together);
   final Together together;
 
@@ -71,12 +69,20 @@ class _TogethertimesInfo extends StatelessWidget {
     return Column(
       children: [
         Text(
+          timeago.format(together.lastUpdate.toDate(), locale: 'ko'),
+          style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 14.0,
+              color: Colors.black45),
+        ),
+        const SizedBox(height: 4.0),
+        Text(
           together.clubID,
           style: const TextStyle(fontSize: 18.0, color: Colors.black54),
         ),
         const SizedBox(height: 4.0),
         Text(
-          timeago.format(together.lastUpdate.toDate(), locale: 'ko'),
+          "${together.tablePrice}",
           style: const TextStyle(
             fontSize: 14.0,
             color: const Color(0xFF717DAD),
