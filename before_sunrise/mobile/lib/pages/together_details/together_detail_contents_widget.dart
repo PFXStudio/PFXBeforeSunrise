@@ -45,7 +45,7 @@ class _TogetherDetailContentsWidgetState
             Row(
               children: <Widget>[
                 Expanded(
-                  flex: 1,
+                  flex: 2,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -53,13 +53,13 @@ class _TogetherDetailContentsWidgetState
                           iconData: FontAwesomeIcons.calendar,
                           color: Colors.black54,
                           width: 150,
-                          text: "2019년9월19일 토",
+                          text: widget.together.dateString,
                           onPressed: () => {}),
                       FlatIconTextButton(
                           iconData: FontAwesomeIcons.mapMarkerAlt,
                           color: Colors.black54,
                           width: 150,
-                          text: "클럽명은옥타곤",
+                          text: widget.together.clubID,
                           onPressed: () => {}),
                       FlatIconTextButton(
                           iconData: FontAwesomeIcons.idCard,
@@ -71,26 +71,26 @@ class _TogetherDetailContentsWidgetState
                   ),
                 ),
                 Expanded(
-                    flex: 1,
+                    flex: 3,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         FlatIconTextButton(
                             iconData: FontAwesomeIcons.users,
                             color: Colors.black54,
-                            width: 150,
+                            width: 200,
                             text: "총7명 - 2자리남음",
                             onPressed: () => {}),
                         FlatIconTextButton(
                             iconData: FontAwesomeIcons.cocktail,
                             color: Colors.black54,
-                            width: 150,
+                            width: 200,
                             text: "3하드 2샴 + 섭샴",
                             onPressed: () => {}),
                         FlatIconTextButton(
                             iconData: FontAwesomeIcons.wonSign,
                             color: Colors.black54,
-                            width: 150,
+                            width: 200,
                             text: "총 150만원 - 엔 21만원",
                             onPressed: () => {}),
                       ],
@@ -101,7 +101,7 @@ class _TogetherDetailContentsWidgetState
               padding: EdgeInsets.only(top: 10),
             ),
             Text(
-              "seeennddddd....\n asdfasdfddddfadfa\n\ndsfasdgadsa",
+              widget.together.contents,
               style: TextStyle(
                 color: Colors.black54,
               ),

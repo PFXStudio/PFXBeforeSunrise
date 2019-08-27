@@ -1,5 +1,6 @@
 import 'package:before_sunrise/import.dart';
 import 'package:before_sunrise/pages/together_details/together_detail_poster.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class TogetherDetailWidget extends StatefulWidget {
   TogetherDetailWidget(this.together);
@@ -208,41 +209,49 @@ class _Header extends StatelessWidget {
         child: moviePoster,
       ),
       Positioned(
-          top: 218.0,
+          top: 180.0,
           left: 146.0,
           right: 0,
           child: Column(children: <Widget>[
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                FlatIconTextButton(
+                    width: 120,
+                    iconData: FontAwesomeIcons.clock,
+                    color: Colors.white54,
+                    text: timeago.format(together.lastUpdate.toDate(),
+                        locale: 'ko'),
+                    onPressed: () => {}),
+              ],
+            ),
+            Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  FlatIconTextButton(
-                      iconData: Icons.visibility,
-                      color: Colors.black54,
-                      width: 70,
-                      text: sprintf("%d", [138]),
-                      onPressed: () => {}),
-                  FlatIconTextButton(
-                      iconData: Icons.thumb_up,
-                      color: MainTheme.enabledButtonColor,
-                      width: 70,
-                      text: sprintf("%d", [138]),
-                      onPressed: () => {}),
-                  FlatIconTextButton(
-                      iconData: Icons.message,
-                      color: MainTheme.enabledButtonColor,
-                      width: 70,
-                      text: sprintf("%d", [12118]),
-                      onPressed: () => {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) {},
-                                ))
-                          }),
+                  Expanded(
+                    flex: 1,
+                    child: FlatIconTextButton(
+                        iconData: Icons.visibility,
+                        color: Colors.black54,
+                        text: sprintf("%d", [138]),
+                        onPressed: () => {}),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: FlatIconTextButton(
+                        iconData: Icons.message,
+                        color: MainTheme.enabledButtonColor,
+                        text: sprintf("%d", [121]),
+                        onPressed: () => {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) {},
+                                  ))
+                            }),
+                  ),
                 ]),
-            Padding(
-                padding: EdgeInsets.only(left: 5),
-                child: TogetherInfo(together)),
+            TogetherInfo(together),
           ]))
     ]);
   }
@@ -259,30 +268,26 @@ class TogetherInfo extends StatelessWidget {
     return [
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             FlatIconTextButton(
-                iconData: FontAwesomeIcons.userEdit,
+                iconData: FontAwesomeIcons.idBadge,
                 color: Colors.black54,
-                width: 150,
-                text: "작성자댕댕이이12",
-                onPressed: () => {}),
-            FlatIconTextButton(
-                iconData: FontAwesomeIcons.clock,
-                color: Colors.black54,
-                width: 70,
-                text: "1시간 ��",
+                text: together.profile.nickname,
                 onPressed: () => {}),
           ],
         ),
       ]),
-      Text(
-        together.title,
-        style: const TextStyle(
-          fontSize: 18.0,
-          fontWeight: FontWeight.w800,
+      Padding(
+        padding: EdgeInsets.only(left: 5, top: 5),
+        child: Text(
+          together.title,
+          style: const TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-      ),
+      )
     ];
   }
 
