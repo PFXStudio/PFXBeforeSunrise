@@ -163,7 +163,7 @@
 //       phoneNumber: _snapshot.data['phoneNumber'],
 //       otherPhoneNumber: _snapshot.data['otherPhoneNumber'],
 //       businessLocation: _snapshot.data['businessLocation'],
-//       profileImageUrl: _snapshot.data['profileImageUrl'],
+//       imageUrl: _snapshot.data['imageUrl'],
 //       hasProfile: _snapshot.data['hasProfile'],
 //       created: _snapshot.data['created'],
 //       lastUpdate: _snapshot.data['lastUpdate'],
@@ -269,7 +269,7 @@
 //         phoneNumber: _snapshot.data['phoneNumber'],
 //         otherPhoneNumber: _snapshot.data['otherPhoneNumber'],
 //         businessLocation: _snapshot.data['businessLocation'],
-//         profileImageUrl: _snapshot.data['profileImageUrl'],
+//         imageUrl: _snapshot.data['imageUrl'],
 //         hasProfile: _snapshot.data['hasProfile'],
 //         created: _snapshot.data['created'],
 //         lastUpdate: _snapshot.data['lastUpdate'],
@@ -316,7 +316,7 @@
 //         phoneNumber: _snapshot.data['phoneNumber'],
 //         otherPhoneNumber: _snapshot.data['otherPhoneNumber'],
 //         businessLocation: _snapshot.data['businessLocation'],
-//         profileImageUrl: _snapshot.data['profileImageUrl'],
+//         imageUrl: _snapshot.data['imageUrl'],
 //         hasProfile: _snapshot.data['hasProfile'],
 //         created: _snapshot.data['created'],
 //         lastUpdate: _snapshot.data['lastUpdate'],
@@ -357,7 +357,7 @@
 
 //       final String _userID = await AuthBloc().getUserID();
 
-//       final String _profileImageUrl = await _imageRepository.saveProfileImage(
+//       final String _imageUrl = await _imageRepository.saveProfileImage(
 //           userID: _userID, imageData: profileImage);
 
 //       await _profileRepository.createProfile(
@@ -369,7 +369,7 @@
 //         phoneNumber: phoneNumber,
 //         otherPhoneNumber: otherPhoneNumber,
 //         businessLocation: businessLocation,
-//         profileImageUrl: _profileImageUrl,
+//         imageUrl: _imageUrl,
 //       );
 
 //       _profileState = ProfileState.Success;

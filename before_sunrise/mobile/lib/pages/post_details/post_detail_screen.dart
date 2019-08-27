@@ -106,17 +106,16 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        _post.profile.profileImageUrl != null &&
-                _post.profile.profileImageUrl.length > 0
+        _post.profile.imageUrl != null && _post.profile.imageUrl.length > 0
             ? CachedNetworkImage(
-                imageUrl: '${_post.profile.profileImageUrl}',
+                imageUrl: '${_post.profile.imageUrl}',
                 placeholder: (context, imageUrl) =>
                     Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
                 errorWidget: (context, imageUrl, error) =>
                     Center(child: Icon(Icons.error)),
                 imageBuilder: (BuildContext context, ImageProvider image) {
                   return Hero(
-                    tag: '${_post.postID}_${_post.profile.profileImageUrl}',
+                    tag: '${_post.postID}_${_post.profile.imageUrl}',
                     child: Container(
                         height: 40.0,
                         width: 40.0,
@@ -130,7 +129,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                 },
               )
             : Hero(
-                tag: '${_post.postID}_${_post.profile.profileImageUrl}',
+                tag: '${_post.postID}_${_post.profile.imageUrl}',
                 child: Container(
                     height: 40.0,
                     width: 40.0,

@@ -16,6 +16,7 @@ class Together {
     this.youtubeUrl = "",
     this.created,
     this.lastUpdate,
+    this.memberProfiles,
     this.isLiked = false,
     this.likeCount = 0,
     this.warningCount = 0,
@@ -40,6 +41,7 @@ class Together {
   dynamic created;
   dynamic lastUpdate;
   // other database.
+  List<Profile> memberProfiles;
   bool isLiked;
   int likeCount;
   int warningCount;
@@ -96,6 +98,7 @@ class Together {
     String youtubeUrl,
     DateTime created,
     DateTime lastUpdate,
+    List<dynamic> memberProfiles,
     bool isLiked,
     int likeCount,
     Profile profile,
@@ -115,6 +118,7 @@ class Together {
       youtubeUrl: youtubeUrl ?? this.youtubeUrl,
       created: created ?? this.created,
       lastUpdate: lastUpdate ?? this.lastUpdate,
+      memberProfiles: memberProfiles ?? this.memberProfiles,
       isLiked: isLiked ?? this.isLiked,
       likeCount: likeCount ?? this.likeCount,
       profile: profile ?? this.profile,

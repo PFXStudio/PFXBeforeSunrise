@@ -42,11 +42,11 @@ class _TextualInfo extends StatelessWidget {
       gradient: LinearGradient(
         begin: Alignment.bottomCenter,
         end: Alignment.topCenter,
-        stops: [0.0, 0.8, 0.9],
+        stops: [0.0, 0.6, 0.9],
         colors: [
+          Colors.black45,
           Colors.white10,
-          Colors.white54,
-          Colors.white54,
+          Colors.white70,
         ],
       ),
     );
@@ -100,12 +100,12 @@ class _TextualInfoContent extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   Container(
-                    height: 50.0,
-                    width: 50.0,
-                    child: together.profile.profileImageUrl != null &&
-                            together.profile.profileImageUrl.isNotEmpty
+                    height: 40.0,
+                    width: 40.0,
+                    child: together.profile.imageUrl != null &&
+                            together.profile.imageUrl.isNotEmpty
                         ? CachedNetworkImage(
-                            imageUrl: '${together.profile.profileImageUrl}',
+                            imageUrl: '${together.profile.imageUrl}',
                             placeholder: (context, imageUrl) => Center(
                                 child: CircularProgressIndicator(
                                     strokeWidth: 2.0)),
@@ -115,7 +115,7 @@ class _TextualInfoContent extends StatelessWidget {
                                 (BuildContext context, ImageProvider image) {
                               return Hero(
                                 tag:
-                                    '${together.postID}_${together.profile.profileImageUrl}',
+                                    '${together.postID}_${together.profile.imageUrl}',
                                 child: Container(
                                   height: 50.0,
                                   width: 50.0,
@@ -136,7 +136,7 @@ class _TextualInfoContent extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                      color: Colors.white54, width: 1.0),
+                                      color: Colors.black26, width: 1.0),
                                   image: DecorationImage(
                                       image: ExactAssetImage(
                                           'assets/avatars/avatar.png'),
@@ -177,8 +177,9 @@ class _TextualInfoContent extends StatelessWidget {
                     const SizedBox(height: 4.0),
                     Text(
                       together.title,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                        fontSize: 12.0,
+                        fontSize: 14.0,
                         color: Colors.white70,
                       ),
                     ),

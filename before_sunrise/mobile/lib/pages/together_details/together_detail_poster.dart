@@ -1,6 +1,4 @@
 import 'package:before_sunrise/import.dart';
-import 'package:intl/intl.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 @visibleForTesting
 Function(String) launchTrailerVideo = (url) async {
@@ -9,10 +7,10 @@ Function(String) launchTrailerVideo = (url) async {
   }
 };
 
-class TogetherPoster extends StatelessWidget {
+class TogetherDetailPoster extends StatelessWidget {
   static const Key playButtonKey = const Key('playButton');
 
-  TogetherPoster({
+  TogetherDetailPoster({
     @required this.together,
     this.size,
     this.displayPlayButton = false,
@@ -28,12 +26,12 @@ class TogetherPoster extends StatelessWidget {
           : null;
 
   Widget _buildPosterImage() =>
-      (together.imageUrls != null && together.imageUrls.length > 0)
+      (together.imageUrls != null && together.imageUrls.isNotEmpty == true)
           ? FadeInImage.assetNetwork(
-              placeholder: "assets/images/1x1_transparent.png",
+              placeholder: DefineImages.bgnd_main_220_path,
               image: together.imageUrls.first,
-              width: 250,
-              height: 250,
+              width: size?.width,
+              height: size?.height,
               fadeInDuration: const Duration(milliseconds: 300),
               fit: BoxFit.cover,
             )
@@ -43,9 +41,9 @@ class TogetherPoster extends StatelessWidget {
   Widget build(BuildContext context) {
     final content = <Widget>[
       const Icon(
-        FontAwesomeIcons.cocktail,
-        color: Colors.black54,
-        size: 32.0,
+        Icons.image,
+        color: Colors.white24,
+        size: 44.0,
       ),
     ];
 
@@ -79,7 +77,7 @@ class _PlayButton extends StatelessWidget {
         type: MaterialType.circle,
         color: Colors.transparent,
         child: IconButton(
-          key: TogetherPoster.playButtonKey,
+          key: TogetherDetailPoster.playButtonKey,
           padding: EdgeInsets.zero,
           icon: const Icon(Icons.play_circle_outline),
           iconSize: 42.0,
@@ -104,12 +102,13 @@ BoxDecoration _buildDecorations() {
         color: Colors.black38,
       ),
     ],
-    gradient:
-        LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter,
-            // colors: [
-            //   Color(0xFF222222),
-            //   Color(0xFF424242),
-            // ],
-            colors: [MainTheme.bgndColor, MainTheme.liteBgndColor]),
+    gradient: LinearGradient(
+      begin: Alignment.bottomCenter,
+      end: Alignment.topCenter,
+      colors: [
+        Color(0xFF222222),
+        Color(0xFF424242),
+      ],
+    ),
   );
 }

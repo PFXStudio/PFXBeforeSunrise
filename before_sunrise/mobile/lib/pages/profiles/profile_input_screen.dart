@@ -101,7 +101,7 @@ class ProfileInputScreenState extends State<ProfileInputScreen> {
                                                 null
                                             ? ProfileBloc()
                                                 .signedProfile
-                                                .profileImageUrl
+                                                .imageUrl
                                             : "https://avatars1.githubusercontent.com/u/13096942?s=460&v=4"),
                                         foregroundColor: Colors.white,
                                         radius: 50.0,
@@ -289,7 +289,7 @@ class ProfileInputScreenState extends State<ProfileInputScreen> {
     updateProfile.phoneNumber = await AuthBloc().getPhoneNumber();
     updateProfile.nickname = nicknameController.text;
     updateProfile.description = descriptionController.text;
-    updateProfile.profileImageUrl = "";
+    updateProfile.imageUrl = "";
     _profileBloc.dispatch(UpdateProfileEvent(profile: updateProfile));
   }
 

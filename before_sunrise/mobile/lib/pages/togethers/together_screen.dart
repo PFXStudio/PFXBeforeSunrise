@@ -35,11 +35,10 @@ class TogetherScreenState extends State<TogetherScreen> {
   @override
   Widget build(BuildContext context) {
     DateTime currentDateTime = DateTime.now();
-    List<DateTime> dates = List<DateTime>();
-    for (int i = 0; i < 6; i++) {
-      var addDateTime = currentDateTime.add(Duration(days: i));
-      dates.add(addDateTime);
-    }
+    List<DateTime> dates = List.generate(6, (index) {
+      var addDateTime = currentDateTime.add(Duration(days: index));
+      return DateTime(addDateTime.year, addDateTime.month, addDateTime.day);
+    });
 
     if (selectedDate == null) {
       selectedDate = dates.first;

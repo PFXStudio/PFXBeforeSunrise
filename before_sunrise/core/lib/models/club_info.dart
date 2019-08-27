@@ -5,7 +5,7 @@ class ClubInfo {
   String nickname;
   String description;
   String phoneNumber;
-  String profileImageUrl;
+  String imageUrl;
   int gender;
   dynamic created;
   dynamic lastUpdate;
@@ -17,7 +17,7 @@ class ClubInfo {
     this.nickname,
     this.description,
     this.phoneNumber,
-    this.profileImageUrl,
+    this.imageUrl,
     this.gender,
     this.created,
     this.lastUpdate,
@@ -30,7 +30,7 @@ class ClubInfo {
     this.nickname = snapshot.data["nickname"];
     this.description = snapshot.data["description"];
     this.phoneNumber = snapshot.data["phoneNumber"];
-    this.profileImageUrl = snapshot.data["profileImageUrl"];
+    this.imageUrl = snapshot.data["imageUrl"];
     this.gender = snapshot.data["gender"];
     this.created = snapshot.data["created"];
     this.lastUpdate = snapshot.data["lastUpdate"];
@@ -42,7 +42,7 @@ class ClubInfo {
       "nickname": nickname,
       "description": description,
       "phoneNumber": phoneNumber,
-      "profileImageUrl": profileImageUrl,
+      "imageUrl": imageUrl,
       "gender": gender,
       "created": created,
       "lastUpdate": lastUpdate,
@@ -54,7 +54,7 @@ class ClubInfo {
     String nickname,
     String description,
     String phoneNumber,
-    String profileImageUrl,
+    String imageUrl,
     int gender,
     dynamic created,
     dynamic lastUpdate,
@@ -66,7 +66,7 @@ class ClubInfo {
       nickname: nickname ?? this.nickname,
       description: description ?? this.description,
       phoneNumber: phoneNumber ?? this.phoneNumber,
-      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+      imageUrl: imageUrl ?? this.imageUrl,
       gender: gender ?? this.gender,
       created: created ?? this.created,
       lastUpdate: lastUpdate ?? this.lastUpdate,

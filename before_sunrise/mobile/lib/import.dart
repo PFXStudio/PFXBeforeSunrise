@@ -110,6 +110,11 @@ export 'pages/together_forms/together_form_date.dart';
 export 'pages/together_forms/together_form_member_count.dart';
 export 'pages/together_forms/together_form_top_bar.dart';
 export 'pages/together_forms/together_form.dart';
+export 'pages/together_details/together_detail_backdrop_photo.dart';
+export 'pages/together_details/together_detail_contents_widget.dart';
+export 'pages/together_details/together_detail_gallery_grid_widget.dart';
+export 'pages/together_details/together_detail_member_scroller_widget.dart';
+export 'pages/together_details/together_detail_scroll_effects.dart';
 
 export 'pages/infos/info_screen.dart';
 

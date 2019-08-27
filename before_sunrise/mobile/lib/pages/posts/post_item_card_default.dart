@@ -239,17 +239,17 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
         height: 50.0,
         width: 50.0,
         child: _post != null &&
-                _post.profile.profileImageUrl != null &&
-                _post.profile.profileImageUrl.isNotEmpty
+                _post.profile.imageUrl != null &&
+                _post.profile.imageUrl.isNotEmpty
             ? CachedNetworkImage(
-                imageUrl: '${_post.profile.profileImageUrl}',
+                imageUrl: '${_post.profile.imageUrl}',
                 placeholder: (context, imageUrl) =>
                     Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
                 errorWidget: (context, imageUrl, error) =>
                     Center(child: Icon(Icons.error)),
                 imageBuilder: (BuildContext context, ImageProvider image) {
                   return Hero(
-                    tag: '${_post.postID}_${_post.profile.profileImageUrl}',
+                    tag: '${_post.postID}_${_post.profile.imageUrl}',
                     child: Container(
                       height: 50.0,
                       width: 50.0,

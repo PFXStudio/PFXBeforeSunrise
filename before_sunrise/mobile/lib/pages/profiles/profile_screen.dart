@@ -105,16 +105,16 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildProfileAvatar() {
-    return _profile != null && _profile.profileImageUrl.isNotEmpty
+    return _profile != null && _profile.imageUrl.isNotEmpty
         ? CachedNetworkImage(
-            imageUrl: '${_profile.profileImageUrl}',
+            imageUrl: '${_profile.imageUrl}',
             placeholder: (context, imageUrl) =>
                 Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
             errorWidget: (context, imageUrl, error) =>
                 Center(child: Icon(Icons.error)),
             imageBuilder: (BuildContext context, ImageProvider image) {
               return Hero(
-                tag: '${_profile.profileImageUrl}',
+                tag: '${_profile.imageUrl}',
                 child: Container(
                   height: 120.0,
                   width: 120.0,

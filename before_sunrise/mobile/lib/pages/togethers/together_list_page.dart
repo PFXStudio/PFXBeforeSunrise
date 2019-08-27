@@ -1,4 +1,5 @@
 import 'package:before_sunrise/import.dart';
+import 'package:before_sunrise/pages/together_details/together_detail_widget.dart';
 
 class TogetherListPage extends StatelessWidget {
   TogetherListPage({@required this.togethers});
@@ -12,12 +13,13 @@ class TogetherListPage extends StatelessWidget {
 
     return Container(
         key: Key("together_list_page_grid"),
+        padding: EdgeInsets.only(bottom: 100),
         child: Scrollbar(
             child: GridView.builder(
           padding: const EdgeInsets.only(bottom: 50.0),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisChildCount,
-            childAspectRatio: 9 / 10,
+            childAspectRatio: 8 / 10,
           ),
           itemCount: togethers.length,
           itemBuilder: _buildItem,
@@ -40,8 +42,13 @@ class TogetherListPage extends StatelessWidget {
     final together = togethers[index];
 
     return TogetherGridItem(
-      together: together,
-      onTapped: () {},
-    );
+        together: together,
+        onTapped: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => TogetherDetailWidget(together),
+              ));
+        });
   }
 }
