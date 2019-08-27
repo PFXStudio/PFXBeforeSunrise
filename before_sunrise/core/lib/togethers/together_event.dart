@@ -39,10 +39,15 @@ class LoadTogetherEvent extends TogetherEvent {
       for (var document in snapshot.documents) {
         Together together = Together();
         together.initialize(document);
+        DocumentSnapshot profileSnapshot =
+            await _profileProvider.fetchProfile(userID: together.userID);
+        Profile userProfile = Profile();
+        userProfile.initialize(profileSnapshot);
+        together.profile = userProfile;
+
         collection.togethers.add(together);
       }
 
-      String userID = await _authProvider.getUserID();
       return new FetchedTogetherState(togetherCollection: collection);
     } catch (_, stackTrace) {
       print('$_ $stackTrace');

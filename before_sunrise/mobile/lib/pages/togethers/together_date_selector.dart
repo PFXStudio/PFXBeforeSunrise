@@ -16,7 +16,7 @@ class _TogetherDateSelectorState extends State<TogetherDateSelector> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xffF8C5B8),
+        color: MainTheme.liteBgndColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black45,

@@ -4,6 +4,7 @@ class MainTheme {
   const MainTheme();
 
   static const Color bgndColor = const Color(0xFFE55D57);
+  static const Color liteBgndColor = const Color(0xffF8C5B8);
   static const Color activeIndicatorColor = const Color(0xFFE55D57);
   static const Color pivotColor = const Color(0xFFe8b730);
   static const Color enabledButtonColor = const Color(0xFFee6d66);
