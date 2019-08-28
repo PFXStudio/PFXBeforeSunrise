@@ -15,6 +15,7 @@ class TogetherDetailWidget extends StatefulWidget {
 class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
   ScrollController _scrollController;
   TogetherDetailScrollEffects _scrollEffects;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -80,6 +81,12 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
     addIfNonNull(_buildSynopsis(), content);
     addIfNonNull(_buildGallery(), content);
     addIfNonNull(_buildJoin(context), content);
+    addIfNonNull(
+        Padding(
+          padding: EdgeInsets.only(bottom: 100),
+          child: Container(),
+        ),
+        content);
 
     // Some padding for the bottom.
     content.add(const SizedBox(height: 32.0));
@@ -128,20 +135,10 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: touchedButton,
-        tooltip: 'Increment',
-        child: const Icon(FontAwesomeIcons.signInAlt),
-      ),
     );
   }
 
   void touchedButton() {}
-
-  Widget _body() {
-    return Container();
-  }
-
   Widget _panel() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,108 +164,16 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              "Comments",
-              style: TextStyle(
-                fontWeight: FontWeight.normal,
-                fontSize: 24.0,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 36.0,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _button("Popular", Icons.favorite, Colors.blue),
-            _button("Food", Icons.restaurant, Colors.red),
-            _button("Events", Icons.event, Colors.amber),
-            _button("More", Icons.more_horiz, Colors.green),
-          ],
-        ),
-        SizedBox(
-          height: 36.0,
-        ),
-        Container(
-          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text("Images",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                  )),
-              SizedBox(
-                height: 12.0,
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 36.0,
-        ),
-        Container(
-          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text("About",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                  )),
-              SizedBox(
-                height: 12.0,
-              ),
-              Text(
-                "Pittsburgh is a city in the Commonwealth of Pennsylvania "
-                "in the United States, and is the county seat of Allegheny County. "
-                "As of 2017, a population of 305,704 lives within the city limits, "
-                "making it the 63rd-largest city in the U.S. The metropolitan population "
-                "of 2,353,045 is the largest in both the Ohio Valley and Appalachia, "
-                "the second-largest in Pennsylvania (behind Philadelphia), "
-                "and the 26th-largest in the U.S.  Pittsburgh is located in the "
-                "south west of the state, at the confluence of the Allegheny, "
-                "Monongahela, and Ohio rivers, Pittsburgh is known both as 'the Steel City' "
-                "for its more than 300 steel-related businesses and as the 'City of Bridges' "
-                "for its 446 bridges. The city features 30 skyscrapers, two inclined railways, "
-                "a pre-revolutionary fortification and the Point State Park at the "
-                "confluence of the rivers. The city developed as a vital link of "
-                "the Atlantic coast and Midwest, as the mineral-rich Allegheny "
-                "Mountains made the area coveted by the French and British "
-                "empires, Virginians, Whiskey Rebels, and Civil War raiders. ",
-                maxLines: 7,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _button(String label, IconData icon, Color color) {
-    return Column(
-      children: <Widget>[
-        Container(
-          padding: const EdgeInsets.all(16.0),
-          child: Icon(
-            icon,
-            color: Colors.white,
-          ),
-          decoration:
-              BoxDecoration(color: color, shape: BoxShape.circle, boxShadow: [
-            BoxShadow(
-              color: Color.fromRGBO(0, 0, 0, 0.15),
-              blurRadius: 8.0,
+            Container(
+              width: 120,
+              child: FlatIconTextButton(
+                  color: MainTheme.enabledButtonColor,
+                  iconData: FontAwesomeIcons.comment,
+                  text: "Comments"),
             )
-          ]),
+          ],
         ),
-        SizedBox(
-          height: 12.0,
-        ),
-        Text(label),
+        CommentList(),
       ],
     );
   }
@@ -388,13 +293,14 @@ class _Header extends StatelessWidget {
                 Icon(
                   FontAwesomeIcons.clock,
                   color: Colors.black54,
-                  size: 16,
+                  size: 14,
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 5),
                 ),
                 Text(
                   timeago.format(together.lastUpdate.toDate(), locale: 'ko'),
+                  style: TextStyle(color: Colors.black54, fontSize: 12),
                 ),
                 Padding(
                   padding: EdgeInsets.only(right: 5),
@@ -476,38 +382,6 @@ class TogetherInfo extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: content,
-    );
-  }
-}
-
-class _DirectorInfo extends StatelessWidget {
-  _DirectorInfo(this.director);
-  final String director;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "director",
-          style: const TextStyle(
-            fontSize: 12.0,
-            color: Colors.black87,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(width: 4.0),
-        Expanded(
-          child: Text(
-            director,
-            style: const TextStyle(
-              fontSize: 12.0,
-              color: Colors.black87,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
