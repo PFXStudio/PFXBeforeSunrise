@@ -1,6 +1,7 @@
 import 'package:before_sunrise/import.dart';
 import 'package:before_sunrise/pages/together_details/together_detail_poster.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:latlong/latlong.dart';
 
 class TogetherDetailWidget extends StatefulWidget {
   TogetherDetailWidget(this.together);
@@ -77,8 +78,7 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
     ];
 
     addIfNonNull(_buildSynopsis(), content);
-    // TODO : Gallery
-    // addIfNonNull(_buildGallery(), content);
+    addIfNonNull(_buildGallery(), content);
     addIfNonNull(_buildJoin(context), content);
 
     // Some padding for the bottom.
@@ -91,16 +91,185 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
       ],
     );
 
+    final double _initFabHeight = 120.0;
+    double _fabHeight;
+    double _panelHeightOpen = 575.0;
+    double _panelHeightClosed = 95.0;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F0F0),
       body: Stack(
         children: [
-          _buildEventBackdrop(),
-          slivers,
-          _BackButton(_scrollEffects),
-          _buildStatusBarBackground(),
+          // Container(
+          //   decoration: new BoxDecoration(
+          //     gradient: MainTheme.primaryLinearGradient,
+          //   ),
+          // ),
+          SlidingUpPanel(
+            maxHeight: _panelHeightOpen,
+            minHeight: _panelHeightClosed,
+            parallaxEnabled: true,
+            parallaxOffset: .5,
+            body: Stack(
+              children: <Widget>[
+                _buildEventBackdrop(),
+                slivers,
+                _BackButton(_scrollEffects),
+                _buildStatusBarBackground(),
+              ],
+            ),
+            panel: _panel(),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(18.0),
+                topRight: Radius.circular(18.0)),
+            onPanelSlide: (double pos) => setState(() {
+              _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) +
+                  _initFabHeight;
+            }),
+          ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: touchedButton,
+        tooltip: 'Increment',
+        child: const Icon(FontAwesomeIcons.signInAlt),
+      ),
+    );
+  }
+
+  void touchedButton() {}
+
+  Widget _body() {
+    return Container();
+  }
+
+  Widget _panel() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(
+          height: 12.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              width: 30,
+              height: 5,
+              decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.all(Radius.circular(12.0))),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 18.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "Comments",
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 24.0,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 36.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            _button("Popular", Icons.favorite, Colors.blue),
+            _button("Food", Icons.restaurant, Colors.red),
+            _button("Events", Icons.event, Colors.amber),
+            _button("More", Icons.more_horiz, Colors.green),
+          ],
+        ),
+        SizedBox(
+          height: 36.0,
+        ),
+        Container(
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text("Images",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                  )),
+              SizedBox(
+                height: 12.0,
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 36.0,
+        ),
+        Container(
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text("About",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                  )),
+              SizedBox(
+                height: 12.0,
+              ),
+              Text(
+                "Pittsburgh is a city in the Commonwealth of Pennsylvania "
+                "in the United States, and is the county seat of Allegheny County. "
+                "As of 2017, a population of 305,704 lives within the city limits, "
+                "making it the 63rd-largest city in the U.S. The metropolitan population "
+                "of 2,353,045 is the largest in both the Ohio Valley and Appalachia, "
+                "the second-largest in Pennsylvania (behind Philadelphia), "
+                "and the 26th-largest in the U.S.  Pittsburgh is located in the "
+                "south west of the state, at the confluence of the Allegheny, "
+                "Monongahela, and Ohio rivers, Pittsburgh is known both as 'the Steel City' "
+                "for its more than 300 steel-related businesses and as the 'City of Bridges' "
+                "for its 446 bridges. The city features 30 skyscrapers, two inclined railways, "
+                "a pre-revolutionary fortification and the Point State Park at the "
+                "confluence of the rivers. The city developed as a vital link of "
+                "the Atlantic coast and Midwest, as the mineral-rich Allegheny "
+                "Mountains made the area coveted by the French and British "
+                "empires, Virginians, Whiskey Rebels, and Civil War raiders. ",
+                maxLines: 7,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _button(String label, IconData icon, Color color) {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Icon(
+            icon,
+            color: Colors.white,
+          ),
+          decoration:
+              BoxDecoration(color: color, shape: BoxShape.circle, boxShadow: [
+            BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.15),
+              blurRadius: 8.0,
+            )
+          ]),
+        ),
+        SizedBox(
+          height: 12.0,
+        ),
+        Text(label),
+      ],
     );
   }
 }
@@ -114,13 +283,13 @@ Widget _buildJoin(BuildContext context) {
       boxShadow: <BoxShadow>[
         BoxShadow(
           color: MainTheme.gradientStartColor,
-          offset: Offset(1.0, 6.0),
-          blurRadius: 20.0,
+          offset: Offset(1.0, 1.0),
+          blurRadius: 4.0,
         ),
         BoxShadow(
           color: MainTheme.gradientEndColor,
-          offset: Offset(1.0, 6.0),
-          blurRadius: 20.0,
+          offset: Offset(1.0, 1.0),
+          blurRadius: 4.0,
         ),
       ],
       gradient: MainTheme.buttonLinearGradient,
@@ -209,20 +378,27 @@ class _Header extends StatelessWidget {
         child: moviePoster,
       ),
       Positioned(
-          top: 180.0,
+          top: 200.0,
           left: 146.0,
           right: 0,
           child: Column(children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                FlatIconTextButton(
-                    width: 120,
-                    iconData: FontAwesomeIcons.clock,
-                    color: Colors.white54,
-                    text: timeago.format(together.lastUpdate.toDate(),
-                        locale: 'ko'),
-                    onPressed: () => {}),
+                Icon(
+                  FontAwesomeIcons.clock,
+                  color: Colors.black54,
+                  size: 16,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 5),
+                ),
+                Text(
+                  timeago.format(together.lastUpdate.toDate(), locale: 'ko'),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 5),
+                ),
               ],
             ),
             Row(
@@ -252,7 +428,7 @@ class _Header extends StatelessWidget {
                   ),
                 ]),
             TogetherInfo(together),
-          ]))
+          ])),
     ]);
   }
 }

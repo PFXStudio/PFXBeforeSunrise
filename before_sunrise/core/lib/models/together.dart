@@ -8,6 +8,9 @@ class Together {
     this.dateString = "",
     this.totalCount = 0,
     this.restCount = 0,
+    this.hardCount = 0,
+    this.champagneCount = 0,
+    this.serviceCount = 0,
     this.tablePrice = 0,
     this.tipPrice = 0,
     this.title = "",
@@ -54,6 +57,9 @@ class Together {
     this.dateString = snapshot.data["dateString"];
     this.totalCount = snapshot.data["totalCount"];
     this.restCount = snapshot.data["restCount"];
+    this.hardCount = snapshot.data["hardCount"];
+    this.champagneCount = snapshot.data["champagneCount"];
+    this.serviceCount = snapshot.data["serviceCount"];
     this.tablePrice = snapshot.data["tablePrice"];
     this.tipPrice = snapshot.data["tipPrice"];
     this.title = snapshot.data["title"];
@@ -72,6 +78,9 @@ class Together {
       "dateString": dateString,
       "totalCount": totalCount,
       "restCount": restCount,
+      "hardCount": hardCount,
+      "champagneCount": champagneCount,
+      "serviceCount": serviceCount,
       "tablePrice": tablePrice,
       "tipPrice": tipPrice,
       "title": title,
@@ -90,6 +99,9 @@ class Together {
     String dateString,
     int totalCount,
     int restCount,
+    int hardCount,
+    int champagneCount,
+    int serviceCount,
     int tablePrice,
     int tipPrice,
     String title,
@@ -110,6 +122,9 @@ class Together {
       dateString: dateString ?? this.dateString,
       totalCount: totalCount ?? this.totalCount,
       restCount: restCount ?? this.restCount,
+      hardCount: hardCount ?? this.hardCount,
+      champagneCount: champagneCount ?? this.champagneCount,
+      serviceCount: serviceCount ?? this.serviceCount,
       tablePrice: tablePrice ?? this.tablePrice,
       tipPrice: tipPrice ?? this.tipPrice,
       title: title ?? this.title,
@@ -123,6 +138,33 @@ class Together {
       likeCount: likeCount ?? this.likeCount,
       profile: profile ?? this.profile,
     );
+  }
+
+  String countText() {
+    return "총 인원 : ${this.totalCount}, 모집 인원 : ${this.restCount}";
+  }
+
+  String cocktailText() {
+    return "${this.hardCount}하드, ${this.champagneCount}샴, ${this.serviceCount}서비스";
+  }
+
+  String priceText() {
+    return "${this.tablePrice} + ${this.tipPrice} = ${this.tablePrice + this.tipPrice}만원";
+  }
+
+  String douchPriceText() {
+    double price = (this.tablePrice + this.tipPrice) / this.totalCount;
+    return "${this.tablePrice + this.tipPrice}만원 / ${this.totalCount}명 = ${price.toStringAsFixed(1)}만원";
+  }
+
+  String dateText() {
+    DateTime dateTime = DateTime.parse(this.dateString);
+    return CoreConst.togetherDateTextFormat.format(dateTime);
+  }
+
+  String synopsisText() {
+    double price = (this.tablePrice + this.tipPrice) / this.totalCount;
+    return "${this.dateText()}, ${this.clubID}, ${this.restCount}명, ${price.toStringAsFixed(1)}만원";
   }
 
   @override
@@ -140,6 +182,9 @@ class Together {
       dateString.hashCode ^
       totalCount.hashCode ^
       restCount.hashCode ^
+      hardCount.hashCode ^
+      champagneCount.hashCode ^
+      serviceCount.hashCode ^
       tablePrice.hashCode ^
       tipPrice.hashCode ^
       title.hashCode ^

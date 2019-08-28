@@ -198,8 +198,10 @@ class _TogetherFormState extends State<TogetherForm>
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  TogetherFormDate(callback: (dateString) {
-                                    together.dateString = dateString;
+                                  TogetherFormDate(callback: (dateTime) {
+                                    together.dateString = CoreConst
+                                        .togetherDateFormat
+                                        .format(dateTime);
                                   }),
                                   TogetherFormClub(
                                     callback: (clubID) {

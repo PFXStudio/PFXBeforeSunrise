@@ -31,7 +31,9 @@ class _TogetherDateSelectorState extends State<TogetherDateSelector> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: widget.dates.map((date) {
-            final isSelected = date == widget.selectedDate;
+            final isSelected = date.year == widget.selectedDate.year &&
+                date.month == widget.selectedDate.month &&
+                date.day == widget.selectedDate.day;
             final backgroundColor =
                 isSelected ? MainTheme.enabledButtonColor : Colors.transparent;
 

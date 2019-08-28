@@ -32,8 +32,8 @@ class TogetherPoster extends StatelessWidget {
           ? FadeInImage.assetNetwork(
               placeholder: "assets/images/1x1_transparent.png",
               image: together.imageUrls.first,
-              width: 250,
-              height: 250,
+              width: 260,
+              height: 260,
               fadeInDuration: const Duration(milliseconds: 300),
               fit: BoxFit.cover,
             )

@@ -18,8 +18,6 @@ class _TogetherDetailContentsWidgetState
   void initState() {
     super.initState();
     _isExpandable = true;
-    // TODO : expandable.
-    // _isExpandable = widget.together.shortSynopsis != widget.together.synopsis;
   }
 
   void _toggleExpandedState() {
@@ -31,13 +29,10 @@ class _TogetherDetailContentsWidgetState
   @override
   Widget build(BuildContext context) {
     final content = AnimatedCrossFade(
-      // TODO : synopsis
       firstChild: Text(
-        "모임일/클럽명/엠디/현인원-총인원/총비용-엔비/주류구성/이미지첨부/유투브링크/제목/내용\nas\n\nsefsf",
+        widget.together.synopsisText(),
         style: const TextStyle(
-          fontSize: 12.0,
-          fontWeight: FontWeight.w600,
-        ),
+            fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.black54),
       ),
       secondChild: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,33 +40,39 @@ class _TogetherDetailContentsWidgetState
             Row(
               children: <Widget>[
                 Expanded(
-                  flex: 2,
+                  flex: 3,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       FlatIconTextButton(
                           iconData: FontAwesomeIcons.calendar,
                           color: Colors.black54,
-                          width: 150,
-                          text: widget.together.dateString,
+                          width: 170,
+                          text: _isExpanded == false
+                              ? ""
+                              : widget.together.dateText(),
                           onPressed: () => {}),
                       FlatIconTextButton(
                           iconData: FontAwesomeIcons.mapMarkerAlt,
                           color: Colors.black54,
-                          width: 150,
-                          text: widget.together.clubID,
+                          width: 170,
+                          text: _isExpanded == false
+                              ? ""
+                              : widget.together.clubID,
                           onPressed: () => {}),
                       FlatIconTextButton(
-                          iconData: FontAwesomeIcons.idCard,
+                          iconData: FontAwesomeIcons.wonSign,
                           color: Colors.black54,
-                          width: 150,
-                          text: "엠디명은김상무",
+                          width: 170,
+                          text: _isExpanded == false
+                              ? ""
+                              : widget.together.priceText(),
                           onPressed: () => {}),
                     ],
                   ),
                 ),
                 Expanded(
-                    flex: 3,
+                    flex: 4,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -79,19 +80,25 @@ class _TogetherDetailContentsWidgetState
                             iconData: FontAwesomeIcons.users,
                             color: Colors.black54,
                             width: 200,
-                            text: "총7명 - 2자리남음",
+                            text: _isExpanded == false
+                                ? ""
+                                : widget.together.countText(),
                             onPressed: () => {}),
                         FlatIconTextButton(
                             iconData: FontAwesomeIcons.cocktail,
                             color: Colors.black54,
                             width: 200,
-                            text: "3하드 2샴 + 섭샴",
+                            text: _isExpanded == false
+                                ? ""
+                                : widget.together.cocktailText(),
                             onPressed: () => {}),
                         FlatIconTextButton(
-                            iconData: FontAwesomeIcons.wonSign,
+                            iconData: FontAwesomeIcons.moneyBillWave,
                             color: Colors.black54,
                             width: 200,
-                            text: "총 150만원 - 엔 21만원",
+                            text: _isExpanded == false
+                                ? ""
+                                : widget.together.douchPriceText(),
                             onPressed: () => {}),
                       ],
                     )),
@@ -102,9 +109,8 @@ class _TogetherDetailContentsWidgetState
             ),
             Text(
               widget.together.contents,
-              style: TextStyle(
-                color: Colors.black54,
-              ),
+              style:
+                  TextStyle(color: Colors.black54, fontWeight: FontWeight.w600),
             ),
           ]),
       crossFadeState:

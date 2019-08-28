@@ -52,8 +52,8 @@ class _PlaceholderBackground extends StatelessWidget {
         begin: Alignment.bottomCenter,
         end: Alignment.topCenter,
         colors: [
-          Color(0xFF222222),
-          Color(0xFF424242),
+          MainTheme.bgndColor,
+          MainTheme.liteBgndColor,
         ],
       ),
     );
@@ -64,9 +64,9 @@ class _PlaceholderBackground extends StatelessWidget {
       decoration: decoration,
       child: const Center(
         child: Icon(
-          Icons.theaters,
-          color: Colors.white30,
-          size: 96.0,
+          FontAwesomeIcons.cocktail,
+          color: Colors.white54,
+          size: 48.0,
         ),
       ),
     );
@@ -89,8 +89,11 @@ class _BackdropImage extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final screenWidth = MediaQuery.of(context).size.width;
+    if (photoUrl.length <= 0) {
+      return const SizedBox.shrink();
+    }
 
+    final screenWidth = MediaQuery.of(context).size.width;
     return SizedBox(
       width: screenWidth,
       height: scrollEffects.backdropHeight,

@@ -1,7 +1,7 @@
 import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart';
 
-typedef TogetherFormDateCallback = void Function(String dateString);
+typedef TogetherFormDateCallback = void Function(DateTime dateTime);
 
 class TogetherFormDate extends StatefulWidget {
   TogetherFormDate({this.callback});
@@ -20,7 +20,7 @@ class _TogetherFormDateState extends State<TogetherFormDate> {
       color: MainTheme.enabledButtonColor,
       width: 150,
       text: selectedDate != null
-          ? CoreConst.togetherDateFormat.format(selectedDate)
+          ? CoreConst.togetherDateTextFormat.format(selectedDate)
           : LocalizableLoader.of(context).text("date_select"),
       onPressed: () async {
         final date = await showDatePicker(
@@ -35,7 +35,7 @@ class _TogetherFormDateState extends State<TogetherFormDate> {
           return;
         }
 
-        widget.callback(CoreConst.togetherDateFormat.format(selectedDate));
+        widget.callback(selectedDate);
       },
     );
   }
