@@ -1,128 +1,24 @@
 import 'package:before_sunrise/import.dart';
-
-Random random = Random();
-List names = [
-  "Ling Waldner",
-  "Gricelda Barrera",
-  "Lenard Milton",
-  "Bryant Marley",
-  "Rosalva Sadberry",
-  "Guadalupe Ratledge",
-  "Brandy Gazda",
-  "Kurt Toms",
-  "Rosario Gathright",
-  "Kim Delph",
-  "Stacy Christensen",
-];
-
-List messages = [
-  "Hey, how are you doing?",
-  "Are you available tomorrow?",
-  "It's late. Go to bed!",
-  "This cracked me up 😂😂",
-  "Flutter Rocks!!!",
-  "The last rocket🚀",
-  "Griezmann signed for Barca❤️❤️",
-  "Will you be attending the meetup tomorrow?",
-  "Are you angry at something?",
-  "Let's make a UI serie.",
-  "Can i hear your voice?",
-];
-
-List notifs = [
-  "${names[random.nextInt(10)]} and ${random.nextInt(100)} others liked your post",
-  "${names[random.nextInt(10)]} mentioned you in a comment",
-  "${names[random.nextInt(10)]} shared your post",
-  "${names[random.nextInt(10)]} commented on your post",
-  "${names[random.nextInt(10)]} replied to your comment",
-  "${names[random.nextInt(10)]} reacted to your comment",
-  "${names[random.nextInt(10)]} asked you to join a Group️",
-  "${names[random.nextInt(10)]} asked you to like a page",
-  "You have memories with ${names[random.nextInt(10)]}",
-  "${names[random.nextInt(10)]} Tagged you and ${random.nextInt(100)} others in a post",
-  "${names[random.nextInt(10)]} Sent you a friend request",
-];
-
-List notifications = List.generate(
-    13,
-    (index) => {
-          "name": names[random.nextInt(10)],
-          "dp": "assets/images/cm${random.nextInt(10)}.jpeg",
-          "time": "${random.nextInt(50)} min ago",
-          "notif": notifs[random.nextInt(10)]
-        });
-
-List posts = List.generate(
-    13,
-    (index) => {
-          "name": names[random.nextInt(10)],
-          "dp": "assets/images/images/cm${random.nextInt(10)}.jpeg",
-          "time": "${random.nextInt(50)} min ago",
-          "img": "assets/images/cm${random.nextInt(10)}.jpeg"
-        });
-
-List chats = List.generate(
-    13,
-    (index) => {
-          "name": names[random.nextInt(10)],
-          "dp": "assets/images/cm${random.nextInt(10)}.jpeg",
-          "msg": messages[random.nextInt(10)],
-          "counter": random.nextInt(20),
-          "time": "${random.nextInt(50)} min ago",
-          "isOnline": random.nextBool(),
-        });
-
-List groups = List.generate(
-    13,
-    (index) => {
-          "name": "Group ${random.nextInt(20)}",
-          "dp": "assets/images/cm${random.nextInt(10)}.jpeg",
-          "msg": messages[random.nextInt(10)],
-          "counter": random.nextInt(20),
-          "time": "${random.nextInt(50)} min ago",
-          "isOnline": random.nextBool(),
-        });
-
-List types = ["text", "image"];
-List conversation = List.generate(
-    10,
-    (index) => {
-          "username": "Group ${random.nextInt(20)}",
-          "time": "${random.nextInt(50)} min ago",
-          "type": types[random.nextInt(2)],
-          "replyText": messages[random.nextInt(10)],
-          "isMe": random.nextBool(),
-          "isGroup": false,
-          "isReply": random.nextBool(),
-        });
-
-List friends = List.generate(
-    13,
-    (index) => {
-          "name": names[random.nextInt(10)],
-          "dp": "assets/images/cm${random.nextInt(10)}.jpeg",
-          "status": "Anything could be here",
-          "isAccept": random.nextBool(),
-        });
+import 'package:before_sunrise/import.dart' as prefix0;
 
 class CommentList extends StatefulWidget {
-  CommentList({this.comment});
+  CommentList({this.category, this.postID});
   @override
   _CommentListState createState() => _CommentListState();
-  Comment comment;
+  String category;
+  String postID;
 }
 
 class _CommentListState extends State<CommentList> {
-  Comment get _comment => widget.comment;
+  List<Comment> _comments;
   @override
   void initState() {
     super.initState();
-    this._commentBloc.dispatch(LoadCommentEvent(comment: _comment));
+    this._commentBloc.dispatch(LoadCommentEvent(
+        category: widget.category, comment: null, postID: widget.postID));
   }
 
   final TextEditingController _textController = TextEditingController();
-  static Random random = Random();
-  String name = names[random.nextInt(10)];
   ByteData _selectedThumbData;
   ByteData _selectedOriginalData;
   final _commentBloc = CommentBloc();
@@ -146,25 +42,17 @@ class _CommentListState extends State<CommentList> {
                       BuildContext context,
                       CommentState currentState,
                     ) {
+                      if (currentState is prefix0.FetchedCommentState) {
+                        _comments = currentState.comments;
+                      }
+
                       return ListView.builder(
                         padding: EdgeInsets.symmetric(horizontal: 10),
-                        itemCount: conversation.length,
+                        itemCount: _comments.length,
                         reverse: true,
                         itemBuilder: (BuildContext context, int index) {
-                          Map msg = conversation[index];
-                          return CommentBubble(
-                            message: msg['type'] == "text"
-                                ? messages[random.nextInt(10)]
-                                : "assets/images/cm${random.nextInt(10)}.jpeg",
-                            username: msg["username"],
-                            time: msg["time"],
-                            type: msg['type'],
-                            replyText: msg["replyText"],
-                            isMe: msg['isMe'],
-                            isGroup: msg['isGroup'],
-                            isReply: msg['isReply'],
-                            replyName: name,
-                          );
+                          Comment comment = _comments[index];
+                          return CommentBubble(comment: comment);
                         },
                       );
                     })),
@@ -326,6 +214,15 @@ class _CommentListState extends State<CommentList> {
       FailSnackbar().show("E41122", null);
       return;
     }
+
+    Comment comment = Comment();
+    comment.text = _textController.text;
+
+    this._commentBloc.dispatch(CreateCommentEvent(
+        category: widget.category,
+        postID: widget.postID,
+        comment: comment,
+        byteDatas: null));
   }
 
   void _touchedSendImageButton() {
@@ -333,5 +230,13 @@ class _CommentListState extends State<CommentList> {
       FailSnackbar().show("E41123", null);
       return;
     }
+
+    Comment comment = Comment();
+
+    this._commentBloc.dispatch(CreateCommentEvent(
+        category: widget.category,
+        postID: widget.postID,
+        comment: comment,
+        byteDatas: [_selectedOriginalData]));
   }
 }

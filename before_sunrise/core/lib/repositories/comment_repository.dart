@@ -1,19 +1,16 @@
 import 'package:core/import.dart';
 
 class CommentRepository {
-  final CollectionReference _postCollection;
-
-  CommentRepository()
-      : _postCollection =
-            Firestore.instance.collection(Config().root() + "/comment/posts");
-
+  CollectionReference _postCollection;
   Future<bool> isLiked(
-      {@required String postID,
+      {@required String category,
+      @required String postID,
       @required String commentID,
       @required String userID}) async {
+    _postCollection = Firestore.instance
+        .collection(Config().root() + "/${category}/posts/${postID}/comments");
+
     final DocumentSnapshot snapshot = await _postCollection
-        .document(postID)
-        .collection('comments')
         .document(commentID)
         .collection('likes')
         .document(userID)
@@ -23,12 +20,13 @@ class CommentRepository {
   }
 
   Future<void> addToLike(
-      {@required String postID,
+      {@required String category,
+      @required String postID,
       @required String commentID,
       @required String userID}) {
+    _postCollection = Firestore.instance
+        .collection(Config().root() + "/${category}/posts/${postID}/comments");
     return _postCollection
-        .document(postID)
-        .collection('comments')
         .document(commentID)
         .collection('likes')
         .document(userID)
@@ -38,12 +36,13 @@ class CommentRepository {
   }
 
   Future<void> removeFromLike(
-      {@required String postID,
+      {@required String category,
+      @required String postID,
       @required String commentID,
       @required String userID}) {
+    _postCollection = Firestore.instance
+        .collection(Config().root() + "/${category}/posts/${postID}/comments");
     return _postCollection
-        .document(postID)
-        .collection('comments')
         .document(commentID)
         .collection('likes')
         .document(userID)
@@ -51,17 +50,17 @@ class CommentRepository {
   }
 
   Future<QuerySnapshot> fetchComment(
-      {@required String postID, @required Comment lastVisibleComment}) {
+      {@required String category,
+      @required String postID,
+      @required Comment lastVisibleComment}) {
+    _postCollection = Firestore.instance
+        .collection(Config().root() + "/${category}/posts/${postID}/comments");
     return lastVisibleComment == null
         ? _postCollection
-            .document(postID)
-            .collection('comments')
             .orderBy('lastUpdate', descending: true)
             .limit(CoreConst.maxLoadCommentCount)
             .getDocuments()
         : _postCollection
-            .document(postID)
-            .collection('comments')
             .orderBy('lastUpdate', descending: true)
             .startAfter([lastVisibleComment.lastUpdate])
             .limit(CoreConst.maxLoadCommentCount)
@@ -69,27 +68,29 @@ class CommentRepository {
   }
 
   Future<QuerySnapshot> fetchCommentLikes(
-      {@required String postID, @required String commentID}) {
+      {@required String category,
+      @required String postID,
+      @required String commentID}) {
+    _postCollection = Firestore.instance
+        .collection(Config().root() + "/${category}/posts/${postID}/comments");
     return _postCollection
-        .document(postID)
-        .collection('comments')
         .document(commentID)
         .collection('likes')
         .getDocuments();
   }
 
   Future<QuerySnapshot> fetchComments(
-      {@required String postID, Comment lastVisibleComment}) {
+      {@required String category,
+      @required String postID,
+      Comment lastVisibleComment}) {
+    _postCollection = Firestore.instance
+        .collection(Config().root() + "/${category}/posts/${postID}/comments");
     return lastVisibleComment == null
         ? _postCollection
-            .document(postID)
-            .collection('comments')
             .orderBy('lastUpdate', descending: true)
             .limit(CoreConst.maxLoadPostCount)
             .getDocuments()
         : _postCollection
-            .document(postID)
-            .collection('comments')
             .orderBy('lastUpdate', descending: true)
             .startAfter([lastVisibleComment.lastUpdate])
             .limit(CoreConst.maxLoadPostCount)
@@ -97,7 +98,11 @@ class CommentRepository {
   }
 
   Future<DocumentReference> createComment(
-      {@required String postID, @required Map<String, dynamic> data}) {
-    return _postCollection.document(postID).collection('comments').add(data);
+      {@required String category,
+      @required String postID,
+      @required Map<String, dynamic> data}) {
+    _postCollection = Firestore.instance
+        .collection(Config().root() + "/${category}/posts/${postID}/comments");
+    return _postCollection.add(data);
   }
 }

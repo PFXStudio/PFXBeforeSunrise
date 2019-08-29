@@ -18,6 +18,7 @@ class Post {
     this.likeCount = 0,
     this.warningCount = 0,
     this.profile,
+    this.comments,
   });
 
   String category;
@@ -37,6 +38,7 @@ class Post {
   int likeCount;
   int warningCount;
   Profile profile;
+  List<Comment> comments;
 
   void initialize(DocumentSnapshot snapshot) {
     this.postID = snapshot.documentID;
@@ -86,6 +88,7 @@ class Post {
     bool isLiked,
     int likeCount,
     Profile profile,
+    List<Comment> comments,
   }) {
     return Post(
       category: category ?? this.category,
@@ -103,6 +106,7 @@ class Post {
       isLiked: isLiked ?? this.isLiked,
       likeCount: likeCount ?? this.likeCount,
       profile: profile ?? this.profile,
+      comments: comments ?? this.comments,
     );
   }
 

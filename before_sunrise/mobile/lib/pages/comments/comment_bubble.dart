@@ -1,35 +1,27 @@
 import 'package:before_sunrise/import.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class CommentBubble extends StatefulWidget {
-  final String message, time, username, type, replyText, replyName;
-  final bool isMe, isGroup, isReply;
+  CommentBubble({
+    @required this.comment,
+  });
 
-  CommentBubble(
-      {@required this.message,
-      @required this.time,
-      @required this.isMe,
-      @required this.isGroup,
-      @required this.username,
-      @required this.type,
-      @required this.replyText,
-      @required this.isReply,
-      @required this.replyName});
+  Comment comment;
 
   @override
   _CommentBubbleState createState() => _CommentBubbleState();
 }
 
 class _CommentBubbleState extends State<CommentBubble> {
+  Comment get _comment => widget.comment;
   List colors = Colors.primaries;
-  static Random random = Random();
-  int rNum = random.nextInt(18);
 
   @override
   Widget build(BuildContext context) {
-    final bg = widget.isMe ? MainTheme.bgndColor : Colors.grey[200];
+    final bg = _comment.isMine ? MainTheme.bgndColor : Colors.grey[200];
     final align =
-        widget.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start;
-    final radius = widget.isMe
+        _comment.isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start;
+    final radius = _comment.isMine
         ? BorderRadius.only(
             topLeft: Radius.circular(5.0),
             bottomLeft: Radius.circular(5.0),
@@ -58,17 +50,17 @@ class _CommentBubbleState extends State<CommentBubble> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              widget.isMe
+              _comment.isMine
                   ? SizedBox()
-                  : widget.isGroup
+                  : true
                       ? Padding(
                           padding: EdgeInsets.only(right: 48.0),
                           child: Container(
                             child: Text(
-                              widget.username,
+                              "Group!!",
                               style: TextStyle(
                                 fontSize: 13,
-                                color: colors[rNum],
+                                color: MainTheme.liteBgndColor,
                                 fontWeight: FontWeight.bold,
                               ),
                               textAlign: TextAlign.left,
@@ -77,13 +69,15 @@ class _CommentBubbleState extends State<CommentBubble> {
                           ),
                         )
                       : SizedBox(),
-              widget.isGroup
-                  ? widget.isMe ? SizedBox() : SizedBox(height: 5)
+              true
+                  ? _comment.isMine ? SizedBox() : SizedBox(height: 5)
                   : SizedBox(),
-              widget.isReply
+              _comment.parentCommentID != null
                   ? Container(
                       decoration: BoxDecoration(
-                        color: !widget.isMe ? Colors.grey[50] : Colors.blue[50],
+                        color: !_comment.isMine
+                            ? Colors.grey[50]
+                            : Colors.blue[50],
                         borderRadius: BorderRadius.all(Radius.circular(5.0)),
                       ),
                       constraints: BoxConstraints(
@@ -98,7 +92,9 @@ class _CommentBubbleState extends State<CommentBubble> {
                           children: <Widget>[
                             Container(
                               child: Text(
-                                widget.isMe ? "You" : widget.replyName,
+                                _comment.isMine
+                                    ? _comment.profile.nickname
+                                    : _comment.parentProfile.nickname,
                                 style: TextStyle(
                                   color: Theme.of(context).accentColor,
                                   fontWeight: FontWeight.bold,
@@ -112,7 +108,7 @@ class _CommentBubbleState extends State<CommentBubble> {
                             SizedBox(height: 2),
                             Container(
                               child: Text(
-                                widget.replyText,
+                                _comment.text,
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 10,
@@ -126,29 +122,36 @@ class _CommentBubbleState extends State<CommentBubble> {
                       ),
                     )
                   : SizedBox(width: 2),
-              widget.isReply ? SizedBox(height: 5) : SizedBox(),
+              _comment.parentCommentID != null
+                  ? SizedBox(height: 5)
+                  : SizedBox(),
               Padding(
-                padding: EdgeInsets.all(widget.type == "text" ? 5 : 0),
-                child: widget.type == "text"
-                    ? !widget.isReply
+                padding: EdgeInsets.all(
+                    (_comment.text != null && _comment.text.length > 0)
+                        ? 5
+                        : 0),
+                child: (_comment.text != null && _comment.text.length > 0)
+                    ? _comment.parentCommentID == null
                         ? Text(
-                            widget.message,
+                            _comment.text,
                             style: TextStyle(
-                              color: widget.isMe ? Colors.white : Colors.black,
+                              color:
+                                  _comment.isMine ? Colors.white : Colors.black,
                             ),
                           )
                         : Container(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              widget.message,
+                              _comment.parentText,
                               style: TextStyle(
-                                color:
-                                    widget.isMe ? Colors.white : Colors.black,
+                                color: _comment.isMine
+                                    ? Colors.white
+                                    : Colors.black,
                               ),
                             ),
                           )
                     : Image.asset(
-                        "${widget.message}",
+                        "${_comment.imageUrls.first}",
                         height: 130,
                         width: MediaQuery.of(context).size.width / 1.3,
                         fit: BoxFit.cover,
@@ -158,7 +161,7 @@ class _CommentBubbleState extends State<CommentBubble> {
           ),
         ),
         Padding(
-          padding: widget.isMe
+          padding: _comment.isMine
               ? EdgeInsets.only(
                   right: 10,
                   bottom: 10.0,
@@ -168,7 +171,7 @@ class _CommentBubbleState extends State<CommentBubble> {
                   bottom: 10.0,
                 ),
           child: Text(
-            widget.time,
+            timeago.format(_comment.lastUpdate.toDate(), locale: 'ko'),
             style: TextStyle(
               color: Colors.black,
               fontSize: 10.0,

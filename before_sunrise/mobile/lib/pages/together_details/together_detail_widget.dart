@@ -187,7 +187,9 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
             ],
           ),
         ),
-        CommentList(comment: comment),
+        CommentList(
+            category: widget.together.category(),
+            postID: widget.together.postID),
       ],
     );
   }

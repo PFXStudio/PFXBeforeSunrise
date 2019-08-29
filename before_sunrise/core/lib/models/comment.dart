@@ -8,14 +8,15 @@ class Comment {
     this.text = "",
     this.parentText = "",
     this.imageUrls,
-    this.parentImageUrls,
     this.created,
     this.lastUpdate,
     this.isLiked = false,
     this.likeCount = 0,
     this.warningCount = 0,
-    this.profile,
     this.isMine = false,
+    this.profile,
+    this.parentProfile,
+    this.parentImageUrls,
   });
 
   String commentID;
@@ -23,16 +24,17 @@ class Comment {
   String parentCommentID;
   String text;
   List<dynamic> imageUrls;
-  List<dynamic> parentImageUrls;
   dynamic created;
   dynamic lastUpdate;
   // other database.
   String parentText;
-  bool isMine;
   bool isLiked;
   int likeCount;
   int warningCount;
+  bool isMine;
   Profile profile;
+  Profile parentProfile;
+  List<dynamic> parentImageUrls;
 
   void initialize(DocumentSnapshot snapshot) {
     this.commentID = snapshot.documentID;
@@ -40,7 +42,6 @@ class Comment {
     this.parentCommentID = snapshot.data["parentCommentID"];
     this.text = snapshot.data["text"];
     this.imageUrls = snapshot.data["imageUrls"];
-    this.parentImageUrls = snapshot.data["parentImageUrls"];
     this.created = snapshot.data["created"];
     this.lastUpdate = snapshot.data["lastUpdate"];
   }
@@ -52,7 +53,6 @@ class Comment {
       "parentCommentID": parentCommentID,
       "text": text,
       "imageUrls": imageUrls,
-      "parentImageUrls": parentImageUrls,
       'created': created,
       'lastUpdate': lastUpdate,
     };
@@ -65,29 +65,30 @@ class Comment {
     String text,
     String parentText,
     List<dynamic> imageUrls,
-    List<dynamic> parentImageUrls,
     DateTime created,
     DateTime lastUpdate,
     bool isLiked,
     int likeCount,
-    Profile profile,
     bool isMine,
+    Profile profile,
+    Profile parentProfile,
+    List<dynamic> parentImageUrls,
   }) {
     return Comment(
-      userID: userID ?? this.userID,
-      commentID: commentID ?? this.commentID,
-      parentCommentID: parentCommentID ?? this.parentCommentID,
-      text: text ?? this.text,
-      parentText: parentText ?? this.parentText,
-      imageUrls: imageUrls ?? this.imageUrls,
-      parentImageUrls: parentImageUrls ?? this.parentImageUrls,
-      created: created ?? this.created,
-      lastUpdate: lastUpdate ?? this.lastUpdate,
-      isLiked: isLiked ?? this.isLiked,
-      likeCount: likeCount ?? this.likeCount,
-      profile: profile ?? this.profile,
-      isMine: isMine ?? this.isMine,
-    );
+        userID: userID ?? this.userID,
+        commentID: commentID ?? this.commentID,
+        parentCommentID: parentCommentID ?? this.parentCommentID,
+        text: text ?? this.text,
+        parentText: parentText ?? this.parentText,
+        imageUrls: imageUrls ?? this.imageUrls,
+        created: created ?? this.created,
+        lastUpdate: lastUpdate ?? this.lastUpdate,
+        isLiked: isLiked ?? this.isLiked,
+        likeCount: likeCount ?? this.likeCount,
+        isMine: isMine ?? this.isMine,
+        profile: profile ?? this.profile,
+        parentProfile: parentProfile ?? this.parentProfile),
+        parentImageUrls: parentImageUrls ?? this.parentImageUrls;
   }
 
   @override
@@ -107,8 +108,7 @@ class Comment {
       imageUrls.hashCode ^
       parentImageUrls.hashCode ^
       created.hashCode ^
-      lastUpdate.hashCode ^
-      isMine.hashCode;
+      lastUpdate.hashCode;
 }
 
 class CommentImageData {

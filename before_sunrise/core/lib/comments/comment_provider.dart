@@ -3,28 +3,36 @@ import 'package:core/import.dart';
 // 정의 한 것만 접근 하도록 인터페이스 관리
 abstract class ICommentProvider {
   Future<bool> isLiked(
-      {@required String postID,
+      {@required String category,
+      @required String postID,
       @required String commentID,
       @required String userID});
-
   Future<void> addToLike(
-      {@required String postID,
+      {@required String category,
+      @required String postID,
       @required String commentID,
       @required String userID});
-
   Future<void> removeFromLike(
-      {@required String postID,
+      {@required String category,
+      @required String postID,
       @required String commentID,
       @required String userID});
-
   Future<QuerySnapshot> fetchComment(
-      {@required String postID, @required Comment lastVisibleComment});
-
+      {@required String category,
+      @required String postID,
+      @required Comment lastVisibleComment});
   Future<QuerySnapshot> fetchCommentLikes(
-      {@required String postID, @required String commentID});
-
+      {@required String category,
+      @required String postID,
+      @required String commentID});
+  Future<QuerySnapshot> fetchComments(
+      {@required String category,
+      @required String postID,
+      Comment lastVisibleComment});
   Future<DocumentReference> createComment(
-      {@required Map<String, dynamic> data});
+      {@required String category,
+      @required String postID,
+      @required Map<String, dynamic> data});
 }
 
 class CommentProvider implements ICommentProvider {
@@ -35,43 +43,74 @@ class CommentProvider implements ICommentProvider {
   }
 
   Future<bool> isLiked(
-      {@required String postID,
+      {@required String category,
+      @required String postID,
       @required String commentID,
       @required String userID}) async {
     return _commentRepository.isLiked(
-        postID: postID, commentID: commentID, userID: userID);
+        category: category,
+        postID: postID,
+        commentID: commentID,
+        userID: userID);
   }
 
   Future<void> addToLike(
-      {@required String postID,
+      {@required String category,
+      @required String postID,
       @required String commentID,
       @required String userID}) async {
     return _commentRepository.addToLike(
-        postID: postID, commentID: commentID, userID: userID);
+        category: category,
+        postID: postID,
+        commentID: commentID,
+        userID: userID);
   }
 
   Future<void> removeFromLike(
-      {@required String postID,
+      {@required String category,
+      @required String postID,
       @required String commentID,
       @required String userID}) async {
     return _commentRepository.removeFromLike(
-        postID: postID, commentID: commentID, userID: userID);
+        category: category,
+        postID: postID,
+        commentID: commentID,
+        userID: userID);
   }
 
   Future<QuerySnapshot> fetchComment(
-      {@required String postID, @required Comment lastVisibleComment}) async {
+      {@required String category,
+      @required String postID,
+      @required Comment lastVisibleComment}) async {
     return _commentRepository.fetchComment(
-        postID: postID, lastVisibleComment: lastVisibleComment);
+        category: category,
+        postID: postID,
+        lastVisibleComment: lastVisibleComment);
   }
 
   Future<QuerySnapshot> fetchCommentLikes(
-      {@required String postID, @required String commentID}) async {
+      {@required String category,
+      @required String postID,
+      @required String commentID}) async {
     return _commentRepository.fetchCommentLikes(
-        postID: postID, commentID: commentID);
+        category: category, postID: postID, commentID: commentID);
+  }
+
+  Future<QuerySnapshot> fetchComments(
+      {@required String category,
+      @required String postID,
+      Comment lastVisibleComment}) async {
+    return _commentRepository.fetchComments(
+        category: category,
+        postID: postID,
+        lastVisibleComment: lastVisibleComment);
   }
 
   Future<DocumentReference> createComment(
-      {@required Map<String, dynamic> data}) async {
-    return _commentRepository.createComment(data: data);
+      {@required String category,
+      @required String postID,
+      @required Map<String, dynamic> data}) async {
+    return _commentRepository.createComment(
+        category: category, postID: postID, data: data);
   }
 }

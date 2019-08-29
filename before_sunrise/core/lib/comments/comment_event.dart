@@ -7,13 +7,15 @@ abstract class CommentEvent {
 }
 
 class LoadCommentEvent extends CommentEvent {
-  LoadCommentEvent({@required this.postID, @required this.comment});
+  LoadCommentEvent(
+      {@required this.category, @required this.postID, @required this.comment});
   @override
   String toString() => 'LoadCommentEvent';
   final ICommentProvider _commentProvider = CommentProvider();
   final IProfileProvider _profileProvider = ProfileProvider();
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
+  String category;
   String postID;
   Comment comment;
 
@@ -22,7 +24,7 @@ class LoadCommentEvent extends CommentEvent {
       {CommentState currentState, CommentBloc bloc}) async {
     try {
       QuerySnapshot snapshot = await _commentProvider.fetchComment(
-          postID: postID, lastVisibleComment: comment);
+          category: category, postID: postID, lastVisibleComment: comment);
       List<Comment> comments = List<Comment>();
       if (snapshot == null) {
         return EmptyCommentState();
@@ -61,13 +63,17 @@ class LoadCommentEvent extends CommentEvent {
 
 class ToggleLikeCommentEvent extends CommentEvent {
   ToggleLikeCommentEvent(
-      {@required this.postID, @required this.commentID, this.isLike});
+      {@required this.category,
+      @required this.postID,
+      @required this.commentID,
+      this.isLike});
   @override
   String toString() => 'ToggleLikeCommentEvent';
   final ICommentProvider _commentProvider = CommentProvider();
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
 
+  String category;
   String postID;
   String commentID;
   bool isLike;
@@ -79,11 +85,17 @@ class ToggleLikeCommentEvent extends CommentEvent {
       String userID = await _authProvider.getUserID();
       if (isLike == true) {
         await _commentProvider.addToLike(
-            postID: postID, commentID: commentID, userID: userID);
+            category: category,
+            postID: postID,
+            commentID: commentID,
+            userID: userID);
         await _shardsProvider.increaseCommentLikeCount(commentID: commentID);
       } else {
         await _commentProvider.removeFromLike(
-            postID: postID, commentID: commentID, userID: userID);
+            category: category,
+            postID: postID,
+            commentID: commentID,
+            userID: userID);
         await _shardsProvider.decreaseCommentLikeCount(commentID: commentID);
       }
 
@@ -96,7 +108,11 @@ class ToggleLikeCommentEvent extends CommentEvent {
 }
 
 class CreateCommentEvent extends CommentEvent {
-  CreateCommentEvent({@required this.comment, @required this.byteDatas})
+  CreateCommentEvent(
+      {@required this.category,
+      @required this.postID,
+      @required this.comment,
+      @required this.byteDatas})
       : _firestoreTimestamp = FieldValue.serverTimestamp();
   @override
   String toString() => 'CreateCommentEvent';
@@ -106,6 +122,8 @@ class CreateCommentEvent extends CommentEvent {
   FieldValue _firestoreTimestamp;
   List<ByteData> byteDatas;
 
+  String category;
+  String postID;
   Comment comment;
 
   @override
@@ -115,17 +133,17 @@ class CreateCommentEvent extends CommentEvent {
       String userID = await _authProvider.getUserID();
       List<String> imageUrls = List<String>();
       if (byteDatas != null) {
-        final String fileLocation = '$userID/posts';
+        final String fileLocation = '$userID/comments';
 
-        imageUrls = await _imageProvider.uploadCommentImages(
+        imageUrls = await _imageProvider.uploadPostImages(
             fileLocation: fileLocation, byteDatas: byteDatas);
       }
       comment.userID = userID;
       comment.created = _firestoreTimestamp;
       comment.lastUpdate = _firestoreTimestamp;
       comment.imageUrls = imageUrls;
-      DocumentReference reference =
-          await _commentProvider.createComment(data: comment.data());
+      DocumentReference reference = await _commentProvider.createComment(
+          category: category, postID: postID, data: comment.data());
       if (reference == null) {
         return ErrorCommentState("error");
       }
