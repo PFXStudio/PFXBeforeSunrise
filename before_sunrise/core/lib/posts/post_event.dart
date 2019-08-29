@@ -6,20 +6,21 @@ abstract class PostEvent {
 }
 
 class LoadPostEvent extends PostEvent {
-  LoadPostEvent({@required this.post});
+  LoadPostEvent({@required this.category, @required this.post});
   @override
   String toString() => 'LoadPostEvent';
   final IPostProvider _postProvider = PostProvider();
   final IProfileProvider _profileProvider = ProfileProvider();
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
+  String category;
   Post post;
 
   @override
   Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
     try {
-      QuerySnapshot snapshot =
-          await _postProvider.fetchPosts(lastVisiblePost: post);
+      QuerySnapshot snapshot = await _postProvider.fetchPosts(
+          category: category, lastVisiblePost: post);
       List<Post> posts = List<Post>();
       if (snapshot == null) {
         return EmptyPostState();
@@ -38,8 +39,8 @@ class LoadPostEvent extends PostEvent {
         profile.initialize(snapshot);
         post.profile = profile;
 
-        post.isLiked =
-            await _postProvider.isLiked(postID: post.postID, userID: userID);
+        post.isLiked = await _postProvider.isLiked(
+            category: post.category, postID: post.postID, userID: userID);
         DocumentSnapshot shardsSnapshot =
             await _shardsProvider.postLikedCount(postID: post.postID);
         if (shardsSnapshot != null && shardsSnapshot.data != null) {
@@ -58,14 +59,14 @@ class LoadPostEvent extends PostEvent {
 }
 
 class ToggleLikePostEvent extends PostEvent {
-  ToggleLikePostEvent({@required this.postID, this.isLike});
+  ToggleLikePostEvent({@required this.post, this.isLike});
   @override
   String toString() => 'ToggleLikePostEvent';
   final IPostProvider _postProvider = PostProvider();
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
 
-  String postID;
+  Post post;
   bool isLike;
 
   @override
@@ -73,11 +74,13 @@ class ToggleLikePostEvent extends PostEvent {
     try {
       String userID = await _authProvider.getUserID();
       if (isLike == true) {
-        await _postProvider.addToLike(postID: postID, userID: userID);
-        await _shardsProvider.increasePostLikeCount(postID: postID);
+        await _postProvider.addToLike(
+            category: post.category, postID: post.postID, userID: userID);
+        await _shardsProvider.increasePostLikeCount(postID: post.postID);
       } else {
-        await _postProvider.removeFromLike(postID: postID, userID: userID);
-        await _shardsProvider.decreasePostLikeCount(postID: postID);
+        await _postProvider.removeFromLike(
+            category: post.category, postID: post.postID, userID: userID);
+        await _shardsProvider.decreasePostLikeCount(postID: post.postID);
       }
 
       return currentState;
@@ -116,8 +119,8 @@ class CreatePostEvent extends PostEvent {
       post.created = _firestoreTimestamp;
       post.lastUpdate = _firestoreTimestamp;
       post.imageUrls = imageUrls;
-      DocumentReference reference =
-          await _postProvider.createPost(data: post.data());
+      DocumentReference reference = await _postProvider.createPost(
+          category: post.category, data: post.data());
       if (reference == null) {
         return ErrorPostState("error");
       }

@@ -26,7 +26,9 @@ class HomeScreenState extends State<HomeScreen> {
   final _homeBloc = new HomeBloc();
 
   PageView _pageView;
-  Widget postPage = FreePostPage();
+  Widget postPage = PostPage(
+    category: "free",
+  );
 
   final _pageController = PageController(initialPage: 0, keepPage: false);
   @override
@@ -52,27 +54,10 @@ class HomeScreenState extends State<HomeScreen> {
         children: <Widget>[
           HomeCategoryBar(
             onActiveCategoryChange: (String categoryId) {
-              print(categoryId);
-              if (categoryId == "0") {
-                setState(() {
-                  postPage = FreePostPage();
-                });
-                return;
-              }
-
-              if (categoryId == "1") {
-                setState(() {
-                  postPage = RealtimePostPage();
-                });
-                return;
-              }
-
-              if (categoryId == "2") {
-                setState(() {
-                  postPage = LatestPostPage();
-                });
-                return;
-              }
+              setState(() {
+                postPage = PostPage(category: categoryName(categoryId));
+              });
+              return;
             },
           ),
           SizedBox(height: 10.0),
@@ -169,11 +154,14 @@ class HomeScreenState extends State<HomeScreen> {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (_homeBloc.currentState is PostTabState) {
-                Navigator.pushNamed(context, PostFormScreen.routeName);
+                Navigator.pushNamed(context, PostFormScreen.routeName,
+                    arguments: categoryName(_activePageIndex.toString()));
+                return;
               }
 
               if (_homeBloc.currentState is TogetherTabState) {
                 Navigator.pushNamed(context, TogetherForm.routeName);
+                return;
               }
             },
             tooltip: LocalizableLoader.of(context).text("hint_post"),
@@ -205,5 +193,17 @@ class HomeScreenState extends State<HomeScreen> {
             ],
           );
         });
+  }
+
+  String categoryName(String index) {
+    if (index == "0") {
+      return "free";
+    }
+
+    if (index == "1") {
+      return "realtime";
+    }
+
+    return "";
   }
 }

@@ -2,10 +2,9 @@ import 'package:before_sunrise/import.dart';
 
 class PostFormScreen extends StatefulWidget {
   static const String routeName = "/postForm";
-  const PostFormScreen({
-    Key key,
-  }) : super(key: key);
+  const PostFormScreen({Key key, @required this.category}) : super(key: key);
 
+  final String category;
   @override
   PostFormScreenState createState() {
     return new PostFormScreenState();
@@ -32,10 +31,11 @@ class PostFormScreenState extends State<PostFormScreen> {
 // 이 값은 초기에 초기화 되기 때문에 재 진입해야 적용 됨.
   double _maxContentsHeight = 1200;
   final int _maxPicturesCount = 20;
-  Post _post = Post();
+  Post _post;
   @override
   void initState() {
     super.initState();
+    _post = Post(category: widget.category);
   }
 
   @override

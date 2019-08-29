@@ -2,6 +2,7 @@ import 'package:core/import.dart';
 
 class Post {
   Post({
+    this.category = "",
     this.userID = "",
     this.postID = "",
     this.type = "",
@@ -19,6 +20,7 @@ class Post {
     this.profile,
   });
 
+  String category;
   String userID;
   String postID;
   String type;
@@ -38,6 +40,7 @@ class Post {
 
   void initialize(DocumentSnapshot snapshot) {
     this.postID = snapshot.documentID;
+    this.category = snapshot.data["category"];
     this.userID = snapshot.data["userID"];
     this.type = snapshot.data["type"];
     this.title = snapshot.data["title"];
@@ -52,6 +55,7 @@ class Post {
 
   Object data() {
     return {
+      "category": category,
       "userID": userID,
       // "postID": postID, // 저장 할 이유 없음.
       "type": type,
@@ -67,6 +71,7 @@ class Post {
   }
 
   Post copyWith({
+    String category,
     String userID,
     String postID,
     String type,
@@ -83,6 +88,7 @@ class Post {
     Profile profile,
   }) {
     return Post(
+      category: category ?? this.category,
       userID: userID ?? this.userID,
       postID: postID ?? this.postID,
       type: type ?? this.type,

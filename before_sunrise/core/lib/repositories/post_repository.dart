@@ -1,14 +1,15 @@
 import 'package:core/import.dart';
 
 class PostRepository {
-  final CollectionReference _postCollection;
-
-  PostRepository()
-      : _postCollection =
-            Firestore.instance.collection(Config().root() + "/free/posts");
+  CollectionReference _postCollection;
 
   Future<bool> isLiked(
-      {@required String postID, @required String userID}) async {
+      {@required String category,
+      @required String postID,
+      @required String userID}) async {
+    _postCollection =
+        Firestore.instance.collection(Config().root() + "/${category}/posts");
+
     final DocumentSnapshot snapshot = await _postCollection
         .document(postID)
         .collection('likes')
@@ -18,7 +19,12 @@ class PostRepository {
     return snapshot.exists;
   }
 
-  Future<void> addToLike({@required String postID, @required String userID}) {
+  Future<void> addToLike(
+      {@required String category,
+      @required String postID,
+      @required String userID}) {
+    _postCollection =
+        Firestore.instance.collection(Config().root() + "/${category}/posts");
     return _postCollection
         .document(postID)
         .collection('likes')
@@ -29,7 +35,11 @@ class PostRepository {
   }
 
   Future<void> removeFromLike(
-      {@required String postID, @required String userID}) {
+      {@required String category,
+      @required String postID,
+      @required String userID}) {
+    _postCollection =
+        Firestore.instance.collection(Config().root() + "/${category}/posts");
     return _postCollection
         .document(postID)
         .collection('likes')
@@ -37,11 +47,17 @@ class PostRepository {
         .delete();
   }
 
-  Future<DocumentSnapshot> fetchPost({@required String postID}) {
+  Future<DocumentSnapshot> fetchPost(
+      {@required String category, @required String postID}) {
+    _postCollection =
+        Firestore.instance.collection(Config().root() + "/${category}/posts");
     return _postCollection.document(postID).get();
   }
 
-  Future<QuerySnapshot> fetchSubscribedLatestPosts({@required String userID}) {
+  Future<QuerySnapshot> fetchSubscribedLatestPosts(
+      {@required String category, @required String userID}) {
+    _postCollection =
+        Firestore.instance.collection(Config().root() + "/${category}/posts");
     return _postCollection
         .orderBy('lastUpdate', descending: true)
         .where('userID', isEqualTo: userID)
@@ -49,11 +65,17 @@ class PostRepository {
         .getDocuments();
   }
 
-  Future<QuerySnapshot> fetchPostLikes({@required String postID}) {
+  Future<QuerySnapshot> fetchPostLikes(
+      {@required String category, @required String postID}) {
+    _postCollection =
+        Firestore.instance.collection(Config().root() + "/${category}/posts");
     return _postCollection.document(postID).collection('likes').getDocuments();
   }
 
-  Future<QuerySnapshot> fetchPosts({@required Post lastVisiblePost}) {
+  Future<QuerySnapshot> fetchPosts(
+      {@required String category, @required Post lastVisiblePost}) {
+    _postCollection =
+        Firestore.instance.collection(Config().root() + "/${category}/posts");
     return lastVisiblePost == null
         ? _postCollection
             .orderBy('lastUpdate', descending: true)
@@ -67,7 +89,11 @@ class PostRepository {
   }
 
   Future<QuerySnapshot> fetchProfilePosts(
-      {@required Post lastVisiblePost, @required String userID}) {
+      {@required String category,
+      @required Post lastVisiblePost,
+      @required String userID}) {
+    _postCollection =
+        Firestore.instance.collection(Config().root() + "/${category}/posts");
     return lastVisiblePost == null
         ? _postCollection
             .where('userID', isEqualTo: userID)
@@ -82,7 +108,10 @@ class PostRepository {
             .getDocuments();
   }
 
-  Future<DocumentReference> createPost({@required Map<String, dynamic> data}) {
+  Future<DocumentReference> createPost(
+      {@required String category, @required Map<String, dynamic> data}) {
+    _postCollection =
+        Firestore.instance.collection(Config().root() + "/${category}/posts");
     return _postCollection.add(data);
   }
 }

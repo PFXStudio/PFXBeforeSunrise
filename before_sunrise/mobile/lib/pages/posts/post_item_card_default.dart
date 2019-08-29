@@ -301,8 +301,8 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
         shadowColor: MainTheme.enabledButtonColor,
         filledIconColor: MainTheme.enabledButtonColor,
         clapFabCallback: (callback) {
-          PostBloc().dispatch(ToggleLikePostEvent(
-              postID: _post.postID, isLike: !_post.isLiked));
+          PostBloc().dispatch(
+              ToggleLikePostEvent(post: _post, isLike: !_post.isLiked));
           _post.isLiked = !_post.isLiked;
           if (_post.isLiked == true) {
             _post.likeCount++;

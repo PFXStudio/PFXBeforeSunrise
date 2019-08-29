@@ -1,30 +1,35 @@
 import 'package:before_sunrise/import.dart';
 
-class FreePostScreen extends StatefulWidget {
-  const FreePostScreen({
+class PostScreen extends StatefulWidget {
+  const PostScreen({
     Key key,
+    @required String category,
     @required PostBloc postBloc,
   })  : _postBloc = postBloc,
+        _category = category,
         super(key: key);
 
   final PostBloc _postBloc;
+  final String _category;
 
   @override
-  FreePostScreenState createState() {
-    return new FreePostScreenState(_postBloc);
+  PostScreenState createState() {
+    return new PostScreenState(_postBloc);
   }
 }
 
-class FreePostScreenState extends State<FreePostScreen> {
+class PostScreenState extends State<PostScreen> {
   final PostBloc _postBloc;
-  FreePostScreenState(this._postBloc);
+  PostScreenState(this._postBloc);
   List<Post> _posts = List<Post>();
   bool _enabeldMorePosts = false;
 
   @override
   void initState() {
     super.initState();
-    this._postBloc.dispatch(LoadPostEvent(post: null));
+    this
+        ._postBloc
+        .dispatch(LoadPostEvent(category: widget._category, post: null));
   }
 
   @override
@@ -74,7 +79,9 @@ class FreePostScreenState extends State<FreePostScreen> {
         onRefresh: () async {
           _posts.clear();
           _enabeldMorePosts = true;
-          this._postBloc.dispatch(LoadPostEvent(post: null));
+          this
+              ._postBloc
+              .dispatch(LoadPostEvent(category: widget._category, post: null));
         },
         child: NotificationListener<ScrollNotification>(
             onNotification: (ScrollNotification scrollInfo) {
@@ -112,7 +119,9 @@ class FreePostScreenState extends State<FreePostScreen> {
     _enabeldMorePosts = false;
     if (_posts.length > 0) {
       Post post = _posts.last;
-      this._postBloc.dispatch(LoadPostEvent(post: post));
+      this
+          ._postBloc
+          .dispatch(LoadPostEvent(category: widget._category, post: post));
       return;
     }
   }
