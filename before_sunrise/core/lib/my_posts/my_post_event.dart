@@ -43,7 +43,7 @@ class LoadMyPostEvent extends MyPostEvent {
         post.isLiked =
             await _postProvider.isLiked(postID: post.postID, userID: userID);
         DocumentSnapshot shardsSnapshot =
-            await _shardsProvider.likedCount(postID: post.postID);
+            await _shardsProvider.postLikedCount(postID: post.postID);
         if (shardsSnapshot != null && shardsSnapshot.data != null) {
           post.likeCount = shardsSnapshot.data["count"];
         }
@@ -77,10 +77,10 @@ class ToggleLikeMyPostEvent extends MyPostEvent {
       String userID = await _authProvider.getUserID();
       if (isLike == true) {
         await _postProvider.addToLike(postID: postID, userID: userID);
-        await _shardsProvider.increaseLikeCount(postID: postID);
+        await _shardsProvider.increasePostLikeCount(postID: postID);
       } else {
         await _postProvider.removeFromLike(postID: postID, userID: userID);
-        await _shardsProvider.decreaseLikeCount(postID: postID);
+        await _shardsProvider.decreasePostLikeCount(postID: postID);
       }
 
       return currentState;

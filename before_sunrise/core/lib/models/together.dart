@@ -24,6 +24,7 @@ class Together {
     this.likeCount = 0,
     this.warningCount = 0,
     this.profile,
+    this.comments,
   });
 
   String userID;
@@ -49,6 +50,7 @@ class Together {
   int likeCount;
   int warningCount;
   Profile profile;
+  List<Comment> comments;
 
   void initialize(DocumentSnapshot snapshot) {
     this.postID = snapshot.documentID;
@@ -114,6 +116,7 @@ class Together {
     bool isLiked,
     int likeCount,
     Profile profile,
+    List<Comment> comments,
   }) {
     return Together(
       userID: userID ?? this.userID,
@@ -137,6 +140,7 @@ class Together {
       isLiked: isLiked ?? this.isLiked,
       likeCount: likeCount ?? this.likeCount,
       profile: profile ?? this.profile,
+      comments: comments ?? this.comments,
     );
   }
 
@@ -192,7 +196,8 @@ class Together {
       imageUrls.hashCode ^
       youtubeUrl.hashCode ^
       created.hashCode ^
-      lastUpdate.hashCode;
+      lastUpdate.hashCode ^
+      comments.hashCode;
 }
 
 class TogetherImageData {

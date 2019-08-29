@@ -15,7 +15,6 @@ class TogetherDetailWidget extends StatefulWidget {
 class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
   ScrollController _scrollController;
   TogetherDetailScrollEffects _scrollEffects;
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -140,40 +139,55 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
 
   void touchedButton() {}
   Widget _panel() {
+    final Comment comment = Comment();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        SizedBox(
-          height: 12.0,
+        Container(
+          decoration: new BoxDecoration(
+              color: MainTheme.bgndColor,
+              borderRadius: new BorderRadius.only(
+                  topLeft: const Radius.circular(15.0),
+                  topRight: const Radius.circular(15.0))),
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: 12.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    width: 30,
+                    height: 5,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 5.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    width: 120,
+                    child: FlatIconTextButton(
+                        color: Colors.white,
+                        iconData: FontAwesomeIcons.comment,
+                        text: "Comments"),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+            ],
+          ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              width: 30,
-              height: 5,
-              decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.all(Radius.circular(12.0))),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 18.0,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              width: 120,
-              child: FlatIconTextButton(
-                  color: MainTheme.enabledButtonColor,
-                  iconData: FontAwesomeIcons.comment,
-                  text: "Comments"),
-            )
-          ],
-        ),
-        CommentList(),
+        CommentList(comment: comment),
       ],
     );
   }

@@ -119,7 +119,6 @@ export 'pages/together_details/together_detail_contents_widget.dart';
 export 'pages/together_details/together_detail_gallery_grid_widget.dart';
 export 'pages/together_details/together_detail_member_scroller_widget.dart';
 export 'pages/together_details/together_detail_scroll_effects.dart';
-export 'pages/together_details/together_detail_app_bar.dart';
 
 export 'pages/infos/info_screen.dart';
 

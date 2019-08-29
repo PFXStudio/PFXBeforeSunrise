@@ -1,5 +1,4 @@
 import 'package:before_sunrise/import.dart';
-import 'package:before_sunrise/import.dart' as prefix0;
 
 Random random = Random();
 List names = [
@@ -107,42 +106,68 @@ List friends = List.generate(
         });
 
 class CommentList extends StatefulWidget {
+  CommentList({this.comment});
   @override
   _CommentListState createState() => _CommentListState();
+  Comment comment;
 }
 
 class _CommentListState extends State<CommentList> {
+  Comment get _comment => widget.comment;
+  @override
+  void initState() {
+    super.initState();
+    this._commentBloc.dispatch(LoadCommentEvent(comment: _comment));
+  }
+
+  final TextEditingController _textController = TextEditingController();
   static Random random = Random();
   String name = names[random.nextInt(10)];
+  ByteData _selectedThumbData;
+  ByteData _selectedOriginalData;
+  final _commentBloc = CommentBloc();
+
   @override
   Widget build(BuildContext context) {
+    print(MediaQuery.of(context).size.height);
     return Container(
-      height: MediaQuery.of(context).size.height - 170,
+      height: MediaQuery.of(context).size.height -
+          (MediaQuery.of(context).size.height - 500),
       child: Column(
         children: <Widget>[
           SizedBox(height: 10),
           Flexible(
-            child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              itemCount: conversation.length,
-              reverse: true,
-              itemBuilder: (BuildContext context, int index) {
-                Map msg = conversation[index];
-                return CommentBubble(
-                  message: msg['type'] == "text"
-                      ? messages[random.nextInt(10)]
-                      : "assets/images/cm${random.nextInt(10)}.jpeg",
-                  username: msg["username"],
-                  time: msg["time"],
-                  type: msg['type'],
-                  replyText: msg["replyText"],
-                  isMe: msg['isMe'],
-                  isGroup: msg['isGroup'],
-                  isReply: msg['isReply'],
-                  replyName: name,
-                );
-              },
-            ),
+            child: BlocListener(
+                bloc: _commentBloc,
+                listener: (context, state) async {},
+                child: BlocBuilder<CommentBloc, CommentState>(
+                    bloc: _commentBloc,
+                    builder: (
+                      BuildContext context,
+                      CommentState currentState,
+                    ) {
+                      return ListView.builder(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        itemCount: conversation.length,
+                        reverse: true,
+                        itemBuilder: (BuildContext context, int index) {
+                          Map msg = conversation[index];
+                          return CommentBubble(
+                            message: msg['type'] == "text"
+                                ? messages[random.nextInt(10)]
+                                : "assets/images/cm${random.nextInt(10)}.jpeg",
+                            username: msg["username"],
+                            time: msg["time"],
+                            type: msg['type'],
+                            replyText: msg["replyText"],
+                            isMe: msg['isMe'],
+                            isGroup: msg['isGroup'],
+                            isReply: msg['isReply'],
+                            replyName: name,
+                          );
+                        },
+                      );
+                    })),
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -166,38 +191,45 @@ class _CommentListState extends State<CommentList> {
                 children: <Widget>[
                   // Flexible(
                   //   child:
-                  ListTile(
-                    leading: IconButton(
-                      icon: Icon(
-                        Icons.photo,
-                        color: MainTheme.enabledButtonColor,
-                      ),
-                      onPressed: () {},
-                    ),
-                    contentPadding: EdgeInsets.all(0),
-                    title: TextField(
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        color: Theme.of(context).textTheme.title.color,
-                      ),
-                      decoration: InputDecoration(
-                        focusColor: Colors.black,
-                        fillColor: Colors.black,
-                        hoverColor: Colors.black,
-                        contentPadding: EdgeInsets.all(10.0),
-                        hintText: LocalizableLoader.of(context)
-                            .text("comment_hint_text"),
-                      ),
-                      maxLines: null,
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(
-                        Icons.send,
-                        color: MainTheme.enabledButtonColor,
-                      ),
-                      onPressed: () {},
-                    ),
-                  ),
+                  _selectedThumbData == null
+                      ? ListTile(
+                          leading: IconButton(
+                            icon: Icon(
+                              Icons.photo,
+                              color: MainTheme.enabledButtonColor,
+                            ),
+                            onPressed: () {
+                              _loadAssets();
+                            },
+                          ),
+                          contentPadding: EdgeInsets.all(0),
+                          title: TextField(
+                            controller: _textController,
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              color: Theme.of(context).textTheme.title.color,
+                            ),
+                            decoration: InputDecoration(
+                              focusColor: Colors.black,
+                              fillColor: Colors.black,
+                              hoverColor: Colors.black,
+                              contentPadding: EdgeInsets.all(10.0),
+                              hintText: LocalizableLoader.of(context)
+                                  .text("comment_hint_text"),
+                            ),
+                            maxLines: null,
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(
+                              Icons.send,
+                              color: MainTheme.enabledButtonColor,
+                            ),
+                            onPressed: () {
+                              _touchedSendButton();
+                            },
+                          ),
+                        )
+                      : _buildGridView(context),
                   // ),
                 ],
               ),
@@ -206,5 +238,100 @@ class _CommentListState extends State<CommentList> {
         ],
       ),
     );
+  }
+
+  Future<void> _loadAssets() async {
+    List<Asset> resultList = List<Asset>();
+    String error;
+
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 1,
+        enableCamera: true,
+      );
+
+      if (resultList == null) {
+        return;
+      }
+
+      if (resultList.length <= 0) {
+        return;
+      }
+
+      for (Asset asset in resultList) {
+        ByteData data = await asset.getThumbByteData(
+          100,
+          100,
+          quality: 50,
+        );
+        _selectedThumbData = data;
+
+        ByteData originalData = await asset.getByteData();
+        _selectedOriginalData = originalData;
+        setState(() {});
+        break;
+      }
+    } catch (e) {
+      error = e.message;
+      print(e.message);
+    }
+
+    if (!mounted) return;
+  }
+
+  Widget _buildGridView(BuildContext context) {
+    if (_selectedThumbData == null) {
+      return Container();
+    }
+
+    return ListTile(
+      contentPadding: EdgeInsets.all(10),
+      title: Stack(children: <Widget>[
+        ThumbnailItem(
+          data: _selectedThumbData,
+          width: 50,
+          height: 50,
+          quality: 50,
+        ),
+        CircleAvatar(
+          backgroundColor: MainTheme.disabledButtonColor,
+          child: IconButton(
+            icon: Icon(
+              Icons.delete,
+            ),
+            color: MainTheme.enabledIconColor,
+            onPressed: () {
+              _selectedThumbData = null;
+              _selectedOriginalData = null;
+              setState(() {});
+              print("deleted");
+            },
+          ),
+        ),
+      ]),
+      trailing: IconButton(
+        icon: Icon(
+          Icons.send,
+          color: MainTheme.enabledButtonColor,
+        ),
+        onPressed: () {
+          _touchedSendImageButton();
+        },
+      ),
+    );
+  }
+
+  void _touchedSendButton() {
+    if (_textController.text.length <= 0) {
+      FailSnackbar().show("E41122", null);
+      return;
+    }
+  }
+
+  void _touchedSendImageButton() {
+    if (_selectedOriginalData == null) {
+      FailSnackbar().show("E41123", null);
+      return;
+    }
   }
 }

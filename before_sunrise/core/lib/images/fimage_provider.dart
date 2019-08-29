@@ -9,6 +9,10 @@ abstract class IFImageProvider {
     @required String fileLocation,
     @required List<ByteData> byteDatas,
   });
+  Future<List<String>> uploadCommentImages({
+    @required String fileLocation,
+    @required List<ByteData> byteDatas,
+  });
   Future<void> deleteImage({@required String imageUrl});
 }
 
@@ -39,5 +43,12 @@ class FImageProvider implements IFImageProvider {
 
   Future<void> deleteImage({@required String imageUrl}) async {
     return await _imageRepository.deleteImage(imageUrl: imageUrl);
+  }
+
+  @override
+  Future<List<String>> uploadCommentImages(
+      {String fileLocation, List<ByteData> byteDatas}) async {
+    return await _imageRepository.uploadCommentImages(
+        fileLocation: fileLocation, byteDatas: byteDatas);
   }
 }

@@ -74,10 +74,10 @@ class ToggleLikeTogetherEvent extends TogetherEvent {
       String userID = await _authProvider.getUserID();
       if (isLike == true) {
         await _togetherProvider.addToLike(postID: postID, userID: userID);
-        await _shardsProvider.increaseLikeCount(postID: postID);
+        await _shardsProvider.increasePostLikeCount(postID: postID);
       } else {
         await _togetherProvider.removeFromLike(postID: postID, userID: userID);
-        await _shardsProvider.decreaseLikeCount(postID: postID);
+        await _shardsProvider.decreasePostLikeCount(postID: postID);
       }
 
       return currentState;
