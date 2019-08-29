@@ -18,28 +18,189 @@ class _CommentBubbleState extends State<CommentBubble> {
 
   @override
   Widget build(BuildContext context) {
-    final bg = _comment.isMine ? MainTheme.bgndColor : Colors.grey[200];
-    final align =
-        _comment.isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start;
-    final radius = _comment.isMine
-        ? BorderRadius.only(
-            topLeft: Radius.circular(5.0),
-            bottomLeft: Radius.circular(5.0),
-            bottomRight: Radius.circular(10.0),
-          )
-        : BorderRadius.only(
-            topRight: Radius.circular(5.0),
-            bottomLeft: Radius.circular(10.0),
-            bottomRight: Radius.circular(5.0),
-          );
+    final isReply =
+        _comment.parentCommentID != null && _comment.parentCommentID.length > 0
+            ? true
+            : false;
+
+    if (_comment.isMine == true && isReply == true) {
+      return _buildMyReplyComment(context);
+    }
+
+    if (_comment.isMine == true) {
+      return _buildMyComment(context);
+    }
+
+    if (isReply == true) {
+      return _buildYourReplyComment(context);
+    }
+
+    return _buildYourComment(context);
+  }
+
+  Widget _buildProfile(BuildContext context) {
+    Profile profile = _comment.profile;
+    if (profile == null) {
+      return SizedBox();
+    }
+
+    return ListTile(
+      leading: Container(
+        height: 30.0,
+        width: 30.0,
+        child: profile.imageUrl != null && profile.imageUrl.length > 0
+            ? CachedNetworkImage(
+                imageUrl: '${profile.imageUrl}',
+                placeholder: (context, imageUrl) =>
+                    Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
+                errorWidget: (context, imageUrl, error) =>
+                    Center(child: Icon(Icons.error)),
+                imageBuilder: (BuildContext context, ImageProvider image) {
+                  return Hero(
+                    tag: '${_comment.commentID}_${profile.imageUrl}',
+                    child: Container(
+                      height: 30.0,
+                      width: 30.0,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(image: image, fit: BoxFit.cover),
+                      ),
+                    ),
+                  );
+                },
+              )
+            : ClipRRect(
+                borderRadius: BorderRadius.circular(25.0),
+                child: Container(
+                    height: 30.0,
+                    width: 30.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.black12, width: 1.0),
+                      image: DecorationImage(
+                          image: ExactAssetImage('assets/avatars/avatar.png'),
+                          fit: BoxFit.fill),
+                    )),
+              ),
+      ),
+      title: Text('${profile.nickname}',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+    );
+  }
+
+  Widget _buildParentComment(BuildContext context) {
+    if (_comment.parentCommentID == null ||
+        _comment.parentCommentID.length <= 0) {
+      return SizedBox();
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: _comment.isMine == false ? Colors.grey[50] : Colors.blue[50],
+        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+      ),
+      constraints: BoxConstraints(
+        minHeight: 25,
+        maxHeight: 157,
+        minWidth: 80,
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(5),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Container(
+              child: Text(
+                _comment.parentProfile.nickname,
+                style: TextStyle(
+                  color: MainTheme.enabledButtonColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+                maxLines: 1,
+                textAlign: TextAlign.left,
+              ),
+              alignment: Alignment.centerLeft,
+            ),
+            SizedBox(height: 2),
+            Container(
+              child: _comment.parentImageUrls != null &&
+                      _comment.parentImageUrls.length > 0
+                  ? _buildImage(context, _comment.parentImageUrls.first)
+                  : Text(
+                      _comment.parentText,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                      maxLines: 2,
+                    ),
+              alignment: Alignment.centerLeft,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImage(BuildContext context, String imageUrl) {
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      placeholder: (context, imageUrl) =>
+          Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
+      errorWidget: (context, imageUrl, error) =>
+          Center(child: Icon(Icons.error)),
+      imageBuilder: (BuildContext context, ImageProvider image) {
+        return Hero(
+          tag: '${_comment.commentID}_$imageUrl',
+          child: Container(
+            height: 130,
+            width: MediaQuery.of(context).size.width / 1.3,
+            decoration: BoxDecoration(
+              image: DecorationImage(image: image, fit: BoxFit.cover),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildTimeage(BuildContext context) {
+    return Padding(
+      padding: _comment.isMine
+          ? EdgeInsets.only(
+              right: 10,
+              bottom: 10.0,
+            )
+          : EdgeInsets.only(
+              left: 10,
+              bottom: 10.0,
+            ),
+      child: Text(
+        timeago.format(_comment.lastUpdate.toDate(), locale: 'ko'),
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 10.0,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMyComment(BuildContext context) {
+    final radius = BorderRadius.only(
+      topLeft: Radius.circular(5.0),
+      bottomLeft: Radius.circular(5.0),
+      bottomRight: Radius.circular(10.0),
+    );
+
     return Column(
-      crossAxisAlignment: align,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         Container(
           margin: const EdgeInsets.all(3.0),
           padding: const EdgeInsets.all(5.0),
           decoration: BoxDecoration(
-            color: bg,
+            color: MainTheme.bgndColor,
             borderRadius: radius,
           ),
           constraints: BoxConstraints(
@@ -50,134 +211,175 @@ class _CommentBubbleState extends State<CommentBubble> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              _comment.isMine
-                  ? SizedBox()
-                  : true
-                      ? Padding(
-                          padding: EdgeInsets.only(right: 48.0),
-                          child: Container(
-                            child: Text(
-                              "Group!!",
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: MainTheme.liteBgndColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                            alignment: Alignment.centerLeft,
-                          ),
-                        )
-                      : SizedBox(),
-              true
-                  ? _comment.isMine ? SizedBox() : SizedBox(height: 5)
-                  : SizedBox(),
-              _comment.parentCommentID != null
-                  ? Container(
-                      decoration: BoxDecoration(
-                        color: !_comment.isMine
-                            ? Colors.grey[50]
-                            : Colors.blue[50],
-                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                      ),
-                      constraints: BoxConstraints(
-                        minHeight: 25,
-                        maxHeight: 100,
-                        minWidth: 80,
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Container(
-                              child: Text(
-                                _comment.isMine
-                                    ? _comment.profile.nickname
-                                    : _comment.parentProfile.nickname,
-                                style: TextStyle(
-                                  color: Theme.of(context).accentColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                                maxLines: 1,
-                                textAlign: TextAlign.left,
-                              ),
-                              alignment: Alignment.centerLeft,
-                            ),
-                            SizedBox(height: 2),
-                            Container(
-                              child: Text(
-                                _comment.text,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 10,
-                                ),
-                                maxLines: 2,
-                              ),
-                              alignment: Alignment.centerLeft,
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : SizedBox(width: 2),
-              _comment.parentCommentID != null
-                  ? SizedBox(height: 5)
-                  : SizedBox(),
+              // _comment.isMine == false ? _buildProfile(context) : SizedBox(),
+              SizedBox(width: 2),
+              SizedBox(),
               Padding(
                 padding: EdgeInsets.all(
                     (_comment.text != null && _comment.text.length > 0)
                         ? 5
                         : 0),
                 child: (_comment.text != null && _comment.text.length > 0)
-                    ? _comment.parentCommentID == null
-                        ? Text(
-                            _comment.text,
-                            style: TextStyle(
-                              color:
-                                  _comment.isMine ? Colors.white : Colors.black,
-                            ),
-                          )
-                        : Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              _comment.parentText,
-                              style: TextStyle(
-                                color: _comment.isMine
-                                    ? Colors.white
-                                    : Colors.black,
-                              ),
-                            ),
-                          )
-                    : Image.asset(
-                        "${_comment.imageUrls.first}",
-                        height: 130,
-                        width: MediaQuery.of(context).size.width / 1.3,
-                        fit: BoxFit.cover,
-                      ),
+                    ? Text(
+                        _comment.text,
+                        style: TextStyle(color: Colors.white),
+                      )
+                    : _buildImage(context, _comment.imageUrls.first),
               ),
             ],
           ),
         ),
-        Padding(
-          padding: _comment.isMine
-              ? EdgeInsets.only(
-                  right: 10,
-                  bottom: 10.0,
-                )
-              : EdgeInsets.only(
-                  left: 10,
-                  bottom: 10.0,
-                ),
-          child: Text(
-            timeago.format(_comment.lastUpdate.toDate(), locale: 'ko'),
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 10.0,
-            ),
+        _buildTimeage(context),
+      ],
+    );
+  }
+
+  Widget _buildMyReplyComment(BuildContext context) {
+    final radius = BorderRadius.only(
+      topLeft: Radius.circular(5.0),
+      bottomLeft: Radius.circular(5.0),
+      bottomRight: Radius.circular(10.0),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        Container(
+          margin: const EdgeInsets.all(3.0),
+          padding: const EdgeInsets.all(5.0),
+          decoration: BoxDecoration(
+            color: MainTheme.bgndColor,
+            borderRadius: radius,
+          ),
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width / 1.3,
+            minWidth: 20.0,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              // _comment.isMine == false ? _buildProfile(context) : SizedBox(),
+              _buildParentComment(context),
+              SizedBox(height: 5),
+              Padding(
+                padding: EdgeInsets.all(
+                    (_comment.text != null && _comment.text.length > 0)
+                        ? 5
+                        : 0),
+                child: (_comment.text != null && _comment.text.length > 0)
+                    ? Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          _comment.text,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    : _buildImage(context, _comment.imageUrls.first),
+              ),
+            ],
           ),
         ),
+        _buildTimeage(context),
+      ],
+    );
+  }
+
+  Widget _buildYourReplyComment(BuildContext context) {
+    final radius = BorderRadius.only(
+      topRight: Radius.circular(5.0),
+      bottomLeft: Radius.circular(10.0),
+      bottomRight: Radius.circular(5.0),
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          margin: const EdgeInsets.all(3.0),
+          padding: const EdgeInsets.all(5.0),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: radius,
+          ),
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width / 1.3,
+            minWidth: 20.0,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              // _comment.isMine == false ? _buildProfile(context) : SizedBox(),
+              _buildProfile(context),
+              _buildParentComment(context),
+              SizedBox(height: 5),
+              Padding(
+                padding: EdgeInsets.all(
+                    (_comment.text != null && _comment.text.length > 0)
+                        ? 5
+                        : 0),
+                child: (_comment.text != null && _comment.text.length > 0)
+                    ? Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          _comment.text,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      )
+                    : _buildImage(context, _comment.imageUrls.first),
+              ),
+            ],
+          ),
+        ),
+        _buildTimeage(context),
+      ],
+    );
+  }
+
+  Widget _buildYourComment(BuildContext context) {
+    final radius = BorderRadius.only(
+      topRight: Radius.circular(5.0),
+      bottomLeft: Radius.circular(10.0),
+      bottomRight: Radius.circular(5.0),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          margin: const EdgeInsets.all(3.0),
+          padding: const EdgeInsets.all(5.0),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: radius,
+          ),
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width / 1.3,
+            minWidth: 20.0,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              _buildProfile(context),
+              SizedBox(width: 2),
+              SizedBox(),
+              Padding(
+                padding: EdgeInsets.all(
+                    (_comment.text != null && _comment.text.length > 0)
+                        ? 5
+                        : 0),
+                child: (_comment.text != null && _comment.text.length > 0)
+                    ? Text(
+                        _comment.text,
+                        style: TextStyle(color: Colors.black),
+                      )
+                    : _buildImage(context, _comment.imageUrls.first),
+              ),
+            ],
+          ),
+        ),
+        _buildTimeage(context),
       ],
     );
   }

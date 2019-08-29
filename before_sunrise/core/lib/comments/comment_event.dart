@@ -22,8 +22,9 @@ class LoadCommentEvent extends CommentEvent {
   @override
   Future<CommentState> applyAsync(
       {CommentState currentState, CommentBloc bloc}) async {
+    print("LoadCommentEvent");
     try {
-      QuerySnapshot snapshot = await _commentProvider.fetchComment(
+      QuerySnapshot snapshot = await _commentProvider.fetchComments(
           category: category, postID: postID, lastVisibleComment: comment);
       List<Comment> comments = List<Comment>();
       if (snapshot == null) {
@@ -33,14 +34,43 @@ class LoadCommentEvent extends CommentEvent {
         return EmptyCommentState();
       }
 
+      String userID = await _authProvider.getUserID();
       for (var document in snapshot.documents) {
         Comment infoComment = Comment();
         infoComment.initialize(document);
         DocumentSnapshot snapshot =
             await _profileProvider.fetchProfile(userID: infoComment.userID);
+
         Profile profile = Profile();
         profile.initialize(snapshot);
         infoComment.profile = profile;
+        if (userID == infoComment.userID) {
+          infoComment.isMine = true;
+        }
+
+        if (infoComment.parentCommentID != null &&
+            infoComment.parentCommentID.length > 0) {
+          print(infoComment.parentCommentID);
+          DocumentSnapshot documentSnapshot =
+              await _commentProvider.fetchComment(
+                  category: category,
+                  postID: postID,
+                  commentID: infoComment.parentCommentID);
+          if (documentSnapshot != null) {
+            Comment parentComment = Comment();
+            parentComment.initialize(documentSnapshot);
+            infoComment.parentText = parentComment.text;
+            infoComment.parentImageUrls = parentComment.imageUrls;
+
+            DocumentSnapshot parentSnapshot = await _profileProvider
+                .fetchProfile(userID: parentComment.userID);
+            if (parentSnapshot != null) {
+              Profile parentProfile = Profile();
+              parentProfile.initialize(parentSnapshot);
+              infoComment.parentProfile = parentProfile;
+            }
+          }
+        }
 
         // infoComment.isLiked = await _commentProvider.isLiked(
         //     postID: postID, commentID: infoComment.commentID);

@@ -25,7 +25,6 @@ class _CommentListState extends State<CommentList> {
 
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size.height);
     return Container(
       height: MediaQuery.of(context).size.height -
           (MediaQuery.of(context).size.height - 500),
@@ -44,6 +43,10 @@ class _CommentListState extends State<CommentList> {
                     ) {
                       if (currentState is prefix0.FetchedCommentState) {
                         _comments = currentState.comments;
+                      }
+
+                      if (_comments == null || _comments.length <= 0) {
+                        return Container();
                       }
 
                       return ListView.builder(
@@ -223,6 +226,11 @@ class _CommentListState extends State<CommentList> {
         postID: widget.postID,
         comment: comment,
         byteDatas: null));
+
+    _textController.text = "";
+
+    this._commentBloc.dispatch(LoadCommentEvent(
+        category: widget.category, comment: null, postID: widget.postID));
   }
 
   void _touchedSendImageButton() {
@@ -238,5 +246,8 @@ class _CommentListState extends State<CommentList> {
         postID: widget.postID,
         comment: comment,
         byteDatas: [_selectedOriginalData]));
+
+    this._commentBloc.dispatch(LoadCommentEvent(
+        category: widget.category, comment: null, postID: widget.postID));
   }
 }

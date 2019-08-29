@@ -17,10 +17,10 @@ abstract class ICommentProvider {
       @required String postID,
       @required String commentID,
       @required String userID});
-  Future<QuerySnapshot> fetchComment(
+  Future<DocumentSnapshot> fetchComment(
       {@required String category,
       @required String postID,
-      @required Comment lastVisibleComment});
+      @required String commentID});
   Future<QuerySnapshot> fetchCommentLikes(
       {@required String category,
       @required String postID,
@@ -78,14 +78,12 @@ class CommentProvider implements ICommentProvider {
         userID: userID);
   }
 
-  Future<QuerySnapshot> fetchComment(
+  Future<DocumentSnapshot> fetchComment(
       {@required String category,
       @required String postID,
-      @required Comment lastVisibleComment}) async {
+      @required String commentID}) async {
     return _commentRepository.fetchComment(
-        category: category,
-        postID: postID,
-        lastVisibleComment: lastVisibleComment);
+        category: category, postID: postID, commentID: commentID);
   }
 
   Future<QuerySnapshot> fetchCommentLikes(

@@ -49,22 +49,13 @@ class CommentRepository {
         .delete();
   }
 
-  Future<QuerySnapshot> fetchComment(
+  Future<DocumentSnapshot> fetchComment(
       {@required String category,
       @required String postID,
-      @required Comment lastVisibleComment}) {
+      @required String commentID}) {
     _postCollection = Firestore.instance
         .collection(Config().root() + "/${category}/posts/${postID}/comments");
-    return lastVisibleComment == null
-        ? _postCollection
-            .orderBy('lastUpdate', descending: true)
-            .limit(CoreConst.maxLoadCommentCount)
-            .getDocuments()
-        : _postCollection
-            .orderBy('lastUpdate', descending: true)
-            .startAfter([lastVisibleComment.lastUpdate])
-            .limit(CoreConst.maxLoadCommentCount)
-            .getDocuments();
+    return _postCollection.document(commentID).get();
   }
 
   Future<QuerySnapshot> fetchCommentLikes(
@@ -88,12 +79,12 @@ class CommentRepository {
     return lastVisibleComment == null
         ? _postCollection
             .orderBy('lastUpdate', descending: true)
-            .limit(CoreConst.maxLoadPostCount)
+            .limit(CoreConst.maxLoadCommentCount)
             .getDocuments()
         : _postCollection
             .orderBy('lastUpdate', descending: true)
             .startAfter([lastVisibleComment.lastUpdate])
-            .limit(CoreConst.maxLoadPostCount)
+            .limit(CoreConst.maxLoadCommentCount)
             .getDocuments();
   }
 

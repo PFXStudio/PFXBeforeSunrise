@@ -87,8 +87,8 @@ class Comment {
         likeCount: likeCount ?? this.likeCount,
         isMine: isMine ?? this.isMine,
         profile: profile ?? this.profile,
-        parentProfile: parentProfile ?? this.parentProfile),
-        parentImageUrls: parentImageUrls ?? this.parentImageUrls;
+        parentProfile: parentProfile ?? this.parentProfile,
+        parentImageUrls: parentImageUrls ?? this.parentImageUrls);
   }
 
   @override
