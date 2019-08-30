@@ -27,7 +27,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   PageView _pageView;
   Widget postPage = PostPage(
-    category: "free",
+    category: "/free/posts",
   );
 
   final _pageController = PageController(initialPage: 0, keepPage: false);
@@ -197,11 +197,11 @@ class HomeScreenState extends State<HomeScreen> {
 
   String categoryName(String index) {
     if (index == "0") {
-      return "free";
+      return "/free/posts";
     }
 
     if (index == "1") {
-      return "realtime";
+      return "/realtime/posts";
     }
 
     return "";

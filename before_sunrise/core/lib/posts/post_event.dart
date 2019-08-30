@@ -59,13 +59,15 @@ class LoadPostEvent extends PostEvent {
 }
 
 class ToggleLikePostEvent extends PostEvent {
-  ToggleLikePostEvent({@required this.post, this.isLike});
+  ToggleLikePostEvent(
+      {@required this.category, @required this.post, this.isLike});
   @override
   String toString() => 'ToggleLikePostEvent';
   final IPostProvider _postProvider = PostProvider();
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
 
+  String category;
   Post post;
   bool isLike;
 
@@ -76,11 +78,13 @@ class ToggleLikePostEvent extends PostEvent {
       if (isLike == true) {
         await _postProvider.addToLike(
             category: post.category, postID: post.postID, userID: userID);
-        await _shardsProvider.increasePostLikeCount(postID: post.postID);
+        await _shardsProvider.increasePostLikeCount(
+            category: category, postID: post.postID);
       } else {
         await _postProvider.removeFromLike(
             category: post.category, postID: post.postID, userID: userID);
-        await _shardsProvider.decreasePostLikeCount(postID: post.postID);
+        await _shardsProvider.decreasePostLikeCount(
+            category: category, postID: post.postID);
       }
 
       return currentState;

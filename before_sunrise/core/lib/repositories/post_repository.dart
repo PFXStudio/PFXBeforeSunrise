@@ -8,7 +8,7 @@ class PostRepository {
       @required String postID,
       @required String userID}) async {
     _postCollection =
-        Firestore.instance.collection(Config().root() + "/${category}/posts");
+        Firestore.instance.collection(Config().root() + "/${category}");
 
     final DocumentSnapshot snapshot = await _postCollection
         .document(postID)
@@ -24,7 +24,7 @@ class PostRepository {
       @required String postID,
       @required String userID}) {
     _postCollection =
-        Firestore.instance.collection(Config().root() + "/${category}/posts");
+        Firestore.instance.collection(Config().root() + "/${category}");
     return _postCollection
         .document(postID)
         .collection('likes')
@@ -39,7 +39,7 @@ class PostRepository {
       @required String postID,
       @required String userID}) {
     _postCollection =
-        Firestore.instance.collection(Config().root() + "/${category}/posts");
+        Firestore.instance.collection(Config().root() + "/${category}");
     return _postCollection
         .document(postID)
         .collection('likes')
@@ -50,14 +50,14 @@ class PostRepository {
   Future<DocumentSnapshot> fetchPost(
       {@required String category, @required String postID}) {
     _postCollection =
-        Firestore.instance.collection(Config().root() + "/${category}/posts");
+        Firestore.instance.collection(Config().root() + "/${category}");
     return _postCollection.document(postID).get();
   }
 
   Future<QuerySnapshot> fetchSubscribedLatestPosts(
       {@required String category, @required String userID}) {
     _postCollection =
-        Firestore.instance.collection(Config().root() + "/${category}/posts");
+        Firestore.instance.collection(Config().root() + "/${category}");
     return _postCollection
         .orderBy('lastUpdate', descending: true)
         .where('userID', isEqualTo: userID)
@@ -68,14 +68,14 @@ class PostRepository {
   Future<QuerySnapshot> fetchPostLikes(
       {@required String category, @required String postID}) {
     _postCollection =
-        Firestore.instance.collection(Config().root() + "/${category}/posts");
+        Firestore.instance.collection(Config().root() + "/${category}");
     return _postCollection.document(postID).collection('likes').getDocuments();
   }
 
   Future<QuerySnapshot> fetchPosts(
       {@required String category, @required Post lastVisiblePost}) {
     _postCollection =
-        Firestore.instance.collection(Config().root() + "/${category}/posts");
+        Firestore.instance.collection(Config().root() + "/${category}");
     return lastVisiblePost == null
         ? _postCollection
             .orderBy('lastUpdate', descending: true)
@@ -93,7 +93,7 @@ class PostRepository {
       @required Post lastVisiblePost,
       @required String userID}) {
     _postCollection =
-        Firestore.instance.collection(Config().root() + "/${category}/posts");
+        Firestore.instance.collection(Config().root() + "/${category}");
     return lastVisiblePost == null
         ? _postCollection
             .where('userID', isEqualTo: userID)
@@ -111,7 +111,7 @@ class PostRepository {
   Future<DocumentReference> createPost(
       {@required String category, @required Map<String, dynamic> data}) {
     _postCollection =
-        Firestore.instance.collection(Config().root() + "/${category}/posts");
+        Firestore.instance.collection(Config().root() + "/${category}");
     return _postCollection.add(data);
   }
 }

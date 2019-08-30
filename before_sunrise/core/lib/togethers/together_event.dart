@@ -44,6 +44,11 @@ class LoadTogetherEvent extends TogetherEvent {
         Profile userProfile = Profile();
         userProfile.initialize(profileSnapshot);
         together.profile = userProfile;
+        DocumentSnapshot countSnapshot =
+            await _shardsProvider.commentCount(postID: together.postID);
+        if (countSnapshot != null && countSnapshot.data != null) {
+          together.commentCount = countSnapshot.data["count"];
+        }
 
         collection.togethers.add(together);
       }

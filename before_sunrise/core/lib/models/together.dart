@@ -23,6 +23,7 @@ class Together {
     this.isLiked = false,
     this.likeCount = 0,
     this.warningCount = 0,
+    this.commentCount = 0,
     this.profile,
   });
 
@@ -48,6 +49,7 @@ class Together {
   bool isLiked;
   int likeCount;
   int warningCount;
+  int commentCount;
   Profile profile;
 
   void initialize(DocumentSnapshot snapshot) {
@@ -113,6 +115,7 @@ class Together {
     List<dynamic> memberProfiles,
     bool isLiked,
     int likeCount,
+    int commentCount,
     Profile profile,
   }) {
     return Together(
@@ -136,6 +139,7 @@ class Together {
       memberProfiles: memberProfiles ?? this.memberProfiles,
       isLiked: isLiked ?? this.isLiked,
       likeCount: likeCount ?? this.likeCount,
+      commentCount: commentCount ?? this.commentCount,
       profile: profile ?? this.profile,
     );
   }

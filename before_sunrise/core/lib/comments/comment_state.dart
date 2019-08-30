@@ -44,6 +44,16 @@ class FetchedCommentState extends CommentState {
   }
 }
 
+class IdleCommentState extends CommentState {
+  @override
+  String toString() => 'IdleCommentState';
+
+  @override
+  CommentState getStateCopy() {
+    return IdleCommentState();
+  }
+}
+
 class EmptyCommentState extends CommentState {
   EmptyCommentState();
   @override

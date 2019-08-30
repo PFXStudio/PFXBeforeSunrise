@@ -3,21 +3,21 @@ import 'package:core/import.dart';
 @immutable
 abstract class ShardsEvent {
   Future<ShardsState> applyAsync({ShardsState currentState, ShardsBloc bloc});
-  final ShardsRepository _shardsRepository = new ShardsRepository();
 }
 
 class IncreasePostLikeCountEvent extends ShardsEvent {
-  IncreasePostLikeCountEvent({@required this.postID});
+  IncreasePostLikeCountEvent({@required this.category, @required this.postID});
   @override
   String toString() => 'IncreasePostLikeCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
   String postID;
+  String category;
 
   @override
   Future<ShardsState> applyAsync(
       {ShardsState currentState, ShardsBloc bloc}) async {
     try {
-      _shardsProvider.increasePostLikeCount(postID: postID);
+      _shardsProvider.increasePostLikeCount(category: category, postID: postID);
       return new UnShardsState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
@@ -27,17 +27,18 @@ class IncreasePostLikeCountEvent extends ShardsEvent {
 }
 
 class DecreasePostLikeCountEvent extends ShardsEvent {
-  DecreasePostLikeCountEvent({@required this.postID});
+  DecreasePostLikeCountEvent({@required this.category, @required this.postID});
   @override
   String toString() => 'DecreasePostLikeCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
   String postID;
+  String category;
 
   @override
   Future<ShardsState> applyAsync(
       {ShardsState currentState, ShardsBloc bloc}) async {
     try {
-      _shardsProvider.decreasePostLikeCount(postID: postID);
+      _shardsProvider.decreasePostLikeCount(category: category, postID: postID);
       return UnShardsState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
@@ -46,18 +47,19 @@ class DecreasePostLikeCountEvent extends ShardsEvent {
   }
 }
 
-class IncreaseCommentLikeCountEvent extends ShardsEvent {
-  IncreaseCommentLikeCountEvent({@required this.commentID});
+class IncreaseCommentCountEvent extends ShardsEvent {
+  IncreaseCommentCountEvent({@required this.category, @required this.postID});
   @override
-  String toString() => 'IncreaseCommentLikeCountEvent';
+  String toString() => 'IncreaseCommentCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
-  String commentID;
+  String postID;
+  String category;
 
   @override
   Future<ShardsState> applyAsync(
       {ShardsState currentState, ShardsBloc bloc}) async {
     try {
-      _shardsProvider.increaseCommentLikeCount(commentID: commentID);
+      _shardsProvider.increaseCommentCount(category: category, postID: postID);
       return new UnShardsState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
@@ -66,18 +68,19 @@ class IncreaseCommentLikeCountEvent extends ShardsEvent {
   }
 }
 
-class DecreaseCommentLikeCountEvent extends ShardsEvent {
-  DecreaseCommentLikeCountEvent({@required this.commentID});
+class DecreaseCommentCountEvent extends ShardsEvent {
+  DecreaseCommentCountEvent({@required this.category, @required this.postID});
   @override
-  String toString() => 'DecreaseCommentLikeCountEvent';
+  String toString() => 'DecreaseCommentCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
-  String commentID;
+  String postID;
+  String category;
 
   @override
   Future<ShardsState> applyAsync(
       {ShardsState currentState, ShardsBloc bloc}) async {
     try {
-      _shardsProvider.decreaseCommentLikeCount(commentID: commentID);
+      _shardsProvider.decreaseCommentCount(category: category, postID: postID);
       return UnShardsState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');

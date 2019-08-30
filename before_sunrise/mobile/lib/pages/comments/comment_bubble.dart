@@ -144,25 +144,33 @@ class _CommentBubbleState extends State<CommentBubble> {
   }
 
   Widget _buildImage(BuildContext context, String imageUrl) {
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      placeholder: (context, imageUrl) =>
-          Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
-      errorWidget: (context, imageUrl, error) =>
-          Center(child: Icon(Icons.error)),
-      imageBuilder: (BuildContext context, ImageProvider image) {
-        return Hero(
-          tag: '${_comment.commentID}_$imageUrl',
-          child: Container(
-            height: 130,
-            width: MediaQuery.of(context).size.width / 1.3,
-            decoration: BoxDecoration(
-              image: DecorationImage(image: image, fit: BoxFit.cover),
-            ),
-          ),
-        );
-      },
-    );
+    return GestureDetector(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute<void>(builder: (BuildContext context) {
+            return ImageDetailScreen(
+                '${_comment.commentID}_$imageUrl', imageUrl);
+          }));
+        },
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
+          placeholder: (context, imageUrl) =>
+              Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
+          errorWidget: (context, imageUrl, error) =>
+              Center(child: Icon(Icons.error)),
+          imageBuilder: (BuildContext context, ImageProvider image) {
+            return Hero(
+              tag: '${_comment.commentID}_$imageUrl',
+              child: Container(
+                height: 130,
+                width: MediaQuery.of(context).size.width / 1.3,
+                decoration: BoxDecoration(
+                  image: DecorationImage(image: image, fit: BoxFit.cover),
+                ),
+              ),
+            );
+          },
+        ));
   }
 
   Widget _buildTimeage(BuildContext context) {
@@ -362,18 +370,18 @@ class _CommentBubbleState extends State<CommentBubble> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               _buildProfile(context),
-              SizedBox(width: 2),
-              SizedBox(),
               Padding(
                 padding: EdgeInsets.all(
                     (_comment.text != null && _comment.text.length > 0)
                         ? 5
                         : 0),
                 child: (_comment.text != null && _comment.text.length > 0)
-                    ? Text(
-                        _comment.text,
-                        style: TextStyle(color: Colors.black),
-                      )
+                    ? Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          _comment.text,
+                          style: TextStyle(color: Colors.black),
+                        ))
                     : _buildImage(context, _comment.imageUrls.first),
               ),
             ],
@@ -382,5 +390,41 @@ class _CommentBubbleState extends State<CommentBubble> {
         _buildTimeage(context),
       ],
     );
+  }
+}
+
+class ImageDetailScreen extends StatelessWidget {
+  final String tag;
+  final String imageUrl;
+
+  ImageDetailScreen(this.tag, this.imageUrl); // 생성자를 통해 imageUrl 을 전달받음
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        // appBar: AppBar(),
+        body: GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      child: Center(
+          child: CachedNetworkImage(
+        imageUrl: imageUrl,
+        placeholder: (context, imageUrl) =>
+            Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
+        errorWidget: (context, imageUrl, error) =>
+            Center(child: Icon(Icons.error)),
+        imageBuilder: (BuildContext context, ImageProvider image) {
+          return Hero(
+            tag: tag,
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(image: image, fit: BoxFit.fitWidth),
+              ),
+            ),
+          );
+        },
+      )),
+    ));
   }
 }

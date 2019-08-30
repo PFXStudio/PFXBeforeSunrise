@@ -4,10 +4,13 @@ class RealtimePostScreen extends StatefulWidget {
   const RealtimePostScreen({
     Key key,
     @required PostBloc postBloc,
+    @required String category,
   })  : _postBloc = postBloc,
+        _category = category,
         super(key: key);
 
   final PostBloc _postBloc;
+  final String _category;
 
   @override
   RealtimePostScreenState createState() {
@@ -24,7 +27,9 @@ class RealtimePostScreenState extends State<RealtimePostScreen> {
   @override
   void initState() {
     super.initState();
-    this._postBloc.dispatch(LoadPostEvent(post: null));
+    this
+        ._postBloc
+        .dispatch(LoadPostEvent(category: widget._category, post: null));
   }
 
   @override
@@ -77,7 +82,9 @@ class RealtimePostScreenState extends State<RealtimePostScreen> {
         onRefresh: () async {
           _posts.clear();
           _enabeldMorePosts = true;
-          this._postBloc.dispatch(LoadPostEvent(post: null));
+          this
+              ._postBloc
+              .dispatch(LoadPostEvent(category: widget._category, post: null));
         },
         child: NotificationListener<ScrollNotification>(
             onNotification: (ScrollNotification scrollInfo) {
@@ -115,7 +122,9 @@ class RealtimePostScreenState extends State<RealtimePostScreen> {
     _enabeldMorePosts = false;
     if (_posts.length > 0) {
       Post post = _posts.last;
-      this._postBloc.dispatch(LoadPostEvent(post: post));
+      this
+          ._postBloc
+          .dispatch(LoadPostEvent(category: widget._category, post: post));
       return;
     }
   }

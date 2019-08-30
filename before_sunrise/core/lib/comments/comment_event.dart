@@ -91,52 +91,6 @@ class LoadCommentEvent extends CommentEvent {
   }
 }
 
-class ToggleLikeCommentEvent extends CommentEvent {
-  ToggleLikeCommentEvent(
-      {@required this.category,
-      @required this.postID,
-      @required this.commentID,
-      this.isLike});
-  @override
-  String toString() => 'ToggleLikeCommentEvent';
-  final ICommentProvider _commentProvider = CommentProvider();
-  final IAuthProvider _authProvider = AuthProvider();
-  final IShardsProvider _shardsProvider = ShardsProvider();
-
-  String category;
-  String postID;
-  String commentID;
-  bool isLike;
-
-  @override
-  Future<CommentState> applyAsync(
-      {CommentState currentState, CommentBloc bloc}) async {
-    try {
-      String userID = await _authProvider.getUserID();
-      if (isLike == true) {
-        await _commentProvider.addToLike(
-            category: category,
-            postID: postID,
-            commentID: commentID,
-            userID: userID);
-        await _shardsProvider.increaseCommentLikeCount(commentID: commentID);
-      } else {
-        await _commentProvider.removeFromLike(
-            category: category,
-            postID: postID,
-            commentID: commentID,
-            userID: userID);
-        await _shardsProvider.decreaseCommentLikeCount(commentID: commentID);
-      }
-
-      return currentState;
-    } catch (_, stackTrace) {
-      print('$_ $stackTrace');
-      return new ErrorCommentState(_?.toString());
-    }
-  }
-}
-
 class CreateCommentEvent extends CommentEvent {
   CreateCommentEvent(
       {@required this.category,
@@ -179,6 +133,22 @@ class CreateCommentEvent extends CommentEvent {
       }
 
       return new SuccessCommentState();
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorCommentState(_?.toString());
+    }
+  }
+}
+
+class BindingCommentEvent extends CommentEvent {
+  @override
+  String toString() => 'BindingCommentEvent';
+
+  @override
+  Future<CommentState> applyAsync(
+      {CommentState currentState, CommentBloc bloc}) async {
+    try {
+      return new IdleCommentState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorCommentState(_?.toString());

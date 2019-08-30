@@ -1,5 +1,4 @@
 import 'package:before_sunrise/import.dart';
-import 'package:before_sunrise/import.dart' as prefix0;
 
 class CommentList extends StatefulWidget {
   CommentList({this.category, this.postID});
@@ -10,18 +9,23 @@ class CommentList extends StatefulWidget {
 }
 
 class _CommentListState extends State<CommentList> {
-  List<Comment> _comments;
+  List<Comment> _comments = List<Comment>();
+  bool _isAllLoad = false;
+  final TextEditingController _textController = TextEditingController();
+  ByteData _selectedThumbData;
+  ByteData _selectedOriginalData;
+  final _commentBloc = CommentBloc();
+  ScrollController _scrollController = ScrollController();
+  Widget _commentLoadingIndicator = CircularProgressIndicator(strokeWidth: 2.0);
+
   @override
   void initState() {
     super.initState();
     this._commentBloc.dispatch(LoadCommentEvent(
         category: widget.category, comment: null, postID: widget.postID));
-  }
 
-  final TextEditingController _textController = TextEditingController();
-  ByteData _selectedThumbData;
-  ByteData _selectedOriginalData;
-  final _commentBloc = CommentBloc();
+    _scrollController.addListener(_scrollListener);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,19 +34,42 @@ class _CommentListState extends State<CommentList> {
           (MediaQuery.of(context).size.height - 500),
       child: Column(
         children: <Widget>[
-          SizedBox(height: 10),
+          _commentLoadingIndicator,
+          SizedBox(height: 20),
           Flexible(
             child: BlocListener(
                 bloc: _commentBloc,
-                listener: (context, state) async {},
+                listener: (context, state) async {
+                  if (state is FetchingCommentState) {
+                    _commentLoadingIndicator =
+                        CircularProgressIndicator(strokeWidth: 2.0);
+                    setState(() {});
+                  } else {
+                    _commentLoadingIndicator = SizedBox();
+                    setState(() {});
+                  }
+                },
                 child: BlocBuilder<CommentBloc, CommentState>(
                     bloc: _commentBloc,
                     builder: (
                       BuildContext context,
                       CommentState currentState,
                     ) {
-                      if (currentState is prefix0.FetchedCommentState) {
-                        _comments = currentState.comments;
+                      if (currentState is FetchedCommentState) {
+                        if (currentState.comments == null ||
+                            currentState.comments.length <= 0) {
+                          _isAllLoad = true;
+                        } else {
+                          if (currentState.comments.length <
+                              CoreConst.maxLoadCommentCount) {
+                            _isAllLoad = true;
+                          }
+
+                          _comments.addAll(currentState.comments);
+                          currentState.comments.clear();
+
+                          this._commentBloc.dispatch(BindingCommentEvent());
+                        }
                       }
 
                       if (_comments == null || _comments.length <= 0) {
@@ -50,6 +77,7 @@ class _CommentListState extends State<CommentList> {
                       }
 
                       return ListView.builder(
+                        controller: _scrollController,
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         itemCount: _comments.length,
                         reverse: true,
@@ -249,5 +277,22 @@ class _CommentListState extends State<CommentList> {
 
     this._commentBloc.dispatch(LoadCommentEvent(
         category: widget.category, comment: null, postID: widget.postID));
+  }
+
+  void _scrollListener() {
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      if (_commentBloc.currentState is IdleCommentState) {
+        if (_isAllLoad == true) {
+          return;
+        }
+
+        this._commentBloc.dispatch(LoadCommentEvent(
+            category: widget.category,
+            comment: _comments.last,
+            postID: widget.postID));
+      }
+    }
   }
 }
