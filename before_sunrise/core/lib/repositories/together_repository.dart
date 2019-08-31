@@ -4,8 +4,8 @@ class TogetherRepository {
   final CollectionReference _postCollection;
 
   TogetherRepository()
-      : _postCollection =
-            Firestore.instance.collection(Config().root() + "/together/posts");
+      : _postCollection = Firestore.instance
+            .collection(Config().root() + Together().category());
 
   Future<bool> isLiked(
       {@required String postID, @required String userID}) async {

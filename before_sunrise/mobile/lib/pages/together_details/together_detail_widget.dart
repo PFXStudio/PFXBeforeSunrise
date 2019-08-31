@@ -139,6 +139,7 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
 
   void touchedButton() {}
   Widget _panel() {
+    final CommentBloc _commentBloc = CommentBloc();
     final Comment comment = Comment();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,11 +174,27 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    width: 120,
-                    child: FlatIconTextButton(
-                        color: Colors.white,
-                        iconData: FontAwesomeIcons.comment,
-                        text: "Comments"),
+                    width: 150,
+                    child: BlocListener(
+                        bloc: _commentBloc,
+                        listener: (context, state) async {
+                          print(state.toString());
+                          if (state is SuccessCommentState) {
+                            widget.together.commentCount++;
+                          }
+                        },
+                        child: BlocBuilder<CommentBloc, CommentState>(
+                            bloc: _commentBloc,
+                            builder: (
+                              BuildContext context,
+                              CommentState currentState,
+                            ) {
+                              return FlatIconTextButton(
+                                  color: Colors.white,
+                                  iconData: FontAwesomeIcons.comment,
+                                  text:
+                                      "Comments (${widget.together.commentCount})");
+                            })),
                   )
                 ],
               ),

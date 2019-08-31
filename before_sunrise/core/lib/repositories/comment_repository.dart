@@ -25,7 +25,7 @@ class CommentRepository {
       @required String commentID,
       @required String userID}) {
     _postCollection = Firestore.instance
-        .collection(Config().root() + "/${category}/${postID}/comments");
+        .collection(Config().root() + "${category}/${postID}/comments");
     return _postCollection
         .document(commentID)
         .collection('likes')
@@ -41,7 +41,7 @@ class CommentRepository {
       @required String commentID,
       @required String userID}) {
     _postCollection = Firestore.instance
-        .collection(Config().root() + "/${category}/${postID}/comments");
+        .collection(Config().root() + "${category}/${postID}/comments");
     return _postCollection
         .document(commentID)
         .collection('likes')
@@ -54,7 +54,7 @@ class CommentRepository {
       @required String postID,
       @required String commentID}) {
     _postCollection = Firestore.instance
-        .collection(Config().root() + "/${category}/${postID}/comments");
+        .collection(Config().root() + "${category}/${postID}/comments");
     return _postCollection.document(commentID).get();
   }
 
@@ -63,7 +63,7 @@ class CommentRepository {
       @required String postID,
       @required String commentID}) {
     _postCollection = Firestore.instance
-        .collection(Config().root() + "/${category}/${postID}/comments");
+        .collection(Config().root() + "${category}/${postID}/comments");
     return _postCollection
         .document(commentID)
         .collection('likes')
@@ -75,7 +75,7 @@ class CommentRepository {
       @required String postID,
       Comment lastVisibleComment}) {
     _postCollection = Firestore.instance
-        .collection(Config().root() + "/${category}/${postID}/comments");
+        .collection(Config().root() + "${category}/${postID}/comments");
     return lastVisibleComment == null
         ? _postCollection
             .orderBy('lastUpdate', descending: true)
@@ -93,7 +93,7 @@ class CommentRepository {
       @required String postID,
       @required Map<String, dynamic> data}) {
     _postCollection = Firestore.instance
-        .collection(Config().root() + "/${category}/${postID}/comments");
+        .collection(Config().root() + "${category}/${postID}/comments");
     return _postCollection.add(data);
   }
 }

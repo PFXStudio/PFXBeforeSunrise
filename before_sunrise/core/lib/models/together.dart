@@ -172,7 +172,7 @@ class Together {
   }
 
   String category() {
-    return "together";
+    return "/together/posts";
   }
 
   @override

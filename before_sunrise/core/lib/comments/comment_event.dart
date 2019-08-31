@@ -103,6 +103,7 @@ class CreateCommentEvent extends CommentEvent {
   final ICommentProvider _commentProvider = CommentProvider();
   final IAuthProvider _authProvider = AuthProvider();
   final IFImageProvider _imageProvider = FImageProvider();
+  final IShardsProvider _shardsProvider = ShardsProvider();
   FieldValue _firestoreTimestamp;
   List<ByteData> byteDatas;
 
@@ -132,6 +133,10 @@ class CreateCommentEvent extends CommentEvent {
         return ErrorCommentState("error");
       }
 
+      _shardsProvider.increaseCommentCount(
+        category: category,
+        postID: postID,
+      );
       return new SuccessCommentState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');

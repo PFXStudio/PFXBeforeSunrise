@@ -16,11 +16,13 @@ class _CommentListState extends State<CommentList> {
   ByteData _selectedOriginalData;
   final _commentBloc = CommentBloc();
   ScrollController _scrollController = ScrollController();
-  Widget _commentLoadingIndicator = CircularProgressIndicator(strokeWidth: 2.0);
+  Widget _commentLoadingIndicator = CircularProgressIndicator(
+      strokeWidth: 2.0, backgroundColor: Colors.transparent);
 
   @override
   void initState() {
     super.initState();
+    print("commentlist init");
     this._commentBloc.dispatch(LoadCommentEvent(
         category: widget.category, comment: null, postID: widget.postID));
 
@@ -41,12 +43,28 @@ class _CommentListState extends State<CommentList> {
                 bloc: _commentBloc,
                 listener: (context, state) async {
                   if (state is FetchingCommentState) {
-                    _commentLoadingIndicator =
-                        CircularProgressIndicator(strokeWidth: 2.0);
+                    _commentLoadingIndicator = CircularProgressIndicator(
+                        strokeWidth: 2.0, backgroundColor: Colors.transparent);
                     setState(() {});
+                    return;
+                  } else if (state is SuccessCommentState) {
+                    _textController.text = "";
+                    _selectedThumbData = null;
+                    print("commentlist SuccessCommentState");
+
+                    _isAllLoad = false;
+                    _comments.clear();
+                    this._commentBloc.dispatch(LoadCommentEvent(
+                        category: widget.category,
+                        comment: null,
+                        postID: widget.postID));
+
+                    return;
                   } else {
                     _commentLoadingIndicator = SizedBox();
                     setState(() {});
+
+                    return;
                   }
                 },
                 child: BlocBuilder<CommentBloc, CommentState>(
@@ -254,11 +272,6 @@ class _CommentListState extends State<CommentList> {
         postID: widget.postID,
         comment: comment,
         byteDatas: null));
-
-    _textController.text = "";
-
-    this._commentBloc.dispatch(LoadCommentEvent(
-        category: widget.category, comment: null, postID: widget.postID));
   }
 
   void _touchedSendImageButton() {
@@ -274,9 +287,6 @@ class _CommentListState extends State<CommentList> {
         postID: widget.postID,
         comment: comment,
         byteDatas: [_selectedOriginalData]));
-
-    this._commentBloc.dispatch(LoadCommentEvent(
-        category: widget.category, comment: null, postID: widget.postID));
   }
 
   void _scrollListener() {
@@ -287,6 +297,7 @@ class _CommentListState extends State<CommentList> {
         if (_isAllLoad == true) {
           return;
         }
+        print("commentlist scroll");
 
         this._commentBloc.dispatch(LoadCommentEvent(
             category: widget.category,

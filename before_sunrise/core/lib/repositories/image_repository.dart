@@ -87,7 +87,7 @@ class ImageRepository {
 
               final uuid = Uuid();
               final String fileName =
-                  Config().root() + "/posts/$fileLocation/${uuid.v1()}";
+                  Config().root() + "/$fileLocation/${uuid.v1()}";
 
               StorageReference reference =
                   FirebaseStorage.instance.ref().child(fileName);
