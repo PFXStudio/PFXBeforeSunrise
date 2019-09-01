@@ -36,6 +36,13 @@ class Profile {
     this.lastUpdate = snapshot.data["lastUpdate"];
   }
 
+  String displayPhoneNumber() {
+    String display = phoneNumber.replaceFirst("+8210", "010");
+    display = display.replaceFirst("+82010", "010");
+
+    return display;
+  }
+
   Object data() {
     return {
       "userID": userID,

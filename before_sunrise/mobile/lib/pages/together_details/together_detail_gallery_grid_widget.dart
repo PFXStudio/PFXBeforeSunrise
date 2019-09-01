@@ -55,8 +55,12 @@ class _Grid extends StatelessWidget {
         horizontal: 8.0,
       ),
       children: List.generate(together.imageUrls.length, (index) {
-        return _GalleryImage(together.imageUrls[index], index, () {
-          print("taped image!!");
+        String tag = '${together.postID}_${together.imageUrls[index]}';
+        return _GalleryImage(tag, together.imageUrls[index], index, () {
+          Navigator.push(context,
+              MaterialPageRoute<void>(builder: (BuildContext context) {
+            return ImageDetailScreen(tag, together.imageUrls[index]);
+          }));
         });
       }),
     );
@@ -64,9 +68,10 @@ class _Grid extends StatelessWidget {
 }
 
 class _GalleryImage extends StatelessWidget {
-  _GalleryImage(this.url, this.index, this.onTap);
+  _GalleryImage(this.tag, this.url, this.index, this.onTap);
   final String url;
   final int index;
+  final String tag;
   final GestureTapCallback onTap;
 
   @override
@@ -98,7 +103,7 @@ class _GalleryImage extends StatelessWidget {
               child: GestureDetector(
             onTap: onTap,
             child: Hero(
-              tag: index,
+              tag: tag,
               child: Image.asset(DefineImages.icon_fake_8_path, height: 80.0),
             ),
           )),

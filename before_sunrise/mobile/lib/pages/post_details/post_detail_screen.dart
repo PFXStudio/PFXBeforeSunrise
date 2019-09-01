@@ -66,7 +66,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   Widget _buildPostImageCarousel() {
-    final double _deviceHeight = MediaQuery.of(context).size.height;
+    final double _deviceHeight = MediaQuery.of(context).size.height * 0.7;
 
     return CarouselSlider(
         height: _deviceHeight,
@@ -160,10 +160,12 @@ class PostDetailScreenState extends State<PostDetailScreen> {
       alignment: Alignment.center,
       children: <Widget>[
         Container(
+          width: _deviceWidth,
           color: MainTheme.bgndColor,
           child: _post.imageUrls.length > 0
               ? _buildPostImageCarousel()
-              : Image.asset('assets/avatars/bg-avatar.png', fit: BoxFit.cover),
+              : Image.asset('assets/images/bgnd_empty.png',
+                  fit: BoxFit.fitWidth),
         ),
         Positioned(
           bottom: 0.0,
@@ -176,7 +178,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black87,
+                    Colors.black54,
                   ]),
             ),
           ),
@@ -195,7 +197,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                   end: Alignment.topCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black87,
+                    Colors.black54,
                   ]),
             ),
           ),
@@ -215,31 +217,64 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     return SliverAppBar(
       centerTitle: true,
       title: _buildTitleRow(),
-      expandedHeight: deviceHeight - 100.0,
+      expandedHeight: deviceHeight * 0.7,
       flexibleSpace: FlexibleSpaceBar(
         background: _buildPostCardBackgroundImage(),
       ),
       actions: <Widget>[
-        // Material(
-        //   color: Colors.transparent,
-        //   child: IconButton(
-        //     tooltip: 'Save this post',
-        //     icon: Icon(
-        //       _post.isLiked ? Icons.bookmark : Icons.bookmark_border,
-        //       color: Theme.of(context).accentColor,
-        //     ),
-        //     onPressed: () {
-        //       // TODO :
-        //       // postBloc.toggleBookmarkStatus(post: _post);
-        //     },
-        //   ),
+        // LikePostWidget.icon(
+        //   isSparkleStay: true,
+        //   isLiked: _post.isLiked,
+        //   counter: _post.likeCount,
+        //   defaultIcon: FontAwesomeIcons.handPeace,
+        //   filledIcon: FontAwesomeIcons.solidHandPeace,
+        //   countCircleColor: MainTheme.enabledButtonColor,
+        //   defaultIconColor: MainTheme.enabledButtonColor,
+        //   hasShadow: true,
+        //   sparkleColor: MainTheme.pivotColor,
+        //   shadowColor: MainTheme.enabledButtonColor,
+        //   filledIconColor: MainTheme.enabledButtonColor,
+        //   clapFabCallback: (callback) {
+        //     PostBloc().dispatch(
+        //         ToggleLikePostEvent(post: _post, isLike: !_post.isLiked));
+        //     _post.isLiked = !_post.isLiked;
+        //     if (_post.isLiked == true) {
+        //       _post.likeCount++;
+        //     } else {
+        //       _post.likeCount--;
+        //     }
+
+        //     if (callback == null) {
+        //       return;
+        //     }
+
+        //     print("isLiked : ${_post.isLiked}, count : ${_post.likeCount}");
+        //     callback(_post.isLiked, _post.likeCount);
+
+        //     // });
+        //   },
         // ),
+        Material(
+          color: Colors.transparent,
+          child: IconButton(
+            icon: Icon(Icons.more_vert),
+            onPressed: () {},
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCommentTag() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
         LikePostWidget.icon(
-          isSparkleStay: true,
+          isSparkleStay: false,
           isLiked: _post.isLiked,
           counter: _post.likeCount,
-          defaultIcon: FontAwesomeIcons.handPeace,
-          filledIcon: FontAwesomeIcons.solidHandPeace,
+          defaultIcon: FontAwesomeIcons.kissBeam,
+          filledIcon: FontAwesomeIcons.solidKissWinkHeart,
           countCircleColor: MainTheme.enabledButtonColor,
           defaultIconColor: MainTheme.enabledButtonColor,
           hasShadow: true,
@@ -266,44 +301,6 @@ class PostDetailScreenState extends State<PostDetailScreen> {
             // });
           },
         ),
-        Material(
-          color: Colors.transparent,
-          child: IconButton(
-            icon: Icon(Icons.more_vert),
-            onPressed: () {},
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCommentTag() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        FlatIconTextButton(
-            iconData: FontAwesomeIcons.comment,
-            text: "${_post.likeCount}",
-            onPressed: () {}),
-        // Container(
-        //   height: 30.0,
-        //   alignment: Alignment.center,
-        //   padding: EdgeInsets.symmetric(horizontal: 10.0),
-        //   decoration: BoxDecoration(
-        //     color: Colors.black12,
-        //     borderRadius: BorderRadius.only(
-        //         bottomRight: Radius.circular(15.0),
-        //         bottomLeft: Radius.circular(15.0)),
-        //     // borderRadius: BorderRadius.circular(25.0),
-        //   ),
-        //   child: Text(
-        //     'AAA ${_post.likeCount}',
-        //     style: TextStyle(
-        //         color: Theme.of(context).primaryColor,
-        //         fontSize: 16.0,
-        //         fontWeight: FontWeight.w900),
-        //   ),
-        // ),
       ],
     );
   }
@@ -313,7 +310,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          '${_post.profile.phoneNumber}',
+          '${_post.profile.description}',
           style: TextStyle(
               color: Theme.of(context).accentColor,
               fontWeight: FontWeight.w900),
@@ -494,20 +491,124 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final double _deviceHeight = MediaQuery.of(context).size.height;
+    double _panelHeightOpen = 575.0;
+    double _panelHeightClosed = 95.0;
+    final double _initFabHeight = 120.0;
+    double _fabHeight;
     // final double _deviceWidth = MediaQuery.of(context).size.width;
 
     // final PostBloc _postbloc = Provider.of<PostBloc>(context);
 
     return Scaffold(
-        floatingActionButton: _buildControlFAB(),
-        backgroundColor: MainTheme.bgndColor,
-        body: SafeArea(
-          child: CustomScrollView(
-            slivers: <Widget>[
-              _buildSliverAppBar(deviceHeight: _deviceHeight),
-              _buildSliverList(),
+      // floatingActionButton: _buildControlFAB(),
+      backgroundColor: MainTheme.bgndColor,
+      body: Stack(
+        children: [
+          // Container(
+          //   decoration: new BoxDecoration(
+          //     gradient: MainTheme.primaryLinearGradient,
+          //   ),
+          // ),
+          SlidingUpPanel(
+            maxHeight: _panelHeightOpen,
+            minHeight: _panelHeightClosed,
+            parallaxEnabled: true,
+            parallaxOffset: .5,
+            body: Stack(
+              children: <Widget>[
+                SafeArea(
+                  child: CustomScrollView(
+                    slivers: <Widget>[
+                      _buildSliverAppBar(deviceHeight: _deviceHeight),
+                      _buildSliverList(),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            panel: _panel(),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(18.0),
+                topRight: Radius.circular(18.0)),
+            onPanelSlide: (double pos) => setState(() {
+              _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) +
+                  _initFabHeight;
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _panel() {
+    final CommentBloc _commentBloc = CommentBloc();
+    final Comment comment = Comment();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          decoration: new BoxDecoration(
+              color: MainTheme.bgndColor,
+              borderRadius: new BorderRadius.only(
+                  topLeft: const Radius.circular(15.0),
+                  topRight: const Radius.circular(15.0))),
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: 12.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    width: 30,
+                    height: 5,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 5.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    width: 150,
+                    child: BlocListener(
+                        bloc: _commentBloc,
+                        listener: (context, state) async {
+                          print(state.toString());
+                          if (state is SuccessCommentState) {
+                            widget._post.commentCount++;
+                          }
+                        },
+                        child: BlocBuilder<CommentBloc, CommentState>(
+                            bloc: _commentBloc,
+                            builder: (
+                              BuildContext context,
+                              CommentState currentState,
+                            ) {
+                              return FlatIconTextButton(
+                                  color: Colors.white,
+                                  iconData: FontAwesomeIcons.comment,
+                                  text:
+                                      "Comments (${widget._post.commentCount})");
+                            })),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
             ],
           ),
-        ));
+        ),
+        CommentList(
+            category: widget._post.category, postID: widget._post.postID),
+      ],
+    );
   }
 }

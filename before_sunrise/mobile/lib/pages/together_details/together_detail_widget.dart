@@ -316,56 +316,31 @@ class _Header extends StatelessWidget {
         child: moviePoster,
       ),
       Positioned(
-          top: 200.0,
+          top: 215.0,
           left: 146.0,
           right: 0,
           child: Column(children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Icon(
-                  FontAwesomeIcons.clock,
-                  color: Colors.black54,
-                  size: 14,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 5),
-                ),
-                Text(
-                  timeago.format(together.lastUpdate.toDate(), locale: 'ko'),
-                  style: TextStyle(color: Colors.black54, fontSize: 12),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(right: 5),
-                ),
-              ],
-            ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: FlatIconTextButton(
-                        iconData: Icons.visibility,
-                        color: Colors.black54,
-                        text: sprintf("%d", [138]),
-                        onPressed: () => {}),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: FlatIconTextButton(
-                        iconData: Icons.message,
-                        color: MainTheme.enabledButtonColor,
-                        text: sprintf("%d", [121]),
-                        onPressed: () => {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) {},
-                                  ))
-                            }),
-                  ),
-                ]),
+            Row(children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: FlatIconTextButton(
+                    width: 200,
+                    iconData: Icons.visibility,
+                    color: Colors.black54,
+                    text: sprintf("%d", [138]),
+                    onPressed: () => {}),
+              ),
+              Expanded(
+                flex: 1,
+                child: FlatIconTextButton(
+                    width: 200,
+                    iconData: FontAwesomeIcons.clock,
+                    color: Colors.black54,
+                    text: timeago.format(together.lastUpdate.toDate(),
+                        locale: 'ko'),
+                    onPressed: () => {}),
+              ),
+            ]),
             TogetherInfo(together),
           ])),
     ]);
@@ -385,11 +360,24 @@ class TogetherInfo extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            FlatIconTextButton(
-                iconData: FontAwesomeIcons.idBadge,
-                color: Colors.black54,
-                text: together.profile.nickname,
-                onPressed: () => {}),
+            Expanded(
+              flex: 1,
+              child: FlatIconTextButton(
+                  width: 150,
+                  iconData: FontAwesomeIcons.idBadge,
+                  color: Colors.black54,
+                  text: together.profile.nickname,
+                  onPressed: () => {}),
+            ),
+            Expanded(
+              flex: 1,
+              child: FlatIconTextButton(
+                  width: 150,
+                  iconData: FontAwesomeIcons.mobile,
+                  color: Colors.black54,
+                  text: together.profile.displayPhoneNumber(),
+                  onPressed: () => {}),
+            )
           ],
         ),
       ]),

@@ -123,6 +123,7 @@ export 'pages/together_details/together_detail_scroll_effects.dart';
 export 'pages/infos/info_screen.dart';
 
 export 'widgets/loadings/loading_contents.dart';
+export 'widgets/images/image_detail_screen.dart';
 export 'widgets/loadings/platform_adaptive_progress_indicator.dart';
 export 'widgets/items/thumbnail_item.dart';
 export 'widgets/buttons/flat_icon_text_button.dart';

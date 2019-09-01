@@ -198,7 +198,7 @@ class _LikePostWidgetState extends State<LikePostWidget>
         child: Container(
           height: 40.0 + extraSize,
           width: 40.0 + extraSize,
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(5.0),
           decoration: BoxDecoration(
               border:
                   Border.all(color: widget.floatingOutlineColor, width: 1.0),
@@ -217,7 +217,7 @@ class _LikePostWidgetState extends State<LikePostWidget>
                   color: widget.isLiked == true
                       ? widget.filledIconColor
                       : widget.defaultIconColor,
-                  size: 18.0,
+                  size: 25.0,
                 )
               : ImageIcon(
                   new AssetImage(widget.isLiked == true

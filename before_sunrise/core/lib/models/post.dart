@@ -16,6 +16,7 @@ class Post {
     this.lastUpdate,
     this.isLiked = false,
     this.likeCount = 0,
+    this.commentCount = 0,
     this.warningCount = 0,
     this.profile,
     this.comments,
@@ -36,6 +37,7 @@ class Post {
   // other database.
   bool isLiked;
   int likeCount;
+  int commentCount;
   int warningCount;
   Profile profile;
   List<Comment> comments;
@@ -87,6 +89,7 @@ class Post {
     DateTime lastUpdate,
     bool isLiked,
     int likeCount,
+    int commentCount,
     Profile profile,
     List<Comment> comments,
   }) {
@@ -105,6 +108,7 @@ class Post {
       lastUpdate: lastUpdate ?? this.lastUpdate,
       isLiked: isLiked ?? this.isLiked,
       likeCount: likeCount ?? this.likeCount,
+      commentCount: commentCount ?? this.commentCount,
       profile: profile ?? this.profile,
       comments: comments ?? this.comments,
     );

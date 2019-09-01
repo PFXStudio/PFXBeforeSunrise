@@ -41,10 +41,16 @@ class LoadPostEvent extends PostEvent {
 
         post.isLiked = await _postProvider.isLiked(
             category: post.category, postID: post.postID, userID: userID);
-        DocumentSnapshot shardsSnapshot =
+        DocumentSnapshot likeSnapshot =
             await _shardsProvider.postLikedCount(postID: post.postID);
-        if (shardsSnapshot != null && shardsSnapshot.data != null) {
-          post.likeCount = shardsSnapshot.data["count"];
+        if (likeSnapshot != null && likeSnapshot.data != null) {
+          post.likeCount = likeSnapshot.data["count"];
+        }
+
+        DocumentSnapshot commentSnapshot =
+            await _shardsProvider.commentCount(postID: post.postID);
+        if (commentSnapshot != null && commentSnapshot.data != null) {
+          post.commentCount = commentSnapshot.data["count"];
         }
 
         posts.add(post);

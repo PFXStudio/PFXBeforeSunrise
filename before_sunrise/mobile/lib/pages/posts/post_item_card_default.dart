@@ -1,4 +1,5 @@
 import 'package:before_sunrise/import.dart';
+import 'package:before_sunrise/import.dart' as prefix0;
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -140,21 +141,34 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
       top: 20.0,
       right: 0.0,
       child: Container(
-        height: 30.0,
-        alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(horizontal: 10.0),
-        decoration: BoxDecoration(
-          color: Colors.black54,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15.0),
-              bottomLeft: Radius.circular(15.0)),
-        ),
-        child: Text(
-          'GHC ${_post.likeCount}',
-          style: TextStyle(
-              color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
-        ),
-      ),
+          height: 30.0,
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(horizontal: 10.0),
+          decoration: BoxDecoration(
+            color: Colors.black54,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15.0),
+                bottomLeft: Radius.circular(15.0)),
+          ),
+          child: Row(
+            children: <Widget>[
+              Icon(
+                prefix0.FontAwesomeIcons.comment,
+                size: 20.0,
+                color: prefix0.MainTheme.enabledIconColor,
+              ),
+              prefix0.Padding(
+                padding: prefix0.EdgeInsets.only(left: 5),
+              ),
+              Text(
+                '${_post.commentCount}',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          )),
     );
   }
 
@@ -172,7 +186,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
         _post.imageUrls.length > 1
             ? _buildPostImageCarouselIndicator()
             : Container(),
-        _buildPostPriceTag()
+        // _buildPostPriceTag()
       ],
     );
   }
@@ -292,8 +306,8 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
       trailing: LikePostWidget.icon(
         isLiked: _post.isLiked,
         counter: _post.likeCount,
-        defaultIcon: FontAwesomeIcons.handPeace,
-        filledIcon: FontAwesomeIcons.solidHandPeace,
+        defaultIcon: FontAwesomeIcons.kissBeam,
+        filledIcon: FontAwesomeIcons.solidKissWinkHeart,
         countCircleColor: MainTheme.enabledButtonColor,
         defaultIconColor: MainTheme.enabledButtonColor,
         hasShadow: true,
