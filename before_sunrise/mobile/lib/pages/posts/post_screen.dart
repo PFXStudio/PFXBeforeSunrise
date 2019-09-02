@@ -47,8 +47,12 @@ class PostScreenState extends State<PostScreen> {
         ) {
           if (currentState is FetchingPostState) {
             if (_posts.length == 0) {
-              return Center(
-                child: CircularProgressIndicator(),
+              return Column(
+                children: <Widget>[
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ],
               );
             }
 

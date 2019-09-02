@@ -222,38 +222,6 @@ class PostDetailScreenState extends State<PostDetailScreen> {
         background: _buildPostCardBackgroundImage(),
       ),
       actions: <Widget>[
-        // LikePostWidget.icon(
-        //   isSparkleStay: true,
-        //   isLiked: _post.isLiked,
-        //   counter: _post.likeCount,
-        //   defaultIcon: FontAwesomeIcons.handPeace,
-        //   filledIcon: FontAwesomeIcons.solidHandPeace,
-        //   countCircleColor: MainTheme.enabledButtonColor,
-        //   defaultIconColor: MainTheme.enabledButtonColor,
-        //   hasShadow: true,
-        //   sparkleColor: MainTheme.pivotColor,
-        //   shadowColor: MainTheme.enabledButtonColor,
-        //   filledIconColor: MainTheme.enabledButtonColor,
-        //   clapFabCallback: (callback) {
-        //     PostBloc().dispatch(
-        //         ToggleLikePostEvent(post: _post, isLike: !_post.isLiked));
-        //     _post.isLiked = !_post.isLiked;
-        //     if (_post.isLiked == true) {
-        //       _post.likeCount++;
-        //     } else {
-        //       _post.likeCount--;
-        //     }
-
-        //     if (callback == null) {
-        //       return;
-        //     }
-
-        //     print("isLiked : ${_post.isLiked}, count : ${_post.likeCount}");
-        //     callback(_post.isLiked, _post.likeCount);
-
-        //     // });
-        //   },
-        // ),
         Material(
           color: Colors.transparent,
           child: IconButton(
@@ -310,14 +278,8 @@ class PostDetailScreenState extends State<PostDetailScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          '${_post.profile.description}',
-          style: TextStyle(
-              color: Theme.of(context).accentColor,
-              fontWeight: FontWeight.w900),
-        ),
-        Text(
           timeago.format(_post.lastUpdate.toDate(), locale: 'ko'),
-          style: TextStyle(color: Colors.black26, fontWeight: FontWeight.w500),
+          style: TextStyle(color: Colors.black38, fontWeight: FontWeight.w500),
         ),
         SizedBox(height: 5.0),
         Row(
@@ -359,50 +321,94 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     );
   }
 
-  Widget _buildPostContactInfo() {
+  Widget _buildCommunityInfo() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Contacts',
+          '건전한 커뮤니티를 위한 제재 안내',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+        ),
+        Divider(),
+        Row(
+          children: <Widget>[
+            Icon(FontAwesomeIcons.times, size: 15.0),
+            SizedBox(width: 5.0),
+            Expanded(
+                child: Text(
+              '과도한 욕설, 비속어 및 저속한 언어를 사용하여 불쾌감을 주는 내용',
+              style: TextStyle(fontSize: 12),
+            )),
+          ],
+        ),
+        SizedBox(height: 5.0),
+        Row(
+          children: <Widget>[
+            Icon(FontAwesomeIcons.times, size: 15.0),
+            SizedBox(width: 5.0),
+            Text(
+              '거짓되거나 확인되지 않은 내용을 사실인 것처럼 표현하는 내용',
+              style: TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+        SizedBox(height: 5.0),
+        Row(
+          children: <Widget>[
+            Icon(FontAwesomeIcons.times, size: 15.0),
+            SizedBox(width: 5.0),
+            Expanded(
+              child: Text(
+                '과도한 신체의 노출이나 성적 수치심을 불러 일으킬 수 있는 내용',
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
+          ],
+        ),
+        Divider(),
+      ],
+    );
+  }
+
+  Widget _buildYoutube() {
+    if (_post.youtubeUrl == null || _post.youtubeUrl.length <= 0) {
+      return SizedBox();
+    }
+
+    final double _deviceHeight = MediaQuery.of(context).size.height;
+    final double _deviceWidth = MediaQuery.of(context).size.width;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Youtube',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
         ),
         SizedBox(height: 10.0),
-        Row(
-          children: <Widget>[
-            Icon(Icons.access_time, size: 15.0),
-            SizedBox(width: 5.0),
-            Expanded(child: Text('Mon - Fri (9.00am - 6.00pm)')),
-          ],
-        ),
-        SizedBox(height: 5.0),
-        Row(
-          children: <Widget>[
-            Icon(Icons.phone_android, size: 15.0),
-            SizedBox(width: 5.0),
-            Text('${_post.profile.phoneNumber}'),
-          ],
-        ),
-        SizedBox(height: 5.0),
-        Row(
-          children: <Widget>[
-            Icon(Icons.location_on, size: 15.0),
-            SizedBox(width: 5.0),
-            // TODO : MD
-            // Expanded(child: Text('${_post.profile.businessLocation}')),
-          ],
+        InkWell(
+          onTap: () {
+            print("tap");
+          },
+          child: Row(
+            children: <Widget>[
+              Icon(FontAwesomeIcons.youtube, size: 15.0),
+              SizedBox(width: 5.0),
+              Expanded(child: Text(_post.youtubeUrl)),
+            ],
+          ),
         ),
         SizedBox(height: 20.0),
       ],
     );
   }
 
-  Widget _buidlDetailsSummary() {
+  Widget _buildContents() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Details Summary',
+          'Contents',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
         ),
         Divider(),
@@ -441,10 +447,10 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    _buildCommunityInfo(),
                     _buildPostTitleInfo(),
-                    _buildPostColorsInfo(),
-                    _buildPostContactInfo(),
-                    _buidlDetailsSummary(),
+                    _buildContents(),
+                    _buildYoutube(),
                     // add similar posts
                   ],
                 ),
@@ -467,24 +473,6 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           ),
         )
       ]),
-    );
-  }
-
-  Widget _buildControlFAB() {
-    return FloatingActionButton(
-      backgroundColor: Colors.white10,
-      focusColor: Colors.transparent,
-      foregroundColor: Colors.transparent,
-      hoverColor: Colors.transparent,
-      elevation: 0,
-      mini: false,
-      clipBehavior: Clip.none,
-      child: SizedBox(
-        height: 200,
-        width: 200,
-        child: Container(),
-      ),
-      onPressed: () {},
     );
   }
 

@@ -2,13 +2,6 @@ import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-@visibleForTesting
-Function(String) launchTrailerVideo = (url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
-  }
-};
-
 class TogetherPoster extends StatelessWidget {
   static const Key playButtonKey = const Key('playButton');
 

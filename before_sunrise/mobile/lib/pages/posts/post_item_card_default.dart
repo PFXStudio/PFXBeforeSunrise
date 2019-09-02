@@ -1,5 +1,4 @@
 import 'package:before_sunrise/import.dart';
-import 'package:before_sunrise/import.dart' as prefix0;
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -94,7 +93,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: <Color>[Colors.transparent, Colors.black87],
+            colors: <Color>[Colors.transparent, Colors.black54],
           ),
         ),
       ),
@@ -153,12 +152,12 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
           child: Row(
             children: <Widget>[
               Icon(
-                prefix0.FontAwesomeIcons.comment,
+                FontAwesomeIcons.comment,
                 size: 20.0,
-                color: prefix0.MainTheme.enabledIconColor,
+                color: MainTheme.enabledIconColor,
               ),
-              prefix0.Padding(
-                padding: prefix0.EdgeInsets.only(left: 5),
+              Padding(
+                padding: EdgeInsets.only(left: 5),
               ),
               Text(
                 '${_post.commentCount}',

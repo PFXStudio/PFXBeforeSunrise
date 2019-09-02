@@ -6,7 +6,7 @@ class ImageRepository {
   ImageRepository() : _firebaseStorage = FirebaseStorage.instance;
 
   Future<Uint8List> _compressFile(
-      {@required List<int> listData, int quality = 20}) async {
+      {@required List<int> listData, int quality = 40}) async {
     List<int> compressedImageData =
         await FlutterImageCompress.compressWithList(listData, quality: quality);
 

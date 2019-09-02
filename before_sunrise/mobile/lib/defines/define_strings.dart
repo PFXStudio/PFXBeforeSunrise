@@ -8,4 +8,9 @@ class DefineStrings {
     '09wghsudij',
     'lf8u3uif',
   ];
+
+  static const List<String> categories = [
+    "/free/posts",
+    "/realtime/posts",
+  ];
 }

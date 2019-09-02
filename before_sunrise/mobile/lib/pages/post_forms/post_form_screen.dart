@@ -29,7 +29,7 @@ class PostFormScreenState extends State<PostFormScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
 // 이 값은 초기에 초기화 되기 때문에 재 진입해야 적용 됨.
-  double _maxContentsHeight = 1200;
+  double _maxContentsHeight = 1100;
   final int _maxPicturesCount = 20;
   Post _post;
   @override
@@ -60,7 +60,7 @@ class PostFormScreenState extends State<PostFormScreen> {
     return SingleChildScrollView(
         child: Container(
       width: MediaQuery.of(context).size.width,
-      height: _selectedThumbDatas.length == 0 ? 900 : _maxContentsHeight,
+      height: _selectedThumbDatas.length == 0 ? 780 : _maxContentsHeight,
       decoration: new BoxDecoration(
         gradient: MainTheme.primaryLinearGradient,
       ),
@@ -68,21 +68,21 @@ class PostFormScreenState extends State<PostFormScreen> {
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Expanded(
-            flex: 3,
+            flex: 2,
             child: ConstrainedBox(
               constraints: const BoxConstraints.expand(),
               child: _buildHeader(),
             ),
           ),
           Expanded(
-            flex: 10,
+            flex: 12,
             child: ConstrainedBox(
               constraints: const BoxConstraints.expand(),
               child: _buildForms(context),
             ),
           ),
           Expanded(
-              flex: _selectedThumbDatas.length == 0 ? 8 : 15,
+              flex: _selectedThumbDatas.length == 0 ? 7 : 16,
               child: ConstrainedBox(
                 constraints: const BoxConstraints.expand(),
                 child: Column(children: <Widget>[
@@ -161,7 +161,7 @@ class PostFormScreenState extends State<PostFormScreen> {
                 child: Container(
                   width: MediaQuery.of(context).size.width -
                       MainTheme.edgeInsets.left,
-                  height: 100,
+                  height: 45,
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
@@ -182,42 +182,42 @@ class PostFormScreenState extends State<PostFormScreen> {
                                 ],
                               ),
                             ),
-                            Expanded(
-                              flex: 1,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  DialogPublishTypeWidget(
-                                    callback: (type) {
-                                      setState(() {
-                                        _post.publishType = type;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
+                            // Expanded(
+                            //   flex: 1,
+                            //   child: Column(
+                            //     crossAxisAlignment: CrossAxisAlignment.start,
+                            //     children: <Widget>[
+                            //       DialogPublishTypeWidget(
+                            //         callback: (type) {
+                            //           setState(() {
+                            //             _post.publishType = type;
+                            //           });
+                            //         },
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                           ],
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              LocalizableLoader.of(context)
-                                  .text("anonymous_checkbox"),
-                              style: TextStyle(color: Colors.black54),
-                            ),
-                            Checkbox(
-                              value: _post.enabledAnonymous,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  _post.enabledAnonymous = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.end,
+                        //   crossAxisAlignment: CrossAxisAlignment.center,
+                        //   children: <Widget>[
+                        //     Text(
+                        //       LocalizableLoader.of(context)
+                        //           .text("anonymous_checkbox"),
+                        //       style: TextStyle(color: Colors.black54),
+                        //     ),
+                        //     Checkbox(
+                        //       value: _post.enabledAnonymous,
+                        //       onChanged: (bool value) {
+                        //         setState(() {
+                        //           _post.enabledAnonymous = value;
+                        //         });
+                        //       },
+                        //     ),
+                        //   ],
+                        // ),
                       ]),
                 ),
               ),
@@ -547,6 +547,11 @@ class PostFormScreenState extends State<PostFormScreen> {
   }
 
   void _requestRegist() {
+    if (_post.type.length <= 0) {
+      FailSnackbar().show("error_post_form_empty_type", null);
+      return;
+    }
+
     if (_titleController.text.length <= 0) {
       FailSnackbar().show("error_post_form_empty_title", null);
       return;
@@ -557,14 +562,17 @@ class PostFormScreenState extends State<PostFormScreen> {
       return;
     }
 
-    if (_post.type.length <= 0) {
-      FailSnackbar().show("error_post_form_empty_type", null);
-      return;
-    }
+    // if (_post.publishType.length <= 0) {
+    //   FailSnackbar().show("error_post_form_publish_type", null);
+    //   return;
+    // }
 
-    if (_post.publishType.length <= 0) {
-      FailSnackbar().show("error_post_form_publish_type", null);
-      return;
+    if (_youtubeController.text.length > 0) {
+      bool result = StringChecker.validUrl(_youtubeController.text);
+      if (result == false) {
+        FailSnackbar().show("error_post_form_youtube_url", null);
+        return;
+      }
     }
 
     _post.title = _titleController.text;

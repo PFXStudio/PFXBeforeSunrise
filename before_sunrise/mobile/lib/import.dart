@@ -45,9 +45,10 @@ export 'package:core/import.dart';
 // utils
 export 'utils/before_sunrise.dart';
 export 'utils/widget_utils.dart';
+export 'utils/string_checker.dart';
+export 'utils/url_linker.dart';
 
 // modules
-export 'consts/const.dart';
 export 'modules/localizables/localizable_delegate.dart';
 export 'modules/localizables/localizable_loader.dart';
 export 'modules/localizables/localizable_manager.dart';

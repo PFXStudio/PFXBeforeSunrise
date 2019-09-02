@@ -58,7 +58,6 @@ export 'posts/post_provider.dart';
 export 'posts/post_state.dart';
 export 'my_posts/my_post_bloc.dart';
 export 'my_posts/my_post_event.dart';
-export 'my_posts/my_post_provider.dart';
 export 'my_posts/my_post_state.dart';
 export 'shards/shards_bloc.dart';
 export 'shards/shards_event.dart';

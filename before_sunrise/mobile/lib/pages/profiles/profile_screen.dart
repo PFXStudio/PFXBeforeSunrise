@@ -31,15 +31,8 @@ class ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _myPostBloc.dispatch(LoadMyPostEvent(post: null));
-
-    // _scrollController.addListener(_onScroll);
-
-    // if (_profileBloc.signedProfile != null) {
-    //   _profile.userID == _profileBloc.signedProfile.userID
-    //       ? _isCurrentUserProfile = true
-    //       : _isCurrentUserProfile = false;
-    // }
+    _myPostBloc.dispatch(
+        LoadMyPostEvent(category: DefineStrings.categories.first, post: null));
   }
 
   @override
@@ -105,7 +98,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildProfileAvatar() {
-    return _profile != null && _profile.imageUrl.isNotEmpty
+    return _profile.hasProfileImage()
         ? CachedNetworkImage(
             imageUrl: '${_profile.imageUrl}',
             placeholder: (context, imageUrl) =>

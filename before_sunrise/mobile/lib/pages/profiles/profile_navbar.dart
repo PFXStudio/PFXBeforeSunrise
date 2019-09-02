@@ -48,7 +48,8 @@ class _ProfileNavbarState extends State<ProfileNavbar> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    _buildBottomNavBarItem(index: 0, icon: Icons.art_track),
+                    _buildBottomNavBarItem(
+                        index: 0, icon: FontAwesomeIcons.listUl),
                     !_isCurrentUserProfile
                         ? Container()
                         : _buildBottomNavBarItem(
@@ -57,7 +58,7 @@ class _ProfileNavbarState extends State<ProfileNavbar> {
                           ),
                     _buildBottomNavBarItem(
                       index: !_isCurrentUserProfile ? 1 : 2,
-                      icon: Icons.person,
+                      icon: FontAwesomeIcons.idCard,
                     ),
                   ],
                 ),
@@ -70,7 +71,7 @@ class _ProfileNavbarState extends State<ProfileNavbar> {
   }
 
   double _getItemSize({@required int index}) {
-    return index == _activeIndex ? 40.0 : 35.0;
+    return index == _activeIndex ? 32.0 : 26.0;
   }
 
   Color _getItemColor({@required int index}) {

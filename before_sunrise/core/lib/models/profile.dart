@@ -36,6 +36,14 @@ class Profile {
     this.lastUpdate = snapshot.data["lastUpdate"];
   }
 
+  bool hasProfileImage() {
+    if (this.imageUrl == null || this.imageUrl.length <= 0) {
+      return false;
+    }
+
+    return true;
+  }
+
   String displayPhoneNumber() {
     String display = phoneNumber.replaceFirst("+8210", "010");
     display = display.replaceFirst("+82010", "010");
