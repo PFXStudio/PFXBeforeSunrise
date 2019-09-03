@@ -35,4 +35,25 @@ class MainTheme {
     fontSize: 24.0,
     color: Colors.white,
   );
+
+  static const TextStyle nickNameStyle =
+      TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white);
+
+  static const TextStyle simpleNickNameStyle =
+      TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black);
+
+  static const TextStyle titleTextStyle = TextStyle(
+      fontSize: 34, fontWeight: FontWeight.bold, color: Colors.black87);
+
+  static const TextStyle barTitleTextStyle = TextStyle(
+      fontSize: 17, fontWeight: FontWeight.w600, color: Colors.black87);
+
+  static const TextStyle subTitleTextStyle = TextStyle(
+      fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black87);
+
+  static const TextStyle contentsTextStyle =
+      TextStyle(fontSize: 13, color: Colors.black87);
+
+  static const TextStyle timeTextStyle =
+      TextStyle(fontSize: 13, color: Colors.black54);
 }

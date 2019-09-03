@@ -289,8 +289,11 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
               ),
       ),
       title: Text('${_post.profile.nickname}',
-          style: TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(timeago.format(_post.lastUpdate.toDate(), locale: 'ko')),
+          style: MainTheme.simpleNickNameStyle),
+      subtitle: Text(
+        timeago.format(_post.lastUpdate.toDate(), locale: 'ko'),
+        style: MainTheme.timeTextStyle,
+      ),
       trailing: _isCurrentUserProfile
           ? null
           : _isProfilePost ? null : _buildFollowTrailingButton(),
@@ -299,9 +302,12 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
 
   Widget _buildPostListTile() {
     return ListTile(
-      title:
-          Text('${_post.title}', style: TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text('${_post.contents}', overflow: TextOverflow.ellipsis),
+      title: Text('${_post.title}', style: MainTheme.subTitleTextStyle),
+      subtitle: Text(
+        '${_post.contents}',
+        overflow: TextOverflow.ellipsis,
+        style: MainTheme.contentsTextStyle,
+      ),
       trailing: LikePostWidget.icon(
         isLiked: _post.isLiked,
         counter: _post.likeCount,

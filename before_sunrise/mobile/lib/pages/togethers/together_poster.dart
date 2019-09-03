@@ -79,7 +79,7 @@ class _PlayButton extends StatelessWidget {
           color: Colors.white.withOpacity(0.8),
           onPressed: () {
             final url = together.youtubeUrl;
-            launchTrailerVideo(url);
+            launchVideo(url);
           },
         ),
       ),

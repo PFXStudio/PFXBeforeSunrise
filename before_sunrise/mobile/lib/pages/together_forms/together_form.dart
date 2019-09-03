@@ -29,9 +29,11 @@ class _TogetherFormState extends State<TogetherForm>
   String _error;
 
 // 이 값은 초기에 초기화 되기 때문에 재 진입해야 적용 됨.
-  double maxContentsHeight = 1200;
+  double maxContentsHeight = 1250;
+  double minContentsHeight = 970;
   final int maxPicturesCount = 20;
   final Together together = Together();
+  bool enabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +64,7 @@ class _TogetherFormState extends State<TogetherForm>
                       child: Container(
                     width: MediaQuery.of(context).size.width,
                     height: selectedThumbDatas.length == 0
-                        ? 900
+                        ? minContentsHeight
                         : maxContentsHeight,
                     decoration: new BoxDecoration(
                       gradient: MainTheme.primaryLinearGradient,
@@ -85,12 +87,13 @@ class _TogetherFormState extends State<TogetherForm>
                           ),
                         ),
                         Expanded(
-                            flex: selectedThumbDatas.length == 0 ? 7 : 14,
+                            flex: selectedThumbDatas.length == 0 ? 9 : 16,
                             child: ConstrainedBox(
                               constraints: const BoxConstraints.expand(),
                               child: Column(children: <Widget>[
                                 _buildGalleryFiles(context),
                                 _buildLineDecoration(context),
+                                _buildCheckBox(context),
                                 _buildRegistButton(context),
                               ]),
                             )),
@@ -240,13 +243,13 @@ class _TogetherFormState extends State<TogetherForm>
                                     ),
                                     FlatIconTextButton(
                                         width: 200,
-                                        color: Colors.orange,
+                                        color: Colors.black54,
                                         iconData:
                                             FontAwesomeIcons.moneyBillWave,
                                         text: (together.totalCount != 0 &&
                                                 together.tablePrice != 0)
                                             ? "${together.tablePrice + together.tipPrice}만원 / ${together.totalCount}명 = ${((together.tablePrice + together.tipPrice) / together.totalCount.toDouble()).toStringAsFixed(1)} 만원"
-                                            : ""),
+                                            : "자동 입력 됩니다."),
                                   ],
                                 )),
                           ],
@@ -512,6 +515,59 @@ class _TogetherFormState extends State<TogetherForm>
             ),
             width: 100.0,
             height: 1.0,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCheckBox(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: MainTheme.edgeInsets.top),
+      child: Column(
+        children: <Widget>[
+          Stack(
+            alignment: Alignment.topCenter,
+            overflow: Overflow.visible,
+            children: <Widget>[
+              Card(
+                elevation: 2.0,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width -
+                      MainTheme.edgeInsets.left,
+                  height: 60,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                          padding: EdgeInsets.only(left: 7, top: 5, bottom: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Checkbox(
+                                value: enabled,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    enabled = value;
+                                  });
+                                },
+                              ),
+                              Text(
+                                LocalizableLoader.of(context)
+                                    .text("phone_number_agree_checkbox"),
+                                style: MainTheme.contentsTextStyle,
+                              ),
+                            ],
+                          )),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

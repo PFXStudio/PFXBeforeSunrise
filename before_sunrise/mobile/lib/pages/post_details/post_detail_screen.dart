@@ -1,4 +1,5 @@
 import 'package:before_sunrise/import.dart';
+import 'package:before_sunrise/import.dart' as prefix0;
 import 'package:timeago/timeago.dart' as timeago;
 
 class PostDetailScreen extends StatefulWidget {
@@ -146,7 +147,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           tag: '${_post.postID}_${_post.profile.nickname}',
           child: Text(
             '${_post.profile.nickname}',
-            style: TextStyle(fontSize: 20.0),
+            style: MainTheme.nickNameStyle,
           ),
         ),
       ],
@@ -279,7 +280,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
       children: <Widget>[
         Text(
           timeago.format(_post.lastUpdate.toDate(), locale: 'ko'),
-          style: TextStyle(color: Colors.black38, fontWeight: FontWeight.w500),
+          style: prefix0.MainTheme.timeTextStyle,
         ),
         SizedBox(height: 5.0),
         Row(
@@ -289,7 +290,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
               child: Text(
                 '${_post.title}',
                 overflow: TextOverflow.fade,
-                style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.w900),
+                style: MainTheme.titleTextStyle,
               ),
             ),
             _buildCommentTag(),
@@ -300,72 +301,71 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     );
   }
 
-  Widget _buildPostColorsInfo() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Colors',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
-        ),
-        SizedBox(height: 10.0),
-        Row(
-          children: <Widget>[
-            Icon(Icons.color_lens, size: 15.0),
-            SizedBox(width: 5.0),
-            Expanded(child: Text('Blue, Black, Grey')),
-          ],
-        ),
-        SizedBox(height: 20.0),
-      ],
-    );
-  }
-
   Widget _buildCommunityInfo() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           '건전한 커뮤니티를 위한 제재 안내',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+          style: MainTheme.subTitleTextStyle,
         ),
         Divider(),
         Row(
           children: <Widget>[
-            Icon(FontAwesomeIcons.times, size: 15.0),
+            Icon(FontAwesomeIcons.times, size: 15.0, color: Colors.red),
             SizedBox(width: 5.0),
             Expanded(
                 child: Text(
               '과도한 욕설, 비속어 및 저속한 언어를 사용하여 불쾌감을 주는 내용',
-              style: TextStyle(fontSize: 12),
+              style: MainTheme.contentsTextStyle,
             )),
           ],
         ),
         SizedBox(height: 5.0),
         Row(
           children: <Widget>[
-            Icon(FontAwesomeIcons.times, size: 15.0),
+            Icon(FontAwesomeIcons.times, size: 15.0, color: Colors.red),
             SizedBox(width: 5.0),
             Text(
               '거짓되거나 확인되지 않은 내용을 사실인 것처럼 표현하는 내용',
-              style: TextStyle(fontSize: 12),
+              style: MainTheme.contentsTextStyle,
             ),
           ],
         ),
         SizedBox(height: 5.0),
         Row(
           children: <Widget>[
-            Icon(FontAwesomeIcons.times, size: 15.0),
+            Icon(FontAwesomeIcons.times, size: 15.0, color: Colors.red),
             SizedBox(width: 5.0),
             Expanded(
               child: Text(
                 '과도한 신체의 노출이나 성적 수치심을 불러 일으킬 수 있는 내용',
-                style: TextStyle(fontSize: 12),
+                style: MainTheme.contentsTextStyle,
               ),
             ),
           ],
         ),
         Divider(),
+      ],
+    );
+  }
+
+  Widget _buildContents() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Contents',
+          style: MainTheme.barTitleTextStyle,
+        ),
+        SizedBox(height: 10.0),
+        Text(
+          '${_post.contents}',
+          softWrap: true,
+          textAlign: TextAlign.justify,
+          style: MainTheme.contentsTextStyle,
+        ),
+        SizedBox(height: 20.0),
       ],
     );
   }
@@ -383,40 +383,24 @@ class PostDetailScreenState extends State<PostDetailScreen> {
       children: <Widget>[
         Text(
           'Youtube',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+          style: MainTheme.barTitleTextStyle,
         ),
         SizedBox(height: 10.0),
         InkWell(
           onTap: () {
-            print("tap");
+            launchVideo(_post.youtubeUrl);
           },
           child: Row(
             children: <Widget>[
               Icon(FontAwesomeIcons.youtube, size: 15.0),
               SizedBox(width: 5.0),
-              Expanded(child: Text(_post.youtubeUrl)),
+              Expanded(
+                  child: Text(
+                _post.youtubeUrl,
+                style: MainTheme.contentsTextStyle,
+              )),
             ],
           ),
-        ),
-        SizedBox(height: 20.0),
-      ],
-    );
-  }
-
-  Widget _buildContents() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Contents',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
-        ),
-        Divider(),
-        // SizedBox(height: 10.0),
-        Text(
-          '${_post.contents}',
-          softWrap: true,
-          textAlign: TextAlign.justify,
         ),
         SizedBox(height: 20.0),
       ],
