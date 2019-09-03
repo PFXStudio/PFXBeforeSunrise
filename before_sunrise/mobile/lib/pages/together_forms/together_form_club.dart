@@ -13,6 +13,12 @@ class TogetherFormClub extends StatefulWidget {
 class _TogetherFormClubState extends State<TogetherFormClub> {
   double selectedPrice = 0;
 
+  @override
+  void dispose() {
+    togetherClubID = "";
+    super.dispose();
+  }
+
   Widget _buildContents(BuildContext context) {
     return Container(
         height: 250,

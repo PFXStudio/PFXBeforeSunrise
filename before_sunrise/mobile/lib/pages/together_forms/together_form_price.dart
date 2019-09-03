@@ -193,13 +193,20 @@ class _TogetherFormPriceContentsWidgetState
 
 class _TogetherFormPriceState extends State<TogetherFormPrice> {
   @override
+  void dispose() {
+    togetherTablePrice = 0;
+    togetherTipPrice = 0;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FlatIconTextButton(
         iconData: FontAwesomeIcons.wonSign,
         color: MainTheme.enabledButtonColor,
         width: 170,
         text: togetherTablePrice != 0
-            ? "${togetherTablePrice.toInt()} + ${togetherTipPrice.toInt()} 만원"
+            ? "${togetherTablePrice.toInt()} + ${togetherTipPrice.toInt()} = ${togetherTablePrice.toInt() + togetherTipPrice.toInt()}만원"
             : LocalizableLoader.of(context).text("price_select"),
         onPressed: () {
           showDialog(

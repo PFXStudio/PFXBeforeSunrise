@@ -16,6 +16,14 @@ class TogetherFormCocktailCount extends StatefulWidget {
 }
 
 class _TogetherFormCocktailCountState extends State<TogetherFormCocktailCount> {
+  @override
+  void dispose() {
+    togetherHardCount = 0;
+    togetherChampagneCount = 0;
+    togetherServiceCount = 0;
+    super.dispose();
+  }
+
   Widget _buildContents(BuildContext context) {
     return TogetherFormCocktailCountContentsWidget();
   }

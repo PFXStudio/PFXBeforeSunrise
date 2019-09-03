@@ -16,6 +16,12 @@ class TogetherFormMemberCount extends StatefulWidget {
 
 class _TogetherFormMemberCountState extends State<TogetherFormMemberCount> {
   double selectedPrice = 0;
+  @override
+  void dispose() {
+    togetherTotalCount = 2;
+    togetherRestCount = 1;
+    super.dispose();
+  }
 
   Widget _buildContents(BuildContext context) {
     return Container(
