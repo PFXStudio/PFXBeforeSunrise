@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class FailSnackbar {
   static final FailSnackbar _successSnarbarSingleton =
@@ -30,7 +31,7 @@ class FailSnackbar {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(child: Text(message)),
-              Icon(Icons.check, color: Colors.green),
+              Icon(FontAwesomeIcons.exclamationCircle, color: Colors.redAccent),
             ],
           ),
         ),

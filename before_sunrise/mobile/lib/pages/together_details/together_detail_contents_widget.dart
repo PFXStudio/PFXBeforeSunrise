@@ -29,11 +29,8 @@ class _TogetherDetailContentsWidgetState
   @override
   Widget build(BuildContext context) {
     final content = AnimatedCrossFade(
-      firstChild: Text(
-        widget.together.synopsisText(),
-        style: const TextStyle(
-            fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.black54),
-      ),
+      firstChild: Text(widget.together.synopsisText(),
+          style: MainTheme.contentsTextStyle),
       secondChild: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -109,8 +106,7 @@ class _TogetherDetailContentsWidgetState
             ),
             Text(
               widget.together.contents,
-              style:
-                  TextStyle(color: Colors.black54, fontWeight: FontWeight.w600),
+              style: MainTheme.contentsTextStyle,
             ),
           ]),
       crossFadeState:
@@ -158,10 +154,7 @@ class _Title extends StatelessWidget {
     final content = <Widget>[
       Text(
         LocalizableLoader.of(context).text("board_contents_text"),
-        style: const TextStyle(
-          fontSize: 16.0,
-          fontWeight: FontWeight.w700,
-        ),
+        style: MainTheme.subTitleTextStyle,
       ),
     ];
 

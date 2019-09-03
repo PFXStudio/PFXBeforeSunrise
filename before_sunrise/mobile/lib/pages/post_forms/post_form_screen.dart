@@ -405,25 +405,6 @@ class PostFormScreenState extends State<PostFormScreen> {
                           ),
                         ),
                       ),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.end,
-                      //   crossAxisAlignment: CrossAxisAlignment.center,
-                      //   children: <Widget>[
-                      //     Text(
-                      //       LocalizableLoader.of(context)
-                      //           .text("anonymous_checkbox"),
-                      //       style: TextStyle(color: Colors.black54),
-                      //     ),
-                      //     Checkbox(
-                      //       value: _post.enabledAnonymous,
-                      //       onChanged: (bool value) {
-                      //         setState(() {
-                      //           _post.enabledAnonymous = value;
-                      //         });
-                      //       },
-                      //     ),
-                      //   ],
-                      // ),
                     ],
                   ),
                 ),

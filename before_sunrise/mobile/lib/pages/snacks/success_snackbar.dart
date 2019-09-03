@@ -1,3 +1,4 @@
+import 'package:before_sunrise/import.dart';
 import 'package:flutter/material.dart';
 
 class SuccessSnackbar {
@@ -30,7 +31,7 @@ class SuccessSnackbar {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(child: Text(message)),
-              Icon(Icons.check, color: Colors.green),
+              Icon(FontAwesomeIcons.checkCircle, color: Colors.green),
             ],
           ),
         ),

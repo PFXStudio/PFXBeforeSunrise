@@ -79,7 +79,7 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
 
     addIfNonNull(_buildSynopsis(), content);
     addIfNonNull(_buildGallery(), content);
-    addIfNonNull(_buildJoin(context), content);
+    // addIfNonNull(_buildJoin(context), content);
     addIfNonNull(
         Padding(
           padding: EdgeInsets.only(bottom: 100),
@@ -289,7 +289,7 @@ class _Header extends StatelessWidget {
       padding: const EdgeInsets.all(6.0),
       child: TogetherDetailPoster(
         together: together,
-        size: const Size(125.0, 187.5),
+        size: const Size(125, 160),
         displayPlayButton: true,
       ),
     );
@@ -385,10 +385,7 @@ class TogetherInfo extends StatelessWidget {
         padding: EdgeInsets.only(left: 5, top: 5),
         child: Text(
           together.title,
-          style: const TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
-          ),
+          style: MainTheme.titleTextStyle,
         ),
       )
     ];

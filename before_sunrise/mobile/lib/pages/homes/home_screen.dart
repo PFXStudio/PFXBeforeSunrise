@@ -154,7 +154,7 @@ class HomeScreenState extends State<HomeScreen> {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (_homeBloc.currentState is PostTabState) {
-                Navigator.pushNamed(context, PostFormScreen.routeName,
+                Navigator.pushNamed(context, PostStepForm.routeName,
                     arguments: categoryName(_activePageIndex.toString()));
                 return;
               }

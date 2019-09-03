@@ -279,7 +279,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
       children: <Widget>[
         Text(
           timeago.format(_post.lastUpdate.toDate(), locale: 'ko'),
-          style: prefix0.MainTheme.timeTextStyle,
+          style: MainTheme.timeTextStyle,
         ),
         SizedBox(height: 5.0),
         Row(

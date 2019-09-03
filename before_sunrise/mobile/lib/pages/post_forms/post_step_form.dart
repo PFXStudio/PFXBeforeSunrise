@@ -1,44 +1,38 @@
 import 'package:before_sunrise/import.dart';
-import 'package:before_sunrise/import.dart' as prefix0;
-import 'package:before_sunrise/pages/together_forms/together_form_club.dart';
-import 'package:before_sunrise/pages/together_forms/together_form_price.dart';
 
-class TogetherStepForm extends StatefulWidget {
-  static const String routeName = "/togetherStepForm";
-  TogetherStepForm({Key key}) : super(key: key);
+class PostStepForm extends StatefulWidget {
+  static const String routeName = "/postStepForm";
+  const PostStepForm({Key key, @required this.category}) : super(key: key);
 
+  final String category;
   @override
-  _TogetherStepFormState createState() => new _TogetherStepFormState();
+  PostStepFormState createState() {
+    return new PostStepFormState();
+  }
 }
 
-class _TogetherStepFormState extends State<TogetherStepForm>
+class PostStepFormState extends State<PostStepForm>
     with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  TogetherBloc _togetherBloc = TogetherBloc();
+  PostBloc _postBloc = PostBloc();
   final TextEditingController _titleController = new TextEditingController();
   final TextEditingController _contentsController = new TextEditingController();
   final TextEditingController _youtubeController = new TextEditingController();
 
   FocusNode _focusNode = new FocusNode();
   GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  Together together = Together();
 // multi image picker 이미지 데이터가 사라짐. 받아오면 바로 백업.
-  final List<ByteData> selectedThumbDatas = List<ByteData>();
-  final List<ByteData> selectedOriginalDatas = List<ByteData>();
+  final List<ByteData> _selectedThumbDatas = List<ByteData>();
+  final List<ByteData> _selectedOriginalDatas = List<ByteData>();
 
   int currentStep = 0;
   final int maxPicturesCount = 20;
   String _error;
-  bool enabled = false;
-
+  Post _post;
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(() {
-      setState(() {});
-      print('Has focus: $_focusNode.hasFocus');
-    });
-
+    _post = Post(category: widget.category);
     SuccessSnackbar().initialize(_scaffoldKey);
     FailSnackbar().initialize(_scaffoldKey);
   }
@@ -46,7 +40,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
   @override
   void dispose() {
     _focusNode.dispose();
-    together = Together();
+    _post = Post();
 
     super.dispose();
   }
@@ -55,10 +49,10 @@ class _TogetherStepFormState extends State<TogetherStepForm>
   Widget build(BuildContext context) {
     final List<Step> steps = [
       new Step(
-          title: const Text('정보'),
+          title: const Text('게시판 종류'),
           isActive: true,
           state: StepState.indexed,
-          content: _buildInfo()),
+          content: _buildType()),
       new Step(
           title: const Text('내용'),
           isActive: true,
@@ -77,9 +71,9 @@ class _TogetherStepFormState extends State<TogetherStepForm>
     ];
 
     return BlocListener(
-        bloc: _togetherBloc,
+        bloc: _postBloc,
         listener: (context, state) async {
-          if (state is SuccessTogetherState) {
+          if (state is SuccessPostState) {
             SuccessSnackbar().show("success_post", () {
               Navigator.pop(context);
             });
@@ -87,17 +81,14 @@ class _TogetherStepFormState extends State<TogetherStepForm>
             return;
           }
         },
-        child: BlocBuilder<TogetherBloc, TogetherState>(
-            bloc: _togetherBloc,
+        child: BlocBuilder<PostBloc, PostState>(
+            bloc: _postBloc,
             builder: (
               BuildContext context,
-              TogetherState currentState,
+              PostState currentState,
             ) {
               return Scaffold(
-                appBar: PreferredSize(
-                  preferredSize: const Size.fromHeight(kToolbarHeight),
-                  child: TogetherFormTopBar(),
-                ),
+                appBar: PostFormTopBar(),
                 key: _scaffoldKey,
                 body: Container(
                   child: new ListView(
@@ -109,37 +100,8 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                         onStepContinue: () {
                           if (currentStep == 0 ||
                               currentStep == steps.length - 1) {
-                            if (together.dateString == null ||
-                                together.dateString.length <= 0) {
-                              FailSnackbar()
-                                  .show("error_together_form_date", null);
-                              return;
-                            }
-
-                            if (together.clubID == null ||
-                                together.clubID.length <= 0) {
-                              FailSnackbar()
-                                  .show("error_together_form_club", null);
-                              return;
-                            }
-
-                            if (together.hardCount == 0 &&
-                                together.champagneCount == 0) {
-                              FailSnackbar()
-                                  .show("error_together_form_cocktail", null);
-                              return;
-                            }
-
-                            if (together.tablePrice <= 0) {
-                              FailSnackbar()
-                                  .show("error_together_form_price", null);
-                              return;
-                            }
-
-                            if (together.totalCount < 2 ||
-                                together.restCount < 1) {
-                              FailSnackbar()
-                                  .show("error_together_form_count", null);
+                            if (_post.type == null) {
+                              FailSnackbar().show("error_post_form_type", null);
                               return;
                             }
                           }
@@ -148,13 +110,13 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                               currentStep == steps.length - 1) {
                             if (_titleController.text.length <= 0) {
                               FailSnackbar()
-                                  .show("error_together_form_title", null);
+                                  .show("error_post_form_title", null);
                               return;
                             }
 
                             if (_contentsController.text.length <= 0) {
                               FailSnackbar()
-                                  .show("error_together_form_contents", null);
+                                  .show("error_post_form_title", null);
                               return;
                             }
                           }
@@ -162,25 +124,19 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                           if (currentStep == 2 ||
                               currentStep == steps.length - 1) {}
                           if (currentStep == 3 ||
-                              currentStep == steps.length - 1) {
-                            if (enabled == false) {
-                              FailSnackbar()
-                                  .show("error_agree_phone_number", null);
-                              return;
-                            }
-                          }
+                              currentStep == steps.length - 1) {}
 
                           setState(() {
                             if (currentStep < steps.length - 1) {
                               currentStep = currentStep + 1;
                             } else {
-                              together.title = _titleController.text;
-                              together.contents = _contentsController.text;
-                              together.youtubeUrl = _youtubeController.text;
+                              _post.title = _titleController.text;
+                              _post.contents = _contentsController.text;
+                              _post.youtubeUrl = _youtubeController.text;
 
-                              _togetherBloc.dispatch(CreateTogetherEvent(
-                                  together: together,
-                                  byteDatas: selectedOriginalDatas));
+                              _postBloc.dispatch(CreatePostEvent(
+                                  post: _post,
+                                  byteDatas: _selectedOriginalDatas));
 
                               return;
                             }
@@ -210,43 +166,17 @@ class _TogetherStepFormState extends State<TogetherStepForm>
             }));
   }
 
-  Widget _buildInfo() {
+  Widget _buildType() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        TogetherFormDate(callback: (dateTime) {
-          together.dateString = CoreConst.togetherDateFormat.format(dateTime);
-        }),
-        TogetherFormClub(
-          callback: (clubID) {
-            print(clubID);
-            together.clubID = clubID;
+        DialogPostType(
+          callback: (type) {
+            setState(() {
+              _post.type = type;
+            });
           },
         ),
-        TogetherFormCocktailCount(
-          callback: (hardCount, champagneCount, serviceCount) {
-            together.hardCount = hardCount;
-            together.champagneCount = champagneCount;
-            together.serviceCount = serviceCount;
-          },
-        ),
-        TogetherFormPrice(callback: (tablePrice, tipPrice) {
-          together.tablePrice = tablePrice;
-          together.tipPrice = tipPrice;
-          setState(() {});
-        }),
-        TogetherFormMemberCount(callback: (totalCount, restCount) {
-          together.totalCount = totalCount;
-          together.restCount = restCount;
-          setState(() {});
-        }),
-        FlatIconTextButton(
-            width: 200,
-            color: MainTheme.enabledButtonColor,
-            iconData: FontAwesomeIcons.moneyBillWave,
-            text: (together.totalCount != 0 && together.tablePrice != 0)
-                ? "${together.tablePrice + together.tipPrice}만원 / ${together.totalCount}명 = ${((together.tablePrice + together.tipPrice) / together.totalCount.toDouble()).toStringAsFixed(1)} 만원"
-                : "..."),
       ],
     );
   }
@@ -340,7 +270,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                 child: Container(
                   width: MediaQuery.of(context).size.width -
                       MainTheme.edgeInsets.left,
-                  height: (selectedThumbDatas.length > 0) ? 300 : 114,
+                  height: (_selectedThumbDatas.length > 0) ? 400 : 114,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -357,7 +287,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                                     LocalizableLoader.of(context)
                                         .text("add_pictures_button"),
                                     [
-                                      selectedThumbDatas.length,
+                                      _selectedThumbDatas.length,
                                       maxPicturesCount
                                     ]),
                                 style: TextStyle(
@@ -365,7 +295,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                                     color: MainTheme.enabledButtonColor),
                               ),
                               onPressed: () {
-                                if (selectedThumbDatas.length >=
+                                if (_selectedThumbDatas.length >=
                                     maxPicturesCount) {
                                   FailSnackbar()
                                       .show("notice_remove_pictures", null);
@@ -384,7 +314,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                             color: Colors.grey[400],
                           )),
                       Expanded(child: _buildGridView(context)),
-                      selectedThumbDatas.length == 0
+                      _selectedThumbDatas.length == 0
                           ? Container()
                           : Padding(
                               padding: EdgeInsets.only(left: 10),
@@ -426,15 +356,15 @@ class _TogetherStepFormState extends State<TogetherStepForm>
   }
 
   Widget _buildGridView(BuildContext context) {
-    if (selectedThumbDatas.length <= 0) {
+    if (_selectedThumbDatas.length <= 0) {
       return Container();
     }
 
     return GridView.count(
       padding: MainTheme.edgeInsets,
       crossAxisCount: 4,
-      children: List.generate(selectedThumbDatas.length, (index) {
-        ByteData data = selectedThumbDatas[index];
+      children: List.generate(_selectedThumbDatas.length, (index) {
+        ByteData data = _selectedThumbDatas[index];
         return Stack(children: <Widget>[
           ThumbnailItem(
             data: data,
@@ -450,8 +380,8 @@ class _TogetherStepFormState extends State<TogetherStepForm>
               ),
               color: MainTheme.enabledIconColor,
               onPressed: () {
-                selectedThumbDatas.removeAt(index);
-                selectedOriginalDatas.removeAt(index);
+                _selectedThumbDatas.removeAt(index);
+                _selectedOriginalDatas.removeAt(index);
                 setState(() {});
                 print("deleted");
               },
@@ -470,7 +400,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
 
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: maxPicturesCount - selectedThumbDatas.length,
+        maxImages: maxPicturesCount - _selectedThumbDatas.length,
       );
 
       if (resultList.length > 0) {
@@ -480,10 +410,10 @@ class _TogetherStepFormState extends State<TogetherStepForm>
             100,
             quality: 50,
           );
-          selectedThumbDatas.add(data);
+          _selectedThumbDatas.add(data);
 
           ByteData originalData = await asset.getByteData();
-          selectedOriginalDatas.add(originalData);
+          _selectedOriginalDatas.add(originalData);
         }
       }
     } on PlatformException catch (e) {
@@ -493,11 +423,11 @@ class _TogetherStepFormState extends State<TogetherStepForm>
     if (!mounted) return;
 
     setState(() {
-      if (selectedThumbDatas.length > maxPicturesCount) {
-        int end = selectedThumbDatas.length - maxPicturesCount - 1;
-        selectedThumbDatas.removeRange(0, end);
+      if (_selectedThumbDatas.length > maxPicturesCount) {
+        int end = _selectedThumbDatas.length - maxPicturesCount - 1;
+        _selectedThumbDatas.removeRange(0, end);
 
-        selectedOriginalDatas.removeRange(0, end);
+        _selectedOriginalDatas.removeRange(0, end);
       }
 
       if (error == null) _error = 'No Error Dectected';
@@ -510,24 +440,6 @@ class _TogetherStepFormState extends State<TogetherStepForm>
         child: Column(
           children: <Widget>[
             SanctionContents(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Checkbox(
-                  value: enabled,
-                  onChanged: (bool value) {
-                    setState(() {
-                      enabled = value;
-                    });
-                  },
-                ),
-                Text(
-                  LocalizableLoader.of(context)
-                      .text("phone_number_agree_checkbox"),
-                  style: MainTheme.contentsTextStyle,
-                ),
-              ],
-            ),
           ],
         ));
   }
