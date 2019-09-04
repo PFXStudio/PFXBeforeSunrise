@@ -165,7 +165,7 @@ class HomeScreenState extends State<HomeScreen> {
               }
             },
             tooltip: LocalizableLoader.of(context).text("hint_post"),
-            child: const Icon(Icons.add),
+            child: const Icon(FontAwesomeIcons.plus),
             backgroundColor: MainTheme.enabledButtonColor,
           ),
         ));

@@ -132,7 +132,7 @@ class _CommentListState extends State<CommentList> {
                       ? ListTile(
                           leading: IconButton(
                             icon: Icon(
-                              Icons.photo,
+                              FontAwesomeIcons.image,
                               color: MainTheme.enabledButtonColor,
                             ),
                             onPressed: () {
@@ -158,7 +158,7 @@ class _CommentListState extends State<CommentList> {
                           ),
                           trailing: IconButton(
                             icon: Icon(
-                              Icons.send,
+                              FontAwesomeIcons.paperPlane,
                               color: MainTheme.enabledButtonColor,
                             ),
                             onPressed: () {
@@ -234,7 +234,7 @@ class _CommentListState extends State<CommentList> {
           backgroundColor: MainTheme.disabledButtonColor,
           child: IconButton(
             icon: Icon(
-              Icons.delete,
+              FontAwesomeIcons.trash,
             ),
             color: MainTheme.enabledIconColor,
             onPressed: () {
@@ -248,7 +248,7 @@ class _CommentListState extends State<CommentList> {
       ]),
       trailing: IconButton(
         icon: Icon(
-          Icons.send,
+          FontAwesomeIcons.paperPlane,
           color: MainTheme.enabledButtonColor,
         ),
         onPressed: () {

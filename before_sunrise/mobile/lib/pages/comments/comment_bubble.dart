@@ -54,7 +54,7 @@ class _CommentBubbleState extends State<CommentBubble> {
                 placeholder: (context, imageUrl) =>
                     Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
                 errorWidget: (context, imageUrl, error) =>
-                    Center(child: Icon(Icons.error)),
+                    Center(child: Icon(FontAwesomeIcons.exclamationCircle)),
                 imageBuilder: (BuildContext context, ImageProvider image) {
                   return Hero(
                     tag: '${_comment.commentID}_${profile.imageUrl}',
@@ -157,7 +157,7 @@ class _CommentBubbleState extends State<CommentBubble> {
           placeholder: (context, imageUrl) =>
               Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
           errorWidget: (context, imageUrl, error) =>
-              Center(child: Icon(Icons.error)),
+              Center(child: Icon(FontAwesomeIcons.exclamationCircle)),
           imageBuilder: (BuildContext context, ImageProvider image) {
             return Hero(
               tag: '${_comment.commentID}_$imageUrl',

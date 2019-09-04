@@ -182,7 +182,7 @@ class VerifyAuthScreen extends StatelessWidget {
                 ),
               ),
               Icon(
-                Icons.arrow_right,
+                FontAwesomeIcons.angleRight,
                 size: 30.0,
                 color: Colors.white,
               )

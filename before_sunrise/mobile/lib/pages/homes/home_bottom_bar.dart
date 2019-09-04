@@ -50,11 +50,11 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
                   children: <Widget>[
                     _buildHomeBottomBarItem(
                       index: 0,
-                      icon: Icons.home,
+                      icon: FontAwesomeIcons.rss,
                     ),
                     _buildHomeBottomBarItem(
                       index: 1,
-                      icon: Icons.rss_feed,
+                      icon: FontAwesomeIcons.userFriends,
                     ),
                     _buildHomeBottomBarItem(
                       index: 2,

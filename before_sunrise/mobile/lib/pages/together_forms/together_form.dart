@@ -368,7 +368,7 @@ class _TogetherFormState extends State<TogetherForm>
                           child: FlatButton.icon(
                               focusColor: Colors.red,
                               icon: Icon(
-                                Icons.photo_library,
+                                FontAwesomeIcons.images,
                                 color: MainTheme.enabledButtonColor,
                               ),
                               label: Text(
@@ -464,7 +464,7 @@ class _TogetherFormState extends State<TogetherForm>
             backgroundColor: MainTheme.disabledButtonColor,
             child: IconButton(
               icon: Icon(
-                Icons.delete,
+                FontAwesomeIcons.trashAlt,
               ),
               color: MainTheme.enabledIconColor,
               onPressed: () {

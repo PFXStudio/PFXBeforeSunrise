@@ -41,7 +41,7 @@ class TogetherDetailPoster extends StatelessWidget {
   Widget build(BuildContext context) {
     final content = <Widget>[
       const Icon(
-        Icons.image,
+        FontAwesomeIcons.image,
         color: Colors.white24,
         size: 44.0,
       ),
@@ -79,7 +79,7 @@ class _PlayButton extends StatelessWidget {
         child: IconButton(
           key: TogetherDetailPoster.playButtonKey,
           padding: EdgeInsets.zero,
-          icon: const Icon(Icons.play_circle_outline),
+          icon: const Icon(FontAwesomeIcons.playCircle),
           iconSize: 42.0,
           color: Colors.white.withOpacity(0.8),
           onPressed: () {

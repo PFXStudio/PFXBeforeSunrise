@@ -67,7 +67,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       ),
       expandedHeight: 360.0,
       actions: <Widget>[
-        Icon(Icons.more_vert),
+        Icon(FontAwesomeIcons.ellipsisV),
       ],
       flexibleSpace: FlexibleSpaceBar(
         background: _buildFlexibleSpace(
@@ -104,7 +104,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             placeholder: (context, imageUrl) =>
                 Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
             errorWidget: (context, imageUrl, error) =>
-                Center(child: Icon(Icons.error)),
+                Center(child: Icon(FontAwesomeIcons.exclamationCircle)),
             imageBuilder: (BuildContext context, ImageProvider image) {
               return Hero(
                 tag: '${_profile.imageUrl}',
@@ -172,7 +172,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                         ? Flexible(
                             child: Center(
                               child: Icon(
-                                Icons.favorite,
+                                FontAwesomeIcons.smileWink,
                                 size: 20.0,
                                 color: Colors.black38,
                                 // color: Colors.red,
@@ -223,7 +223,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           child: IconButton(
             tooltip: 'Call ${_profile.nickname}',
             icon: Icon(
-              Icons.call,
+              FontAwesomeIcons.mobileAlt,
               color: Colors.white,
             ),
             onPressed: () {},
@@ -237,7 +237,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           child: IconButton(
             tooltip: 'Chat with ${_profile.nickname}',
             icon: Icon(
-              Icons.chat_bubble_outline,
+              FontAwesomeIcons.comment,
               color: Colors.white,
             ),
             onPressed: () {},

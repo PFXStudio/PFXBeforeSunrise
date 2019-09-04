@@ -37,7 +37,7 @@ class _TogetherFormMemberCountState extends State<TogetherFormMemberCount> {
     return FlatIconTextButton(
         iconData: FontAwesomeIcons.users,
         color: MainTheme.enabledButtonColor,
-        width: 180,
+        width: 200,
         text: togetherTotalCount > 2
             ? "총 인원 : ${togetherTotalCount.toInt()}, 모집 인원 : ${togetherRestCount.toInt()}"
             : LocalizableLoader.of(context).text("member_count_select"),
@@ -161,8 +161,8 @@ class _TogetherFormMemberCountContentsWidgetState
                         activeTrackBarHeight: 3,
                       ),
                       disabled: false,
-                      handler: customHandler(Icons.chevron_right),
-                      rightHandler: customHandler(Icons.chevron_left),
+                      handler: customHandler(FontAwesomeIcons.caretRight),
+                      rightHandler: customHandler(FontAwesomeIcons.caretLeft),
                       tooltip: FlutterSliderTooltip(
                         alwaysShowTooltip: true,
                         numberFormat: intl.NumberFormat(),
@@ -238,8 +238,8 @@ class _TogetherFormMemberCountContentsWidgetState
                         activeTrackBarHeight: 3,
                       ),
                       disabled: false,
-                      handler: customHandler(Icons.chevron_right),
-                      rightHandler: customHandler(Icons.chevron_left),
+                      handler: customHandler(FontAwesomeIcons.caretRight),
+                      rightHandler: customHandler(FontAwesomeIcons.caretLeft),
                       tooltip: FlutterSliderTooltip(
                         alwaysShowTooltip: true,
                         numberFormat: intl.NumberFormat(),

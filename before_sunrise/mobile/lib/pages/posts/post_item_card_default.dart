@@ -1,4 +1,5 @@
 import 'package:before_sunrise/import.dart';
+import 'package:before_sunrise/import.dart' as prefix0;
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -118,7 +119,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
                 placeholder: (context, imageUrl) =>
                     Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
                 errorWidget: (context, imageUrl, error) =>
-                    Center(child: Icon(Icons.error)),
+                    Center(child: Icon(FontAwesomeIcons.exclamationCircle)),
                 imageBuilder: (BuildContext context, ImageProvider image) {
                   return Hero(
                     tag: '${_post.postID}_${_post.imageUrls[0]}',
@@ -231,9 +232,9 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
               child: Center(
                 child: Icon(
                   _post.profile.isFollowing
-                      ? Icons.favorite
-                      : Icons.favorite_border,
-                  size: 20.0,
+                      ? FontAwesomeIcons.bookmark
+                      : FontAwesomeIcons.solidBookmark,
+                  size: 15.0,
                   color: Colors.red,
                 ),
               ),
@@ -259,7 +260,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
                 placeholder: (context, imageUrl) =>
                     Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
                 errorWidget: (context, imageUrl, error) =>
-                    Center(child: Icon(Icons.error)),
+                    Center(child: Icon(FontAwesomeIcons.exclamationCircle)),
                 imageBuilder: (BuildContext context, ImageProvider image) {
                   return Hero(
                     tag: '${_post.postID}_${_post.profile.imageUrl}',
@@ -339,17 +340,6 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
           // });
         },
       ),
-      // IconButton(
-      //   tooltip: 'Save this post',
-      //   icon: Icon(
-      //     _post.isLiked ? Icons.favorite : Icons.favorite_border,
-      //     color: Theme.of(context).accentColor,
-      //   ),
-      //   onPressed: () {
-      //     // TODO :
-      //     // postBloc.toggleLikeStatus(post: _post);
-      //   },
-      // )
     );
   }
 

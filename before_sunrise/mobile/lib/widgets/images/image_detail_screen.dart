@@ -25,7 +25,7 @@ class ImageDetailScreen extends StatelessWidget {
                 placeholder: (context, imageUrl) =>
                     Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
                 errorWidget: (context, imageUrl, error) =>
-                    Center(child: Icon(Icons.error)),
+                    Center(child: Icon(FontAwesomeIcons.exclamationCircle)),
                 imageBuilder: (BuildContext context, ImageProvider image) {
                   return Hero(
                     tag: tag,

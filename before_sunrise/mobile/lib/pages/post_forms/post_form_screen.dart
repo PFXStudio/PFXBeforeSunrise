@@ -339,7 +339,7 @@ class PostFormScreenState extends State<PostFormScreen> {
                           child: FlatButton.icon(
                               focusColor: Colors.red,
                               icon: Icon(
-                                Icons.photo_library,
+                                FontAwesomeIcons.image,
                                 color: MainTheme.enabledButtonColor,
                               ),
                               label: Text(
@@ -437,7 +437,7 @@ class PostFormScreenState extends State<PostFormScreen> {
             backgroundColor: MainTheme.disabledButtonColor,
             child: IconButton(
               icon: Icon(
-                Icons.delete,
+                FontAwesomeIcons.trash,
               ),
               color: MainTheme.enabledIconColor,
               onPressed: () {

@@ -28,7 +28,7 @@ class SanctionContents extends StatelessWidget {
             Icon(FontAwesomeIcons.times, size: 15.0, color: Colors.red),
             SizedBox(width: 5.0),
             Text(
-              '거짓되거나 확인되지 않은 내용을 사실인 것처럼 표현하는 내용',
+              '허위 내용을 사실인 것처럼 표현하는 내용',
               style: MainTheme.contentsTextStyle,
             ),
           ],

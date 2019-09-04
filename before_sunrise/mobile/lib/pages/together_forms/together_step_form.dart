@@ -111,35 +111,55 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                               currentStep == steps.length - 1) {
                             if (together.dateString == null ||
                                 together.dateString.length <= 0) {
-                              FailSnackbar()
-                                  .show("error_together_form_date", null);
+                              FailSnackbar().show("error_together_form_date",
+                                  () {
+                                setState(() {
+                                  currentStep = 0;
+                                });
+                              });
                               return;
                             }
 
                             if (together.clubID == null ||
                                 together.clubID.length <= 0) {
-                              FailSnackbar()
-                                  .show("error_together_form_club", null);
+                              FailSnackbar().show("error_together_form_club",
+                                  () {
+                                setState(() {
+                                  currentStep = 0;
+                                });
+                              });
                               return;
                             }
 
                             if (together.hardCount == 0 &&
                                 together.champagneCount == 0) {
                               FailSnackbar()
-                                  .show("error_together_form_cocktail", null);
+                                  .show("error_together_form_cocktail", () {
+                                setState(() {
+                                  currentStep = 0;
+                                });
+                              });
                               return;
                             }
 
                             if (together.tablePrice <= 0) {
-                              FailSnackbar()
-                                  .show("error_together_form_price", null);
+                              FailSnackbar().show("error_together_form_price",
+                                  () {
+                                setState(() {
+                                  currentStep = 0;
+                                });
+                              });
                               return;
                             }
 
                             if (together.totalCount < 2 ||
                                 together.restCount < 1) {
-                              FailSnackbar()
-                                  .show("error_together_form_count", null);
+                              FailSnackbar().show("error_together_form_count",
+                                  () {
+                                setState(() {
+                                  currentStep = 0;
+                                });
+                              });
                               return;
                             }
                           }
@@ -147,14 +167,22 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                           if (currentStep == 1 ||
                               currentStep == steps.length - 1) {
                             if (_titleController.text.length <= 0) {
-                              FailSnackbar()
-                                  .show("error_together_form_title", null);
+                              FailSnackbar().show("error_together_form_title",
+                                  () {
+                                setState(() {
+                                  currentStep = 1;
+                                });
+                              });
                               return;
                             }
 
                             if (_contentsController.text.length <= 0) {
                               FailSnackbar()
-                                  .show("error_together_form_contents", null);
+                                  .show("error_together_form_contents", () {
+                                setState(() {
+                                  currentStep = 1;
+                                });
+                              });
                               return;
                             }
                           }
@@ -211,115 +239,147 @@ class _TogetherStepFormState extends State<TogetherStepForm>
   }
 
   Widget _buildInfo() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        TogetherFormDate(callback: (dateTime) {
-          together.dateString = CoreConst.togetherDateFormat.format(dateTime);
-        }),
-        TogetherFormClub(
-          callback: (clubID) {
-            print(clubID);
-            together.clubID = clubID;
-          },
+    return Card(
+        elevation: 2.0,
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
         ),
-        TogetherFormCocktailCount(
-          callback: (hardCount, champagneCount, serviceCount) {
-            together.hardCount = hardCount;
-            together.champagneCount = champagneCount;
-            together.serviceCount = serviceCount;
-          },
-        ),
-        TogetherFormPrice(callback: (tablePrice, tipPrice) {
-          together.tablePrice = tablePrice;
-          together.tipPrice = tipPrice;
-          setState(() {});
-        }),
-        TogetherFormMemberCount(callback: (totalCount, restCount) {
-          together.totalCount = totalCount;
-          together.restCount = restCount;
-          setState(() {});
-        }),
-        FlatIconTextButton(
-            width: 200,
-            color: MainTheme.enabledButtonColor,
-            iconData: FontAwesomeIcons.moneyBillWave,
-            text: (together.totalCount != 0 && together.tablePrice != 0)
-                ? "${together.tablePrice + together.tipPrice}만원 / ${together.totalCount}명 = ${((together.tablePrice + together.tipPrice) / together.totalCount.toDouble()).toStringAsFixed(1)} 만원"
-                : "..."),
-      ],
-    );
+        child: Container(
+            width:
+                MediaQuery.of(context).size.width - MainTheme.edgeInsets.left,
+            height: 250,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                TogetherFormDate(callback: (dateTime) {
+                  if (dateTime == null) {
+                    return;
+                  }
+
+                  together.dateString =
+                      CoreConst.togetherDateFormat.format(dateTime);
+                }),
+                TogetherFormClub(
+                  callback: (clubID) {
+                    print(clubID);
+                    together.clubID = clubID;
+                  },
+                ),
+                TogetherFormCocktailCount(
+                  callback: (hardCount, champagneCount, serviceCount) {
+                    together.hardCount = hardCount;
+                    together.champagneCount = champagneCount;
+                    together.serviceCount = serviceCount;
+                  },
+                ),
+                TogetherFormPrice(callback: (tablePrice, tipPrice) {
+                  together.tablePrice = tablePrice;
+                  together.tipPrice = tipPrice;
+                  setState(() {});
+                }),
+                TogetherFormMemberCount(callback: (totalCount, restCount) {
+                  together.totalCount = totalCount;
+                  together.restCount = restCount;
+                  setState(() {});
+                }),
+                FlatIconTextButton(
+                    width: 200,
+                    color: MainTheme.enabledButtonColor,
+                    iconData: FontAwesomeIcons.moneyBillWave,
+                    text: (together.totalCount != 0 && together.tablePrice != 0)
+                        ? "${together.tablePrice + together.tipPrice}만원 / ${together.totalCount}명 = ${((together.tablePrice + together.tipPrice) / together.totalCount.toDouble()).toStringAsFixed(1)} 만원"
+                        : "..."),
+              ],
+            )));
   }
 
   Widget _buildContents() {
-    return Center(
-        child: new ListView(
-      shrinkWrap: true,
-      reverse: false,
-      children: <Widget>[
-        new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Center(
-                child: new Center(
-              child: new Stack(
-                children: <Widget>[
-                  Padding(
-                      padding: EdgeInsets.only(left: 30.0, right: 30.0),
-                      child: new Form(
-                        autovalidate: false,
-                        child: new Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            new Padding(
-                              padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                              child: new TextFormField(
-                                controller: _titleController,
-                                decoration: new InputDecoration(
-                                    labelText: "Title",
-                                    filled: false,
-                                    prefixIcon: Padding(
+    return Card(
+        elevation: 2.0,
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Container(
+            width:
+                MediaQuery.of(context).size.width - MainTheme.edgeInsets.left,
+            height: 400,
+            child: Center(
+                child: new ListView(
+              shrinkWrap: true,
+              reverse: false,
+              children: <Widget>[
+                new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new Center(
+                        child: new Center(
+                      child: new Stack(
+                        children: <Widget>[
+                          Padding(
+                              padding: EdgeInsets.only(left: 30.0, right: 30.0),
+                              child: new Form(
+                                autovalidate: false,
+                                child: new Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    new Padding(
                                       padding: EdgeInsets.only(
-                                          bottom: 10.0,
-                                          top: 10.0,
-                                          left: 10.0,
-                                          right: 10.0),
-                                      child: Icon(FontAwesomeIcons.pencilAlt),
-                                    )),
-                                keyboardType: TextInputType.text,
-                              ),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.only(
-                                    left: 20, top: 5, bottom: 5),
-                                child: TextField(
-                                  focusNode: _focusNode,
-                                  controller: _contentsController,
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: 15,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    icon: Icon(
-                                      FontAwesomeIcons.alignJustify,
-                                      size: 18.0,
-                                      color: Colors.black54,
+                                          left: 10.0, right: 10.0),
+                                      child: new TextFormField(
+                                        controller: _titleController,
+                                        decoration: new InputDecoration(
+                                            labelText: "Title",
+                                            filled: false,
+                                            labelStyle: MainTheme.hintTextStyle,
+                                            prefixIcon: Padding(
+                                              padding: EdgeInsets.only(
+                                                  bottom: 10.0,
+                                                  top: 10.0,
+                                                  left: 10.0,
+                                                  right: 10.0),
+                                              child: Icon(
+                                                  FontAwesomeIcons.quoteLeft,
+                                                  size: 14),
+                                            )),
+                                        keyboardType: TextInputType.text,
+                                      ),
                                     ),
-                                    hintText: LocalizableLoader.of(context)
-                                        .text("board_contents_hint_text"),
-                                    hintStyle: TextStyle(fontSize: 17.0),
-                                  ),
-                                )),
-                          ],
-                        ),
-                      )),
-                ],
-              ),
-            ))
-          ],
-        )
-      ],
-    ));
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 10.0, right: 10.0),
+                                      child: new TextFormField(
+                                        maxLines: 15,
+                                        controller: _contentsController,
+                                        decoration: new InputDecoration(
+                                            labelText: "Contents",
+                                            filled: false,
+                                            labelStyle: MainTheme.hintTextStyle,
+                                            prefixIcon: Padding(
+                                              padding: EdgeInsets.only(
+                                                  bottom: 10.0,
+                                                  top: 10.0,
+                                                  left: 10.0,
+                                                  right: 10.0),
+                                              child: Icon(
+                                                  FontAwesomeIcons.alignJustify,
+                                                  size: 14),
+                                            )),
+                                        keyboardType: TextInputType.multiline,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                        ],
+                      ),
+                    ))
+                  ],
+                )
+              ],
+            ))));
   }
 
   Widget _buildGalleryFiles(BuildContext context) {
@@ -349,8 +409,9 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                           child: FlatButton.icon(
                               focusColor: Colors.red,
                               icon: Icon(
-                                Icons.photo_library,
+                                FontAwesomeIcons.images,
                                 color: MainTheme.enabledButtonColor,
+                                size: 15,
                               ),
                               label: Text(
                                 sprintf(
@@ -360,9 +421,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                                       selectedThumbDatas.length,
                                       maxPicturesCount
                                     ]),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: MainTheme.enabledButtonColor),
+                                style: MainTheme.enabledFlatIconTextButtonStyle,
                               ),
                               onPressed: () {
                                 if (selectedThumbDatas.length >=
@@ -406,11 +465,11 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                             icon: Icon(
                               FontAwesomeIcons.youtube,
                               color: Colors.black54,
-                              size: 18.0,
+                              size: 15.0,
                             ),
                             hintText: LocalizableLoader.of(context)
                                 .text("board_youtube_hint_text"),
-                            hintStyle: TextStyle(fontSize: 17.0),
+                            hintStyle: MainTheme.hintTextStyle,
                           ),
                         ),
                       ),
@@ -446,7 +505,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
             backgroundColor: MainTheme.disabledButtonColor,
             child: IconButton(
               icon: Icon(
-                Icons.delete,
+                FontAwesomeIcons.trashAlt,
               ),
               color: MainTheme.enabledIconColor,
               onPressed: () {
@@ -505,30 +564,40 @@ class _TogetherStepFormState extends State<TogetherStepForm>
   }
 
   Widget _buildAgree() {
-    return Padding(
-        padding: EdgeInsets.only(top: 5, bottom: 5),
-        child: Column(
-          children: <Widget>[
-            SanctionContents(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Checkbox(
-                  value: enabled,
-                  onChanged: (bool value) {
-                    setState(() {
-                      enabled = value;
-                    });
-                  },
-                ),
-                Text(
-                  LocalizableLoader.of(context)
-                      .text("phone_number_agree_checkbox"),
-                  style: MainTheme.contentsTextStyle,
-                ),
-              ],
-            ),
-          ],
-        ));
+    return Card(
+        elevation: 2.0,
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Container(
+            width:
+                MediaQuery.of(context).size.width - MainTheme.edgeInsets.left,
+            height: 230,
+            child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: <Widget>[
+                    SanctionContents(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Checkbox(
+                          value: enabled,
+                          onChanged: (bool value) {
+                            setState(() {
+                              enabled = value;
+                            });
+                          },
+                        ),
+                        Text(
+                          LocalizableLoader.of(context)
+                              .text("phone_number_agree_checkbox"),
+                          style: MainTheme.contentsTextStyle,
+                        ),
+                      ],
+                    ),
+                  ],
+                ))));
   }
 }

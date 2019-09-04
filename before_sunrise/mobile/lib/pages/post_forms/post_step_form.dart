@@ -167,89 +167,114 @@ class PostStepFormState extends State<PostStepForm>
   }
 
   Widget _buildType() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        DialogPostType(
-          callback: (type) {
-            setState(() {
-              _post.type = type;
-            });
-          },
+    return Card(
+        elevation: 2.0,
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
         ),
-      ],
-    );
+        child: Container(
+            width:
+                MediaQuery.of(context).size.width - MainTheme.edgeInsets.left,
+            height: 45,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                DialogPostType(
+                  callback: (type) {
+                    setState(() {
+                      _post.type = type;
+                    });
+                  },
+                ),
+              ],
+            )));
   }
 
   Widget _buildContents() {
-    return Center(
-        child: new ListView(
-      shrinkWrap: true,
-      reverse: false,
-      children: <Widget>[
-        new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Center(
-                child: new Center(
-              child: new Stack(
-                children: <Widget>[
-                  Padding(
-                      padding: EdgeInsets.only(left: 30.0, right: 30.0),
-                      child: new Form(
-                        autovalidate: false,
-                        child: new Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            new Padding(
-                              padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                              child: new TextFormField(
-                                controller: _titleController,
-                                decoration: new InputDecoration(
-                                    labelText: "Title",
-                                    filled: false,
-                                    prefixIcon: Padding(
+    return Card(
+        elevation: 2.0,
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Container(
+            width:
+                MediaQuery.of(context).size.width - MainTheme.edgeInsets.left,
+            height: 400,
+            child: Center(
+                child: new ListView(
+              shrinkWrap: true,
+              reverse: false,
+              children: <Widget>[
+                new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new Center(
+                        child: new Center(
+                      child: new Stack(
+                        children: <Widget>[
+                          Padding(
+                              padding: EdgeInsets.only(left: 30.0, right: 30.0),
+                              child: new Form(
+                                autovalidate: false,
+                                child: new Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    new Padding(
                                       padding: EdgeInsets.only(
-                                          bottom: 10.0,
-                                          top: 10.0,
-                                          left: 10.0,
-                                          right: 10.0),
-                                      child: Icon(FontAwesomeIcons.pencilAlt),
-                                    )),
-                                keyboardType: TextInputType.text,
-                              ),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.only(
-                                    left: 20, top: 5, bottom: 5),
-                                child: TextField(
-                                  focusNode: _focusNode,
-                                  controller: _contentsController,
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: 15,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    icon: Icon(
-                                      FontAwesomeIcons.alignJustify,
-                                      size: 18.0,
-                                      color: Colors.black54,
+                                          left: 10.0, right: 10.0),
+                                      child: new TextFormField(
+                                        controller: _titleController,
+                                        decoration: new InputDecoration(
+                                            labelText: "Title",
+                                            filled: false,
+                                            prefixIcon: Padding(
+                                              padding: EdgeInsets.only(
+                                                  bottom: 10.0,
+                                                  top: 10.0,
+                                                  left: 10.0,
+                                                  right: 10.0),
+                                              child: Icon(
+                                                  FontAwesomeIcons.pencilAlt),
+                                            )),
+                                        keyboardType: TextInputType.text,
+                                      ),
                                     ),
-                                    hintText: LocalizableLoader.of(context)
-                                        .text("board_contents_hint_text"),
-                                    hintStyle: TextStyle(fontSize: 17.0),
-                                  ),
-                                )),
-                          ],
-                        ),
-                      )),
-                ],
-              ),
-            ))
-          ],
-        )
-      ],
-    ));
+                                    Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 20, top: 5, bottom: 5),
+                                        child: TextField(
+                                          focusNode: _focusNode,
+                                          controller: _contentsController,
+                                          keyboardType: TextInputType.multiline,
+                                          maxLines: 15,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            icon: Icon(
+                                              FontAwesomeIcons.alignJustify,
+                                              size: 18.0,
+                                              color: Colors.black54,
+                                            ),
+                                            hintText: LocalizableLoader.of(
+                                                    context)
+                                                .text(
+                                                    "board_contents_hint_text"),
+                                            hintStyle:
+                                                TextStyle(fontSize: 17.0),
+                                          ),
+                                        )),
+                                  ],
+                                ),
+                              )),
+                        ],
+                      ),
+                    ))
+                  ],
+                )
+              ],
+            ))));
   }
 
   Widget _buildGalleryFiles(BuildContext context) {
@@ -279,7 +304,7 @@ class PostStepFormState extends State<PostStepForm>
                           child: FlatButton.icon(
                               focusColor: Colors.red,
                               icon: Icon(
-                                Icons.photo_library,
+                                FontAwesomeIcons.image,
                                 color: MainTheme.enabledButtonColor,
                               ),
                               label: Text(
@@ -376,7 +401,7 @@ class PostStepFormState extends State<PostStepForm>
             backgroundColor: MainTheme.disabledButtonColor,
             child: IconButton(
               icon: Icon(
-                Icons.delete,
+                FontAwesomeIcons.trash,
               ),
               color: MainTheme.enabledIconColor,
               onPressed: () {
@@ -435,12 +460,22 @@ class PostStepFormState extends State<PostStepForm>
   }
 
   Widget _buildAgree() {
-    return Padding(
-        padding: EdgeInsets.only(top: 5, bottom: 5),
-        child: Column(
-          children: <Widget>[
-            SanctionContents(),
-          ],
-        ));
+    return Card(
+        elevation: 2.0,
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Container(
+            width:
+                MediaQuery.of(context).size.width - MainTheme.edgeInsets.left,
+            height: 177,
+            child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: <Widget>[
+                    SanctionContents(),
+                  ],
+                ))));
   }
 }

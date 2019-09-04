@@ -85,7 +85,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                 placeholder: (context, imageUrl) =>
                     Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
                 errorWidget: (context, imageUrl, error) =>
-                    Center(child: Icon(Icons.error)),
+                    Center(child: Icon(FontAwesomeIcons.exclamationCircle)),
                 imageBuilder: (BuildContext context, ImageProvider image) {
                   return Hero(
                     tag: '${_post.postID}_${_post.imageUrls[0]}',
@@ -112,7 +112,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                 placeholder: (context, imageUrl) =>
                     Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
                 errorWidget: (context, imageUrl, error) =>
-                    Center(child: Icon(Icons.error)),
+                    Center(child: Icon(FontAwesomeIcons.exclamationCircle)),
                 imageBuilder: (BuildContext context, ImageProvider image) {
                   return Hero(
                     tag: '${_post.postID}_${_post.profile.imageUrl}',
@@ -225,7 +225,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
         Material(
           color: Colors.transparent,
           child: IconButton(
-            icon: Icon(Icons.more_vert),
+            icon: Icon(FontAwesomeIcons.ellipsisV),
             onPressed: () {},
           ),
         ),

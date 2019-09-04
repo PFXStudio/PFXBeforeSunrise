@@ -31,10 +31,10 @@ class LikePostWidget extends StatefulWidget {
       this.shadowColor = Colors.blue,
       this.floatingOutlineColor = Colors.white,
       this.floatingBgColor = Colors.white,
-      this.defaultIcon = Icons.favorite_border,
+      this.defaultIcon = FontAwesomeIcons.kissBeam,
       this.defaultIconColor = Colors.blue,
       this.sparkleColor = Colors.blue,
-      this.filledIcon = Icons.favorite,
+      this.filledIcon = FontAwesomeIcons.kissWinkHeart,
       this.filledIconColor = Colors.blue,
       this.clapFabCallback})
       : defaultImage = null,

@@ -20,7 +20,7 @@ class SuccessSnackbar {
       return;
     }
 
-    final maxDuration = 3;
+    final maxDuration = 2;
     _scaffoldKey.currentState
       ..hideCurrentSnackBar()
       ..showSnackBar(

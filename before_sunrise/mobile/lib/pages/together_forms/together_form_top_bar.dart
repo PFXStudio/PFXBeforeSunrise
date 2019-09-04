@@ -24,7 +24,7 @@ class _BoardTopBarWidgetState extends State<TogetherFormTopBar>
       automaticallyImplyLeading: false,
       centerTitle: false,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios),
+        icon: Icon(FontAwesomeIcons.angleLeft),
         onPressed: () {
           Navigator.pop(context);
         },

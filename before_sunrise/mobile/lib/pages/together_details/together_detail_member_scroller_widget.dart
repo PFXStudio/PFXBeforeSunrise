@@ -110,7 +110,7 @@ class _ProfileAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final content = <Widget>[
       const Icon(
-        Icons.person,
+        FontAwesomeIcons.userFriends,
         color: Colors.white,
         size: 26.0,
       ),

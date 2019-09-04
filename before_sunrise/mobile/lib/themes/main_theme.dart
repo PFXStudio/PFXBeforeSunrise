@@ -54,6 +54,15 @@ class MainTheme {
   static const TextStyle contentsTextStyle =
       TextStyle(fontSize: 13, color: Colors.black87);
 
+  static const TextStyle hintTextStyle =
+      TextStyle(fontSize: 13, color: Colors.black54);
+
   static const TextStyle timeTextStyle =
       TextStyle(fontSize: 13, color: Colors.black54);
+
+  static const TextStyle enabledFlatIconTextButtonStyle =
+      TextStyle(fontSize: 12, color: MainTheme.enabledButtonColor);
+
+  static const TextStyle disabledFlatIconTextButtonStyle =
+      TextStyle(fontSize: 12, color: Colors.black54);
 }

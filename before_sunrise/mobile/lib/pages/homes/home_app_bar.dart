@@ -24,8 +24,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
       backgroundColor: MainTheme.appBarColor,
       leading: IconButton(
         icon: Icon(
-          Icons.menu,
-          size: 30.0,
+          FontAwesomeIcons.bars,
+          size: 25.0,
           color: Colors.white,
         ),
         onPressed: () => widget.scaffoldKey.currentState.openDrawer(),
@@ -36,7 +36,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
       ),
       actions: <Widget>[
         _buildAppbarActionWidgets(
-            context: context, index: 1, icon: Icons.more_vert),
+            context: context, index: 1, icon: FontAwesomeIcons.ellipsisV),
         SizedBox(width: 10.0)
         // _buildAppBarMenuPopUp(),
       ],
@@ -64,7 +64,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
         padding: const EdgeInsets.all(2.0),
         child: Icon(
           icon,
-          size: 30.0,
+          size: 25.0,
           color: Colors.white,
         ),
       ),
@@ -84,7 +84,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
           MenuItem(
               title: 'Profile',
               image: Icon(
-                Icons.person_outline,
+                FontAwesomeIcons.child,
                 color: Colors.white,
               )),
           MenuItem(

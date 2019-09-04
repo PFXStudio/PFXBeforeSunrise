@@ -38,7 +38,7 @@ class _LoadingFailContentsState extends State<LoadingFailContents> {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Icon(Icons.refresh),
+              Icon(FontAwesomeIcons.sync),
               Text('refresh'),
             ],
           ),

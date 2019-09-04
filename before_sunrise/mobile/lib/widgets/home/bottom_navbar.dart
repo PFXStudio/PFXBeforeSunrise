@@ -49,15 +49,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   children: <Widget>[
                     _buildBottomNavBarItem(
                       index: 0,
-                      icon: Icons.home,
+                      icon: FontAwesomeIcons.hubspot,
                     ),
                     _buildBottomNavBarItem(
                       index: 1,
-                      icon: Icons.rss_feed,
+                      icon: FontAwesomeIcons.calendarDay,
                     ),
                     _buildBottomNavBarItem(
                       index: 2,
-                      icon: Icons.thumb_up,
+                      icon: FontAwesomeIcons.comment,
                     ),
                     // Container(
                     //   width: _deviceWidth / 6,

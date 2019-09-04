@@ -62,8 +62,8 @@ class _TogetherFormPriceContentsWidgetState
                         activeTrackBarHeight: 3,
                       ),
                       disabled: false,
-                      handler: customHandler(Icons.chevron_right),
-                      rightHandler: customHandler(Icons.chevron_left),
+                      handler: customHandler(FontAwesomeIcons.caretRight),
+                      rightHandler: customHandler(FontAwesomeIcons.caretLeft),
                       tooltip: FlutterSliderTooltip(
                         alwaysShowTooltip: true,
                         numberFormat: intl.NumberFormat(),
@@ -141,8 +141,8 @@ class _TogetherFormPriceContentsWidgetState
                         activeTrackBarHeight: 3,
                       ),
                       disabled: false,
-                      handler: customHandler(Icons.chevron_right),
-                      rightHandler: customHandler(Icons.chevron_left),
+                      handler: customHandler(FontAwesomeIcons.caretRight),
+                      rightHandler: customHandler(FontAwesomeIcons.caretLeft),
                       tooltip: FlutterSliderTooltip(
                         alwaysShowTooltip: true,
                         numberFormat: intl.NumberFormat(),

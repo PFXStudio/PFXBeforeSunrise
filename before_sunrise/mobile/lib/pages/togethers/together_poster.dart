@@ -74,7 +74,7 @@ class _PlayButton extends StatelessWidget {
         child: IconButton(
           key: TogetherPoster.playButtonKey,
           padding: EdgeInsets.zero,
-          icon: const Icon(Icons.play_circle_outline),
+          icon: const Icon(FontAwesomeIcons.playCircle),
           iconSize: 42.0,
           color: Colors.white.withOpacity(0.8),
           onPressed: () {

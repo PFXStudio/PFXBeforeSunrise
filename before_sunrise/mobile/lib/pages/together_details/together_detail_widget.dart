@@ -325,7 +325,7 @@ class _Header extends StatelessWidget {
                 flex: 1,
                 child: FlatIconTextButton(
                     width: 200,
-                    iconData: Icons.visibility,
+                    iconData: FontAwesomeIcons.eye,
                     color: Colors.black54,
                     text: sprintf("%d", [138]),
                     onPressed: () => {}),

@@ -118,7 +118,7 @@ class ProfileInputScreenState extends State<ProfileInputScreen> {
                                     )
                                   ]),
                                   IconButton(
-                                    icon: Icon(Icons.call),
+                                    icon: Icon(FontAwesomeIcons.mobileAlt),
                                     color: Colors.white,
                                     onPressed: () {},
                                   ),

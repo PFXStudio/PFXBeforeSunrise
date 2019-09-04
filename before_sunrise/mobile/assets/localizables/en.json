@@ -25,7 +25,7 @@
   "dash_board_section_header_03": "Free",
   "comment_hint_text": "Write your comment..",
   "angel_join_button": "Request Join",
-  "add_pictures_button": "Add pictures. (%d / Max %s)",
+  "add_pictures_button": "  Add pictures. (%d / Max %s)",
 
   "//////////////////// Boards...": "",
   "board_title_hint_text": "Write your title..",
