@@ -103,7 +103,7 @@ class PostScreenState extends State<PostScreen> {
                   return Column(
                     children: <Widget>[
                       _enabeldMorePosts == true ? BottomLoader() : Container(),
-                      SizedBox(height: 160),
+                      SizedBox(height: 200),
                     ],
                   );
                 }

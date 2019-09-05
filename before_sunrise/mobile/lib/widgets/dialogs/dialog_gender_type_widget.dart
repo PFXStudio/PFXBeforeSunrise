@@ -16,7 +16,6 @@ class _DialogGenderTypeWidgetState extends State<DialogGenderTypeWidget> {
     return FlatIconTextButton(
         iconData: FontAwesomeIcons.venusMars,
         color: MainTheme.enabledButtonColor,
-        width: 170,
         text: LocalizableLoader.of(context).text("gender_type_select"),
         onPressed: () {
           showDialog(

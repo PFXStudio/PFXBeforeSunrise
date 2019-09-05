@@ -33,7 +33,6 @@ class _TogetherFormCocktailCountState extends State<TogetherFormCocktailCount> {
     return FlatIconTextButton(
         iconData: FontAwesomeIcons.cocktail,
         color: MainTheme.enabledButtonColor,
-        width: 180,
         text: togetherHardCount != 0 || togetherChampagneCount != 0
             ? "${togetherHardCount.toInt()}하드, ${togetherChampagneCount.toInt()}샴, ${togetherServiceCount.toInt()}서비스"
             : LocalizableLoader.of(context).text("cocktail_count_select"),

@@ -22,6 +22,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   final PostBloc _postBloc = PostBloc();
   Post get _post => widget._post;
   int _currentPostImageIndex = 0;
+  GlobalKey moreMenuKey = GlobalKey();
 
   Widget _buildActivePostImage() {
     return Container(
@@ -213,7 +214,8 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     );
   }
 
-  Widget _buildSliverAppBar({@required double deviceHeight}) {
+  Widget _buildSliverAppBar(BuildContext context,
+      {@required double deviceHeight}) {
     return SliverAppBar(
       centerTitle: true,
       title: _buildTitleRow(),
@@ -225,8 +227,11 @@ class PostDetailScreenState extends State<PostDetailScreen> {
         Material(
           color: Colors.transparent,
           child: IconButton(
+            key: moreMenuKey,
             icon: Icon(FontAwesomeIcons.ellipsisV),
-            onPressed: () {},
+            onPressed: () {
+              _touchedMoreButton(context);
+            },
           ),
         ),
       ],
@@ -441,7 +446,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                 SafeArea(
                   child: CustomScrollView(
                     slivers: <Widget>[
-                      _buildSliverAppBar(deviceHeight: _deviceHeight),
+                      _buildSliverAppBar(context, deviceHeight: _deviceHeight),
                       _buildSliverList(),
                     ],
                   ),
@@ -533,4 +538,55 @@ class PostDetailScreenState extends State<PostDetailScreen> {
       ],
     );
   }
+
+  void _touchedMoreButton(BuildContext context) {
+    PopupMenu.context = context;
+    PopupMenu menu = PopupMenu(
+        backgroundColor: Colors.black54,
+        items: [
+          // MenuItem(title: 'Copy', image: Image.asset('assets/copy.png')),
+          MenuItem(
+              title: 'Home',
+              image: Icon(
+                Icons.home,
+                color: Colors.white,
+              )),
+          MenuItem(
+              title: 'Mail',
+              image: Icon(
+                Icons.mail,
+                color: Colors.white,
+              )),
+          MenuItem(
+              title: 'Power',
+              image: Icon(
+                Icons.power,
+                color: Colors.white,
+              )),
+          MenuItem(
+              title: 'Setting',
+              image: Icon(
+                Icons.settings,
+                color: Colors.white,
+              )),
+          MenuItem(
+              title: 'Traffic',
+              image: Icon(
+                Icons.traffic,
+                color: Colors.white,
+              ))
+        ],
+        onClickMenu: onClickMenu,
+        onDismiss: onDismiss);
+
+    menu.show(widgetKey: moreMenuKey);
+  }
+
+  void onClickMenu(item) {}
+
+  void stateChanged(bool isShow) {
+    print('menu is ${isShow ? 'showing' : 'closed'}');
+  }
+
+  void onDismiss() {}
 }

@@ -60,7 +60,6 @@ class _TogetherFormClubState extends State<TogetherFormClub> {
     return FlatIconTextButton(
         iconData: FontAwesomeIcons.mapMarkerAlt,
         color: MainTheme.enabledButtonColor,
-        width: 170,
         text: togetherClubID != null && togetherClubID.length > 0
             ? togetherClubID
             : LocalizableLoader.of(context).text("club_name_select"),

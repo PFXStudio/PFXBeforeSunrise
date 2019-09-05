@@ -36,6 +36,8 @@ class PostFormScreenState extends State<PostFormScreen> {
   void initState() {
     super.initState();
     _post = Post(category: widget.category);
+    SuccessSnackbar().initialize(_scaffoldKey);
+    FailSnackbar().initialize(_scaffoldKey);
   }
 
   @override
@@ -43,6 +45,8 @@ class PostFormScreenState extends State<PostFormScreen> {
     _titleFocusNode.dispose();
     _contentsFocusNode.dispose();
     _youtubeFocusNode.dispose();
+    SuccessSnackbar().initialize(null);
+    FailSnackbar().initialize(null);
     super.dispose();
   }
 

@@ -1,6 +1,5 @@
 import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class TogetherPoster extends StatelessWidget {
   static const Key playButtonKey = const Key('playButton');

@@ -1,5 +1,4 @@
 import 'package:before_sunrise/import.dart';
-import 'package:before_sunrise/import.dart' as prefix0;
 
 class ProfileScreen extends StatefulWidget {
   static const String routeName = "/profile";

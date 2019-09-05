@@ -29,8 +29,11 @@ class _TogetherDetailContentsWidgetState
   @override
   Widget build(BuildContext context) {
     final content = AnimatedCrossFade(
-      firstChild: Text(widget.together.synopsisText(),
-          style: MainTheme.contentsTextStyle),
+      firstChild: Padding(
+        padding: EdgeInsets.only(left: 10, right: 10),
+        child: Text(widget.together.synopsisText(),
+            style: MainTheme.contentsTextStyle),
+      ),
       secondChild: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -43,24 +46,21 @@ class _TogetherDetailContentsWidgetState
                     children: <Widget>[
                       FlatIconTextButton(
                           iconData: FontAwesomeIcons.calendar,
-                          color: Colors.black54,
-                          width: 170,
+                          color: MainTheme.contentsTextStyle.color,
                           text: _isExpanded == false
                               ? ""
                               : widget.together.dateText(),
                           onPressed: () => {}),
                       FlatIconTextButton(
                           iconData: FontAwesomeIcons.mapMarkerAlt,
-                          color: Colors.black54,
-                          width: 170,
+                          color: MainTheme.contentsTextStyle.color,
                           text: _isExpanded == false
                               ? ""
                               : widget.together.clubID,
                           onPressed: () => {}),
                       FlatIconTextButton(
                           iconData: FontAwesomeIcons.wonSign,
-                          color: Colors.black54,
-                          width: 170,
+                          color: MainTheme.contentsTextStyle.color,
                           text: _isExpanded == false
                               ? ""
                               : widget.together.priceText(),
@@ -75,24 +75,21 @@ class _TogetherDetailContentsWidgetState
                       children: <Widget>[
                         FlatIconTextButton(
                             iconData: FontAwesomeIcons.users,
-                            color: Colors.black54,
-                            width: 200,
+                            color: MainTheme.contentsTextStyle.color,
                             text: _isExpanded == false
                                 ? ""
                                 : widget.together.countText(),
                             onPressed: () => {}),
                         FlatIconTextButton(
                             iconData: FontAwesomeIcons.cocktail,
-                            color: Colors.black54,
-                            width: 200,
+                            color: MainTheme.contentsTextStyle.color,
                             text: _isExpanded == false
                                 ? ""
                                 : widget.together.cocktailText(),
                             onPressed: () => {}),
                         FlatIconTextButton(
                             iconData: FontAwesomeIcons.moneyBillWave,
-                            color: Colors.black54,
-                            width: 200,
+                            color: MainTheme.contentsTextStyle.color,
                             text: _isExpanded == false
                                 ? ""
                                 : widget.together.douchPriceText(),
@@ -101,13 +98,16 @@ class _TogetherDetailContentsWidgetState
                     )),
               ],
             ),
+            Divider(),
             Padding(
               padding: EdgeInsets.only(top: 10),
             ),
-            Text(
-              widget.together.contents,
-              style: MainTheme.contentsTextStyle,
-            ),
+            Padding(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: Text(
+                  widget.together.contents,
+                  style: MainTheme.contentsTextStyle,
+                )),
           ]),
       crossFadeState:
           _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,

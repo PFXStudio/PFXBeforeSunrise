@@ -46,7 +46,7 @@ class _Grid extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 1.25 / 1,
+        childAspectRatio: 1.0 / 1,
         crossAxisSpacing: 8.0,
         mainAxisSpacing: 8.0,
       ),
@@ -89,12 +89,12 @@ class _GalleryImage extends StatelessWidget {
 
     return Stack(children: <Widget>[
       Container(
-          margin: const EdgeInsets.all(8.0),
+          margin: const EdgeInsets.all(4.0),
           decoration: decoration,
           child: FadeInImage.assetNetwork(
             placeholder: DefineImages.icon_fake_8_path,
             image: url,
-            fit: BoxFit.cover,
+            fit: BoxFit.fitWidth,
           )),
       Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,

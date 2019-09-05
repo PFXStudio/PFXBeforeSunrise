@@ -34,11 +34,15 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    SuccessSnackbar().initialize(_scaffoldKey);
+    FailSnackbar().initialize(_scaffoldKey);
     this._homeBloc.dispatch(LoadTabEvent(index: 0));
   }
 
   @override
   void dispose() {
+    SuccessSnackbar().initialize(null);
+    FailSnackbar().initialize(null);
     super.dispose();
   }
 

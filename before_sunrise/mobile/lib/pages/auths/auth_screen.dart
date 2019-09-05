@@ -26,6 +26,8 @@ class AuthScreenState extends State<AuthScreen> {
   void initState() {
     super.initState();
     this._authBloc.dispatch(LoadAuthEvent());
+    SuccessSnackbar().initialize(_scaffoldKey);
+    FailSnackbar().initialize(_scaffoldKey);
 
     _errorAuthScreen = ErrorAuthScreen(
         context: context,
@@ -63,6 +65,8 @@ class AuthScreenState extends State<AuthScreen> {
 
   @override
   void dispose() {
+    SuccessSnackbar().initialize(null);
+    FailSnackbar().initialize(null);
     super.dispose();
   }
 

@@ -18,6 +18,7 @@ class Post {
     this.likeCount = 0,
     this.commentCount = 0,
     this.warningCount = 0,
+    this.viewCount = 0,
     this.profile,
     this.comments,
   });
@@ -39,6 +40,7 @@ class Post {
   int likeCount;
   int commentCount;
   int warningCount;
+  int viewCount;
   Profile profile;
   List<Comment> comments;
 
@@ -90,6 +92,8 @@ class Post {
     bool isLiked,
     int likeCount,
     int commentCount,
+    int warningCount,
+    int viewCount,
     Profile profile,
     List<Comment> comments,
   }) {
@@ -109,6 +113,8 @@ class Post {
       isLiked: isLiked ?? this.isLiked,
       likeCount: likeCount ?? this.likeCount,
       commentCount: commentCount ?? this.commentCount,
+      warningCount: warningCount ?? this.warningCount,
+      viewCount: viewCount ?? this.viewCount,
       profile: profile ?? this.profile,
       comments: comments ?? this.comments,
     );
@@ -134,63 +140,4 @@ class Post {
       enabledAnonymous.hashCode ^
       created.hashCode ^
       lastUpdate.hashCode;
-}
-
-class PostImageData {
-  PostImageData({
-    @required this.portraitSmall,
-    @required this.portraitMedium,
-    @required this.portraitLarge,
-    @required this.landscapeSmall,
-    @required this.landscapeBig,
-    @required this.landscapeHd,
-    @required this.landscapeHd2,
-  });
-
-  final String portraitSmall;
-  final String portraitMedium;
-  final String portraitLarge;
-  final String landscapeSmall;
-  final String landscapeBig;
-  final String landscapeHd;
-  final String landscapeHd2;
-
-  String get anyAvailableImage =>
-      portraitSmall ??
-      portraitMedium ??
-      portraitLarge ??
-      landscapeSmall ??
-      landscapeBig;
-
-  PostImageData.empty()
-      : portraitSmall = null,
-        portraitMedium = null,
-        portraitLarge = null,
-        landscapeSmall = null,
-        landscapeBig = null,
-        landscapeHd = null,
-        landscapeHd2 = null;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PostImageData &&
-          runtimeType == other.runtimeType &&
-          portraitSmall == other.portraitSmall &&
-          portraitMedium == other.portraitMedium &&
-          portraitLarge == other.portraitLarge &&
-          landscapeSmall == other.landscapeSmall &&
-          landscapeBig == other.landscapeBig &&
-          landscapeHd == other.landscapeHd &&
-          landscapeHd2 == other.landscapeHd2;
-
-  @override
-  int get hashCode =>
-      portraitSmall.hashCode ^
-      portraitMedium.hashCode ^
-      portraitLarge.hashCode ^
-      landscapeSmall.hashCode ^
-      landscapeBig.hashCode ^
-      landscapeHd.hashCode ^
-      landscapeHd2.hashCode;
 }

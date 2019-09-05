@@ -41,6 +41,8 @@ class PostStepFormState extends State<PostStepForm>
   void dispose() {
     _focusNode.dispose();
     _post = Post();
+    SuccessSnackbar().initialize(null);
+    FailSnackbar().initialize(null);
 
     super.dispose();
   }

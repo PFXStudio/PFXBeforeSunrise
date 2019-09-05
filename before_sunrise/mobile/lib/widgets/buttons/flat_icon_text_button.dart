@@ -3,15 +3,15 @@ import 'package:before_sunrise/import.dart';
 class FlatIconTextButton extends StatefulWidget {
   FlatIconTextButton(
       {this.iconData = FontAwesomeIcons.child,
-      this.color = Colors.red,
-      this.width = 100,
+      this.color = Colors.black,
+      this.width = 200,
       this.text = "null",
       this.onPressed = null});
   @override
   _FlatIconTextButtonState createState() => _FlatIconTextButtonState();
   IconData iconData = FontAwesomeIcons.child;
-  Color color = Colors.red;
-  double width = 100;
+  Color color = Colors.black;
+  double width = 200;
   String text = "";
   VoidCallback onPressed;
 }

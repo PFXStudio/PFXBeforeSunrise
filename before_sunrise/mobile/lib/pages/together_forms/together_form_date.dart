@@ -18,7 +18,6 @@ class _TogetherFormDateState extends State<TogetherFormDate> {
     return FlatIconTextButton(
       iconData: FontAwesomeIcons.calendar,
       color: MainTheme.enabledButtonColor,
-      width: 150,
       text: selectedDate != null
           ? CoreConst.togetherDateTextFormat.format(selectedDate)
           : LocalizableLoader.of(context).text("date_select"),

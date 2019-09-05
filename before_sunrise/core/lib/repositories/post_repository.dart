@@ -31,7 +31,7 @@ class PostRepository {
         .document(userID)
         .setData({
       'isLiked': true,
-    });
+    }, merge: true);
   }
 
   Future<void> removeFromLike(
@@ -45,6 +45,81 @@ class PostRepository {
         .collection('likes')
         .document(userID)
         .delete();
+  }
+
+  Future<bool> isReporter(
+      {@required String category,
+      @required String postID,
+      @required String userID}) async {
+    _postCollection =
+        Firestore.instance.collection(Config().root() + "${category}");
+
+    final DocumentSnapshot snapshot = await _postCollection
+        .document(postID)
+        .collection('reporters')
+        .document(userID)
+        .get();
+
+    return snapshot.exists;
+  }
+
+  Future<void> addToReporter(
+      {@required String category,
+      @required String postID,
+      @required String userID}) {
+    _postCollection =
+        Firestore.instance.collection(Config().root() + "${category}");
+    return _postCollection
+        .document(postID)
+        .collection('reporters')
+        .document(userID)
+        .setData({
+      'isReported': true,
+    }, merge: true);
+  }
+
+  Future<void> removeFromReporter(
+      {@required String category,
+      @required String postID,
+      @required String userID}) {
+    _postCollection =
+        Firestore.instance.collection(Config().root() + "${category}");
+    return _postCollection
+        .document(postID)
+        .collection('reporters')
+        .document(userID)
+        .delete();
+  }
+
+  Future<bool> isViewer(
+      {@required String category,
+      @required String postID,
+      @required String userID}) async {
+    _postCollection =
+        Firestore.instance.collection(Config().root() + "${category}");
+
+    final DocumentSnapshot snapshot = await _postCollection
+        .document(postID)
+        .collection('viewers')
+        .document(userID)
+        .get();
+
+    return snapshot.exists;
+  }
+
+  Future<void> addToViewer(
+      {@required String category,
+      @required String postID,
+      @required String userID}) {
+    _postCollection =
+        Firestore.instance.collection(Config().root() + "${category}");
+    return _postCollection
+        .document(postID)
+        .collection('viewers')
+        .document(userID)
+        .setData({
+      'viewed': true,
+    }, merge: true);
   }
 
   Future<DocumentSnapshot> fetchPost(

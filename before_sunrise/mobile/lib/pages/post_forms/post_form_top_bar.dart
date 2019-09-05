@@ -1,7 +1,7 @@
 import 'package:before_sunrise/import.dart';
 
 class PostFormTopBar extends StatefulWidget implements PreferredSizeWidget {
-  PostFormTopBar({Key key, this.scaffoldKey})
+  PostFormTopBar({Key key})
       : preferredSize = Size.fromHeight(kToolbarHeight),
         super(key: key);
 
@@ -10,7 +10,6 @@ class PostFormTopBar extends StatefulWidget implements PreferredSizeWidget {
 
   @override
   _PostFormTopBarState createState() => _PostFormTopBarState();
-  final GlobalKey<ScaffoldState> scaffoldKey;
 }
 
 class _PostFormTopBarState extends State<PostFormTopBar>

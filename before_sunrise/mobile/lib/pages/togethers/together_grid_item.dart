@@ -42,11 +42,12 @@ class _TextualInfo extends StatelessWidget {
       gradient: LinearGradient(
         begin: Alignment.bottomCenter,
         end: Alignment.topCenter,
-        stops: [0.0, 0.6, 0.9],
+        stops: [0.0, 0.4, 0.6, 1],
         colors: [
-          Colors.black45,
-          Colors.white10,
-          Colors.white70,
+          Colors.black54,
+          Colors.transparent,
+          Colors.transparent,
+          Colors.black54,
         ],
       ),
     );
@@ -74,20 +75,9 @@ class _TextualInfoContent extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            // Text(
-            //   "together.title",
-            //   style: const TextStyle(
-            //     fontWeight: FontWeight.w500,
-            //     fontSize: 12.0,
-            //   ),
-            // ),
             Text(
               timeago.format(together.lastUpdate.toDate(), locale: 'ko'),
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 12.0,
-                color: Colors.black45,
-              ),
+              style: TextStyle(color: Colors.white, fontSize: 13),
             ),
           ],
         ),
@@ -137,7 +127,7 @@ class _TextualInfoContent extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                      color: Colors.black26, width: 1.0),
+                                      color: Colors.white54, width: 1.0),
                                   image: DecorationImage(
                                       image: ExactAssetImage(
                                           'assets/avatars/avatar.png'),
@@ -151,9 +141,9 @@ class _TextualInfoContent extends StatelessWidget {
                   Text(
                     together.profile.nickname,
                     style: const TextStyle(
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                         fontSize: 16.0,
-                        color: Colors.black54),
+                        color: Colors.white),
                   ),
                 ],
               ),
@@ -169,19 +159,21 @@ class _TextualInfoContent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      together.clubID,
+                      together.title,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16.0,
+                        fontSize: 17.0,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 4.0),
                     Text(
-                      together.title,
+                      together.synopsisItemText(),
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.white70,
+                        fontSize: 15.0,
+                        color: Colors.white,
                       ),
                     ),
                   ],

@@ -204,7 +204,6 @@ class _TogetherFormPriceState extends State<TogetherFormPrice> {
     return FlatIconTextButton(
         iconData: FontAwesomeIcons.wonSign,
         color: MainTheme.enabledButtonColor,
-        width: 170,
         text: togetherTablePrice != 0
             ? "${togetherTablePrice.toInt()} + ${togetherTipPrice.toInt()} = ${togetherTablePrice.toInt() + togetherTipPrice.toInt()}만원"
             : LocalizableLoader.of(context).text("price_select"),

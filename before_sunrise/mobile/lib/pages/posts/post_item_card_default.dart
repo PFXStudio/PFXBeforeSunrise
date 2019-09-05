@@ -20,6 +20,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
 
   Post get _post => widget.post;
   bool get _isProfilePost => widget.isProfilePost;
+  final PostBloc _postBloc = PostBloc();
 
   initState() {
     super.initState();
@@ -35,6 +36,9 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
   }
 
   void _navigateToPostDetailsPage() {
+    _postBloc.dispatch(
+        ViewPostEvent(post: _post, userID: ProfileBloc().signedProfile.userID));
+
     Navigator.pushNamed(context, PostDetailScreen.routeName, arguments: _post);
   }
 
@@ -291,10 +295,6 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
       ),
       title: Text('${_post.profile.nickname}',
           style: MainTheme.simpleNickNameStyle),
-      subtitle: Text(
-        timeago.format(_post.lastUpdate.toDate(), locale: 'ko'),
-        style: MainTheme.timeTextStyle,
-      ),
       trailing: _isCurrentUserProfile
           ? null
           : _isProfilePost ? null : _buildFollowTrailingButton(),
@@ -346,6 +346,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
   Widget _buildPostDetails() {
     return Column(
       children: <Widget>[
+        _buildInfoListTile(),
         _buildUserListTile(),
         Padding(
             padding: EdgeInsets.all(5),
@@ -358,6 +359,49 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
         _buildPostListTile(),
       ],
     );
+  }
+
+  Widget _buildInfoListTile() {
+    if (_post.viewCount == null) {
+      return SizedBox(
+        width: 1,
+      );
+    }
+
+    return Padding(
+        padding: prefix0.EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 10, right: 10),
+              child: Icon(
+                FontAwesomeIcons.eye,
+                color: MainTheme.timeTextStyle.color,
+                size: 15,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 20),
+              child: Text(
+                "${_post.viewCount}",
+                style: MainTheme.timeTextStyle,
+              ),
+            ),
+            Icon(
+              FontAwesomeIcons.clock,
+              color: MainTheme.timeTextStyle.color,
+              size: 15,
+            ),
+            Padding(
+              padding: prefix0.EdgeInsets.only(left: 10, right: 10),
+              child: Text(
+                timeago.format(_post.lastUpdate.toDate(), locale: 'ko'),
+                style: MainTheme.timeTextStyle,
+              ),
+            ),
+          ],
+        ));
   }
 
   Widget _buildPostItem() {

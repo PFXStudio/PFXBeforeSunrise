@@ -14,6 +14,27 @@ abstract class IPostProvider {
       {@required String category,
       @required String postID,
       @required String userID});
+  Future<bool> isReporter(
+      {@required String category,
+      @required String postID,
+      @required String userID});
+  Future<void> addToReporter(
+      {@required String category,
+      @required String postID,
+      @required String userID});
+  Future<void> removeFromReporter(
+      {@required String category,
+      @required String postID,
+      @required String userID});
+  Future<bool> isViewer(
+      {@required String category,
+      @required String postID,
+      @required String userID});
+  Future<void> addToViewer(
+      {@required String category,
+      @required String postID,
+      @required String userID});
+
   Future<DocumentSnapshot> fetchPost(
       {@required String category, @required String postID});
   Future<QuerySnapshot> fetchSubscribedLatestPosts(
@@ -58,6 +79,46 @@ class PostProvider implements IPostProvider {
       @required String postID,
       @required String userID}) async {
     return await _postRepository.removeFromLike(
+        category: category, postID: postID, userID: userID);
+  }
+
+  Future<bool> isReporter(
+      {@required String category,
+      @required String postID,
+      @required String userID}) async {
+    return await _postRepository.isReporter(
+        category: category, postID: postID, userID: userID);
+  }
+
+  Future<void> addToReporter(
+      {@required String category,
+      @required String postID,
+      @required String userID}) async {
+    return await _postRepository.addToReporter(
+        category: category, postID: postID, userID: userID);
+  }
+
+  Future<void> removeFromReporter(
+      {@required String category,
+      @required String postID,
+      @required String userID}) async {
+    return await _postRepository.removeFromReporter(
+        category: category, postID: postID, userID: userID);
+  }
+
+  Future<bool> isViewer(
+      {@required String category,
+      @required String postID,
+      @required String userID}) async {
+    return await _postRepository.isViewer(
+        category: category, postID: postID, userID: userID);
+  }
+
+  Future<void> addToViewer(
+      {@required String category,
+      @required String postID,
+      @required String userID}) async {
+    return await _postRepository.addToViewer(
         category: category, postID: postID, userID: userID);
   }
 

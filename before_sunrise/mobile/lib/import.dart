@@ -70,7 +70,7 @@ export 'screens/universal/image_card.dart';
 export 'dialogs/error_dialog.dart';
 
 // widgets
-export 'pages/posts/like_post_widget.dart';
+export 'widgets/buttons/like_post_widget.dart';
 export 'widgets/contents/sanction_contents.dart';
 
 // pages
@@ -116,8 +116,7 @@ export 'pages/together_forms/together_form_cocktail_count.dart';
 export 'pages/together_forms/together_form_date.dart';
 export 'pages/together_forms/together_form_member_count.dart';
 export 'pages/together_forms/together_form_top_bar.dart';
-export 'pages/together_forms/together_form.dart';
-export 'package:before_sunrise/pages/together_forms/together_step_form.dart';
+export 'pages/together_forms/together_step_form.dart';
 export 'pages/together_details/together_detail_backdrop_photo.dart';
 export 'pages/together_details/together_detail_contents_widget.dart';
 export 'pages/together_details/together_detail_gallery_grid_widget.dart';

@@ -22,8 +22,9 @@ class Together {
     this.memberProfiles,
     this.isLiked = false,
     this.likeCount = 0,
-    this.warningCount = 0,
     this.commentCount = 0,
+    this.warningCount = 0,
+    this.viewCount = 0,
     this.profile,
   });
 
@@ -48,8 +49,9 @@ class Together {
   List<Profile> memberProfiles;
   bool isLiked;
   int likeCount;
-  int warningCount;
   int commentCount;
+  int warningCount;
+  int viewCount;
   Profile profile;
 
   void initialize(DocumentSnapshot snapshot) {
@@ -116,6 +118,8 @@ class Together {
     bool isLiked,
     int likeCount,
     int commentCount,
+    int warningCount,
+    int viewCount,
     Profile profile,
   }) {
     return Together(
@@ -140,6 +144,8 @@ class Together {
       isLiked: isLiked ?? this.isLiked,
       likeCount: likeCount ?? this.likeCount,
       commentCount: commentCount ?? this.commentCount,
+      warningCount: warningCount ?? this.warningCount,
+      viewCount: viewCount ?? this.viewCount,
       profile: profile ?? this.profile,
     );
   }
@@ -153,7 +159,7 @@ class Together {
   }
 
   String priceText() {
-    return "${this.tablePrice} + ${this.tipPrice} = ${this.tablePrice + this.tipPrice}만원";
+    return "${this.tablePrice}+${this.tipPrice} = ${this.tablePrice + this.tipPrice}만원";
   }
 
   String douchPriceText() {
@@ -168,7 +174,12 @@ class Together {
 
   String synopsisText() {
     double price = (this.tablePrice + this.tipPrice) / this.totalCount;
-    return "${this.dateText()}, ${this.clubID}, ${this.restCount}명, ${price.toStringAsFixed(1)}만원";
+    return "${this.dateText()}, ${this.clubID}, ${this.restCount}명 모집, 인당 ${price.toStringAsFixed(1)}만원";
+  }
+
+  String synopsisItemText() {
+    double price = (this.tablePrice + this.tipPrice) / this.totalCount;
+    return "${this.restCount}명 모집, 인당 ${price.toStringAsFixed(1)}만원";
   }
 
   String category() {
@@ -201,63 +212,4 @@ class Together {
       youtubeUrl.hashCode ^
       created.hashCode ^
       lastUpdate.hashCode;
-}
-
-class TogetherImageData {
-  TogetherImageData({
-    @required this.portraitSmall,
-    @required this.portraitMedium,
-    @required this.portraitLarge,
-    @required this.landscapeSmall,
-    @required this.landscapeBig,
-    @required this.landscapeHd,
-    @required this.landscapeHd2,
-  });
-
-  final String portraitSmall;
-  final String portraitMedium;
-  final String portraitLarge;
-  final String landscapeSmall;
-  final String landscapeBig;
-  final String landscapeHd;
-  final String landscapeHd2;
-
-  String get anyAvailableImage =>
-      portraitSmall ??
-      portraitMedium ??
-      portraitLarge ??
-      landscapeSmall ??
-      landscapeBig;
-
-  TogetherImageData.empty()
-      : portraitSmall = null,
-        portraitMedium = null,
-        portraitLarge = null,
-        landscapeSmall = null,
-        landscapeBig = null,
-        landscapeHd = null,
-        landscapeHd2 = null;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TogetherImageData &&
-          runtimeType == other.runtimeType &&
-          portraitSmall == other.portraitSmall &&
-          portraitMedium == other.portraitMedium &&
-          portraitLarge == other.portraitLarge &&
-          landscapeSmall == other.landscapeSmall &&
-          landscapeBig == other.landscapeBig &&
-          landscapeHd == other.landscapeHd &&
-          landscapeHd2 == other.landscapeHd2;
-
-  @override
-  int get hashCode =>
-      portraitSmall.hashCode ^
-      portraitMedium.hashCode ^
-      portraitLarge.hashCode ^
-      landscapeSmall.hashCode ^
-      landscapeBig.hashCode ^
-      landscapeHd.hashCode ^
-      landscapeHd2.hashCode;
 }

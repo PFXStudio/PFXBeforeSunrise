@@ -13,6 +13,16 @@ abstract class IShardsProvider {
       {@required String category, @required String postID});
   Future<void> decreaseCommentCount(
       {@required String category, @required String postID});
+
+  Future<DocumentSnapshot> reporterCount({@required String postID});
+  Future<void> increaseReporterCount(
+      {@required String category, @required String postID});
+  Future<void> decreaseReporterCount(
+      {@required String category, @required String postID});
+
+  Future<DocumentSnapshot> viewerCount({@required String postID});
+  Future<void> increaseViewerCount(
+      {@required String category, @required String postID});
 }
 
 class ShardsProvider implements IShardsProvider {
@@ -55,6 +65,38 @@ class ShardsProvider implements IShardsProvider {
   Future<void> decreaseCommentCount(
       {@required String category, @required String postID}) async {
     return await _shardsRepository.decreaseCommentCount(
+        category: category, postID: postID);
+  }
+
+  Future<DocumentSnapshot> reporterCount({@required String postID}) async {
+    return await _shardsRepository.reporterCount(postID: postID);
+  }
+
+  Future<void> increaseReporterCount(
+      {@required String category, @required String postID}) async {
+    return await _shardsRepository.increaseReporterCount(
+        category: category, postID: postID);
+  }
+
+  Future<void> decreaseReporterCount(
+      {@required String category, @required String postID}) async {
+    return await _shardsRepository.decreaseReporterCount(
+        category: category, postID: postID);
+  }
+
+  Future<DocumentSnapshot> viewerCount({@required String postID}) async {
+    return await _shardsRepository.viewerCount(postID: postID);
+  }
+
+  Future<void> increaseViewerCount(
+      {@required String category, @required String postID}) async {
+    return await _shardsRepository.increaseViewerCount(
+        category: category, postID: postID);
+  }
+
+  Future<void> decreaseViewerCount(
+      {@required String category, @required String postID}) async {
+    return await _shardsRepository.decreaseViewerCount(
         category: category, postID: postID);
   }
 }

@@ -18,7 +18,6 @@ class _DialogPostTypeState extends State<DialogPostType> {
     return FlatIconTextButton(
         iconData: FontAwesomeIcons.thLarge,
         color: MainTheme.enabledButtonColor,
-        width: 170,
         text: selectedText == null
             ? LocalizableLoader.of(context).text("post_type_select")
             : selectedText,

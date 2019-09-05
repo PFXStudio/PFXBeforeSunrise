@@ -1,7 +1,6 @@
 import 'package:before_sunrise/import.dart';
 import 'package:before_sunrise/pages/together_details/together_detail_poster.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:latlong/latlong.dart';
 
 class TogetherDetailWidget extends StatefulWidget {
   TogetherDetailWidget(this.together);
@@ -324,18 +323,16 @@ class _Header extends StatelessWidget {
               Expanded(
                 flex: 1,
                 child: FlatIconTextButton(
-                    width: 200,
                     iconData: FontAwesomeIcons.eye,
-                    color: Colors.black54,
+                    color: MainTheme.contentsTextStyle.color,
                     text: sprintf("%d", [138]),
                     onPressed: () => {}),
               ),
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: FlatIconTextButton(
-                    width: 200,
                     iconData: FontAwesomeIcons.clock,
-                    color: Colors.black54,
+                    color: MainTheme.contentsTextStyle.color,
                     text: timeago.format(together.lastUpdate.toDate(),
                         locale: 'ko'),
                     onPressed: () => {}),
@@ -363,18 +360,16 @@ class TogetherInfo extends StatelessWidget {
             Expanded(
               flex: 1,
               child: FlatIconTextButton(
-                  width: 150,
                   iconData: FontAwesomeIcons.idBadge,
-                  color: Colors.black54,
+                  color: MainTheme.contentsTextStyle.color,
                   text: together.profile.nickname,
                   onPressed: () => {}),
             ),
             Expanded(
-              flex: 1,
+              flex: 2,
               child: FlatIconTextButton(
-                  width: 150,
                   iconData: FontAwesomeIcons.mobile,
-                  color: Colors.black54,
+                  color: MainTheme.contentsTextStyle.color,
                   text: together.profile.displayPhoneNumber(),
                   onPressed: () => {}),
             )

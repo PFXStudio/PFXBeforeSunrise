@@ -13,7 +13,7 @@ class TogetherListPage extends StatelessWidget {
 
     return Container(
         key: Key("together_list_page_grid"),
-        padding: EdgeInsets.only(bottom: 100),
+        padding: EdgeInsets.only(bottom: 150),
         child: Scrollbar(
             child: GridView.builder(
           padding: const EdgeInsets.only(bottom: 50.0),

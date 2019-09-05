@@ -53,6 +53,18 @@ class LoadPostEvent extends PostEvent {
           post.commentCount = commentSnapshot.data["count"];
         }
 
+        DocumentSnapshot reporterSnapshot =
+            await _shardsProvider.reporterCount(postID: post.postID);
+        if (reporterSnapshot != null && reporterSnapshot.data != null) {
+          post.warningCount = reporterSnapshot.data["count"];
+        }
+
+        DocumentSnapshot viewerSnapshot =
+            await _shardsProvider.viewerCount(postID: post.postID);
+        if (viewerSnapshot != null && viewerSnapshot.data != null) {
+          post.viewCount = viewerSnapshot.data["count"];
+        }
+
         posts.add(post);
       }
 
@@ -134,6 +146,67 @@ class CreatePostEvent extends PostEvent {
       }
 
       return new SuccessPostState();
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorPostState(_?.toString());
+    }
+  }
+}
+
+class ReportPostEvent extends PostEvent {
+  ReportPostEvent({@required this.post, @required this.isReport});
+  @override
+  String toString() => 'ReportPostEvent';
+  final IPostProvider _postProvider = PostProvider();
+  final IAuthProvider _authProvider = AuthProvider();
+  final IShardsProvider _shardsProvider = ShardsProvider();
+
+  Post post;
+  bool isReport = false;
+
+  @override
+  Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
+    try {
+      String userID = await _authProvider.getUserID();
+      if (isReport == true) {
+        await _postProvider.addToReporter(
+            category: post.category, postID: post.postID, userID: userID);
+        await _shardsProvider.increaseReporterCount(
+            category: post.category, postID: post.postID);
+      } else {
+        await _postProvider.removeFromReporter(
+            category: post.category, postID: post.postID, userID: userID);
+        await _shardsProvider.decreaseReporterCount(
+            category: post.category, postID: post.postID);
+      }
+
+      return currentState;
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorPostState(_?.toString());
+    }
+  }
+}
+
+class ViewPostEvent extends PostEvent {
+  ViewPostEvent({@required this.post, @required this.userID});
+  @override
+  String toString() => 'ViewPostEvent';
+  final IPostProvider _postProvider = PostProvider();
+  final IShardsProvider _shardsProvider = ShardsProvider();
+
+  String userID;
+  Post post;
+
+  @override
+  Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
+    try {
+      await _postProvider.addToViewer(
+          category: post.category, postID: post.postID, userID: userID);
+      await _shardsProvider.increaseViewerCount(
+          category: post.category, postID: post.postID);
+
+      return currentState;
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorPostState(_?.toString());

@@ -19,7 +19,6 @@ class _DialogPublishTypeWidgetState extends State<DialogPublishTypeWidget> {
     return FlatIconTextButton(
         iconData: FontAwesomeIcons.venusMars,
         color: MainTheme.enabledButtonColor,
-        width: 170,
         text: selectedText == null
             ? LocalizableLoader.of(context).text("publish_type_select")
             : selectedText,

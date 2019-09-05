@@ -1,5 +1,4 @@
 import 'package:before_sunrise/import.dart';
-import 'package:before_sunrise/import.dart' as prefix0;
 import 'package:before_sunrise/pages/together_forms/together_form_club.dart';
 import 'package:before_sunrise/pages/together_forms/together_form_price.dart';
 
@@ -284,7 +283,6 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                   setState(() {});
                 }),
                 FlatIconTextButton(
-                    width: 200,
                     color: MainTheme.enabledButtonColor,
                     iconData: FontAwesomeIcons.moneyBillWave,
                     text: (together.totalCount != 0 && together.tablePrice != 0)
@@ -506,6 +504,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
             child: IconButton(
               icon: Icon(
                 FontAwesomeIcons.trashAlt,
+                size: 20,
               ),
               color: MainTheme.enabledIconColor,
               onPressed: () {

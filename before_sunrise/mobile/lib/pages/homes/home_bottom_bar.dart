@@ -30,12 +30,14 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
   }
 
   double get _deviceWidth => MediaQuery.of(context).size.width;
+  double get _deviceHeight => MediaQuery.of(context).size.height;
   Color get _accentColor => MainTheme.pivotColor;
 
   @override
   Widget build(BuildContext context) {
+    final _height = _deviceHeight > 800 ? 100.0 : 60.0;
     return Container(
-      height: 60.0,
+      height: _height,
       child: Stack(
         children: <Widget>[
           Positioned(
@@ -115,7 +117,7 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
                 child: Container(
                   height: 5.0,
                   width: itemWidth / 4,
-                  margin: EdgeInsets.only(bottom: 5.0),
+                  margin: EdgeInsets.only(top: 5),
                   decoration: BoxDecoration(
                       color: _accentColor,
                       borderRadius: BorderRadius.only(
