@@ -1,4 +1,5 @@
 import 'package:before_sunrise/import.dart';
+import 'package:before_sunrise/import.dart' as prefix0;
 import 'package:timeago/timeago.dart' as timeago;
 
 class PostDetailScreen extends StatefulWidget {
@@ -540,49 +541,55 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   void _touchedMoreButton(BuildContext context) {
+    bool isMine = _post.userID == ProfileBloc().signedProfile.userID;
+    List<MenuItem> menuItems = [
+      MenuItem(
+          index: 0,
+          title: '공유',
+          image: Icon(
+            FontAwesomeIcons.share,
+            color: Colors.white,
+          )),
+      MenuItem(
+          index: 1,
+          title: '신고',
+          image: Icon(
+            FontAwesomeIcons.handMiddleFinger,
+            color: Colors.white,
+          )),
+    ];
+
+    if (isMine == true) {
+      menuItems.add(MenuItem(
+          index: 2,
+          title: '삭제',
+          image: Icon(
+            FontAwesomeIcons.trash,
+            color: Colors.white,
+          )));
+      menuItems.add(MenuItem(
+          index: 3,
+          title: '삭제',
+          image: Icon(
+            FontAwesomeIcons.trash,
+            color: Colors.white,
+          )));
+    }
     PopupMenu.context = context;
     PopupMenu menu = PopupMenu(
         backgroundColor: Colors.black54,
-        items: [
-          // MenuItem(title: 'Copy', image: Image.asset('assets/copy.png')),
-          MenuItem(
-              title: 'Home',
-              image: Icon(
-                Icons.home,
-                color: Colors.white,
-              )),
-          MenuItem(
-              title: 'Mail',
-              image: Icon(
-                Icons.mail,
-                color: Colors.white,
-              )),
-          MenuItem(
-              title: 'Power',
-              image: Icon(
-                Icons.power,
-                color: Colors.white,
-              )),
-          MenuItem(
-              title: 'Setting',
-              image: Icon(
-                Icons.settings,
-                color: Colors.white,
-              )),
-          MenuItem(
-              title: 'Traffic',
-              image: Icon(
-                Icons.traffic,
-                color: Colors.white,
-              ))
-        ],
+        items: menuItems,
         onClickMenu: onClickMenu,
         onDismiss: onDismiss);
 
     menu.show(widgetKey: moreMenuKey);
   }
 
-  void onClickMenu(item) {}
+  void onClickMenu(item) {
+    MenuItem menuItem = item;
+
+    print(menuItem.index);
+  }
 
   void stateChanged(bool isShow) {
     print('menu is ${isShow ? 'showing' : 'closed'}');
