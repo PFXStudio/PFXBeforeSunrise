@@ -102,7 +102,9 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
     double _panelHeightClosed = 95.0;
 
     return Scaffold(
-      body: Stack(
+        body: GestureDetector(
+      onTapDown: (tap) { print("tap")},
+      child: Stack(
         children: [
           // Container(
           //   decoration: new BoxDecoration(
@@ -133,7 +135,7 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
           ),
         ],
       ),
-    );
+    ));
   }
 
   void touchedButton() {}

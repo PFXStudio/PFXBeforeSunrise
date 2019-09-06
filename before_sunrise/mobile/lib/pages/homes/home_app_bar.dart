@@ -15,7 +15,6 @@ class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _HomeAppBarState extends State<HomeAppBar> {
   final GlobalKey _menuButtonKey = GlobalKey();
-  PopupMenu _menu;
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -56,8 +55,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
           Navigator.of(context).pushNamed('/search');
         } else if (index == 1) {
           // _openCustomMenu();
-          Rect rect = PopupMenu.getWidgetGlobalRect(_menuButtonKey);
-          _menu.show(rect: rect, widgetKey: _menuButtonKey);
         }
       },
       child: Padding(
@@ -73,41 +70,5 @@ class _HomeAppBarState extends State<HomeAppBar> {
 
   void onDismiss() {
     print('Menu is closed');
-  }
-
-  void _openCustomMenu() {
-    _menu = PopupMenu(
-        // backgroundColor: Theme.of(context).primaryColor,
-        // lineColor: Theme.of(context).accentColor,
-        maxColumn: 1,
-        items: [
-          MenuItem(
-              title: 'Profile',
-              image: Icon(
-                FontAwesomeIcons.child,
-                color: Colors.white,
-              )),
-          MenuItem(
-              title: 'Categories',
-              image: Icon(
-                Icons.category,
-                color: Colors.white,
-              )),
-          MenuItem(
-              title: 'Settings',
-              image: Icon(
-                Icons.settings,
-                color: Colors.white,
-              )),
-          MenuItem(
-              title: 'Signout',
-              image: Icon(
-                Icons.exit_to_app,
-                color: Colors.white,
-              )),
-        ],
-        onClickMenu: (result) {},
-        onDismiss: onDismiss);
-    // _menu.show(widgetKey: _menuButtonKey);
   }
 }

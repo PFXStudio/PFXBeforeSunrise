@@ -22,7 +22,6 @@ export 'package:flutter/widgets.dart';
 export 'package:libphonenumber/libphonenumber.dart';
 export 'package:country_code_picker/country_code_picker.dart';
 export 'package:shared_preferences/shared_preferences.dart';
-export 'package:popup_menu/popup_menu.dart';
 export 'package:sliding_up_panel/sliding_up_panel.dart';
 export 'package:cached_network_image/cached_network_image.dart';
 export 'package:flutter/gestures.dart';
@@ -134,4 +133,7 @@ export 'widgets/dialogs/dialog_bottom_widget.dart';
 export 'widgets/dialogs/dialog_publish_type_widget.dart';
 export 'widgets/dialogs/dialog_header_widget.dart';
 export 'widgets/dialogs/dialog_post_type.dart';
+export 'widgets/popups/option_menu.dart';
+export 'widgets/popups/triangle_mark.dart';
+
 import 'package:before_sunrise/import.dart' as XXYY;

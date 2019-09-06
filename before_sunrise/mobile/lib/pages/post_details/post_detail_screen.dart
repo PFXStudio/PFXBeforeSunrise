@@ -542,15 +542,15 @@ class PostDetailScreenState extends State<PostDetailScreen> {
 
   void _touchedMoreButton(BuildContext context) {
     bool isMine = _post.userID == ProfileBloc().signedProfile.userID;
-    List<MenuItem> menuItems = [
-      MenuItem(
+    List<OptionItem> menuItems = [
+      OptionItem(
           index: 0,
           title: '공유',
           image: Icon(
             FontAwesomeIcons.share,
             color: Colors.white,
           )),
-      MenuItem(
+      OptionItem(
           index: 1,
           title: '신고',
           image: Icon(
@@ -560,23 +560,23 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     ];
 
     if (isMine == true) {
-      menuItems.add(MenuItem(
+      menuItems.add(OptionItem(
           index: 2,
           title: '삭제',
           image: Icon(
             FontAwesomeIcons.trash,
             color: Colors.white,
           )));
-      menuItems.add(MenuItem(
-          index: 3,
-          title: '삭제',
-          image: Icon(
-            FontAwesomeIcons.trash,
-            color: Colors.white,
-          )));
+      // menuItems.add(OptionItem(
+      //     index: 3,
+      //     title: '삭제',
+      //     image: Icon(
+      //       FontAwesomeIcons.trash,
+      //       color: Colors.white,
+      //     )));
     }
-    PopupMenu.context = context;
-    PopupMenu menu = PopupMenu(
+    OptionMenu.context = context;
+    OptionMenu menu = OptionMenu(
         backgroundColor: Colors.black54,
         items: menuItems,
         onClickMenu: onClickMenu,
@@ -586,9 +586,9 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   void onClickMenu(item) {
-    MenuItem menuItem = item;
+    OptionItem optionItem = item;
 
-    print(menuItem.index);
+    print(optionItem.index);
   }
 
   void stateChanged(bool isShow) {
