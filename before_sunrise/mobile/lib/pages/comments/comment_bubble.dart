@@ -163,7 +163,7 @@ class _CommentBubbleState extends State<CommentBubble> {
               tag: '${_comment.commentID}_$imageUrl',
               child: Container(
                 height: 130,
-                width: MediaQuery.of(context).size.width / 1.3,
+                width: kDeviceWidth / 1.3,
                 decoration: BoxDecoration(
                   image: DecorationImage(image: image, fit: BoxFit.cover),
                 ),
@@ -212,7 +212,7 @@ class _CommentBubbleState extends State<CommentBubble> {
             borderRadius: radius,
           ),
           constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width / 1.3,
+            maxWidth: kDeviceWidth / 1.3,
             minWidth: 20.0,
           ),
           child: Column(
@@ -260,7 +260,7 @@ class _CommentBubbleState extends State<CommentBubble> {
             borderRadius: radius,
           ),
           constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width / 1.3,
+            maxWidth: kDeviceWidth / 1.3,
             minWidth: 20.0,
           ),
           child: Column(
@@ -310,7 +310,7 @@ class _CommentBubbleState extends State<CommentBubble> {
             borderRadius: radius,
           ),
           constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width / 1.3,
+            maxWidth: kDeviceWidth / 1.3,
             minWidth: 20.0,
           ),
           child: Column(
@@ -362,7 +362,7 @@ class _CommentBubbleState extends State<CommentBubble> {
             borderRadius: radius,
           ),
           constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width / 1.3,
+            maxWidth: kDeviceWidth / 1.3,
             minWidth: 20.0,
           ),
           child: Column(

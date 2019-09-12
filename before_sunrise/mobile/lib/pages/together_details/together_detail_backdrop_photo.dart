@@ -59,7 +59,7 @@ class _PlaceholderBackground extends StatelessWidget {
     );
 
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: kDeviceWidth,
       height: height,
       decoration: decoration,
       child: const Center(
@@ -93,7 +93,7 @@ class _BackdropImage extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = kDeviceWidth;
     return SizedBox(
       width: screenWidth,
       height: scrollEffects.backdropHeight,
@@ -121,7 +121,7 @@ class _BlurOverlay extends StatelessWidget {
         sigmaY: scrollEffects.backdropOverlayBlur,
       ),
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: kDeviceWidth,
         height: scrollEffects.backdropHeight,
         decoration: BoxDecoration(
           color: Colors.black.withOpacity(
@@ -136,7 +136,7 @@ class _BlurOverlay extends StatelessWidget {
 class _InsetShadow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = kDeviceWidth;
 
     return Positioned(
       bottom: -8.0,

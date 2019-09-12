@@ -36,7 +36,7 @@ class ProfileTabPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double _deviceWidth = MediaQuery.of(context).size.width;
+    final double _deviceWidth = kDeviceWidth;
 
     final double _contentWidthPadding =
         _deviceWidth > 450.0 ? _deviceWidth - 450.0 : 30.0;

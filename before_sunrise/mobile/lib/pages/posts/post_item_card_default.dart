@@ -1,5 +1,4 @@
 import 'package:before_sunrise/import.dart';
-import 'package:before_sunrise/import.dart' as prefix0;
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -351,8 +350,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
         Padding(
             padding: EdgeInsets.all(5),
             child: Container(
-              width: MediaQuery.of(context).size.width -
-                  MainTheme.edgeInsets.left * 2,
+              width: kDeviceWidth - MainTheme.edgeInsets.left * 2,
               height: 1.0,
               color: Colors.grey[300],
             )),
@@ -369,7 +367,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
     }
 
     return Padding(
-        padding: prefix0.EdgeInsets.all(10),
+        padding: EdgeInsets.all(10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
@@ -394,7 +392,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
               size: 15,
             ),
             Padding(
-              padding: prefix0.EdgeInsets.only(left: 10, right: 10),
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: Text(
                 timeago.format(_post.lastUpdate.toDate(), locale: 'ko'),
                 style: MainTheme.timeTextStyle,
@@ -405,7 +403,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
   }
 
   Widget _buildPostItem() {
-    final _deviceWidth = MediaQuery.of(context).size.width;
+    final _deviceWidth = kDeviceWidth;
     final _contentWidth = _deviceWidth > 450.0 ? 450.0 : _deviceWidth;
 
     return Column(

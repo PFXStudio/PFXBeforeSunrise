@@ -32,8 +32,7 @@ class _CommentListState extends State<CommentList> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height -
-          (MediaQuery.of(context).size.height - 500),
+      height: kDeviceHeight - (kDeviceHeight - 500),
       child: Column(
         children: <Widget>[
           _commentLoadingIndicator,

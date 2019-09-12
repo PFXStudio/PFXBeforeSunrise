@@ -245,8 +245,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Container(
-            width:
-                MediaQuery.of(context).size.width - MainTheme.edgeInsets.left,
+            width: kDeviceWidth - MainTheme.edgeInsets.left,
             height: 250,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -300,8 +299,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Container(
-            width:
-                MediaQuery.of(context).size.width - MainTheme.edgeInsets.left,
+            width: kDeviceWidth - MainTheme.edgeInsets.left,
             height: 400,
             child: Center(
                 child: new ListView(
@@ -396,8 +394,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Container(
-                  width: MediaQuery.of(context).size.width -
-                      MainTheme.edgeInsets.left,
+                  width: kDeviceWidth - MainTheme.edgeInsets.left,
                   height: (selectedThumbDatas.length > 0) ? 300 : 114,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -435,8 +432,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                       Padding(
                           padding: EdgeInsets.only(left: 10),
                           child: Container(
-                            width: MediaQuery.of(context).size.width -
-                                MainTheme.edgeInsets.left * 2,
+                            width: kDeviceWidth - MainTheme.edgeInsets.left * 2,
                             height: 1.0,
                             color: Colors.grey[400],
                           )),
@@ -446,7 +442,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                           : Padding(
                               padding: EdgeInsets.only(left: 10),
                               child: Container(
-                                width: MediaQuery.of(context).size.width -
+                                width: kDeviceWidth -
                                     MainTheme.edgeInsets.left * 2,
                                 height: 1.0,
                                 color: Colors.grey[400],
@@ -570,8 +566,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Container(
-            width:
-                MediaQuery.of(context).size.width - MainTheme.edgeInsets.left,
+            width: kDeviceWidth - MainTheme.edgeInsets.left,
             height: 230,
             child: Padding(
                 padding: EdgeInsets.all(10),

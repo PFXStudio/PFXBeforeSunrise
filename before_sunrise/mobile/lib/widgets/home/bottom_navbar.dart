@@ -28,7 +28,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     super.didUpdateWidget(oldWidget);
   }
 
-  double get _deviceWidth => MediaQuery.of(context).size.width;
+  double get _deviceWidth => kDeviceWidth;
   Color get _accentColor => MainTheme.pivotColor;
 
   @override

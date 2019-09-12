@@ -17,6 +17,12 @@ class _HomeAppBarState extends State<HomeAppBar> {
   final GlobalKey _menuButtonKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
+    final List<String> menus = [
+      "1111",
+      "1122",
+      "1133",
+    ];
+
     return AppBar(
       elevation: 0.0,
       automaticallyImplyLeading: false,
@@ -34,10 +40,26 @@ class _HomeAppBarState extends State<HomeAppBar> {
         style: MainTheme.navTitleTextStyle,
       ),
       actions: <Widget>[
-        _buildAppbarActionWidgets(
-            context: context, index: 1, icon: FontAwesomeIcons.ellipsisV),
-        SizedBox(width: 10.0)
-        // _buildAppBarMenuPopUp(),
+        SizedBox(width: 10.0),
+        PopupMenuButton<String>(
+          icon: Icon(FontAwesomeIcons.ellipsisV),
+          onSelected: _selectedMenu,
+          itemBuilder: (BuildContext context) {
+            return menus.map((String choice) {
+              return PopupMenuItem<String>(
+                  value: choice,
+                  child: Row(
+                    children: <Widget>[
+                      Icon(FontAwesomeIcons.accessibleIcon),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(choice),
+                    ],
+                  ));
+            }).toList();
+          },
+        )
       ],
     );
   }
@@ -46,16 +68,12 @@ class _HomeAppBarState extends State<HomeAppBar> {
       {@required BuildContext context,
       @required int index,
       @required IconData icon}) {
-    double _deviceWidth = MediaQuery.of(context).size.width;
-
     return InkWell(
       key: index == 1 ? _menuButtonKey : null,
       onTap: () {
         if (index == 0) {
           Navigator.of(context).pushNamed('/search');
-        } else if (index == 1) {
-          // _openCustomMenu();
-        }
+        } else if (index == 1) {}
       },
       child: Padding(
         padding: const EdgeInsets.all(2.0),
@@ -67,6 +85,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
       ),
     );
   }
+
+  void _selectedMenu(index) {}
 
   void onDismiss() {
     print('Menu is closed');

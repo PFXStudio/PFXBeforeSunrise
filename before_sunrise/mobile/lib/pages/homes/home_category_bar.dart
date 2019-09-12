@@ -65,7 +65,7 @@ class _HomeCategoryBarState extends State<HomeCategoryBar> {
       {@required int categoryIndex,
       @required String categoryId,
       @required String categoryTitle}) {
-    double _deviceWidth = MediaQuery.of(context).size.width;
+    double _deviceWidth = kDeviceWidth;
     double _spacerWidth =
         _deviceWidth / (double.parse((_categories.length * 2).toString()));
 

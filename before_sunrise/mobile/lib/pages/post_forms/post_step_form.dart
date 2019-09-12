@@ -176,8 +176,7 @@ class PostStepFormState extends State<PostStepForm>
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Container(
-            width:
-                MediaQuery.of(context).size.width - MainTheme.edgeInsets.left,
+            width: kDeviceWidth - MainTheme.edgeInsets.left,
             height: 45,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,8 +200,7 @@ class PostStepFormState extends State<PostStepForm>
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Container(
-            width:
-                MediaQuery.of(context).size.width - MainTheme.edgeInsets.left,
+            width: kDeviceWidth - MainTheme.edgeInsets.left,
             height: 400,
             child: Center(
                 child: new ListView(
@@ -295,8 +293,7 @@ class PostStepFormState extends State<PostStepForm>
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Container(
-                  width: MediaQuery.of(context).size.width -
-                      MainTheme.edgeInsets.left,
+                  width: kDeviceWidth - MainTheme.edgeInsets.left,
                   height: (_selectedThumbDatas.length > 0) ? 400 : 114,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -335,8 +332,7 @@ class PostStepFormState extends State<PostStepForm>
                       Padding(
                           padding: EdgeInsets.only(left: 10),
                           child: Container(
-                            width: MediaQuery.of(context).size.width -
-                                MainTheme.edgeInsets.left * 2,
+                            width: kDeviceWidth - MainTheme.edgeInsets.left * 2,
                             height: 1.0,
                             color: Colors.grey[400],
                           )),
@@ -346,7 +342,7 @@ class PostStepFormState extends State<PostStepForm>
                           : Padding(
                               padding: EdgeInsets.only(left: 10),
                               child: Container(
-                                width: MediaQuery.of(context).size.width -
+                                width: kDeviceWidth -
                                     MainTheme.edgeInsets.left * 2,
                                 height: 1.0,
                                 color: Colors.grey[400],
@@ -469,8 +465,7 @@ class PostStepFormState extends State<PostStepForm>
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Container(
-            width:
-                MediaQuery.of(context).size.width - MainTheme.edgeInsets.left,
+            width: kDeviceWidth - MainTheme.edgeInsets.left,
             height: 177,
             child: Padding(
                 padding: EdgeInsets.all(10),

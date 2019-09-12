@@ -63,7 +63,7 @@ class PostFormScreenState extends State<PostFormScreen> {
   Widget _buildContents() {
     return SingleChildScrollView(
         child: Container(
-      width: MediaQuery.of(context).size.width,
+      width: kDeviceWidth,
       height: _selectedThumbDatas.length == 0 ? 780 : _maxContentsHeight,
       decoration: new BoxDecoration(
         gradient: MainTheme.primaryLinearGradient,
@@ -163,8 +163,7 @@ class PostFormScreenState extends State<PostFormScreen> {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Container(
-                  width: MediaQuery.of(context).size.width -
-                      MainTheme.edgeInsets.left,
+                  width: kDeviceWidth - MainTheme.edgeInsets.left,
                   height: 45,
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -250,8 +249,7 @@ class PostFormScreenState extends State<PostFormScreen> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Container(
-                      width: MediaQuery.of(context).size.width -
-                          MainTheme.edgeInsets.left,
+                      width: kDeviceWidth - MainTheme.edgeInsets.left,
                       height: 400,
                       child: Column(
                         children: <Widget>[
@@ -279,8 +277,7 @@ class PostFormScreenState extends State<PostFormScreen> {
                             ),
                           ),
                           Container(
-                            width: MediaQuery.of(context).size.width -
-                                MainTheme.edgeInsets.left * 2,
+                            width: kDeviceWidth - MainTheme.edgeInsets.left * 2,
                             height: 1.0,
                             color: Colors.grey[400],
                           ),
@@ -332,8 +329,7 @@ class PostFormScreenState extends State<PostFormScreen> {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Container(
-                  width: MediaQuery.of(context).size.width -
-                      MainTheme.edgeInsets.left,
+                  width: kDeviceWidth - MainTheme.edgeInsets.left,
                   height: (_selectedThumbDatas.length > 0) ? 400 : 114,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -373,8 +369,7 @@ class PostFormScreenState extends State<PostFormScreen> {
                       Padding(
                           padding: EdgeInsets.only(left: 10),
                           child: Container(
-                            width: MediaQuery.of(context).size.width -
-                                MainTheme.edgeInsets.left * 2,
+                            width: kDeviceWidth - MainTheme.edgeInsets.left * 2,
                             height: 1.0,
                             color: Colors.grey[400],
                           )),
@@ -384,7 +379,7 @@ class PostFormScreenState extends State<PostFormScreen> {
                           : Padding(
                               padding: EdgeInsets.only(left: 10),
                               child: Container(
-                                width: MediaQuery.of(context).size.width -
+                                width: kDeviceWidth -
                                     MainTheme.edgeInsets.left * 2,
                                 height: 1.0,
                                 color: Colors.grey[400],
@@ -475,7 +470,7 @@ class PostFormScreenState extends State<PostFormScreen> {
                   stops: [0.0, 1.0],
                   tileMode: TileMode.clamp),
             ),
-            width: MediaQuery.of(context).size.width / 2,
+            width: kDeviceWidth / 2,
             height: 1.0,
           ),
           Container(

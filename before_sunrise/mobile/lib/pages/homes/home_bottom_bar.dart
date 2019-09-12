@@ -29,8 +29,8 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
     super.didUpdateWidget(oldWidget);
   }
 
-  double get _deviceWidth => MediaQuery.of(context).size.width;
-  double get _deviceHeight => MediaQuery.of(context).size.height;
+  double get _deviceWidth => kDeviceWidth;
+  double get _deviceHeight => kDeviceHeight;
   Color get _accentColor => MainTheme.pivotColor;
 
   @override

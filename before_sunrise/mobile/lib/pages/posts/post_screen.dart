@@ -45,6 +45,7 @@ class PostScreenState extends State<PostScreen> {
           BuildContext context,
           PostState currentState,
         ) {
+          print(">>>" + currentState.toString());
           if (currentState is FetchingPostState) {
             if (_posts.length == 0) {
               return Column(
@@ -56,18 +57,18 @@ class PostScreenState extends State<PostScreen> {
               );
             }
 
-            return _buildPosts(null);
+            return _buildPosts(null, true);
           }
 
           if (currentState is FetchedPostState) {
-            return _buildPosts(currentState.posts);
+            return _buildPosts(currentState.posts, false);
           }
 
-          return _buildPosts(null);
+          return _buildPosts(null, false);
         });
   }
 
-  Widget _buildPosts(List<Post> posts) {
+  Widget _buildPosts(List<Post> posts, bool isBottomLoading) {
     _enabeldMorePosts = false;
     if (posts != null) {
       if (posts.length >= CoreConst.maxLoadPostCount) {
@@ -102,8 +103,8 @@ class PostScreenState extends State<PostScreen> {
                 if (index == _posts.length) {
                   return Column(
                     children: <Widget>[
-                      _enabeldMorePosts == true ? BottomLoader() : Container(),
-                      SizedBox(height: 200),
+                      isBottomLoading ? BottomLoader() : Container(),
+                      SizedBox(height: 240),
                     ],
                   );
                 }

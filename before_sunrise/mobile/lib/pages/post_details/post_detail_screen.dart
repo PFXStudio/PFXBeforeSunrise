@@ -1,5 +1,4 @@
 import 'package:before_sunrise/import.dart';
-import 'package:before_sunrise/import.dart' as prefix0;
 import 'package:timeago/timeago.dart' as timeago;
 
 class PostDetailScreen extends StatefulWidget {
@@ -68,7 +67,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   Widget _buildPostImageCarousel() {
-    final double _deviceHeight = MediaQuery.of(context).size.height * 0.7;
+    final double _deviceHeight = kDeviceHeight * 0.7;
 
     return CarouselSlider(
         height: _deviceHeight,
@@ -156,13 +155,11 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   Widget _buildPostCardBackgroundImage() {
-    final double _deviceWidth = MediaQuery.of(context).size.width;
-
     return Stack(
       alignment: Alignment.center,
       children: <Widget>[
         Container(
-          width: _deviceWidth,
+          width: kDeviceWidth,
           color: MainTheme.bgndColor,
           child: _post.imageUrls.length > 0
               ? _buildPostImageCarousel()
@@ -172,7 +169,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
         Positioned(
           bottom: 0.0,
           height: 80.0,
-          width: _deviceWidth,
+          width: kDeviceWidth,
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -191,7 +188,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
         Positioned(
           top: 0.0,
           height: 60.0,
-          width: _deviceWidth,
+          width: kDeviceWidth,
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -331,9 +328,6 @@ class PostDetailScreenState extends State<PostDetailScreen> {
       return SizedBox();
     }
 
-    final double _deviceHeight = MediaQuery.of(context).size.height;
-    final double _deviceWidth = MediaQuery.of(context).size.width;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -364,13 +358,10 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   Widget _buildPostDetails() {
-    final double _deviceHeight = MediaQuery.of(context).size.height;
-    final double _deviceWidth = MediaQuery.of(context).size.width;
-
-    final double _contentHeight = _deviceHeight * 0.7;
+    final double _contentHeight = kDeviceHeight * 0.7;
 
     final double _contentWidthPadding =
-        _deviceWidth > 450.0 ? _deviceWidth - 450.0 : 30.0;
+        kDeviceWidth > 450.0 ? kDeviceWidth - 450.0 : 30.0;
 
     return Material(
       elevation: 5.0,
@@ -418,12 +409,10 @@ class PostDetailScreenState extends State<PostDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double _deviceHeight = MediaQuery.of(context).size.height;
     double _panelHeightOpen = 575.0;
     double _panelHeightClosed = 95.0;
     final double _initFabHeight = 120.0;
     double _fabHeight;
-    // final double _deviceWidth = MediaQuery.of(context).size.width;
 
     // final PostBloc _postbloc = Provider.of<PostBloc>(context);
 
@@ -447,7 +436,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                 SafeArea(
                   child: CustomScrollView(
                     slivers: <Widget>[
-                      _buildSliverAppBar(context, deviceHeight: _deviceHeight),
+                      _buildSliverAppBar(context, deviceHeight: kDeviceHeight),
                       _buildSliverList(),
                     ],
                   ),

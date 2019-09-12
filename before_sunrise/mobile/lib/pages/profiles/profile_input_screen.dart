@@ -59,10 +59,8 @@ class ProfileInputScreenState extends State<ProfileInputScreen> {
               if (currentState is UnProfileState) {
                 return SingleChildScrollView(
                     child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height >= 655.0
-                      ? MediaQuery.of(context).size.height
-                      : 655.0,
+                  width: kDeviceWidth,
+                  height: kDeviceHeight >= 655.0 ? kDeviceHeight : 655.0,
                   decoration: new BoxDecoration(
                     gradient: MainTheme.primaryLinearGradient,
                   ),
@@ -183,7 +181,7 @@ class ProfileInputScreenState extends State<ProfileInputScreen> {
                                     color: Colors.grey[400],
                                   ),
                                   Container(
-                                    width: MediaQuery.of(context).size.width -
+                                    width: kDeviceWidth -
                                         MainTheme.edgeInsets.left,
                                     height: 60,
                                     padding: EdgeInsets.only(top: 20),

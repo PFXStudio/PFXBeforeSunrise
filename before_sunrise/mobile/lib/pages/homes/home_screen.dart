@@ -72,13 +72,12 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   Widget build(BuildContext context) {
-    double _deviceHeight = MediaQuery.of(context).size.height;
-    double _deviceWidth = MediaQuery.of(context).size.width;
+    initializeDeviceSize(context);
     _pageView = PageView(
       controller: _pageController,
       onPageChanged: (int index) async {},
       children: <Widget>[
-        _buildPageBody(_deviceHeight, _deviceWidth),
+        _buildPageBody(kDeviceHeight, kDeviceWidth),
       ],
     );
     return WillPopScope(

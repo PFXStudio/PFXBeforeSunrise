@@ -103,7 +103,9 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
 
     return Scaffold(
         body: GestureDetector(
-      onTapDown: (tap) { print("tap")},
+      onTapDown: (tap) {
+        print("tap");
+      },
       child: Stack(
         children: [
           // Container(
@@ -214,7 +216,7 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
 }
 
 Widget _buildJoin(BuildContext context) {
-  double margin = MediaQuery.of(context).size.width / 6;
+  double margin = kDeviceWidth / 6;
   return Container(
     margin: EdgeInsets.only(top: 28, left: margin, right: margin),
     decoration: new BoxDecoration(

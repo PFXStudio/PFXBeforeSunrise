@@ -15,14 +15,12 @@ class UnAuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double _deviceHeight = MediaQuery.of(context).size.height;
-    final double _deviceWidth = MediaQuery.of(context).size.width;
     return Container(
         decoration: new BoxDecoration(
           gradient: MainTheme.primaryLinearGradient,
         ),
-        height: _deviceHeight,
-        width: _deviceWidth,
+        height: kDeviceHeight,
+        width: kDeviceWidth,
         padding: EdgeInsets.all(20.0),
         child: Column(children: <Widget>[
           Flexible(

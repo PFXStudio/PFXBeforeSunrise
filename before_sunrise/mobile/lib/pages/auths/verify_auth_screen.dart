@@ -17,8 +17,8 @@ class VerifyAuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double _deviceHeight = MediaQuery.of(context).size.height;
-    final double _deviceWidth = MediaQuery.of(context).size.width;
+    final double _deviceHeight = kDeviceHeight;
+    final double _deviceWidth = kDeviceWidth;
     return Container(
         decoration: new BoxDecoration(
           gradient: MainTheme.primaryLinearGradient,

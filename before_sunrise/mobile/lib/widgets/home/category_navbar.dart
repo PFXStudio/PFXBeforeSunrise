@@ -65,9 +65,8 @@ class _CategoryNavBarState extends State<CategoryNavBar> {
       {@required int categoryIndex,
       @required String categoryId,
       @required String categoryTitle}) {
-    double _deviceWidth = MediaQuery.of(context).size.width;
     double _spacerWidth =
-        _deviceWidth / (double.parse((_categories.length * 2).toString()));
+        kDeviceWidth / (double.parse((_categories.length * 2).toString()));
 
     return Row(
       children: <Widget>[

@@ -340,8 +340,8 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildLoadingPosts(BuildContext context) {
-    final double _deviceHeight = MediaQuery.of(context).size.height;
-    final double _deviceWidth = MediaQuery.of(context).size.width;
+    final double _deviceHeight = kDeviceHeight;
+    final double _deviceWidth = kDeviceWidth;
     return Scaffold(
       body: CustomScrollView(
         controller: _scrollController,
@@ -363,8 +363,8 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildPosts(BuildContext context, List<Post> posts) {
-    final double _deviceHeight = MediaQuery.of(context).size.height;
-    final double _deviceWidth = MediaQuery.of(context).size.width;
+    final double _deviceHeight = kDeviceHeight;
+    final double _deviceWidth = kDeviceWidth;
     _enabeldMorePosts = false;
     if (posts != null) {
       if (posts.length >= CoreConst.maxLoadPostCount) {

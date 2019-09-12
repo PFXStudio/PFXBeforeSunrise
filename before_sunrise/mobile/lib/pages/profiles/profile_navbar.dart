@@ -27,7 +27,7 @@ class _ProfileNavbarState extends State<ProfileNavbar> {
     super.initState();
   }
 
-  double get _deviceWidth => MediaQuery.of(context).size.width;
+  double get _deviceWidth => kDeviceWidth;
 
   // Color get _accentColor => Theme.of(context).accentColor;
   Color get _primaryColor => Theme.of(context).primaryColor;
