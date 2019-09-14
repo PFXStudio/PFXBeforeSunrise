@@ -2,7 +2,7 @@ import 'package:core/import.dart';
 
 // 정의 한 것만 접근 하도록 인터페이스 관리
 abstract class IPostProvider {
-  Future<bool> isLiked(
+  Future<bool> isLike(
       {@required String category,
       @required String postID,
       @required String userID});
@@ -14,23 +14,23 @@ abstract class IPostProvider {
       {@required String category,
       @required String postID,
       @required String userID});
-  Future<bool> isReporter(
+  Future<bool> isReport(
       {@required String category,
       @required String postID,
       @required String userID});
-  Future<void> addToReporter(
+  Future<void> addToReport(
       {@required String category,
       @required String postID,
       @required String userID});
-  Future<void> removeFromReporter(
+  Future<void> removeFromReport(
       {@required String category,
       @required String postID,
       @required String userID});
-  Future<bool> isViewer(
+  Future<bool> isView(
       {@required String category,
       @required String postID,
       @required String userID});
-  Future<void> addToViewer(
+  Future<void> addToView(
       {@required String category,
       @required String postID,
       @required String userID});
@@ -49,6 +49,7 @@ abstract class IPostProvider {
       @required String userID});
   Future<DocumentReference> createPost(
       {@required String category, @required Map<String, dynamic> data});
+  Future<void> removePost({@required String category, @required String postID});
 }
 
 class PostProvider implements IPostProvider {
@@ -58,11 +59,11 @@ class PostProvider implements IPostProvider {
     _postRepository = PostRepository();
   }
 
-  Future<bool> isLiked(
+  Future<bool> isLike(
       {@required String category,
       @required String postID,
       @required String userID}) async {
-    return await _postRepository.isLiked(
+    return await _postRepository.isLike(
         category: category, postID: postID, userID: userID);
   }
 
@@ -82,43 +83,43 @@ class PostProvider implements IPostProvider {
         category: category, postID: postID, userID: userID);
   }
 
-  Future<bool> isReporter(
+  Future<bool> isReport(
       {@required String category,
       @required String postID,
       @required String userID}) async {
-    return await _postRepository.isReporter(
+    return await _postRepository.isReport(
         category: category, postID: postID, userID: userID);
   }
 
-  Future<void> addToReporter(
+  Future<void> addToReport(
       {@required String category,
       @required String postID,
       @required String userID}) async {
-    return await _postRepository.addToReporter(
+    return await _postRepository.addToReport(
         category: category, postID: postID, userID: userID);
   }
 
-  Future<void> removeFromReporter(
+  Future<void> removeFromReport(
       {@required String category,
       @required String postID,
       @required String userID}) async {
-    return await _postRepository.removeFromReporter(
+    return await _postRepository.removeFromReport(
         category: category, postID: postID, userID: userID);
   }
 
-  Future<bool> isViewer(
+  Future<bool> isView(
       {@required String category,
       @required String postID,
       @required String userID}) async {
-    return await _postRepository.isViewer(
+    return await _postRepository.isView(
         category: category, postID: postID, userID: userID);
   }
 
-  Future<void> addToViewer(
+  Future<void> addToView(
       {@required String category,
       @required String postID,
       @required String userID}) async {
-    return await _postRepository.addToViewer(
+    return await _postRepository.addToView(
         category: category, postID: postID, userID: userID);
   }
 
@@ -156,5 +157,10 @@ class PostProvider implements IPostProvider {
   Future<DocumentReference> createPost(
       {@required String category, @required Map<String, dynamic> data}) async {
     return await _postRepository.createPost(category: category, data: data);
+  }
+
+  Future<void> removePost(
+      {@required String category, @required String postID}) async {
+    return await _postRepository.removePost(category: category, postID: postID);
   }
 }

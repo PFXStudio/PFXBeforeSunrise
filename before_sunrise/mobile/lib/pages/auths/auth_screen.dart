@@ -72,6 +72,7 @@ class AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    initializeDeviceSize(context);
     return Scaffold(
         key: _scaffoldKey,
         body: BlocListener(

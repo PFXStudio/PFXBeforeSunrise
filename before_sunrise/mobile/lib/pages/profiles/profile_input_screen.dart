@@ -40,6 +40,7 @@ class ProfileInputScreenState extends State<ProfileInputScreen> {
 
   @override
   Widget build(BuildContext context) {
+    initializeDeviceSize(context);
     return BlocListener(
         bloc: widget._profileBloc,
         listener: (context, state) async {

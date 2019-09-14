@@ -7,7 +7,7 @@ class InfoRepository {
       : _infoCollection =
             Firestore.instance.collection(Config().root() + "/info/clubs");
 
-  Future<bool> isLiked(
+  Future<bool> isLike(
       {@required String infoID, @required String userID}) async {
     final DocumentSnapshot snapshot = await _infoCollection
         .document(infoID)
@@ -24,7 +24,7 @@ class InfoRepository {
         .collection('likes')
         .document(userID)
         .setData({
-      'isLiked': true,
+      'isLike': true,
     });
   }
 

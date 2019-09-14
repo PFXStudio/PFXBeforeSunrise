@@ -72,7 +72,7 @@ class LoadCommentEvent extends CommentEvent {
           }
         }
 
-        // infoComment.isLiked = await _commentProvider.isLiked(
+        // infoComment.isLike = await _commentProvider.isLike(
         //     postID: postID, commentID: infoComment.commentID);
         // DocumentSnapshot shardsSnapshot = await _shardsProvider
         //     .commentLikedCount(commentID: infoComment.commentID);
@@ -95,6 +95,7 @@ class CreateCommentEvent extends CommentEvent {
   CreateCommentEvent(
       {@required this.category,
       @required this.postID,
+      @required this.imageFolder,
       @required this.comment,
       @required this.byteDatas})
       : _firestoreTimestamp = FieldValue.serverTimestamp();
@@ -109,6 +110,7 @@ class CreateCommentEvent extends CommentEvent {
 
   String category;
   String postID;
+  String imageFolder;
   Comment comment;
 
   @override
@@ -118,10 +120,8 @@ class CreateCommentEvent extends CommentEvent {
       String userID = await _authProvider.getUserID();
       List<String> imageUrls = List<String>();
       if (byteDatas != null) {
-        final String fileLocation = '$userID/comments';
-
-        imageUrls = await _imageProvider.uploadPostImages(
-            fileLocation: fileLocation, byteDatas: byteDatas);
+        imageUrls = await _imageProvider.uploadCommentImages(
+            imageFolder: imageFolder, byteDatas: byteDatas);
       }
       comment.userID = userID;
       comment.created = _firestoreTimestamp;

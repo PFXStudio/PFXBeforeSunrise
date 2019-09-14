@@ -8,13 +8,14 @@ class Post {
     this.type = "",
     this.title = "",
     this.contents = "",
+    this.imageFolder = "",
     this.imageUrls,
     this.youtubeUrl = "",
     this.publishType = "",
     this.enabledAnonymous = false,
     this.created,
     this.lastUpdate,
-    this.isLiked = false,
+    this.isLike = false,
     this.likeCount = 0,
     this.commentCount = 0,
     this.warningCount = 0,
@@ -29,6 +30,7 @@ class Post {
   String type;
   String title;
   String contents;
+  String imageFolder;
   List<dynamic> imageUrls;
   String youtubeUrl;
   String publishType;
@@ -36,7 +38,7 @@ class Post {
   dynamic created;
   dynamic lastUpdate;
   // other database.
-  bool isLiked;
+  bool isLike;
   int likeCount;
   int commentCount;
   int warningCount;
@@ -51,6 +53,7 @@ class Post {
     this.type = snapshot.data["type"];
     this.title = snapshot.data["title"];
     this.contents = snapshot.data["contents"];
+    this.imageFolder = snapshot.data["imageFolder"];
     this.imageUrls = snapshot.data["imageUrls"];
     this.youtubeUrl = snapshot.data["youtubeUrl"];
     this.publishType = snapshot.data["publishType"];
@@ -67,6 +70,7 @@ class Post {
       "type": type,
       "title": title,
       "contents": contents,
+      "imageFolder": imageFolder,
       "imageUrls": imageUrls,
       "youtubeUrl": youtubeUrl,
       "publishType": publishType,
@@ -83,13 +87,14 @@ class Post {
     String type,
     String title,
     String contents,
+    String imageFolder,
     List<dynamic> imageUrls,
     String youtubeUrl,
     String publishType,
     bool enabledAnonymous,
     DateTime created,
     DateTime lastUpdate,
-    bool isLiked,
+    bool isLike,
     int likeCount,
     int commentCount,
     int warningCount,
@@ -104,13 +109,14 @@ class Post {
       type: type ?? this.type,
       title: title ?? this.title,
       contents: contents ?? this.contents,
+      imageFolder: imageFolder ?? this.imageFolder,
       imageUrls: imageUrls ?? this.imageUrls,
       youtubeUrl: youtubeUrl ?? this.youtubeUrl,
       publishType: publishType ?? this.publishType,
       enabledAnonymous: enabledAnonymous ?? this.enabledAnonymous,
       created: created ?? this.created,
       lastUpdate: lastUpdate ?? this.lastUpdate,
-      isLiked: isLiked ?? this.isLiked,
+      isLike: isLike ?? this.isLike,
       likeCount: likeCount ?? this.likeCount,
       commentCount: commentCount ?? this.commentCount,
       warningCount: warningCount ?? this.warningCount,
@@ -134,6 +140,7 @@ class Post {
       type.hashCode ^
       title.hashCode ^
       contents.hashCode ^
+      imageFolder.hashCode ^
       imageUrls.hashCode ^
       youtubeUrl.hashCode ^
       publishType.hashCode ^

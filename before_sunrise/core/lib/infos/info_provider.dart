@@ -2,7 +2,7 @@ import 'package:core/import.dart';
 
 // 정의 한 것만 접근 하도록 인터페이스 관리
 abstract class IInfoProvider {
-  Future<bool> isLiked({@required String infoID, @required String userID});
+  Future<bool> isLike({@required String infoID, @required String userID});
   Future<void> addToLike({@required String infoID, @required String userID});
   Future<void> removeFromLike(
       {@required String infoID, @required String userID});
@@ -22,9 +22,9 @@ class InfoProvider implements IInfoProvider {
     _infoRepository = InfoRepository();
   }
 
-  Future<bool> isLiked(
+  Future<bool> isLike(
       {@required String infoID, @required String userID}) async {
-    return await _infoRepository.isLiked(infoID: infoID, userID: userID);
+    return await _infoRepository.isLike(infoID: infoID, userID: userID);
   }
 
   Future<void> addToLike(

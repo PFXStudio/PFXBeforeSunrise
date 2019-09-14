@@ -111,12 +111,19 @@ class CreateTogetherEvent extends TogetherEvent {
       {TogetherState currentState, TogetherBloc bloc}) async {
     try {
       String userID = await _authProvider.getUserID();
+      Uuid uuid = Uuid();
+      String identifier = uuid.v4(options: {
+        'positionalArgs': [userID]
+      });
+      print("identifier : ${identifier}");
+
       List<String> imageUrls = List<String>();
       if (byteDatas != null) {
-        final String fileLocation = '$userID/posts';
+        final String imageFolder = '$userID/posts/$identifier';
 
         imageUrls = await _imageProvider.uploadPostImages(
-            fileLocation: fileLocation, byteDatas: byteDatas);
+            imageFolder: imageFolder, byteDatas: byteDatas);
+        together.imageFolder = imageFolder;
       }
       together.userID = userID;
       together.created = _firestoreTimestamp;

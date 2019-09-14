@@ -2,7 +2,7 @@ import 'package:core/import.dart';
 
 class CommentRepository {
   CollectionReference _postCollection;
-  Future<bool> isLiked(
+  Future<bool> isLike(
       {@required String category,
       @required String postID,
       @required String commentID,
@@ -31,7 +31,7 @@ class CommentRepository {
         .collection('likes')
         .document(userID)
         .setData({
-      'isLiked': true,
+      'isLike': true,
     });
   }
 
@@ -95,5 +95,18 @@ class CommentRepository {
     _postCollection = Firestore.instance
         .collection(Config().root() + "${category}/${postID}/comments");
     return _postCollection.add(data);
+  }
+
+  Future<void> removeComments({
+    @required String category,
+    @required String postID,
+  }) async {
+    _postCollection = Firestore.instance
+        .collection(Config().root() + "${category}/${postID}/comments");
+    return await _postCollection.getDocuments().then((snapshot) {
+      return snapshot.documents.map((doc) {
+        doc.reference.delete();
+      });
+    });
   }
 }

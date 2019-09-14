@@ -5,6 +5,27 @@ abstract class ShardsEvent {
   Future<ShardsState> applyAsync({ShardsState currentState, ShardsBloc bloc});
 }
 
+class RemovePostLikeCountEvent extends ShardsEvent {
+  RemovePostLikeCountEvent({@required this.category, @required this.postID});
+  @override
+  String toString() => 'RemovePostLikeCountEvent';
+  final IShardsProvider _shardsProvider = ShardsProvider();
+  String postID;
+  String category;
+
+  @override
+  Future<ShardsState> applyAsync(
+      {ShardsState currentState, ShardsBloc bloc}) async {
+    try {
+      await _shardsProvider.removePostLikeCount(postID: postID);
+      return new UnShardsState();
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorShardsState(_?.toString());
+    }
+  }
+}
+
 class IncreasePostLikeCountEvent extends ShardsEvent {
   IncreasePostLikeCountEvent({@required this.category, @required this.postID});
   @override
@@ -40,6 +61,27 @@ class DecreasePostLikeCountEvent extends ShardsEvent {
     try {
       _shardsProvider.decreasePostLikeCount(category: category, postID: postID);
       return UnShardsState();
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorShardsState(_?.toString());
+    }
+  }
+}
+
+class RemoveCommentCountEvent extends ShardsEvent {
+  RemoveCommentCountEvent({@required this.category, @required this.postID});
+  @override
+  String toString() => 'RemoveCommentCountEvent';
+  final IShardsProvider _shardsProvider = ShardsProvider();
+  String postID;
+  String category;
+
+  @override
+  Future<ShardsState> applyAsync(
+      {ShardsState currentState, ShardsBloc bloc}) async {
+    try {
+      _shardsProvider.removeCommentCount(postID: postID);
+      return new UnShardsState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorShardsState(_?.toString());
@@ -89,10 +131,10 @@ class DecreaseCommentCountEvent extends ShardsEvent {
   }
 }
 
-class IncreaseReporterCountEvent extends ShardsEvent {
-  IncreaseReporterCountEvent({@required this.category, @required this.postID});
+class RemoveReportCountEvent extends ShardsEvent {
+  RemoveReportCountEvent({@required this.category, @required this.postID});
   @override
-  String toString() => 'IncreaseReporterCountEvent';
+  String toString() => 'RemoveReportCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
   String postID;
   String category;
@@ -101,7 +143,7 @@ class IncreaseReporterCountEvent extends ShardsEvent {
   Future<ShardsState> applyAsync(
       {ShardsState currentState, ShardsBloc bloc}) async {
     try {
-      _shardsProvider.increaseReporterCount(category: category, postID: postID);
+      _shardsProvider.removeReportCount(postID: postID);
       return new UnShardsState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
@@ -110,10 +152,10 @@ class IncreaseReporterCountEvent extends ShardsEvent {
   }
 }
 
-class DecreaseReporterCountEvent extends ShardsEvent {
-  DecreaseReporterCountEvent({@required this.category, @required this.postID});
+class IncreaseReportCountEvent extends ShardsEvent {
+  IncreaseReportCountEvent({@required this.category, @required this.postID});
   @override
-  String toString() => 'DecreaseReporterCountEvent';
+  String toString() => 'IncreaseReportCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
   String postID;
   String category;
@@ -122,7 +164,28 @@ class DecreaseReporterCountEvent extends ShardsEvent {
   Future<ShardsState> applyAsync(
       {ShardsState currentState, ShardsBloc bloc}) async {
     try {
-      _shardsProvider.decreaseReporterCount(category: category, postID: postID);
+      _shardsProvider.increaseReportCount(category: category, postID: postID);
+      return new UnShardsState();
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorShardsState(_?.toString());
+    }
+  }
+}
+
+class DecreaseReportCountEvent extends ShardsEvent {
+  DecreaseReportCountEvent({@required this.category, @required this.postID});
+  @override
+  String toString() => 'DecreaseReportCountEvent';
+  final IShardsProvider _shardsProvider = ShardsProvider();
+  String postID;
+  String category;
+
+  @override
+  Future<ShardsState> applyAsync(
+      {ShardsState currentState, ShardsBloc bloc}) async {
+    try {
+      _shardsProvider.decreaseReportCount(category: category, postID: postID);
       return UnShardsState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
@@ -131,10 +194,10 @@ class DecreaseReporterCountEvent extends ShardsEvent {
   }
 }
 
-class IncreaseViewerCountEvent extends ShardsEvent {
-  IncreaseViewerCountEvent({@required this.category, @required this.postID});
+class RemoveViewCountEvent extends ShardsEvent {
+  RemoveViewCountEvent({@required this.category, @required this.postID});
   @override
-  String toString() => 'IncreaseViewerCountEvent';
+  String toString() => 'RemoveViewCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
   String postID;
   String category;
@@ -143,7 +206,28 @@ class IncreaseViewerCountEvent extends ShardsEvent {
   Future<ShardsState> applyAsync(
       {ShardsState currentState, ShardsBloc bloc}) async {
     try {
-      _shardsProvider.increaseViewerCount(category: category, postID: postID);
+      _shardsProvider.removeViewCount(postID: postID);
+      return new UnShardsState();
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorShardsState(_?.toString());
+    }
+  }
+}
+
+class IncreaseViewCountEvent extends ShardsEvent {
+  IncreaseViewCountEvent({@required this.category, @required this.postID});
+  @override
+  String toString() => 'IncreaseViewCountEvent';
+  final IShardsProvider _shardsProvider = ShardsProvider();
+  String postID;
+  String category;
+
+  @override
+  Future<ShardsState> applyAsync(
+      {ShardsState currentState, ShardsBloc bloc}) async {
+    try {
+      _shardsProvider.increaseViewCount(category: category, postID: postID);
       return new UnShardsState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');

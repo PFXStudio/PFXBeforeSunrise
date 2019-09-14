@@ -1,11 +1,12 @@
 import 'package:before_sunrise/import.dart';
 
 class CommentList extends StatefulWidget {
-  CommentList({this.category, this.postID});
+  CommentList({this.category, this.postID, this.imageFolder});
   @override
   _CommentListState createState() => _CommentListState();
   String category;
   String postID;
+  String imageFolder;
 }
 
 class _CommentListState extends State<CommentList> {

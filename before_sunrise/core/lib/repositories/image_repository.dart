@@ -72,7 +72,7 @@ class ImageRepository {
   }
 
   Future<List<String>> uploadPostImages({
-    @required String fileLocation,
+    @required String imageFolder,
     @required List<ByteData> byteDatas,
   }) async {
     List<String> uploadUrls = [];
@@ -87,7 +87,7 @@ class ImageRepository {
 
               final uuid = Uuid();
               final String fileName =
-                  Config().root() + "/$fileLocation/${uuid.v1()}";
+                  Config().root() + "/$imageFolder/${uuid.v1()}";
 
               StorageReference reference =
                   FirebaseStorage.instance.ref().child(fileName);
@@ -126,7 +126,7 @@ class ImageRepository {
   }
 
   Future<List<String>> uploadCommentImages({
-    @required String fileLocation,
+    @required String imageFolder,
     @required List<ByteData> byteDatas,
   }) async {
     List<String> uploadUrls = [];
@@ -141,7 +141,7 @@ class ImageRepository {
 
               final uuid = Uuid();
               final String fileName =
-                  Config().root() + "/comments/$fileLocation/${uuid.v1()}";
+                  Config().root() + "$imageFolder/comments/${uuid.v1()}";
 
               StorageReference reference =
                   FirebaseStorage.instance.ref().child(fileName);
@@ -179,11 +179,26 @@ class ImageRepository {
     return uploadUrls;
   }
 
-  Future<void> deleteImage({@required String imageUrl}) async {
+  Future<void> removeImage({@required String imageUrl}) async {
     if (imageUrl.isNotEmpty) {
       final StorageReference reference =
           await FirebaseStorage.instance.getReferenceFromUrl(imageUrl);
       return reference.delete();
+    }
+  }
+
+  Future<void> removeImageFolder({@required String imageFolder}) async {
+    if (imageFolder.isNotEmpty) {
+      final String targetFolder = Config().root() + "/$imageFolder}";
+      var encoded = Uri.encodeFull(targetFolder);
+
+      try {
+        StorageReference reference = _firebaseStorage.ref().child(encoded);
+
+        return reference.delete();
+      } catch (e) {
+        print(e);
+      }
     }
   }
 }

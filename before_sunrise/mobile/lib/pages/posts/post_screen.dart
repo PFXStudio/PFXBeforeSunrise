@@ -39,33 +39,42 @@ class PostScreenState extends State<PostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PostBloc, PostState>(
-        bloc: widget._postBloc,
-        builder: (
-          BuildContext context,
-          PostState currentState,
-        ) {
-          print(">>>" + currentState.toString());
-          if (currentState is FetchingPostState) {
-            if (_posts.length == 0) {
-              return Column(
-                children: <Widget>[
-                  Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ],
-              );
-            }
-
-            return _buildPosts(null, true);
+    return BlocListener(
+        bloc: _postBloc,
+        listener: (context, state) async {
+          print(state.toString());
+          if (state is SuccessRemovePostState) {
+            _postBloc.dispatch(
+                LoadPostEvent(category: widget._category, post: null));
           }
+        },
+        child: BlocBuilder<PostBloc, PostState>(
+            bloc: widget._postBloc,
+            builder: (
+              BuildContext context,
+              PostState currentState,
+            ) {
+              print(">>>" + currentState.toString());
+              if (currentState is FetchingPostState) {
+                if (_posts.length == 0) {
+                  return Column(
+                    children: <Widget>[
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
+                  );
+                }
 
-          if (currentState is FetchedPostState) {
-            return _buildPosts(currentState.posts, false);
-          }
+                return _buildPosts(null, true);
+              }
 
-          return _buildPosts(null, false);
-        });
+              if (currentState is FetchedPostState) {
+                return _buildPosts(currentState.posts, false);
+              }
+
+              return _buildPosts(null, false);
+            }));
   }
 
   Widget _buildPosts(List<Post> posts, bool isBottomLoading) {

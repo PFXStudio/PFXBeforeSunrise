@@ -6,14 +6,15 @@ abstract class IFImageProvider {
       {@required String userID, @required ByteData imageData});
   Future<String> uploadCategoryImage({@required ByteData imageData});
   Future<List<String>> uploadPostImages({
-    @required String fileLocation,
+    @required String imageFolder,
     @required List<ByteData> byteDatas,
   });
   Future<List<String>> uploadCommentImages({
-    @required String fileLocation,
+    @required String imageFolder,
     @required List<ByteData> byteDatas,
   });
-  Future<void> deleteImage({@required String imageUrl});
+  Future<void> removeImage({@required String imageUrl});
+  Future<void> removeImageFolder({@required String imageFolder});
 }
 
 class FImageProvider implements IFImageProvider {
@@ -34,21 +35,25 @@ class FImageProvider implements IFImageProvider {
   }
 
   Future<List<String>> uploadPostImages({
-    @required String fileLocation,
+    @required String imageFolder,
     @required List<ByteData> byteDatas,
   }) async {
     return await _imageRepository.uploadPostImages(
-        fileLocation: fileLocation, byteDatas: byteDatas);
+        imageFolder: imageFolder, byteDatas: byteDatas);
   }
 
-  Future<void> deleteImage({@required String imageUrl}) async {
-    return await _imageRepository.deleteImage(imageUrl: imageUrl);
+  Future<void> removeImage({@required String imageUrl}) async {
+    return await _imageRepository.removeImage(imageUrl: imageUrl);
+  }
+
+  Future<void> removeImageFolder({@required String imageFolder}) async {
+    return await _imageRepository.removeImageFolder(imageFolder: imageFolder);
   }
 
   @override
   Future<List<String>> uploadCommentImages(
-      {String fileLocation, List<ByteData> byteDatas}) async {
+      {String imageFolder, List<ByteData> byteDatas}) async {
     return await _imageRepository.uploadCommentImages(
-        fileLocation: fileLocation, byteDatas: byteDatas);
+        imageFolder: imageFolder, byteDatas: byteDatas);
   }
 }

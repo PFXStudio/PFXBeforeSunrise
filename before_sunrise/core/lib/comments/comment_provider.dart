@@ -2,7 +2,7 @@ import 'package:core/import.dart';
 
 // 정의 한 것만 접근 하도록 인터페이스 관리
 abstract class ICommentProvider {
-  Future<bool> isLiked(
+  Future<bool> isLike(
       {@required String category,
       @required String postID,
       @required String commentID,
@@ -33,6 +33,10 @@ abstract class ICommentProvider {
       {@required String category,
       @required String postID,
       @required Map<String, dynamic> data});
+  Future<void> removeComments({
+    @required String category,
+    @required String postID,
+  });
 }
 
 class CommentProvider implements ICommentProvider {
@@ -42,12 +46,12 @@ class CommentProvider implements ICommentProvider {
     _commentRepository = CommentRepository();
   }
 
-  Future<bool> isLiked(
+  Future<bool> isLike(
       {@required String category,
       @required String postID,
       @required String commentID,
       @required String userID}) async {
-    return _commentRepository.isLiked(
+    return _commentRepository.isLike(
         category: category,
         postID: postID,
         commentID: commentID,
@@ -110,5 +114,15 @@ class CommentProvider implements ICommentProvider {
       @required Map<String, dynamic> data}) async {
     return _commentRepository.createComment(
         category: category, postID: postID, data: data);
+  }
+
+  Future<void> removeComments({
+    @required String category,
+    @required String postID,
+  }) async {
+    return _commentRepository.removeComments(
+      category: category,
+      postID: postID,
+    );
   }
 }

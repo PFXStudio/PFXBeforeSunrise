@@ -31,7 +31,7 @@ class ProfileRepository {
     return _profileCollection.document(userID).get();
   }
 
-  Future<bool> isLiked(
+  Future<bool> isLike(
       {@required String postID, @required String userID}) async {
     final DocumentSnapshot snapshot = await _profileCollection
         .document(userID)
@@ -48,7 +48,7 @@ class ProfileRepository {
         .collection('likes')
         .document(postID)
         .setData({
-      'isLiked': true,
+      'isLike': true,
       'lastUpdate': _firestoreTimestamp,
     });
   }

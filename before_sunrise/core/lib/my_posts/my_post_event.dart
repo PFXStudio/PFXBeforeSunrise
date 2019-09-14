@@ -41,10 +41,10 @@ class LoadMyPostEvent extends MyPostEvent {
         post.initialize(document);
         post.profile = profile;
 
-        post.isLiked = await _postProvider.isLiked(
+        post.isLike = await _postProvider.isLike(
             postID: post.postID, userID: userID, category: post.category);
         DocumentSnapshot shardsSnapshot =
-            await _shardsProvider.postLikedCount(postID: post.postID);
+            await _shardsProvider.postLikeCount(postID: post.postID);
         if (shardsSnapshot != null && shardsSnapshot.data != null) {
           post.likeCount = shardsSnapshot.data["count"];
         }

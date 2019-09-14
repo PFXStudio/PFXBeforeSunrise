@@ -3,7 +3,7 @@ import 'package:core/import.dart';
 class PostRepository {
   CollectionReference _postCollection;
 
-  Future<bool> isLiked(
+  Future<bool> isLike(
       {@required String category,
       @required String postID,
       @required String userID}) async {
@@ -30,7 +30,7 @@ class PostRepository {
         .collection('likes')
         .document(userID)
         .setData({
-      'isLiked': true,
+      'isLike': true,
     }, merge: true);
   }
 
@@ -47,7 +47,7 @@ class PostRepository {
         .delete();
   }
 
-  Future<bool> isReporter(
+  Future<bool> isReport(
       {@required String category,
       @required String postID,
       @required String userID}) async {
@@ -56,14 +56,14 @@ class PostRepository {
 
     final DocumentSnapshot snapshot = await _postCollection
         .document(postID)
-        .collection('reporters')
+        .collection('reports')
         .document(userID)
         .get();
 
     return snapshot.exists;
   }
 
-  Future<void> addToReporter(
+  Future<void> addToReport(
       {@required String category,
       @required String postID,
       @required String userID}) {
@@ -71,14 +71,14 @@ class PostRepository {
         Firestore.instance.collection(Config().root() + "${category}");
     return _postCollection
         .document(postID)
-        .collection('reporters')
+        .collection('reports')
         .document(userID)
         .setData({
       'isReported': true,
     }, merge: true);
   }
 
-  Future<void> removeFromReporter(
+  Future<void> removeFromReport(
       {@required String category,
       @required String postID,
       @required String userID}) {
@@ -86,12 +86,12 @@ class PostRepository {
         Firestore.instance.collection(Config().root() + "${category}");
     return _postCollection
         .document(postID)
-        .collection('reporters')
+        .collection('reports')
         .document(userID)
         .delete();
   }
 
-  Future<bool> isViewer(
+  Future<bool> isView(
       {@required String category,
       @required String postID,
       @required String userID}) async {
@@ -100,14 +100,14 @@ class PostRepository {
 
     final DocumentSnapshot snapshot = await _postCollection
         .document(postID)
-        .collection('viewers')
+        .collection('views')
         .document(userID)
         .get();
 
     return snapshot.exists;
   }
 
-  Future<void> addToViewer(
+  Future<void> addToView(
       {@required String category,
       @required String postID,
       @required String userID}) {
@@ -115,7 +115,7 @@ class PostRepository {
         Firestore.instance.collection(Config().root() + "${category}");
     return _postCollection
         .document(postID)
-        .collection('viewers')
+        .collection('views')
         .document(userID)
         .setData({
       'viewed': true,
@@ -188,5 +188,42 @@ class PostRepository {
     _postCollection =
         Firestore.instance.collection(Config().root() + "${category}");
     return _postCollection.add(data);
+  }
+
+  Future<void> removePost(
+      {@required String category, @required String postID}) async {
+    _postCollection =
+        Firestore.instance.collection(Config().root() + "${category}");
+    await _postCollection
+        .document(postID)
+        .collection("likes")
+        .getDocuments()
+        .then((snapshot) {
+      return snapshot.documents.map((doc) {
+        doc.reference.delete();
+      });
+    });
+
+    await _postCollection
+        .document(postID)
+        .collection("reports")
+        .getDocuments()
+        .then((snapshot) {
+      return snapshot.documents.map((doc) {
+        doc.reference.delete();
+      });
+    });
+
+    await _postCollection
+        .document(postID)
+        .collection("views")
+        .getDocuments()
+        .then((snapshot) {
+      return snapshot.documents.map((doc) {
+        doc.reference.delete();
+      });
+    });
+
+    return await _postCollection.document(postID).delete();
   }
 }

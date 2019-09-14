@@ -10,7 +10,7 @@ class Comment {
     this.imageUrls,
     this.created,
     this.lastUpdate,
-    this.isLiked = false,
+    this.isLike = false,
     this.likeCount = 0,
     this.warningCount = 0,
     this.isMine = false,
@@ -28,7 +28,7 @@ class Comment {
   dynamic lastUpdate;
   // other database.
   String parentText;
-  bool isLiked;
+  bool isLike;
   int likeCount;
   int warningCount;
   bool isMine;
@@ -67,7 +67,7 @@ class Comment {
     List<dynamic> imageUrls,
     DateTime created,
     DateTime lastUpdate,
-    bool isLiked,
+    bool isLike,
     int likeCount,
     bool isMine,
     Profile profile,
@@ -83,7 +83,7 @@ class Comment {
         imageUrls: imageUrls ?? this.imageUrls,
         created: created ?? this.created,
         lastUpdate: lastUpdate ?? this.lastUpdate,
-        isLiked: isLiked ?? this.isLiked,
+        isLike: isLike ?? this.isLike,
         likeCount: likeCount ?? this.likeCount,
         isMine: isMine ?? this.isMine,
         profile: profile ?? this.profile,

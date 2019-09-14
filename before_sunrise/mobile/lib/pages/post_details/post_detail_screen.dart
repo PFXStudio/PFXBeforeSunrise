@@ -217,7 +217,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     return SliverAppBar(
       centerTitle: true,
       title: _buildTitleRow(),
-      expandedHeight: deviceHeight * 0.7,
+      expandedHeight: deviceHeight * 0.5,
       flexibleSpace: FlexibleSpaceBar(
         background: _buildPostCardBackgroundImage(),
       ),
@@ -242,7 +242,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
       children: <Widget>[
         LikePostWidget.icon(
           isSparkleStay: false,
-          isLiked: _post.isLiked,
+          isLike: _post.isLike,
           counter: _post.likeCount,
           defaultIcon: FontAwesomeIcons.kissBeam,
           filledIcon: FontAwesomeIcons.solidKissWinkHeart,
@@ -254,9 +254,9 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           filledIconColor: MainTheme.enabledButtonColor,
           clapFabCallback: (callback) {
             PostBloc().dispatch(
-                ToggleLikePostEvent(post: _post, isLike: !_post.isLiked));
-            _post.isLiked = !_post.isLiked;
-            if (_post.isLiked == true) {
+                ToggleLikePostEvent(post: _post, isLike: !_post.isLike));
+            _post.isLike = !_post.isLike;
+            if (_post.isLike == true) {
               _post.likeCount++;
             } else {
               _post.likeCount--;
@@ -266,8 +266,8 @@ class PostDetailScreenState extends State<PostDetailScreen> {
               return;
             }
 
-            print("isLiked : ${_post.isLiked}, count : ${_post.likeCount}");
-            callback(_post.isLiked, _post.likeCount);
+            print("isLike : ${_post.isLike}, count : ${_post.likeCount}");
+            callback(_post.isLike, _post.likeCount);
 
             // });
           },
@@ -415,12 +415,12 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     double _fabHeight;
 
     // final PostBloc _postbloc = Provider.of<PostBloc>(context);
-
     return Scaffold(
       // floatingActionButton: _buildControlFAB(),
       backgroundColor: MainTheme.bgndColor,
       body: Stack(
         children: [
+          _buildRemovePost(),
           // Container(
           //   decoration: new BoxDecoration(
           //     gradient: MainTheme.primaryLinearGradient,
@@ -454,6 +454,30 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildRemovePost() {
+    return Container(
+      width: 150,
+      child: BlocListener(
+          bloc: _postBloc,
+          listener: (context, state) async {
+            print(state.toString());
+            if (state is SuccessRemovePostState) {
+              SuccessSnackbar().show("success_remove_post", () {
+                Navigator.pop(context);
+              });
+            }
+          },
+          child: BlocBuilder<PostBloc, PostState>(
+              bloc: _postBloc,
+              builder: (
+                BuildContext context,
+                PostState currentState,
+              ) {
+                return Container();
+              })),
     );
   }
 
@@ -524,7 +548,9 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           ),
         ),
         CommentList(
-            category: widget._post.category, postID: widget._post.postID),
+            category: widget._post.category,
+            postID: widget._post.postID,
+            imageFolder: _post.imageFolder),
       ],
     );
   }
@@ -576,6 +602,16 @@ class PostDetailScreenState extends State<PostDetailScreen> {
 
   void onClickMenu(item) {
     OptionItem optionItem = item;
+
+    if (optionItem.index == 2) {
+      bool isMine = _post.userID == ProfileBloc().signedProfile.userID;
+      if (isMine == false) {
+        FailSnackbar().show("error_not_mine", () {});
+        return;
+      }
+
+      _postBloc.dispatch(RemovePostEvent(post: _post));
+    }
 
     print(optionItem.index);
   }

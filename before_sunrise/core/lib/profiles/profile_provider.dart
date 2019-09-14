@@ -6,7 +6,7 @@ abstract class IProfileProvider {
   Future<QuerySnapshot> getProfileFollowers({@required String userID});
   Future<QuerySnapshot> getProfileFollowing({@required String userID});
   Future<DocumentSnapshot> fetchProfile({@required String userID});
-  Future<bool> isLiked({@required String postID, @required String userID});
+  Future<bool> isLike({@required String postID, @required String userID});
   Future<void> addToLike({@required String postID, @required String userID});
   Future<void> removeFromLike(
       {@required String postID, @required String userID});
@@ -97,8 +97,8 @@ class ProfileProvider implements IProfileProvider {
   }
 
   @override
-  Future<bool> isLiked({String postID, String userID}) {
-    return _profileRepository.isLiked(postID: postID, userID: userID);
+  Future<bool> isLike({String postID, String userID}) {
+    return _profileRepository.isLike(postID: postID, userID: userID);
   }
 
   @override

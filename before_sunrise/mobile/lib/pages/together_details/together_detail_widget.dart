@@ -209,7 +209,8 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
         ),
         CommentList(
             category: widget.together.category(),
-            postID: widget.together.postID),
+            postID: widget.together.postID,
+            imageFolder: widget.together.imageFolder),
       ],
     );
   }

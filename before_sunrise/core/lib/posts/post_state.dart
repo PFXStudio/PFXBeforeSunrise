@@ -55,6 +55,17 @@ class EmptyPostState extends PostState {
   }
 }
 
+class IdlePostState extends PostState {
+  IdlePostState();
+  @override
+  String toString() => 'IdlePostState';
+
+  @override
+  PostState getStateCopy() {
+    return IdlePostState();
+  }
+}
+
 class ErrorPostState extends PostState {
   final String errorMessage;
 
@@ -78,5 +89,17 @@ class SuccessPostState extends PostState {
   @override
   PostState getStateCopy() {
     return SuccessPostState();
+  }
+}
+
+class SuccessRemovePostState extends PostState {
+  SuccessRemovePostState();
+
+  @override
+  String toString() => 'SuccessRemovePostState';
+
+  @override
+  PostState getStateCopy() {
+    return SuccessRemovePostState();
   }
 }

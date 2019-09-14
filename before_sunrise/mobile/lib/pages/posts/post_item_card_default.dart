@@ -309,7 +309,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
         style: MainTheme.contentsTextStyle,
       ),
       trailing: LikePostWidget.icon(
-        isLiked: _post.isLiked,
+        isLike: _post.isLike,
         counter: _post.likeCount,
         defaultIcon: FontAwesomeIcons.kissBeam,
         filledIcon: FontAwesomeIcons.solidKissWinkHeart,
@@ -321,9 +321,9 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
         filledIconColor: MainTheme.enabledButtonColor,
         clapFabCallback: (callback) {
           PostBloc().dispatch(
-              ToggleLikePostEvent(post: _post, isLike: !_post.isLiked));
-          _post.isLiked = !_post.isLiked;
-          if (_post.isLiked == true) {
+              ToggleLikePostEvent(post: _post, isLike: !_post.isLike));
+          _post.isLike = !_post.isLike;
+          if (_post.isLike == true) {
             _post.likeCount++;
           } else {
             _post.likeCount--;
@@ -333,8 +333,8 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
             return;
           }
 
-          print("isLiked : ${_post.isLiked}, count : ${_post.likeCount}");
-          callback(_post.isLiked, _post.likeCount);
+          print("isLike : ${_post.isLike}, count : ${_post.likeCount}");
+          callback(_post.isLike, _post.likeCount);
 
           // });
         },

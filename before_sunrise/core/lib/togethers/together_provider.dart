@@ -2,7 +2,7 @@ import 'package:core/import.dart';
 
 // 정의 한 것만 접근 하도록 인터페이스 관리
 abstract class ITogetherProvider {
-  Future<bool> isLiked({@required String postID, @required String userID});
+  Future<bool> isLike({@required String postID, @required String userID});
   Future<void> addToLike({@required String postID, @required String userID});
   Future<void> removeFromLike(
       {@required String postID, @required String userID});
@@ -24,9 +24,9 @@ class TogetherProvider implements ITogetherProvider {
     _togetherRepository = TogetherRepository();
   }
 
-  Future<bool> isLiked(
+  Future<bool> isLike(
       {@required String postID, @required String userID}) async {
-    return await _togetherRepository.isLiked(postID: postID, userID: userID);
+    return await _togetherRepository.isLike(postID: postID, userID: userID);
   }
 
   Future<void> addToLike(

@@ -2,7 +2,7 @@ import 'package:before_sunrise/import.dart';
 
 class LikePostWidget extends StatefulWidget {
   bool isSparkleStay;
-  bool isLiked;
+  bool isLike;
   int counter;
   final countCircleColor;
   final countTextColor;
@@ -23,7 +23,7 @@ class LikePostWidget extends StatefulWidget {
 
   LikePostWidget.icon(
       {this.isSparkleStay,
-      this.isLiked,
+      this.isLike,
       this.counter,
       this.countCircleColor = Colors.blue,
       this.countTextColor = Colors.white,
@@ -44,7 +44,7 @@ class LikePostWidget extends StatefulWidget {
 
   LikePostWidget.image(
       {this.isSparkleStay,
-      this.isLiked,
+      this.isLike,
       this.counter,
       this.countCircleColor = Colors.blue,
       this.countTextColor = Colors.white,
@@ -151,7 +151,7 @@ class _LikePostWidgetState extends State<LikePostWidget>
 
   void onTapUp(TapUpDetails tap) {
     widget.clapFabCallback((bool isLike, int count) {
-      widget.isLiked = isLike;
+      widget.isLike = isLike;
       widget.counter = count;
       // User pressed the button. This can be a tap or a hold.
       if (scoreOutETA != null) {
@@ -211,19 +211,19 @@ class _LikePostWidgetState extends State<LikePostWidget>
               ]),
           child: widget.defaultImage == null
               ? Icon(
-                  widget.isLiked == true
+                  widget.isLike == true
                       ? widget.filledIcon
                       : widget.defaultIcon,
-                  color: widget.isLiked == true
+                  color: widget.isLike == true
                       ? widget.filledIconColor
                       : widget.defaultIconColor,
                   size: 25.0,
                 )
               : ImageIcon(
-                  new AssetImage(widget.isLiked == true
+                  new AssetImage(widget.isLike == true
                       ? widget.filledImage
                       : widget.defaultImage),
-                  color: widget.isLiked == true
+                  color: widget.isLike == true
                       ? widget.filledImageColor
                       : widget.defaultImageColor,
                   size: 15.0),

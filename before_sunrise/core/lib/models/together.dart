@@ -15,12 +15,13 @@ class Together {
     this.tipPrice = 0,
     this.title = "",
     this.contents = "",
+    this.imageFolder = "",
     this.imageUrls,
     this.youtubeUrl = "",
     this.created,
     this.lastUpdate,
     this.memberProfiles,
-    this.isLiked = false,
+    this.isLike = false,
     this.likeCount = 0,
     this.commentCount = 0,
     this.warningCount = 0,
@@ -41,13 +42,14 @@ class Together {
   int tipPrice;
   String title;
   String contents;
+  String imageFolder;
   List<dynamic> imageUrls;
   String youtubeUrl;
   dynamic created;
   dynamic lastUpdate;
   // other database.
   List<Profile> memberProfiles;
-  bool isLiked;
+  bool isLike;
   int likeCount;
   int commentCount;
   int warningCount;
@@ -68,6 +70,7 @@ class Together {
     this.tipPrice = snapshot.data["tipPrice"];
     this.title = snapshot.data["title"];
     this.contents = snapshot.data["contents"];
+    this.imageFolder = snapshot.data["imageFolder"];
     this.imageUrls = snapshot.data["imageUrls"];
     this.youtubeUrl = snapshot.data["youtubeUrl"];
     this.created = snapshot.data["created"];
@@ -89,6 +92,7 @@ class Together {
       "tipPrice": tipPrice,
       "title": title,
       "contents": contents,
+      "imageFolder": imageFolder,
       "imageUrls": imageUrls,
       "youtubeUrl": youtubeUrl,
       'created': created,
@@ -110,12 +114,13 @@ class Together {
     int tipPrice,
     String title,
     String contents,
+    String imageFolder,
     List<dynamic> imageUrls,
     String youtubeUrl,
     DateTime created,
     DateTime lastUpdate,
     List<dynamic> memberProfiles,
-    bool isLiked,
+    bool isLike,
     int likeCount,
     int commentCount,
     int warningCount,
@@ -136,12 +141,13 @@ class Together {
       tipPrice: tipPrice ?? this.tipPrice,
       title: title ?? this.title,
       contents: contents ?? this.contents,
+      imageFolder: imageFolder ?? this.imageFolder,
       imageUrls: imageUrls ?? this.imageUrls,
       youtubeUrl: youtubeUrl ?? this.youtubeUrl,
       created: created ?? this.created,
       lastUpdate: lastUpdate ?? this.lastUpdate,
       memberProfiles: memberProfiles ?? this.memberProfiles,
-      isLiked: isLiked ?? this.isLiked,
+      isLike: isLike ?? this.isLike,
       likeCount: likeCount ?? this.likeCount,
       commentCount: commentCount ?? this.commentCount,
       warningCount: warningCount ?? this.warningCount,
@@ -207,6 +213,7 @@ class Together {
       tablePrice.hashCode ^
       tipPrice.hashCode ^
       title.hashCode ^
+      imageFolder.hashCode ^
       contents.hashCode ^
       imageUrls.hashCode ^
       youtubeUrl.hashCode ^

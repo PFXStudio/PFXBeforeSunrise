@@ -7,7 +7,7 @@ class TogetherRepository {
       : _postCollection = Firestore.instance
             .collection(Config().root() + Together().category());
 
-  Future<bool> isLiked(
+  Future<bool> isLike(
       {@required String postID, @required String userID}) async {
     final DocumentSnapshot snapshot = await _postCollection
         .document(postID)
@@ -24,7 +24,7 @@ class TogetherRepository {
         .collection('likes')
         .document(userID)
         .setData({
-      'isLiked': true,
+      'isLike': true,
     });
   }
 

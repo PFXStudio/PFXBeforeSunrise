@@ -75,7 +75,7 @@
 
 //   Future<void> togglePostLikeStatus(
 //       {@required Post post, @required String userID}) async {
-//     final bool _likeStatus = post.isLiked;
+//     final bool _likeStatus = post.isLike;
 //     final bool _newLikeStatus = !_likeStatus;
 
 //     final String _postID = post.postID;
@@ -131,8 +131,8 @@
 //     _post.initialize(_document);
 
 //     // get post like status for current user
-//     final bool _isLiked =
-//         await _postRepository.isLiked(postID: _postID, userID: _currentUserId);
+//     final bool _isLike =
+//         await _postRepository.isLike(postID: _postID, userID: _currentUserId);
 
 //     // get post user following status for current user
 //     final bool _isFollowing = await _profileRepository.isSubscribedTo(
@@ -144,7 +144,7 @@
 //     final int _postLikeCount = _snapshot.documents.length;
 
 //     return _post.copyWith(
-//         isLiked: _isLiked,
+//         isLike: _isLike,
 //         likeCount: _postLikeCount,
 //         profile: _profile.copyWith(isFollowing: _isFollowing));
 //   }
