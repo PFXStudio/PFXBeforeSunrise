@@ -237,7 +237,9 @@ class PostStepFormState extends State<PostStepForm>
                                                   left: 10.0,
                                                   right: 10.0),
                                               child: Icon(
-                                                  FontAwesomeIcons.pencilAlt),
+                                                FontAwesomeIcons.quoteLeft,
+                                                size: 14,
+                                              ),
                                             )),
                                         keyboardType: TextInputType.text,
                                       ),
@@ -254,7 +256,7 @@ class PostStepFormState extends State<PostStepForm>
                                             border: InputBorder.none,
                                             icon: Icon(
                                               FontAwesomeIcons.alignJustify,
-                                              size: 18.0,
+                                              size: 14.0,
                                               color: Colors.black54,
                                             ),
                                             hintText: LocalizableLoader.of(

@@ -192,37 +192,38 @@ class PostRepository {
 
   Future<void> removePost(
       {@required String category, @required String postID}) async {
+    print("removePost $postID");
     _postCollection =
         Firestore.instance.collection(Config().root() + "${category}");
-    await _postCollection
+    QuerySnapshot likes = await _postCollection
         .document(postID)
         .collection("likes")
-        .getDocuments()
-        .then((snapshot) {
-      return snapshot.documents.map((doc) {
+        .getDocuments();
+    if (likes.documents != null && likes.documents.length > 0) {
+      for (var doc in likes.documents) {
         doc.reference.delete();
-      });
-    });
+      }
+    }
 
-    await _postCollection
+    QuerySnapshot reports = await _postCollection
         .document(postID)
         .collection("reports")
-        .getDocuments()
-        .then((snapshot) {
-      return snapshot.documents.map((doc) {
+        .getDocuments();
+    if (reports.documents != null && reports.documents.length > 0) {
+      for (var doc in reports.documents) {
         doc.reference.delete();
-      });
-    });
+      }
+    }
 
-    await _postCollection
+    QuerySnapshot views = await _postCollection
         .document(postID)
         .collection("views")
-        .getDocuments()
-        .then((snapshot) {
-      return snapshot.documents.map((doc) {
+        .getDocuments();
+    if (views.documents != null && views.documents.length > 0) {
+      for (var doc in views.documents) {
         doc.reference.delete();
-      });
-    });
+      }
+    }
 
     return await _postCollection.document(postID).delete();
   }

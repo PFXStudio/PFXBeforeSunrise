@@ -103,10 +103,11 @@ class CommentRepository {
   }) async {
     _postCollection = Firestore.instance
         .collection(Config().root() + "${category}/${postID}/comments");
-    return await _postCollection.getDocuments().then((snapshot) {
-      return snapshot.documents.map((doc) {
+    var comments = await _postCollection.getDocuments();
+    if (comments.documents != null && comments.documents.length > 0) {
+      for (var doc in comments.documents) {
         doc.reference.delete();
-      });
-    });
+      }
+    }
   }
 }

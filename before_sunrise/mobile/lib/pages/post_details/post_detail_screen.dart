@@ -23,6 +23,72 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   Post get _post => widget._post;
   int _currentPostImageIndex = 0;
   GlobalKey moreMenuKey = GlobalKey();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    SuccessSnackbar().initialize(_scaffoldKey);
+    FailSnackbar().initialize(_scaffoldKey);
+  }
+
+  @override
+  void dispose() {
+    SuccessSnackbar().initialize(null);
+    FailSnackbar().initialize(null);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double _panelHeightOpen = 575.0;
+    double _panelHeightClosed = 95.0;
+    final double _initFabHeight = 120.0;
+    double _fabHeight;
+
+    // final PostBloc _postbloc = Provider.of<PostBloc>(context);
+    return Scaffold(
+      // floatingActionButton: _buildControlFAB(),
+      key: _scaffoldKey,
+      backgroundColor: MainTheme.bgndColor,
+      body: Stack(
+        children: [
+          _buildRemovePost(),
+          // Container(
+          //   decoration: new BoxDecoration(
+          //     gradient: MainTheme.primaryLinearGradient,
+          //   ),
+          // ),
+          SlidingUpPanel(
+            maxHeight: _panelHeightOpen,
+            minHeight: _panelHeightClosed,
+            parallaxEnabled: true,
+            parallaxOffset: .5,
+            body: Stack(
+              children: <Widget>[
+                SafeArea(
+                  child: CustomScrollView(
+                    slivers: <Widget>[
+                      _buildSliverAppBar(context, deviceHeight: kDeviceHeight),
+                      _buildSliverList(),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            panel: _panel(),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(18.0),
+                topRight: Radius.circular(18.0)),
+            onPanelSlide: (double pos) => setState(() {
+              _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) +
+                  _initFabHeight;
+            }),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildActivePostImage() {
     return Container(
@@ -407,56 +473,6 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    double _panelHeightOpen = 575.0;
-    double _panelHeightClosed = 95.0;
-    final double _initFabHeight = 120.0;
-    double _fabHeight;
-
-    // final PostBloc _postbloc = Provider.of<PostBloc>(context);
-    return Scaffold(
-      // floatingActionButton: _buildControlFAB(),
-      backgroundColor: MainTheme.bgndColor,
-      body: Stack(
-        children: [
-          _buildRemovePost(),
-          // Container(
-          //   decoration: new BoxDecoration(
-          //     gradient: MainTheme.primaryLinearGradient,
-          //   ),
-          // ),
-          SlidingUpPanel(
-            maxHeight: _panelHeightOpen,
-            minHeight: _panelHeightClosed,
-            parallaxEnabled: true,
-            parallaxOffset: .5,
-            body: Stack(
-              children: <Widget>[
-                SafeArea(
-                  child: CustomScrollView(
-                    slivers: <Widget>[
-                      _buildSliverAppBar(context, deviceHeight: kDeviceHeight),
-                      _buildSliverList(),
-                    ],
-                  ),
-                )
-              ],
-            ),
-            panel: _panel(),
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(18.0),
-                topRight: Radius.circular(18.0)),
-            onPanelSlide: (double pos) => setState(() {
-              _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) +
-                  _initFabHeight;
-            }),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildRemovePost() {
     return Container(
       width: 150,
@@ -582,14 +598,8 @@ class PostDetailScreenState extends State<PostDetailScreen> {
             FontAwesomeIcons.trash,
             color: Colors.white,
           )));
-      // menuItems.add(OptionItem(
-      //     index: 3,
-      //     title: '삭제',
-      //     image: Icon(
-      //       FontAwesomeIcons.trash,
-      //       color: Colors.white,
-      //     )));
     }
+
     OptionMenu.context = context;
     OptionMenu menu = OptionMenu(
         backgroundColor: Colors.black54,

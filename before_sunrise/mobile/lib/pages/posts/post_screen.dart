@@ -43,7 +43,9 @@ class PostScreenState extends State<PostScreen> {
         bloc: _postBloc,
         listener: (context, state) async {
           print(state.toString());
-          if (state is SuccessRemovePostState) {
+          if (state is SuccessRemovePostState || state is SuccessPostState) {
+            _posts.clear();
+            _enabeldMorePosts = true;
             _postBloc.dispatch(
                 LoadPostEvent(category: widget._category, post: null));
           }

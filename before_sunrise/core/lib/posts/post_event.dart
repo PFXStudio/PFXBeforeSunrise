@@ -244,6 +244,7 @@ class RemovePostEvent extends PostEvent {
 
       await _commentProvider.removeComments(
           postID: post.postID, category: post.category);
+
       await _shardsProvider.removePostLikeCount(postID: post.postID);
       await _shardsProvider.removeCommentCount(postID: post.postID);
       await _shardsProvider.removeReportCount(postID: post.postID);
