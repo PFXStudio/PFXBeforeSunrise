@@ -89,12 +89,14 @@ class _GalleryImage extends StatelessWidget {
 
     return Stack(children: <Widget>[
       Container(
+          width: kDeviceWidth * 0.5,
+          height: kDeviceWidth * 0.5,
           margin: const EdgeInsets.all(4.0),
           decoration: decoration,
           child: FadeInImage.assetNetwork(
             placeholder: DefineImages.icon_fake_8_path,
             image: url,
-            fit: BoxFit.fitWidth,
+            fit: BoxFit.cover,
           )),
       Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,

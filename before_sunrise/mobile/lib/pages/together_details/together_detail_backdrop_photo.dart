@@ -77,10 +77,10 @@ class _BackdropImage extends StatelessWidget {
   _BackdropImage(this.together, this.scrollEffects);
   final Together together;
   final TogetherDetailScrollEffects scrollEffects;
-
+  final Random random = new Random();
   String get photoUrl =>
-      together.profile.imageUrl != null && together.profile.imageUrl.length > 0
-          ? together.profile.imageUrl
+      together.imageUrls != null && together.imageUrls.length > 0
+          ? together.imageUrls[0]
           : "";
 
   @override

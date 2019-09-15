@@ -36,40 +36,6 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
     });
   }
 
-  Widget _buildSynopsis() {
-    return Container(
-      color: Colors.white,
-      padding: EdgeInsets.only(
-        top: widget.together == null ? 12.0 : 0.0,
-        bottom: 16.0,
-      ),
-      child: TogetherDetailContentsWidget(widget.together),
-    );
-  }
-
-  Widget _buildGallery() => widget.together.imageUrls.isNotEmpty
-      ? TogetherDetailGalleryGridWidget(widget.together)
-      : Container(color: Colors.white, height: 0.0);
-
-  Widget _buildEventBackdrop() {
-    return Positioned(
-      top: _scrollEffects.headerOffset,
-      child: TogetherDetailBackdropPhotoWidget(
-        together: widget.together,
-        scrollEffects: _scrollEffects,
-      ),
-    );
-  }
-
-  Widget _buildStatusBarBackground() {
-    final statusBarColor = Theme.of(context).primaryColor;
-
-    return Container(
-      height: _scrollEffects.statusBarHeight,
-      color: statusBarColor,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final content = <Widget>[
@@ -123,6 +89,7 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
                 _buildEventBackdrop(),
                 slivers,
                 _BackButton(_scrollEffects),
+                _MenuButton(_scrollEffects, widget.together),
                 _buildStatusBarBackground(),
               ],
             ),
@@ -138,6 +105,40 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
         ],
       ),
     ));
+  }
+
+  Widget _buildSynopsis() {
+    return Container(
+      color: Colors.white,
+      padding: EdgeInsets.only(
+        top: widget.together == null ? 12.0 : 0.0,
+        bottom: 16.0,
+      ),
+      child: TogetherDetailContentsWidget(widget.together),
+    );
+  }
+
+  Widget _buildGallery() => widget.together.imageUrls.isNotEmpty
+      ? TogetherDetailGalleryGridWidget(widget.together)
+      : Container(color: Colors.white, height: 0.0);
+
+  Widget _buildEventBackdrop() {
+    return Positioned(
+      top: _scrollEffects.headerOffset,
+      child: TogetherDetailBackdropPhotoWidget(
+        together: widget.together,
+        scrollEffects: _scrollEffects,
+      ),
+    );
+  }
+
+  Widget _buildStatusBarBackground() {
+    final statusBarColor = Theme.of(context).primaryColor;
+
+    return Container(
+      height: _scrollEffects.statusBarHeight,
+      color: statusBarColor,
+    );
   }
 
   void touchedButton() {}
@@ -281,6 +282,98 @@ class _BackButton extends StatelessWidget {
       ),
     );
   }
+}
+
+class _MenuButton extends StatelessWidget {
+  _MenuButton(this.scrollEffects, this.together);
+  final TogetherDetailScrollEffects scrollEffects;
+  final Together together;
+  GlobalKey moreMenuKey = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: MediaQuery.of(context).padding.top,
+      right: 4.0,
+      child: IgnorePointer(
+        ignoring: scrollEffects.backButtonOpacity == 0.0,
+        child: Material(
+          type: MaterialType.circle,
+          color: Colors.transparent,
+          child: IconButton(
+            key: moreMenuKey,
+            icon: Icon(FontAwesomeIcons.ellipsisV),
+            iconSize: 25,
+            color: Colors.white.withOpacity(
+              scrollEffects.backButtonOpacity * 0.9,
+            ),
+            onPressed: () {
+              _touchedMoreButton(context);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _touchedMoreButton(BuildContext context) {
+    bool isMine = together.userID == ProfileBloc().signedProfile.userID;
+    List<OptionItem> menuItems = [
+      OptionItem(
+          index: 0,
+          title: '공유',
+          image: Icon(
+            FontAwesomeIcons.share,
+            color: Colors.white,
+          )),
+      OptionItem(
+          index: 1,
+          title: '신고',
+          image: Icon(
+            FontAwesomeIcons.handMiddleFinger,
+            color: Colors.white,
+          )),
+    ];
+
+    if (isMine == true) {
+      menuItems.add(OptionItem(
+          index: 2,
+          title: '삭제',
+          image: Icon(
+            FontAwesomeIcons.trash,
+            color: Colors.white,
+          )));
+    }
+
+    OptionMenu.context = context;
+    OptionMenu menu = OptionMenu(
+        backgroundColor: Colors.black54,
+        items: menuItems,
+        onClickMenu: onClickMenu,
+        onDismiss: onDismiss);
+
+    menu.show(widgetKey: moreMenuKey);
+  }
+
+  void onClickMenu(item) {
+    OptionItem optionItem = item;
+
+    if (optionItem.index == 2) {
+      bool isMine = together.userID == ProfileBloc().signedProfile.userID;
+      if (isMine == false) {
+        FailSnackbar().show("error_not_mine", () {});
+        return;
+      }
+    }
+
+    print(optionItem.index);
+  }
+
+  void stateChanged(bool isShow) {
+    print('menu is ${isShow ? 'showing' : 'closed'}');
+  }
+
+  void onDismiss() {}
 }
 
 class _Header extends StatelessWidget {

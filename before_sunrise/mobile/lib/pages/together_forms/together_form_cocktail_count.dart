@@ -144,7 +144,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                         textStyle:
                             TextStyle(fontSize: 17, color: Colors.black45),
                       ),
-                      onDragging: (handlerIndex, lowerValue, upperValue) {
+                      onDragCompleted: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
                           togetherHardCount = lowerValue;
                         });
@@ -218,7 +218,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                         textStyle:
                             TextStyle(fontSize: 17, color: Colors.black45),
                       ),
-                      onDragging: (handlerIndex, lowerValue, upperValue) {
+                      onDragCompleted: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
                           togetherChampagneCount = lowerValue;
                         });
@@ -292,7 +292,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                         textStyle:
                             TextStyle(fontSize: 17, color: Colors.black45),
                       ),
-                      onDragging: (handlerIndex, lowerValue, upperValue) {
+                      onDragCompleted: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
                           togetherServiceCount = lowerValue;
                         });

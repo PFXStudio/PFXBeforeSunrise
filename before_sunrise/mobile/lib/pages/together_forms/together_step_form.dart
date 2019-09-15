@@ -28,7 +28,8 @@ class _TogetherStepFormState extends State<TogetherStepForm>
   int currentStep = 0;
   final int maxPicturesCount = 20;
   String _error;
-  bool enabled = false;
+  bool sanctionAgreeEnabled = false;
+  bool phoneNumberAgreeEnabled = false;
 
   @override
   void initState() {
@@ -190,9 +191,9 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                               currentStep == steps.length - 1) {}
                           if (currentStep == 3 ||
                               currentStep == steps.length - 1) {
-                            if (enabled == false) {
-                              FailSnackbar()
-                                  .show("error_agree_phone_number", null);
+                            if (sanctionAgreeEnabled == false ||
+                                phoneNumberAgreeEnabled == false) {
+                              FailSnackbar().show("error_agree_check", null);
                               return;
                             }
                           }
@@ -567,7 +568,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
         ),
         child: Container(
             width: kDeviceWidth - MainTheme.edgeInsets.left,
-            height: 230,
+            height: 260,
             child: Padding(
                 padding: EdgeInsets.all(10),
                 child: Column(
@@ -577,10 +578,28 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Checkbox(
-                          value: enabled,
+                          value: sanctionAgreeEnabled,
                           onChanged: (bool value) {
                             setState(() {
-                              enabled = value;
+                              sanctionAgreeEnabled = value;
+                            });
+                          },
+                        ),
+                        Text(
+                          LocalizableLoader.of(context)
+                              .text("sanction_agree_checkbox"),
+                          style: MainTheme.contentsTextStyle,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Checkbox(
+                          value: phoneNumberAgreeEnabled,
+                          onChanged: (bool value) {
+                            setState(() {
+                              phoneNumberAgreeEnabled = value;
                             });
                           },
                         ),

@@ -177,7 +177,7 @@ class _TogetherFormMemberCountContentsWidgetState
                         textStyle:
                             TextStyle(fontSize: 17, color: Colors.black45),
                       ),
-                      onDragging: (handlerIndex, lowerValue, upperValue) {
+                      onDragCompleted: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
                           togetherTotalCount = lowerValue;
                           if (togetherRestCount > togetherTotalCount) {
@@ -254,7 +254,7 @@ class _TogetherFormMemberCountContentsWidgetState
                         textStyle:
                             TextStyle(fontSize: 17, color: Colors.black45),
                       ),
-                      onDragging: (handlerIndex, lowerValue, upperValue) {
+                      onDragCompleted: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
                           togetherRestCount = lowerValue;
                         });

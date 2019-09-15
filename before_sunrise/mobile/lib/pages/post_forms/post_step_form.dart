@@ -25,6 +25,7 @@ class PostStepFormState extends State<PostStepForm>
   final List<ByteData> _selectedThumbDatas = List<ByteData>();
   final List<ByteData> _selectedOriginalDatas = List<ByteData>();
 
+  bool sanctionAgreeEnabled = false;
   int currentStep = 0;
   final int maxPicturesCount = 20;
   String _error;
@@ -126,7 +127,12 @@ class PostStepFormState extends State<PostStepForm>
                           if (currentStep == 2 ||
                               currentStep == steps.length - 1) {}
                           if (currentStep == 3 ||
-                              currentStep == steps.length - 1) {}
+                              currentStep == steps.length - 1) {
+                            if (sanctionAgreeEnabled == false) {
+                              FailSnackbar().show("error_agree_check", null);
+                              return;
+                            }
+                          }
 
                           setState(() {
                             if (currentStep < steps.length - 1) {
@@ -468,12 +474,30 @@ class PostStepFormState extends State<PostStepForm>
         ),
         child: Container(
             width: kDeviceWidth - MainTheme.edgeInsets.left,
-            height: 177,
+            height: 210,
             child: Padding(
                 padding: EdgeInsets.all(10),
                 child: Column(
                   children: <Widget>[
                     SanctionContents(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Checkbox(
+                          value: sanctionAgreeEnabled,
+                          onChanged: (bool value) {
+                            setState(() {
+                              sanctionAgreeEnabled = value;
+                            });
+                          },
+                        ),
+                        Text(
+                          LocalizableLoader.of(context)
+                              .text("sanction_agree_checkbox"),
+                          style: MainTheme.contentsTextStyle,
+                        ),
+                      ],
+                    ),
                   ],
                 ))));
   }

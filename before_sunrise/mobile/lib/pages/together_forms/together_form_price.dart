@@ -58,12 +58,12 @@ class _TogetherFormPriceContentsWidgetState
                       step: 1,
                       jump: true,
                       trackBar: FlutterSliderTrackBar(
+                        activeDisabledTrackBarColor: Colors.red,
                         inactiveTrackBarHeight: 2,
                         activeTrackBarHeight: 3,
                       ),
                       disabled: false,
-                      handler: customHandler(FontAwesomeIcons.caretRight),
-                      rightHandler: customHandler(FontAwesomeIcons.caretLeft),
+                      handler: customHandler(FontAwesomeIcons.circle),
                       tooltip: FlutterSliderTooltip(
                         alwaysShowTooltip: true,
                         numberFormat: intl.NumberFormat(),
@@ -85,7 +85,7 @@ class _TogetherFormPriceContentsWidgetState
                             color: Colors.black54,
                             fontWeight: FontWeight.bold),
                       ),
-                      onDragging: (handlerIndex, lowerValue, upperValue) {
+                      onDragCompleted: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
                           togetherTablePrice = lowerValue;
                         });
@@ -141,8 +141,7 @@ class _TogetherFormPriceContentsWidgetState
                         activeTrackBarHeight: 3,
                       ),
                       disabled: false,
-                      handler: customHandler(FontAwesomeIcons.caretRight),
-                      rightHandler: customHandler(FontAwesomeIcons.caretLeft),
+                      handler: customHandler(FontAwesomeIcons.circle),
                       tooltip: FlutterSliderTooltip(
                         alwaysShowTooltip: true,
                         numberFormat: intl.NumberFormat(),
@@ -164,7 +163,7 @@ class _TogetherFormPriceContentsWidgetState
                             color: Colors.black54,
                             fontWeight: FontWeight.bold),
                       ),
-                      onDragging: (handlerIndex, lowerValue, upperValue) {
+                      onDragCompleted: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
                           togetherTipPrice = lowerValue;
                         });
@@ -255,7 +254,7 @@ customHandler(IconData icon) {
         child: Icon(
           icon,
           color: Colors.white,
-          size: 23,
+          size: 14,
         ),
       ),
       decoration: BoxDecoration(

@@ -25,25 +25,25 @@ class TogetherDetailPoster extends StatelessWidget {
           ? _PlayButton(together)
           : null;
 
-  Widget _buildPosterImage() =>
-      (together.imageUrls != null && together.imageUrls.isNotEmpty == true)
-          ? FadeInImage.assetNetwork(
-              placeholder: DefineImages.bgnd_main_220_path,
-              image: together.imageUrls.first,
-              width: size?.width,
-              height: size?.height,
-              fadeInDuration: const Duration(milliseconds: 300),
-              fit: BoxFit.cover,
-            )
-          : null;
+  Widget _buildPosterImage() => (together.profile.imageUrl != null &&
+          together.profile.imageUrl.isNotEmpty == true)
+      ? FadeInImage.assetNetwork(
+          placeholder: DefineImages.bgnd_main_220_path,
+          image: together.imageUrls.first,
+          width: size?.width,
+          height: size?.height,
+          fadeInDuration: const Duration(milliseconds: 300),
+          fit: BoxFit.cover,
+        )
+      : null;
 
   @override
   Widget build(BuildContext context) {
     final content = <Widget>[
       const Icon(
-        FontAwesomeIcons.image,
-        color: Colors.white24,
-        size: 44.0,
+        FontAwesomeIcons.cocktail,
+        color: Colors.white,
+        size: 20.0,
       ),
     ];
 
@@ -105,9 +105,12 @@ BoxDecoration _buildDecorations() {
     gradient: LinearGradient(
       begin: Alignment.bottomCenter,
       end: Alignment.topCenter,
+      stops: [0.0, 0.4, 0.6, 1],
       colors: [
-        Color(0xFF222222),
-        Color(0xFF424242),
+        Colors.black54,
+        Colors.transparent,
+        Colors.transparent,
+        Colors.black54,
       ],
     ),
   );
