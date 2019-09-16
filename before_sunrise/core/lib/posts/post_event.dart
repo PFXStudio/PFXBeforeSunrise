@@ -140,7 +140,6 @@ class CreatePostEvent extends PostEvent {
 
         imageUrls = await _imageProvider.uploadPostImages(
             imageFolder: imageFolder, byteDatas: byteDatas);
-        post.imageFolder = imageFolder;
       }
       post.userID = userID;
       post.created = _firestoreTimestamp;

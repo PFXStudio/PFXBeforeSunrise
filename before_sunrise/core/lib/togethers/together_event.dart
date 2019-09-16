@@ -8,7 +8,8 @@ abstract class TogetherEvent {
 }
 
 class LoadTogetherEvent extends TogetherEvent {
-  LoadTogetherEvent({@required this.dateTime});
+  LoadTogetherEvent(
+      {@required this.dateTime, @required this.lastVisibleTogether});
   @override
   String toString() => 'LoadTogetherEvent';
   final ITogetherProvider _togetherProvider = TogetherProvider();
@@ -16,14 +17,15 @@ class LoadTogetherEvent extends TogetherEvent {
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
   DateTime dateTime;
+  Together lastVisibleTogether;
 
   @override
   Future<TogetherState> applyAsync(
       {TogetherState currentState, TogetherBloc bloc}) async {
     try {
       String dateString = CoreConst.togetherDateFormat.format(dateTime);
-      QuerySnapshot snapshot =
-          await _togetherProvider.fetchTogethers(dateString: dateString);
+      QuerySnapshot snapshot = await _togetherProvider.fetchTogethers(
+          dateString: dateString, lastVisibleTogether: lastVisibleTogether);
 
       List<Together> togethers = List<Together>();
       TogetherCollection collection =
@@ -50,6 +52,12 @@ class LoadTogetherEvent extends TogetherEvent {
           together.commentCount = countSnapshot.data["count"];
         }
 
+        DocumentSnapshot viewCountSnapshot =
+            await _shardsProvider.viewCount(postID: together.postID);
+        if (viewCountSnapshot != null && viewCountSnapshot.data != null) {
+          together.viewCount = viewCountSnapshot.data["count"];
+        }
+
         collection.togethers.add(together);
       }
 
@@ -69,8 +77,8 @@ class ToggleLikeTogetherEvent extends TogetherEvent {
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
 
-  String postID;
-  bool isLike;
+  final String postID;
+  final bool isLike;
 
   @override
   Future<TogetherState> applyAsync(
@@ -79,13 +87,42 @@ class ToggleLikeTogetherEvent extends TogetherEvent {
       String userID = await _authProvider.getUserID();
       if (isLike == true) {
         await _togetherProvider.addToLike(postID: postID, userID: userID);
-        await _shardsProvider.increasePostLikeCount(postID: postID);
+        await _shardsProvider.increasePostLikeCount(
+            category: Together().category(), postID: postID);
       } else {
         await _togetherProvider.removeFromLike(postID: postID, userID: userID);
-        await _shardsProvider.decreasePostLikeCount(postID: postID);
+        await _shardsProvider.decreasePostLikeCount(
+            category: Together().category(), postID: postID);
       }
 
       return currentState;
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorTogetherState(_?.toString());
+    }
+  }
+}
+
+class ViewTogetherEvent extends TogetherEvent {
+  ViewTogetherEvent({@required this.together, @required this.userID});
+  @override
+  String toString() => 'ViewTogetherEvent';
+  final ITogetherProvider _togetherProvider = TogetherProvider();
+  final IShardsProvider _shardsProvider = ShardsProvider();
+
+  final String userID;
+  final Together together;
+
+  @override
+  Future<TogetherState> applyAsync(
+      {TogetherState currentState, TogetherBloc bloc}) async {
+    try {
+      await _togetherProvider.addToView(
+          postID: together.postID, userID: userID);
+      await _shardsProvider.increaseViewCount(
+          category: together.category(), postID: together.postID);
+
+      return FetchedTogetherState(togetherCollection: TogetherCollection());
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorTogetherState(_?.toString());
@@ -123,8 +160,8 @@ class CreateTogetherEvent extends TogetherEvent {
 
         imageUrls = await _imageProvider.uploadPostImages(
             imageFolder: imageFolder, byteDatas: byteDatas);
-        together.imageFolder = imageFolder;
       }
+
       together.userID = userID;
       together.created = _firestoreTimestamp;
       together.lastUpdate = _firestoreTimestamp;
@@ -136,6 +173,46 @@ class CreateTogetherEvent extends TogetherEvent {
       }
 
       return new SuccessTogetherState();
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorTogetherState(_?.toString());
+    }
+  }
+}
+
+class RemoveTogetherEvent extends TogetherEvent {
+  RemoveTogetherEvent({@required this.together});
+  @override
+  String toString() => 'RemoveTogetherEvent';
+  final ITogetherProvider _postProvider = TogetherProvider();
+  final IShardsProvider _shardsProvider = ShardsProvider();
+  final IProfileProvider _profileProvider = ProfileProvider();
+  final IFImageProvider _imageProvider = FImageProvider();
+  final ICommentProvider _commentProvider = CommentProvider();
+
+  Together together;
+
+  @override
+  Future<TogetherState> applyAsync(
+      {TogetherState currentState, TogetherBloc bloc}) async {
+    try {
+      if (together.imageUrls != null && together.imageUrls.length > 0) {
+        for (var url in together.imageUrls) {
+          await _imageProvider.removeImage(imageUrl: url);
+        }
+      }
+
+      await _commentProvider.removeComments(
+          postID: together.postID, category: together.category());
+
+      await _shardsProvider.removePostLikeCount(postID: together.postID);
+      await _shardsProvider.removeCommentCount(postID: together.postID);
+      await _shardsProvider.removeReportCount(postID: together.postID);
+      await _shardsProvider.removeViewCount(postID: together.postID);
+
+      await _postProvider.removeTogether(postID: together.postID);
+
+      return new SuccessRemoveTogetherState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorTogetherState(_?.toString());

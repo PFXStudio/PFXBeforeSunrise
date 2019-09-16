@@ -2,9 +2,12 @@ import 'package:before_sunrise/import.dart';
 
 class PostStepForm extends StatefulWidget {
   static const String routeName = "/postStepForm";
-  const PostStepForm({Key key, @required this.category}) : super(key: key);
+  const PostStepForm(
+      {Key key, @required this.category, @required this.editPost})
+      : super(key: key);
 
   final String category;
+  final Post editPost;
   @override
   PostStepFormState createState() {
     return new PostStepFormState();
@@ -33,7 +36,12 @@ class PostStepFormState extends State<PostStepForm>
   @override
   void initState() {
     super.initState();
-    _post = Post(category: widget.category);
+    if (widget.editPost != null) {
+      _post = widget.editPost.copyWith();
+    } else {
+      _post = Post(category: widget.category);
+    }
+
     SuccessSnackbar().initialize(_scaffoldKey);
     FailSnackbar().initialize(_scaffoldKey);
   }
@@ -50,28 +58,32 @@ class PostStepFormState extends State<PostStepForm>
 
   @override
   Widget build(BuildContext context) {
-    final List<Step> steps = [
-      new Step(
-          title: const Text('게시판 종류'),
-          isActive: true,
-          state: StepState.indexed,
-          content: _buildType()),
-      new Step(
-          title: const Text('내용'),
-          isActive: true,
-          state: StepState.indexed,
-          content: _buildContents()),
-      new Step(
-          title: const Text('미디어'),
-          isActive: true,
-          state: StepState.indexed,
-          content: _buildGalleryFiles(context)),
-      new Step(
-          title: const Text('등록'),
-          isActive: true,
-          state: StepState.complete,
-          content: _buildAgree()),
-    ];
+    var typeStep = new Step(
+        title: const Text('게시판 종류'),
+        isActive: true,
+        state: StepState.indexed,
+        content: _buildType());
+
+    var contentsStep = new Step(
+        title: const Text('내용'),
+        isActive: true,
+        state: StepState.indexed,
+        content: _buildContents());
+    var mediaStep = new Step(
+        title: const Text('미디어'),
+        isActive: true,
+        state: StepState.indexed,
+        content: _buildGalleryFiles(context));
+    var registStep = new Step(
+        title: const Text('등록'),
+        isActive: true,
+        state: StepState.complete,
+        content: _buildAgree());
+    List<Step> steps = [];
+    steps.add(typeStep);
+    steps.add(contentsStep);
+    steps.add(mediaStep);
+    steps.add(registStep);
 
     return BlocListener(
         bloc: _postBloc,

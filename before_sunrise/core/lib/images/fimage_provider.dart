@@ -14,7 +14,6 @@ abstract class IFImageProvider {
     @required List<ByteData> byteDatas,
   });
   Future<void> removeImage({@required String imageUrl});
-  Future<void> removeImageFolder({@required String imageFolder});
 }
 
 class FImageProvider implements IFImageProvider {
@@ -44,10 +43,6 @@ class FImageProvider implements IFImageProvider {
 
   Future<void> removeImage({@required String imageUrl}) async {
     return await _imageRepository.removeImage(imageUrl: imageUrl);
-  }
-
-  Future<void> removeImageFolder({@required String imageFolder}) async {
-    return await _imageRepository.removeImageFolder(imageFolder: imageFolder);
   }
 
   @override

@@ -113,16 +113,10 @@ class OptionMenu {
   }
 
   Offset _calculateOffset(BuildContext context) {
-    double dx = _showRect.left + _showRect.width / 2.0 - menuWidth() / 2.0;
+    print("left : ${_showRect.left}, width : ${menuWidth()}");
+    double dx = kDeviceWidth - menuWidth() - 5;
     if (dx < 10.0) {
       dx = 10.0;
-    }
-
-    double widthOverCheck = kDeviceWidth + 5 - (dx + _col * (menuWidth() / 2));
-    print("over ${widthOverCheck}");
-    if (widthOverCheck < 0) {
-      dx = dx + (widthOverCheck / 2);
-      print("dx ${dx}");
     }
 
     double dy = _showRect.top - menuHeight();

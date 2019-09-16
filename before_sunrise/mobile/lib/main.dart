@@ -63,8 +63,12 @@ class _MainAppState extends State<MainApp> {
           return ProfileInputPage(value);
         },
         PostStepForm.routeName: (context) {
-          var value = ModalRoute.of(context).settings.arguments;
-          return PostStepForm(category: value);
+          Map<String, dynamic> infoMap =
+              ModalRoute.of(context).settings.arguments;
+          return PostStepForm(
+            category: infoMap["category"],
+            editPost: infoMap["editPost"],
+          );
         },
         PostDetailScreen.routeName: (context) {
           var post = ModalRoute.of(context).settings.arguments;

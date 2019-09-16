@@ -8,7 +8,6 @@ class Post {
     this.type = "",
     this.title = "",
     this.contents = "",
-    this.imageFolder = "",
     this.imageUrls,
     this.youtubeUrl = "",
     this.publishType = "",
@@ -30,7 +29,6 @@ class Post {
   String type;
   String title;
   String contents;
-  String imageFolder;
   List<dynamic> imageUrls;
   String youtubeUrl;
   String publishType;
@@ -53,7 +51,6 @@ class Post {
     this.type = snapshot.data["type"];
     this.title = snapshot.data["title"];
     this.contents = snapshot.data["contents"];
-    this.imageFolder = snapshot.data["imageFolder"];
     this.imageUrls = snapshot.data["imageUrls"];
     this.youtubeUrl = snapshot.data["youtubeUrl"];
     this.publishType = snapshot.data["publishType"];
@@ -70,7 +67,6 @@ class Post {
       "type": type,
       "title": title,
       "contents": contents,
-      "imageFolder": imageFolder,
       "imageUrls": imageUrls,
       "youtubeUrl": youtubeUrl,
       "publishType": publishType,
@@ -87,7 +83,6 @@ class Post {
     String type,
     String title,
     String contents,
-    String imageFolder,
     List<dynamic> imageUrls,
     String youtubeUrl,
     String publishType,
@@ -109,7 +104,6 @@ class Post {
       type: type ?? this.type,
       title: title ?? this.title,
       contents: contents ?? this.contents,
-      imageFolder: imageFolder ?? this.imageFolder,
       imageUrls: imageUrls ?? this.imageUrls,
       youtubeUrl: youtubeUrl ?? this.youtubeUrl,
       publishType: publishType ?? this.publishType,
@@ -140,7 +134,6 @@ class Post {
       type.hashCode ^
       title.hashCode ^
       contents.hashCode ^
-      imageFolder.hashCode ^
       imageUrls.hashCode ^
       youtubeUrl.hashCode ^
       publishType.hashCode ^

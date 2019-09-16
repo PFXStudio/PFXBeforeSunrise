@@ -14,6 +14,7 @@ class TogetherDetailWidget extends StatefulWidget {
 class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
   ScrollController _scrollController;
   TogetherDetailScrollEffects _scrollEffects;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -21,12 +22,19 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     _scrollEffects = TogetherDetailScrollEffects();
+
+    SuccessSnackbar().initialize(_scaffoldKey);
+    FailSnackbar().initialize(_scaffoldKey);
   }
 
   @override
   void dispose() {
     _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
+
+    SuccessSnackbar().initialize(null);
+    FailSnackbar().initialize(null);
+
     super.dispose();
   }
 
@@ -66,45 +74,68 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
     double _fabHeight;
     double _panelHeightOpen = 575.0;
     double _panelHeightClosed = 95.0;
+    final TogetherBloc _togetherBloc = TogetherBloc();
 
     return Scaffold(
+        key: _scaffoldKey,
         body: GestureDetector(
-      onTapDown: (tap) {
-        print("tap");
-      },
-      child: Stack(
-        children: [
-          // Container(
-          //   decoration: new BoxDecoration(
-          //     gradient: MainTheme.primaryLinearGradient,
-          //   ),
-          // ),
-          SlidingUpPanel(
-            maxHeight: _panelHeightOpen,
-            minHeight: _panelHeightClosed,
-            parallaxEnabled: true,
-            parallaxOffset: .5,
-            body: Stack(
-              children: <Widget>[
-                _buildEventBackdrop(),
-                slivers,
-                _BackButton(_scrollEffects),
-                _MenuButton(_scrollEffects, widget.together),
-                _buildStatusBarBackground(),
-              ],
-            ),
-            panel: _panel(),
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(18.0),
-                topRight: Radius.circular(18.0)),
-            onPanelSlide: (double pos) => setState(() {
-              _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) +
-                  _initFabHeight;
-            }),
+          onTapDown: (tap) {
+            print("tap");
+          },
+          child: Stack(
+            children: [
+              // Container(
+              //   decoration: new BoxDecoration(
+              //     gradient: MainTheme.primaryLinearGradient,
+              //   ),
+              // ),
+              Container(
+                child: BlocListener(
+                    bloc: _togetherBloc,
+                    listener: (context, state) async {
+                      print(state.toString());
+                      if (state is SuccessRemoveTogetherState) {
+                        SuccessSnackbar().show("success_remove_post", () {
+                          Navigator.pop(context);
+                        });
+                      }
+                    },
+                    child: BlocBuilder<TogetherBloc, TogetherState>(
+                        bloc: _togetherBloc,
+                        builder: (
+                          BuildContext context,
+                          TogetherState currentState,
+                        ) {
+                          return Container();
+                        })),
+              ),
+
+              SlidingUpPanel(
+                maxHeight: _panelHeightOpen,
+                minHeight: _panelHeightClosed,
+                parallaxEnabled: true,
+                parallaxOffset: .5,
+                body: Stack(
+                  children: <Widget>[
+                    _buildEventBackdrop(),
+                    slivers,
+                    _BackButton(_scrollEffects),
+                    _MenuButton(_scrollEffects, widget.together),
+                    _buildStatusBarBackground(),
+                  ],
+                ),
+                panel: _panel(),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(18.0),
+                    topRight: Radius.circular(18.0)),
+                onPanelSlide: (double pos) => setState(() {
+                  _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) +
+                      _initFabHeight;
+                }),
+              ),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 
   Widget _buildSynopsis() {
@@ -209,9 +240,9 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
           ),
         ),
         CommentList(
-            category: widget.together.category(),
-            postID: widget.together.postID,
-            imageFolder: widget.together.imageFolder),
+          category: widget.together.category(),
+          postID: widget.together.postID,
+        ),
       ],
     );
   }
@@ -338,6 +369,13 @@ class _MenuButton extends StatelessWidget {
     if (isMine == true) {
       menuItems.add(OptionItem(
           index: 2,
+          title: '편집',
+          image: Icon(
+            FontAwesomeIcons.edit,
+            color: Colors.white,
+          )));
+      menuItems.add(OptionItem(
+          index: 3,
           title: '삭제',
           image: Icon(
             FontAwesomeIcons.trash,
@@ -358,12 +396,14 @@ class _MenuButton extends StatelessWidget {
   void onClickMenu(item) {
     OptionItem optionItem = item;
 
-    if (optionItem.index == 2) {
+    if (optionItem.index == 3) {
       bool isMine = together.userID == ProfileBloc().signedProfile.userID;
       if (isMine == false) {
         FailSnackbar().show("error_not_mine", () {});
         return;
       }
+
+      TogetherBloc().dispatch(RemoveTogetherEvent(together: together));
     }
 
     print(optionItem.index);
@@ -423,7 +463,7 @@ class _Header extends StatelessWidget {
                 child: FlatIconTextButton(
                     iconData: FontAwesomeIcons.eye,
                     color: MainTheme.contentsTextStyle.color,
-                    text: sprintf("%d", [138]),
+                    text: sprintf("%d", [together.viewCount]),
                     onPressed: () => {}),
               ),
               Expanded(

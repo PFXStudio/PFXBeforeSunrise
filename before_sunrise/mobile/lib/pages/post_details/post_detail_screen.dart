@@ -46,19 +46,12 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     final double _initFabHeight = 120.0;
     double _fabHeight;
 
-    // final PostBloc _postbloc = Provider.of<PostBloc>(context);
     return Scaffold(
-      // floatingActionButton: _buildControlFAB(),
       key: _scaffoldKey,
       backgroundColor: MainTheme.bgndColor,
       body: Stack(
         children: [
           _buildRemovePost(),
-          // Container(
-          //   decoration: new BoxDecoration(
-          //     gradient: MainTheme.primaryLinearGradient,
-          //   ),
-          // ),
           SlidingUpPanel(
             maxHeight: _panelHeightOpen,
             minHeight: _panelHeightClosed,
@@ -564,9 +557,9 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           ),
         ),
         CommentList(
-            category: widget._post.category,
-            postID: widget._post.postID,
-            imageFolder: _post.imageFolder),
+          category: widget._post.category,
+          postID: widget._post.postID,
+        ),
       ],
     );
   }
@@ -593,6 +586,13 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     if (isMine == true) {
       menuItems.add(OptionItem(
           index: 2,
+          title: '편집',
+          image: Icon(
+            FontAwesomeIcons.edit,
+            color: Colors.white,
+          )));
+      menuItems.add(OptionItem(
+          index: 3,
           title: '삭제',
           image: Icon(
             FontAwesomeIcons.trash,
@@ -614,6 +614,15 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     OptionItem optionItem = item;
 
     if (optionItem.index == 2) {
+      Map<String, dynamic> infoMap = {
+        "category": _post.category,
+        "editPost": _post
+      };
+      Navigator.pushNamed(context, PostStepForm.routeName, arguments: infoMap);
+      return;
+    }
+
+    if (optionItem.index == 3) {
       bool isMine = _post.userID == ProfileBloc().signedProfile.userID;
       if (isMine == false) {
         FailSnackbar().show("error_not_mine", () {});

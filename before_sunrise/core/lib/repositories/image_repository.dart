@@ -186,19 +186,4 @@ class ImageRepository {
       return reference.delete();
     }
   }
-
-  Future<void> removeImageFolder({@required String imageFolder}) async {
-    if (imageFolder.isNotEmpty) {
-      final String targetFolder = Config().root() + "/$imageFolder}";
-      var encoded = Uri.encodeFull(targetFolder);
-
-      try {
-        StorageReference reference = _firebaseStorage.ref().child(encoded);
-
-        return reference.delete();
-      } catch (e) {
-        print(e);
-      }
-    }
-  }
 }

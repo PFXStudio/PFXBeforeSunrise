@@ -81,3 +81,15 @@ class SuccessTogetherState extends TogetherState {
     return SuccessTogetherState();
   }
 }
+
+class SuccessRemoveTogetherState extends TogetherState {
+  SuccessRemoveTogetherState();
+
+  @override
+  String toString() => 'SuccessRemoveTogetherState';
+
+  @override
+  TogetherState getStateCopy() {
+    return SuccessRemoveTogetherState();
+  }
+}

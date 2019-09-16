@@ -107,58 +107,60 @@ class HomeScreenState extends State<HomeScreen> {
               _homeBloc.dispatch(LoadTabEvent(index: _activePageIndex));
             },
           ),
-          body: RefreshIndicator(
-              onRefresh: () async {},
-              child: SlidingUpPanel(
-                minHeight: 50.0,
-                renderPanelSheet: false,
-                controller: _panelController,
-                body: BlocListener(
+          body: SlidingUpPanel(
+            minHeight: 50.0,
+            renderPanelSheet: false,
+            controller: _panelController,
+            body: BlocListener(
+                bloc: _homeBloc,
+                listener: (context, state) async {},
+                child: BlocBuilder<HomeBloc, HomeState>(
                     bloc: _homeBloc,
-                    listener: (context, state) async {},
-                    child: BlocBuilder<HomeBloc, HomeState>(
-                        bloc: _homeBloc,
-                        builder: (
-                          BuildContext context,
-                          HomeState currentState,
-                        ) {
-                          if (currentState is PostTabState) {
-                            return _pageView;
-                          }
+                    builder: (
+                      BuildContext context,
+                      HomeState currentState,
+                    ) {
+                      if (currentState is PostTabState) {
+                        return _pageView;
+                      }
 
-                          if (currentState is TogetherTabState) {
-                            return TogetherScreen(
-                              togetherBloc: TogetherBloc(),
-                            );
-                          }
+                      if (currentState is TogetherTabState) {
+                        return TogetherScreen(
+                          togetherBloc: TogetherBloc(),
+                        );
+                      }
 
-                          if (currentState is InfoTabState) {
-                            return InfoScreen(
-                              infoBloc: InfoBloc(),
-                            );
-                          }
+                      if (currentState is InfoTabState) {
+                        return InfoScreen(
+                          infoBloc: InfoBloc(),
+                        );
+                      }
 
-                          if (currentState is ProfileTabState) {
-                            return Container();
-                          }
-                          if (currentState is ErrorHomeState) {
-                            return new Container(
-                                child: new Center(
-                              child: new Text('Error'),
-                            ));
-                          }
-                          return new Container(
-                              child: new Center(
-                            child: new Text("В разработке"),
-                          ));
-                        })),
-                panel: Container(),
-              )),
+                      if (currentState is ProfileTabState) {
+                        return Container();
+                      }
+                      if (currentState is ErrorHomeState) {
+                        return new Container(
+                            child: new Center(
+                          child: new Text('Error'),
+                        ));
+                      }
+                      return new Container(
+                          child: new Center(
+                        child: new Text("В разработке"),
+                      ));
+                    })),
+            panel: Container(),
+          ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (_homeBloc.currentState is PostTabState) {
+                Map<String, dynamic> infoMap = {
+                  "category": categoryName(_activePageIndex.toString()),
+                };
+
                 Navigator.pushNamed(context, PostStepForm.routeName,
-                    arguments: categoryName(_activePageIndex.toString()));
+                    arguments: infoMap);
                 return;
               }
 
@@ -196,17 +198,5 @@ class HomeScreenState extends State<HomeScreen> {
             ],
           );
         });
-  }
-
-  String categoryName(String index) {
-    if (index == "0") {
-      return "/free/posts";
-    }
-
-    if (index == "1") {
-      return "/realtime/posts";
-    }
-
-    return "";
   }
 }
