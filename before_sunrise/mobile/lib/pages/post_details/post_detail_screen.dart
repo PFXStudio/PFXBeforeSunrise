@@ -1,5 +1,6 @@
 import 'package:before_sunrise/import.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:flutter/services.dart' show rootBundle;
 
 class PostDetailScreen extends StatefulWidget {
   const PostDetailScreen({
@@ -618,6 +619,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
         "category": _post.category,
         "editPost": _post
       };
+
       Navigator.pushNamed(context, PostStepForm.routeName, arguments: infoMap);
       return;
     }

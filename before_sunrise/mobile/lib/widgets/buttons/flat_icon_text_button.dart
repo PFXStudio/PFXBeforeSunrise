@@ -6,6 +6,7 @@ class FlatIconTextButton extends StatefulWidget {
       this.color = Colors.black,
       this.width = 200,
       this.text = "null",
+      this.enabled = true,
       this.onPressed = null});
   @override
   _FlatIconTextButtonState createState() => _FlatIconTextButtonState();
@@ -13,6 +14,7 @@ class FlatIconTextButton extends StatefulWidget {
   Color color = Colors.black;
   double width = 200;
   String text = "";
+  bool enabled = true;
   VoidCallback onPressed;
 }
 
@@ -28,13 +30,15 @@ class _FlatIconTextButtonState extends State<FlatIconTextButton> {
           right: 5,
           top: 5,
         ),
-        onPressed: widget.onPressed,
+        onPressed: widget.enabled == true ? widget.onPressed : () => {},
         child: Row(
           // Replace with a Row for horizontal icon + text
           children: <Widget>[
             Icon(
               widget.iconData,
-              color: widget.color,
+              color: widget.enabled == false
+                  ? MainTheme.disabledButtonColor
+                  : widget.color,
               size: 16,
             ),
             Padding(
@@ -42,7 +46,11 @@ class _FlatIconTextButtonState extends State<FlatIconTextButton> {
             ),
             Text(widget.text,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: widget.color, fontSize: 13)),
+                style: TextStyle(
+                    color: widget.enabled == false
+                        ? MainTheme.disabledButtonColor
+                        : widget.color,
+                    fontSize: 13)),
           ],
         ),
       ),

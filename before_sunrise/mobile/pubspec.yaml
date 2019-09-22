@@ -49,6 +49,7 @@ dependencies:
   flutter_map: ^0.5.0
   latlong: ^0.6.1
   flutter_rating_bar: ^2.0.0+2
+  network_image_to_byte: ^0.0.1
 
 dev_dependencies:
   flutter_test:

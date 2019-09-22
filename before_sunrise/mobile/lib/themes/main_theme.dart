@@ -8,7 +8,7 @@ class MainTheme {
   static const Color activeIndicatorColor = const Color(0xFFE55D57);
   static const Color pivotColor = const Color(0xFFe8b730);
   static const Color enabledButtonColor = const Color(0xFFee6d66);
-  static const Color disabledButtonColor = const Color(0x66e4e4e4);
+  static const Color disabledButtonColor = const Color(0xBB9e9e9e);
   static const Color appBarColor = const Color(0xFFE55D57);
   static const Color enabledIconColor = Colors.white;
 

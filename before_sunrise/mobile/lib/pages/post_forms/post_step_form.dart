@@ -44,7 +44,25 @@ class PostStepFormState extends State<PostStepForm>
 
     SuccessSnackbar().initialize(_scaffoldKey);
     FailSnackbar().initialize(_scaffoldKey);
+    _updateEditMode();
   }
+
+  _updateEditMode() => Future.delayed(Duration(seconds: 1), () async {
+        if (widget.editPost == null) {
+          return;
+        }
+
+        _titleController.text = widget.editPost.title;
+        _contentsController.text = widget.editPost.contents;
+        if (widget.editPost.imageUrls == null) {
+          return;
+        }
+
+        for (int i = 0; i < widget.editPost.imageUrls.length; i++) {
+          final cache = await CacheManager.getInstance();
+          final file = await cache.getFile(imageUrl);
+        }
+      });
 
   @override
   void dispose() {
@@ -187,6 +205,28 @@ class PostStepFormState extends State<PostStepForm>
   }
 
   Widget _buildType() {
+    if (widget.editPost != null) {
+      return Card(
+          elevation: 2.0,
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Container(
+              width: kDeviceWidth - MainTheme.edgeInsets.left,
+              height: 45,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  FlatIconTextButton(
+                    iconData: FontAwesomeIcons.thLarge,
+                    color: MainTheme.enabledButtonColor,
+                    text: getPostType(_post.category),
+                    enabled: false,
+                  )
+                ],
+              )));
+    }
     return Card(
         elevation: 2.0,
         color: Colors.white,
@@ -211,6 +251,10 @@ class PostStepFormState extends State<PostStepForm>
   }
 
   Widget _buildContents() {
+    if (widget.editPost != null) {
+      _post.type = widget.editPost.type;
+    }
+
     return Card(
         elevation: 2.0,
         color: Colors.white,
@@ -319,12 +363,13 @@ class PostStepFormState extends State<PostStepForm>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Padding(
-                          padding: EdgeInsets.only(left: 7, top: 5, bottom: 5),
+                          padding: EdgeInsets.only(left: 9, top: 5, bottom: 5),
                           child: FlatButton.icon(
                               focusColor: Colors.red,
                               icon: Icon(
                                 FontAwesomeIcons.image,
                                 color: MainTheme.enabledButtonColor,
+                                size: 18,
                               ),
                               label: Text(
                                 sprintf(

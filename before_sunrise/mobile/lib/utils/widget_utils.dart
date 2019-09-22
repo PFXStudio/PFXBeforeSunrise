@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:before_sunrise/import.dart';
 
 double kDeviceWidth = 0;
 double kDeviceHeight = 0;
@@ -23,4 +24,16 @@ String categoryName(String index) {
   }
 
   return "";
+}
+
+String getPostType(String category) {
+  if (category == "/free/posts") {
+    return "Free";
+  }
+
+  if (category == "/realtime/posts") {
+    return "RealTime";
+  }
+
+  return "Free";
 }
