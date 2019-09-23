@@ -190,6 +190,19 @@ class PostRepository {
     return _postCollection.add(data);
   }
 
+  Future<DocumentSnapshot> updatePost(
+      {@required String category, @required Map<String, dynamic> data}) async {
+    _postCollection =
+        Firestore.instance.collection(Config().root() + "${category}");
+    String postID = data["postID"];
+    if (postID != null && postID.isEmpty == false) {
+      await _postCollection.document(postID).setData(data, merge: true);
+      return await _postCollection.document(postID).get();
+    }
+
+    return null;
+  }
+
   Future<void> removePost(
       {@required String category, @required String postID}) async {
     print("removePost $postID");

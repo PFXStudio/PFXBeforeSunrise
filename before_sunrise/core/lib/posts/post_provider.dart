@@ -49,6 +49,8 @@ abstract class IPostProvider {
       @required String userID});
   Future<DocumentReference> createPost(
       {@required String category, @required Map<String, dynamic> data});
+  Future<DocumentSnapshot> updatePost(
+      {@required String category, @required Map<String, dynamic> data});
   Future<void> removePost({@required String category, @required String postID});
 }
 
@@ -157,6 +159,11 @@ class PostProvider implements IPostProvider {
   Future<DocumentReference> createPost(
       {@required String category, @required Map<String, dynamic> data}) async {
     return await _postRepository.createPost(category: category, data: data);
+  }
+
+  Future<DocumentSnapshot> updatePost(
+      {@required String category, @required Map<String, dynamic> data}) async {
+    return await _postRepository.updatePost(category: category, data: data);
   }
 
   Future<void> removePost(

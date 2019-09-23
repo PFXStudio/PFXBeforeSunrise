@@ -61,9 +61,9 @@ class Post {
 
   Object data() {
     return {
+      "postID": postID,
       "category": category,
       "userID": userID,
-      // "postID": postID, // 저장 할 이유 없음.
       "type": type,
       "title": title,
       "contents": contents,
@@ -88,7 +88,7 @@ class Post {
     String publishType,
     bool enabledAnonymous,
     DateTime created,
-    DateTime lastUpdate,
+    dynamic lastUpdate,
     bool isLike,
     int likeCount,
     int commentCount,

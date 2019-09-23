@@ -38,7 +38,6 @@ export 'package:keyboard_visibility/keyboard_visibility.dart';
 export 'package:flutter/rendering.dart';
 export 'package:url_launcher/url_launcher.dart';
 export 'package:flutter_map/flutter_map.dart';
-export 'package:network_image_to_byte/network_image_to_byte.dart';
 
 export 'package:core/import.dart';
 

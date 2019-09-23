@@ -13,8 +13,8 @@ class LoadPostEvent extends PostEvent {
   final IProfileProvider _profileProvider = ProfileProvider();
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
-  String category;
-  Post post;
+  final String category;
+  final Post post;
 
   @override
   Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
@@ -84,8 +84,8 @@ class ToggleLikePostEvent extends PostEvent {
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
 
-  Post post;
-  bool isLike;
+  final Post post;
+  final bool isLike;
 
   @override
   Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
@@ -141,10 +141,28 @@ class CreatePostEvent extends PostEvent {
         imageUrls = await _imageProvider.uploadPostImages(
             imageFolder: imageFolder, byteDatas: byteDatas);
       }
+
       post.userID = userID;
       post.created = _firestoreTimestamp;
       post.lastUpdate = _firestoreTimestamp;
       post.imageUrls = imageUrls;
+
+      if (post.postID != null && post.postID.isEmpty == false) {
+        DocumentSnapshot snapshot = await _postProvider.updatePost(
+            category: post.category, data: post.data());
+
+        Post updatedPost = Post();
+        updatedPost.initialize(snapshot);
+        updatedPost.profile = post.profile;
+        updatedPost.isLike = post.isLike;
+        updatedPost.likeCount = post.likeCount;
+        updatedPost.commentCount = post.commentCount;
+        updatedPost.warningCount = post.warningCount;
+        updatedPost.viewCount = post.viewCount;
+
+        return new SuccessPostState(post: updatedPost);
+      }
+
       DocumentReference reference = await _postProvider.createPost(
           category: post.category, data: post.data());
       if (reference == null) {

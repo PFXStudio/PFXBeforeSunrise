@@ -58,10 +58,7 @@ class PostStepFormState extends State<PostStepForm>
           return;
         }
 
-        for (int i = 0; i < widget.editPost.imageUrls.length; i++) {
-          final cache = await CacheManager.getInstance();
-          final file = await cache.getFile(imageUrl);
-        }
+        for (int i = 0; i < widget.editPost.imageUrls.length; i++) {}
       });
 
   @override

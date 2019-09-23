@@ -81,10 +81,11 @@ class ErrorPostState extends PostState {
 }
 
 class SuccessPostState extends PostState {
-  SuccessPostState();
+  SuccessPostState({this.post});
 
   @override
   String toString() => 'SuccessPostState';
+  final Post post;
 
   @override
   PostState getStateCopy() {

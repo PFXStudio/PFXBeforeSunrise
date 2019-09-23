@@ -21,7 +21,7 @@ class PostDetailScreen extends StatefulWidget {
 
 class PostDetailScreenState extends State<PostDetailScreen> {
   final PostBloc _postBloc = PostBloc();
-  Post get _post => widget._post;
+  Post _post;
   int _currentPostImageIndex = 0;
   GlobalKey moreMenuKey = GlobalKey();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -29,6 +29,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   @override
   void initState() {
     super.initState();
+    _post = widget._post.copyWith();
     SuccessSnackbar().initialize(_scaffoldKey);
     FailSnackbar().initialize(_scaffoldKey);
   }
@@ -478,6 +479,10 @@ class PostDetailScreenState extends State<PostDetailScreen> {
               SuccessSnackbar().show("success_remove_post", () {
                 Navigator.pop(context);
               });
+            }
+
+            if (state is SuccessPostState) {
+              _post = state.post.copyWith();
             }
           },
           child: BlocBuilder<PostBloc, PostState>(
