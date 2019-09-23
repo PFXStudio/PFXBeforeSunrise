@@ -625,6 +625,30 @@ class PostDetailScreenState extends State<PostDetailScreen> {
         "editPost": _post
       };
 
+      if (_post.imageUrls != null) {
+        for (var url in _post.imageUrls) {
+          Image image = Image(image: new CachedNetworkImageProvider(url));
+          image.toByteData();
+          image.image.toString();
+          String value = image.toString();
+          ByteData data = await image.toByteData(); 
+          data.buffer.asUInt8List();
+
+          print(value);
+          Uint8List bytes = base64.decode(value;
+          image.to
+        }
+
+        var sunImage = new NetworkImage(
+        "https://resources.ninghao.org/images/childhood-in-a-picture.jpg");
+    sunImage.obtainKey(new ImageConfiguration()).then((val) {
+      var load = sunImage.load(val);
+      load.addListener((listener, err) async {
+        setState(() => image = listener);
+      });
+    });
+      }
+
       Navigator.pushNamed(context, PostStepForm.routeName, arguments: infoMap);
       return;
     }
