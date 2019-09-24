@@ -68,6 +68,7 @@ class _MainAppState extends State<MainApp> {
           return PostStepForm(
             category: infoMap["category"],
             editPost: infoMap["editPost"],
+            editImageMap: infoMap["editImageMap"],
           );
         },
         PostDetailScreen.routeName: (context) {

@@ -3,11 +3,15 @@ import 'package:before_sunrise/import.dart';
 class PostStepForm extends StatefulWidget {
   static const String routeName = "/postStepForm";
   const PostStepForm(
-      {Key key, @required this.category, @required this.editPost})
+      {Key key,
+      @required this.category,
+      @required this.editPost,
+      @required this.editImageMap})
       : super(key: key);
 
   final String category;
   final Post editPost;
+  final Map<String, dynamic> editImageMap;
   @override
   PostStepFormState createState() {
     return new PostStepFormState();
@@ -27,6 +31,7 @@ class PostStepFormState extends State<PostStepForm>
 // multi image picker 이미지 데이터가 사라짐. 받아오면 바로 백업.
   final List<ByteData> _selectedThumbDatas = List<ByteData>();
   final List<ByteData> _selectedOriginalDatas = List<ByteData>();
+  Map<String, dynamic> _editImageMap = Map<String, dynamic>();
 
   bool sanctionAgreeEnabled = false;
   int currentStep = 0;
@@ -40,6 +45,16 @@ class PostStepFormState extends State<PostStepForm>
       _post = widget.editPost.copyWith();
     } else {
       _post = Post(category: widget.category);
+    }
+
+    if (widget.editImageMap != null) {
+      var keys = widget.editImageMap.keys.toList();
+      for (var key in keys) {
+        ByteData byteData = widget.editImageMap[key];
+        _selectedThumbDatas.add(byteData);
+        _selectedOriginalDatas.add(byteData);
+        _editImageMap[key] = key;
+      }
     }
 
     SuccessSnackbar().initialize(_scaffoldKey);
@@ -467,6 +482,14 @@ class PostStepFormState extends State<PostStepForm>
               onPressed: () {
                 _selectedThumbDatas.removeAt(index);
                 _selectedOriginalDatas.removeAt(index);
+                if (_editImageMap != null) {
+                  var keys = _editImageMap.keys.toList();
+                  if (keys.length > index) {
+                    print([keys[index]]);
+                    _editImageMap.remove(keys[index]);
+                  }
+                }
+
                 setState(() {});
                 print("deleted");
               },

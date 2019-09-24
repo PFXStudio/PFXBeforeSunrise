@@ -1,3 +1,6 @@
+import 'dart:ui';
+import 'dart:io' as Io;
+import 'package:image/image.dart' as libImage;
 import 'package:before_sunrise/import.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter/services.dart' show rootBundle;
@@ -616,7 +619,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     menu.show(widgetKey: moreMenuKey);
   }
 
-  void onClickMenu(item) {
+  void onClickMenu(item) async {
     OptionItem optionItem = item;
 
     if (optionItem.index == 2) {
@@ -625,31 +628,15 @@ class PostDetailScreenState extends State<PostDetailScreen> {
         "editPost": _post
       };
 
-      if (_post.imageUrls != null) {
-        for (var url in _post.imageUrls) {
-          Image image = Image(image: new CachedNetworkImageProvider(url));
-          image.toByteData();
-          image.image.toString();
-          String value = image.toString();
-          ByteData data = await image.toByteData(); 
-          data.buffer.asUInt8List();
-
-          print(value);
-          Uint8List bytes = base64.decode(value;
-          image.to
+      downloadAllImages((editImageMap) {
+        if (editImageMap != null) {
+          infoMap["editImageMap"] = editImageMap;
         }
 
-        var sunImage = new NetworkImage(
-        "https://resources.ninghao.org/images/childhood-in-a-picture.jpg");
-    sunImage.obtainKey(new ImageConfiguration()).then((val) {
-      var load = sunImage.load(val);
-      load.addListener((listener, err) async {
-        setState(() => image = listener);
+        Navigator.pushNamed(context, PostStepForm.routeName,
+            arguments: infoMap);
       });
-    });
-      }
 
-      Navigator.pushNamed(context, PostStepForm.routeName, arguments: infoMap);
       return;
     }
 
@@ -664,6 +651,56 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     }
 
     print(optionItem.index);
+  }
+
+  void downloadAllImages(void Function(Map<String, ByteData>) callback) async {
+    if (_post.imageUrls == null || _post.imageUrls.length <= 0) {
+      callback(null);
+      return;
+    }
+
+    Map<String, ByteData> editImageMap = {};
+    for (String url in _post.imageUrls) {
+      final image = CachedNetworkImageProvider(url);
+      final key = await image.obtainKey(ImageConfiguration());
+      final load = image.load(key);
+
+      // final image = NetworkImage(url);
+      // final key = await image.obtainKey(ImageConfiguration());
+      // final load = image.load(key);
+      load.addListener(
+        ImageStreamListener((listener, err) async {
+          final byteData =
+              await listener.image.toByteData(format: ImageByteFormat.png);
+          final bytes = byteData.buffer.asUint8List();
+          final thumbnailImage = libImage.Image.fromBytes(
+              listener.image.width, listener.image.height, bytes);
+          // final resizeImage =
+          //     libImage.copyResize(thumbnailImage, width: 100, height: 100);
+          // final resizeImage =
+          //     libImage.copyResizeCropSquare(thumbnailImage, 200);
+          final thumbnailBytes = thumbnailImage.getBytes();
+          var thumbnailByteData = new ByteData.view(thumbnailBytes.buffer);
+
+          editImageMap[url] = thumbnailByteData;
+
+          Completer completer = new Completer<ByteData>();
+          defaultBinaryMessenger.setMessageHandler(url,
+              (ByteData message) async {
+            completer.complete(message);
+            defaultBinaryMessenger.setMessageHandler(url, null);
+            return message;
+          });
+
+          print("download $url");
+          if (_post.imageUrls.length != editImageMap.keys.length) {
+            return;
+          }
+
+          callback(editImageMap);
+        }),
+      );
+    }
   }
 
   void stateChanged(bool isShow) {
