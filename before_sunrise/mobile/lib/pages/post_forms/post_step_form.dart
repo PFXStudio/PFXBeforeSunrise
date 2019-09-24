@@ -32,6 +32,7 @@ class PostStepFormState extends State<PostStepForm>
   final List<ByteData> _selectedThumbDatas = List<ByteData>();
   final List<ByteData> _selectedOriginalDatas = List<ByteData>();
   Map<String, dynamic> _editImageMap = Map<String, dynamic>();
+  List<String> _removeImageUrls = List<String>();
 
   bool sanctionAgreeEnabled = false;
   int currentStep = 0;
@@ -43,18 +44,17 @@ class PostStepFormState extends State<PostStepForm>
     super.initState();
     if (widget.editPost != null) {
       _post = widget.editPost.copyWith();
+      if (widget.editImageMap != null) {
+        var keys = widget.editImageMap.keys.toList();
+        for (var key in keys) {
+          ByteData byteData = widget.editImageMap[key];
+          _selectedThumbDatas.add(byteData);
+          _selectedOriginalDatas.add(byteData);
+          _editImageMap[key] = key;
+        }
+      }
     } else {
       _post = Post(category: widget.category);
-    }
-
-    if (widget.editImageMap != null) {
-      var keys = widget.editImageMap.keys.toList();
-      for (var key in keys) {
-        ByteData byteData = widget.editImageMap[key];
-        _selectedThumbDatas.add(byteData);
-        _selectedOriginalDatas.add(byteData);
-        _editImageMap[key] = key;
-      }
     }
 
     SuccessSnackbar().initialize(_scaffoldKey);
@@ -143,54 +143,7 @@ class PostStepFormState extends State<PostStepForm>
                         type: StepperType.vertical,
                         currentStep: currentStep,
                         onStepContinue: () {
-                          if (currentStep == 0 ||
-                              currentStep == steps.length - 1) {
-                            if (_post.type == null) {
-                              FailSnackbar().show("error_post_form_type", null);
-                              return;
-                            }
-                          }
-
-                          if (currentStep == 1 ||
-                              currentStep == steps.length - 1) {
-                            if (_titleController.text.length <= 0) {
-                              FailSnackbar()
-                                  .show("error_post_form_title", null);
-                              return;
-                            }
-
-                            if (_contentsController.text.length <= 0) {
-                              FailSnackbar()
-                                  .show("error_post_form_title", null);
-                              return;
-                            }
-                          }
-
-                          if (currentStep == 2 ||
-                              currentStep == steps.length - 1) {}
-                          if (currentStep == 3 ||
-                              currentStep == steps.length - 1) {
-                            if (sanctionAgreeEnabled == false) {
-                              FailSnackbar().show("error_agree_check", null);
-                              return;
-                            }
-                          }
-
-                          setState(() {
-                            if (currentStep < steps.length - 1) {
-                              currentStep = currentStep + 1;
-                            } else {
-                              _post.title = _titleController.text;
-                              _post.contents = _contentsController.text;
-                              _post.youtubeUrl = _youtubeController.text;
-
-                              _postBloc.dispatch(CreatePostEvent(
-                                  post: _post,
-                                  byteDatas: _selectedOriginalDatas));
-
-                              return;
-                            }
-                          });
+                          _touchedRegistButton(steps.length - 1);
                         },
                         onStepCancel: () {
                           setState(() {
@@ -480,16 +433,16 @@ class PostStepFormState extends State<PostStepForm>
               ),
               color: MainTheme.enabledIconColor,
               onPressed: () {
-                _selectedThumbDatas.removeAt(index);
-                _selectedOriginalDatas.removeAt(index);
-                if (_editImageMap != null) {
+                if (_editImageMap != null &&
+                    _editImageMap.keys.length > index) {
                   var keys = _editImageMap.keys.toList();
-                  if (keys.length > index) {
-                    print([keys[index]]);
-                    _editImageMap.remove(keys[index]);
-                  }
+                  String key = keys[index];
+                  _removeImageUrls.add(key);
+                  _editImageMap.remove(keys[index]);
                 }
 
+                _selectedThumbDatas.removeAt(index);
+                _selectedOriginalDatas.removeAt(index);
                 setState(() {});
                 print("deleted");
               },
@@ -577,5 +530,54 @@ class PostStepFormState extends State<PostStepForm>
                     ),
                   ],
                 ))));
+  }
+
+  void _touchedRegistButton(int lastIndex) {
+    if (currentStep == 0 || currentStep == lastIndex) {
+      if (_post.type == null) {
+        FailSnackbar().show("error_post_form_type", null);
+        return;
+      }
+    }
+
+    if (currentStep == 1 || currentStep == lastIndex) {
+      if (_titleController.text.length <= 0) {
+        FailSnackbar().show("error_post_form_title", null);
+        return;
+      }
+
+      if (_contentsController.text.length <= 0) {
+        FailSnackbar().show("error_post_form_title", null);
+        return;
+      }
+    }
+
+    if (currentStep == 2 || currentStep == lastIndex) {}
+    if (currentStep == 3 || currentStep == lastIndex) {
+      if (sanctionAgreeEnabled == false) {
+        FailSnackbar().show("error_agree_check", null);
+        return;
+      }
+    }
+
+    // _removeImageUrls 삭제 된 이미지들
+    // _editImageMap 유지 된 이미지들
+    if (_editImageMap != null && _editImageMap.keys.length > 0) {}
+    // _selectedOriginalDatas에서 _editImageMap 갯수 이후는 추가 된 이미지들
+
+    setState(() {
+      if (currentStep < lastIndex) {
+        currentStep = currentStep + 1;
+      } else {
+        _post.title = _titleController.text;
+        _post.contents = _contentsController.text;
+        _post.youtubeUrl = _youtubeController.text;
+
+        _postBloc.dispatch(
+            CreatePostEvent(post: _post, byteDatas: _selectedOriginalDatas));
+
+        return;
+      }
+    });
   }
 }

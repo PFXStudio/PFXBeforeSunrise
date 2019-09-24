@@ -673,25 +673,12 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           final byteData =
               await listener.image.toByteData(format: ImageByteFormat.png);
           final bytes = byteData.buffer.asUint8List();
-          final thumbnailImage = libImage.Image.fromBytes(
+          final originalImage = libImage.Image.fromBytes(
               listener.image.width, listener.image.height, bytes);
-          // final resizeImage =
-          //     libImage.copyResize(thumbnailImage, width: 100, height: 100);
-          // final resizeImage =
-          //     libImage.copyResizeCropSquare(thumbnailImage, 200);
-          final thumbnailBytes = thumbnailImage.getBytes();
-          var thumbnailByteData = new ByteData.view(thumbnailBytes.buffer);
+          final originalBytes = originalImage.getBytes();
+          var originalByteData = new ByteData.view(originalBytes.buffer);
 
-          editImageMap[url] = thumbnailByteData;
-
-          Completer completer = new Completer<ByteData>();
-          defaultBinaryMessenger.setMessageHandler(url,
-              (ByteData message) async {
-            completer.complete(message);
-            defaultBinaryMessenger.setMessageHandler(url, null);
-            return message;
-          });
-
+          editImageMap[url] = originalByteData;
           print("download $url");
           if (_post.imageUrls.length != editImageMap.keys.length) {
             return;

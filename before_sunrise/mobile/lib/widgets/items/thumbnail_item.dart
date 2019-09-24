@@ -79,6 +79,8 @@ class _ThumbnailItemState extends State<ThumbnailItem> {
       key: ValueKey(widget.data.hashCode),
       fit: BoxFit.cover,
       gaplessPlayback: true,
+      width: widget.width.toDouble(),
+      height: widget.height.toDouble(),
     );
   }
 }
