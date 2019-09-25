@@ -273,7 +273,7 @@ class PostStepFormState extends State<PostStepForm>
                                           left: 10.0, right: 10.0),
                                       child: new TextFormField(
                                         maxLength: 512,
-                                        maxLines: 15,
+                                        maxLines: 10,
                                         focusNode: _contentsFocusNode,
                                         controller: _contentsController,
                                         decoration: new InputDecoration(
