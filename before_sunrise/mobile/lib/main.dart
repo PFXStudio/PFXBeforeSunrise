@@ -83,7 +83,14 @@ class _MainAppState extends State<MainApp> {
             profile: profile,
           );
         },
-        TogetherStepForm.routeName: (context) => TogetherStepForm(),
+        TogetherStepForm.routeName: (context) {
+          Map<String, dynamic> infoMap =
+              ModalRoute.of(context).settings.arguments;
+          return TogetherStepForm(
+            editPost: infoMap["editPost"],
+            editImageMap: infoMap["editImageMap"],
+          );
+        },
       },
     );
   }

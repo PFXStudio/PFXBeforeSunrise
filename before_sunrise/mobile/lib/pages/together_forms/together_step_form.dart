@@ -4,7 +4,11 @@ import 'package:before_sunrise/pages/together_forms/together_form_price.dart';
 
 class TogetherStepForm extends StatefulWidget {
   static const String routeName = "/togetherStepForm";
-  TogetherStepForm({Key key}) : super(key: key);
+  TogetherStepForm({Key key, this.editPost, this.editImageMap})
+      : super(key: key);
+
+  final Together editPost;
+  final Map<String, dynamic> editImageMap;
 
   @override
   _TogetherStepFormState createState() => new _TogetherStepFormState();
@@ -18,12 +22,15 @@ class _TogetherStepFormState extends State<TogetherStepForm>
   final TextEditingController _contentsController = new TextEditingController();
   final TextEditingController _youtubeController = new TextEditingController();
 
-  FocusNode _focusNode = new FocusNode();
+  FocusNode _titleFocusNode = new FocusNode();
+  FocusNode _contentsFocusNode = new FocusNode();
+  FocusNode _youtubeFocusNode = new FocusNode();
   GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  Together together = Together();
+  Together _together;
 // multi image picker 이미지 데이터가 사라짐. 받아오면 바로 백업.
-  final List<ByteData> selectedThumbDatas = List<ByteData>();
-  final List<ByteData> selectedOriginalDatas = List<ByteData>();
+  final List<ByteData> _selectedOriginalDatas = List<ByteData>();
+  Map<String, dynamic> _editImageMap = Map<String, dynamic>();
+  List<String> _removeImageUrls = List<String>();
 
   int currentStep = 0;
   final int maxPicturesCount = 20;
@@ -34,19 +41,45 @@ class _TogetherStepFormState extends State<TogetherStepForm>
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(() {
-      setState(() {});
-      print('Has focus: $_focusNode.hasFocus');
-    });
+    if (widget.editPost != null) {
+      _together = widget.editPost.copyWith();
+      if (widget.editImageMap != null) {
+        var keys = widget.editImageMap.keys.toList();
+        for (var key in keys) {
+          ByteData byteData = widget.editImageMap[key];
+          _selectedOriginalDatas.add(byteData);
+          _editImageMap[key] = key;
+        }
+      }
+    } else {
+      _together = Together();
+    }
 
     SuccessSnackbar().initialize(_scaffoldKey);
     FailSnackbar().initialize(_scaffoldKey);
+    _updateEditMode();
   }
+
+  _updateEditMode() => Future.delayed(Duration(seconds: 1), () async {
+        if (widget.editPost == null) {
+          return;
+        }
+
+        _titleController.text = widget.editPost.title;
+        _contentsController.text = widget.editPost.contents;
+        _youtubeController.text = widget.editPost.youtubeUrl;
+
+        if (widget.editPost.imageUrls == null) {
+          return;
+        }
+      });
 
   @override
   void dispose() {
-    _focusNode.dispose();
-    together = Together();
+    _titleFocusNode.dispose();
+    _contentsFocusNode.dispose();
+    _youtubeFocusNode.dispose();
+    _together = null;
 
     super.dispose();
   }
@@ -107,112 +140,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                         type: StepperType.vertical,
                         currentStep: currentStep,
                         onStepContinue: () {
-                          if (currentStep == 0 ||
-                              currentStep == steps.length - 1) {
-                            if (together.dateString == null ||
-                                together.dateString.length <= 0) {
-                              FailSnackbar().show("error_together_form_date",
-                                  () {
-                                setState(() {
-                                  currentStep = 0;
-                                });
-                              });
-                              return;
-                            }
-
-                            if (together.clubID == null ||
-                                together.clubID.length <= 0) {
-                              FailSnackbar().show("error_together_form_club",
-                                  () {
-                                setState(() {
-                                  currentStep = 0;
-                                });
-                              });
-                              return;
-                            }
-
-                            if (together.hardCount == 0 &&
-                                together.champagneCount == 0) {
-                              FailSnackbar()
-                                  .show("error_together_form_cocktail", () {
-                                setState(() {
-                                  currentStep = 0;
-                                });
-                              });
-                              return;
-                            }
-
-                            if (together.tablePrice <= 0) {
-                              FailSnackbar().show("error_together_form_price",
-                                  () {
-                                setState(() {
-                                  currentStep = 0;
-                                });
-                              });
-                              return;
-                            }
-
-                            if (together.totalCount < 2 ||
-                                together.restCount < 1) {
-                              FailSnackbar().show("error_together_form_count",
-                                  () {
-                                setState(() {
-                                  currentStep = 0;
-                                });
-                              });
-                              return;
-                            }
-                          }
-
-                          if (currentStep == 1 ||
-                              currentStep == steps.length - 1) {
-                            if (_titleController.text.length <= 0) {
-                              FailSnackbar().show("error_together_form_title",
-                                  () {
-                                setState(() {
-                                  currentStep = 1;
-                                });
-                              });
-                              return;
-                            }
-
-                            if (_contentsController.text.length <= 0) {
-                              FailSnackbar()
-                                  .show("error_together_form_contents", () {
-                                setState(() {
-                                  currentStep = 1;
-                                });
-                              });
-                              return;
-                            }
-                          }
-
-                          if (currentStep == 2 ||
-                              currentStep == steps.length - 1) {}
-                          if (currentStep == 3 ||
-                              currentStep == steps.length - 1) {
-                            if (sanctionAgreeEnabled == false ||
-                                phoneNumberAgreeEnabled == false) {
-                              FailSnackbar().show("error_agree_check", null);
-                              return;
-                            }
-                          }
-
-                          setState(() {
-                            if (currentStep < steps.length - 1) {
-                              currentStep = currentStep + 1;
-                            } else {
-                              together.title = _titleController.text;
-                              together.contents = _contentsController.text;
-                              together.youtubeUrl = _youtubeController.text;
-
-                              _togetherBloc.dispatch(CreateTogetherEvent(
-                                  together: together,
-                                  byteDatas: selectedOriginalDatas));
-
-                              return;
-                            }
-                          });
+                          _touchedRegistButton(steps.length - 1);
                         },
                         onStepCancel: () {
                           setState(() {
@@ -251,42 +179,75 @@ class _TogetherStepFormState extends State<TogetherStepForm>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                TogetherFormDate(callback: (dateTime) {
-                  if (dateTime == null) {
-                    return;
-                  }
+                TogetherFormDate(
+                    editSelectedDate: (_together.dateString != null &&
+                            _together.dateString.length > 0)
+                        ? CoreConst.togetherDateFormat
+                            .parse(_together.dateString)
+                        : null,
+                    callback: (dateTime) {
+                      if (dateTime == null) {
+                        return;
+                      }
 
-                  together.dateString =
-                      CoreConst.togetherDateFormat.format(dateTime);
-                }),
+                      _together.dateString =
+                          CoreConst.togetherDateFormat.format(dateTime);
+                    }),
                 TogetherFormClub(
+                  editSelectedClubID:
+                      (_together.clubID != null && _together.clubID.length > 0)
+                          ? _together.clubID
+                          : null,
                   callback: (clubID) {
                     print(clubID);
-                    together.clubID = clubID;
+                    _together.clubID = clubID;
                   },
                 ),
                 TogetherFormCocktailCount(
-                  callback: (hardCount, champagneCount, serviceCount) {
-                    together.hardCount = hardCount;
-                    together.champagneCount = champagneCount;
-                    together.serviceCount = serviceCount;
+                  editCocktailCountInfo: (_together.hardCount != 0 &&
+                          _together.champagneCount != 0 &&
+                          _together.serviceCount != 0)
+                      ? CocktailCountInfo(
+                          hardCount: _together.hardCount.toDouble(),
+                          champagneCount: _together.champagneCount.toDouble(),
+                          serviceCount: _together.serviceCount.toDouble())
+                      : null,
+                  callback: (cocktailCountInfo) {
+                    _together.hardCount = cocktailCountInfo.hardCount.toInt();
+                    _together.champagneCount =
+                        cocktailCountInfo.champagneCount.toInt();
+                    _together.serviceCount =
+                        cocktailCountInfo.serviceCount.toInt();
                   },
                 ),
-                TogetherFormPrice(callback: (tablePrice, tipPrice) {
-                  together.tablePrice = tablePrice;
-                  together.tipPrice = tipPrice;
-                  setState(() {});
-                }),
-                TogetherFormMemberCount(callback: (totalCount, restCount) {
-                  together.totalCount = totalCount;
-                  together.restCount = restCount;
-                  setState(() {});
-                }),
+                TogetherFormPrice(
+                    editPriceInfo: (_together.tablePrice != 0)
+                        ? PriceInfo(
+                            tablePrice: _together.tablePrice.toDouble(),
+                            tipPrice: _together.tipPrice.toDouble())
+                        : null,
+                    callback: (priceInfo) {
+                      _together.tablePrice = priceInfo.tablePrice.toInt();
+                      _together.tipPrice = priceInfo.tipPrice.toInt();
+                      setState(() {});
+                    }),
+                TogetherFormMemberCount(
+                    editMemberCountInfo: (_together.totalCount != 0)
+                        ? MemberCountInfo(
+                            totalCount: _together.totalCount.toDouble(),
+                            restCount: _together.restCount.toDouble())
+                        : null,
+                    callback: (memberCountInfo) {
+                      _together.totalCount = memberCountInfo.totalCount.toInt();
+                      _together.restCount = memberCountInfo.restCount.toInt();
+                      setState(() {});
+                    }),
                 FlatIconTextButton(
                     color: MainTheme.enabledButtonColor,
                     iconData: FontAwesomeIcons.moneyBillWave,
-                    text: (together.totalCount != 0 && together.tablePrice != 0)
-                        ? "${together.tablePrice + together.tipPrice}만원 / ${together.totalCount}명 = ${((together.tablePrice + together.tipPrice) / together.totalCount.toDouble()).toStringAsFixed(1)} 만원"
+                    text: (_together.totalCount != 0 &&
+                            _together.tablePrice != 0)
+                        ? "${_together.tablePrice + _together.tipPrice}만원 / ${_together.totalCount}명 = ${((_together.tablePrice + _together.tipPrice) / _together.totalCount.toDouble()).toStringAsFixed(1)} 만원"
                         : "..."),
               ],
             )));
@@ -301,7 +262,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
         ),
         child: Container(
             width: kDeviceWidth - MainTheme.edgeInsets.left,
-            height: 400,
+            height: 410,
             child: Center(
                 child: new ListView(
               shrinkWrap: true,
@@ -326,6 +287,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                                       padding: EdgeInsets.only(
                                           left: 10.0, right: 10.0),
                                       child: new TextFormField(
+                                        focusNode: _titleFocusNode,
                                         controller: _titleController,
                                         decoration: new InputDecoration(
                                             labelText: "Title",
@@ -346,9 +308,11 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(
-                                          left: 10.0, right: 10.0),
+                                          left: 10.0, right: 10.0, bottom: 10),
                                       child: new TextFormField(
+                                        maxLength: 512,
                                         maxLines: 15,
+                                        focusNode: _contentsFocusNode,
                                         controller: _contentsController,
                                         decoration: new InputDecoration(
                                             labelText: "Contents",
@@ -396,7 +360,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                 ),
                 child: Container(
                   width: kDeviceWidth - MainTheme.edgeInsets.left,
-                  height: (selectedThumbDatas.length > 0) ? 300 : 114,
+                  height: (_selectedOriginalDatas.length > 0) ? 300 : 114,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -414,13 +378,13 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                                     LocalizableLoader.of(context)
                                         .text("add_pictures_button"),
                                     [
-                                      selectedThumbDatas.length,
+                                      _selectedOriginalDatas.length,
                                       maxPicturesCount
                                     ]),
                                 style: MainTheme.enabledFlatIconTextButtonStyle,
                               ),
                               onPressed: () {
-                                if (selectedThumbDatas.length >=
+                                if (_selectedOriginalDatas.length >=
                                     maxPicturesCount) {
                                   FailSnackbar()
                                       .show("notice_remove_pictures", null);
@@ -438,7 +402,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                             color: Colors.grey[400],
                           )),
                       Expanded(child: _buildGridView(context)),
-                      selectedThumbDatas.length == 0
+                      _selectedOriginalDatas.length == 0
                           ? Container()
                           : Padding(
                               padding: EdgeInsets.only(left: 10),
@@ -451,7 +415,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                       Padding(
                         padding: EdgeInsets.only(left: 20, top: 5, bottom: 5),
                         child: TextField(
-                          focusNode: _focusNode,
+                          focusNode: _youtubeFocusNode,
                           controller: _youtubeController,
                           keyboardType: TextInputType.multiline,
                           style: TextStyle(fontSize: 16.0, color: Colors.black),
@@ -480,15 +444,15 @@ class _TogetherStepFormState extends State<TogetherStepForm>
   }
 
   Widget _buildGridView(BuildContext context) {
-    if (selectedThumbDatas.length <= 0) {
+    if (_selectedOriginalDatas.length <= 0) {
       return Container();
     }
 
     return GridView.count(
       padding: MainTheme.edgeInsets,
       crossAxisCount: 4,
-      children: List.generate(selectedThumbDatas.length, (index) {
-        ByteData data = selectedThumbDatas[index];
+      children: List.generate(_selectedOriginalDatas.length, (index) {
+        ByteData data = _selectedOriginalDatas[index];
         return Stack(children: <Widget>[
           ThumbnailItem(
             data: data,
@@ -505,8 +469,15 @@ class _TogetherStepFormState extends State<TogetherStepForm>
               ),
               color: MainTheme.enabledIconColor,
               onPressed: () {
-                selectedThumbDatas.removeAt(index);
-                selectedOriginalDatas.removeAt(index);
+                if (_editImageMap != null &&
+                    _editImageMap.keys.length > index) {
+                  var keys = _editImageMap.keys.toList();
+                  String key = keys[index];
+                  _removeImageUrls.add(key);
+                  _editImageMap.remove(keys[index]);
+                }
+
+                _selectedOriginalDatas.removeAt(index);
                 setState(() {});
                 print("deleted");
               },
@@ -525,20 +496,13 @@ class _TogetherStepFormState extends State<TogetherStepForm>
 
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: maxPicturesCount - selectedThumbDatas.length,
+        maxImages: maxPicturesCount - _selectedOriginalDatas.length,
       );
 
       if (resultList.length > 0) {
         for (Asset asset in resultList) {
-          ByteData data = await asset.getThumbByteData(
-            100,
-            100,
-            quality: 50,
-          );
-          selectedThumbDatas.add(data);
-
           ByteData originalData = await asset.getByteData();
-          selectedOriginalDatas.add(originalData);
+          _selectedOriginalDatas.add(originalData);
         }
       }
     } on PlatformException catch (e) {
@@ -548,11 +512,9 @@ class _TogetherStepFormState extends State<TogetherStepForm>
     if (!mounted) return;
 
     setState(() {
-      if (selectedThumbDatas.length > maxPicturesCount) {
-        int end = selectedThumbDatas.length - maxPicturesCount - 1;
-        selectedThumbDatas.removeRange(0, end);
-
-        selectedOriginalDatas.removeRange(0, end);
+      if (_selectedOriginalDatas.length > maxPicturesCount) {
+        int end = _selectedOriginalDatas.length - maxPicturesCount - 1;
+        _selectedOriginalDatas.removeRange(0, end);
       }
 
       if (error == null) _error = 'No Error Dectected';
@@ -612,5 +574,116 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                     ),
                   ],
                 ))));
+  }
+
+  void _touchedRegistButton(int lastIndex) {
+    if (currentStep == 0 || currentStep == lastIndex) {
+      if (_together.dateString == null || _together.dateString.length <= 0) {
+        FailSnackbar().show("error_together_form_date", () {
+          setState(() {
+            currentStep = 0;
+          });
+        });
+        return;
+      }
+
+      if (_together.clubID == null || _together.clubID.length <= 0) {
+        FailSnackbar().show("error_together_form_club", () {
+          setState(() {
+            currentStep = 0;
+          });
+        });
+        return;
+      }
+
+      if (_together.hardCount == 0 && _together.champagneCount == 0) {
+        FailSnackbar().show("error_together_form_cocktail", () {
+          setState(() {
+            currentStep = 0;
+          });
+        });
+        return;
+      }
+
+      if (_together.tablePrice <= 0) {
+        FailSnackbar().show("error_together_form_price", () {
+          setState(() {
+            currentStep = 0;
+          });
+        });
+        return;
+      }
+
+      if (_together.totalCount < 2 || _together.restCount < 1) {
+        FailSnackbar().show("error_together_form_count", () {
+          setState(() {
+            currentStep = 0;
+          });
+        });
+        return;
+      }
+    }
+
+    if (currentStep == 1 || currentStep == lastIndex) {
+      if (_titleController.text.length <= 0) {
+        FailSnackbar().show("error_together_form_title", () {
+          setState(() {
+            currentStep = 1;
+          });
+        });
+        return;
+      }
+
+      if (_contentsController.text.length <= 0) {
+        FailSnackbar().show("error_together_form_contents", () {
+          setState(() {
+            currentStep = 1;
+          });
+        });
+        return;
+      }
+    }
+
+    if (currentStep == 2 || currentStep == lastIndex) {}
+    if (currentStep == 3 || currentStep == lastIndex) {
+      if (sanctionAgreeEnabled == false || phoneNumberAgreeEnabled == false) {
+        FailSnackbar().show("error_agree_check", null);
+        return;
+      }
+    }
+
+    setState(() {
+      if (currentStep < lastIndex) {
+        currentStep = currentStep + 1;
+      } else {
+        _together.title = _titleController.text;
+        _together.contents = _contentsController.text;
+        _together.youtubeUrl = _youtubeController.text;
+
+        // _removeImageUrls 삭제 된 이미지들
+        // _editImageMap 유지 된 이미지들
+        List<String> alreadyImageUrls = List<String>();
+        if (_editImageMap != null && _editImageMap.keys.length > 0) {
+          var keys = _editImageMap.keys.toList();
+          for (var key in keys) {
+            alreadyImageUrls.add(key);
+          }
+
+          // _selectedOriginalDatas에서 _editImageMap 갯수 이후는 추가 된 이미지들
+          var length = _editImageMap.length;
+          for (int i = 0; i < length; i++) {
+            _selectedOriginalDatas.removeAt(0);
+          }
+        }
+
+        _togetherBloc.dispatch(CreateTogetherEvent(
+            together: _together,
+            byteDatas: _selectedOriginalDatas,
+            removedImageUrls: _removeImageUrls,
+            alreadyImageUrls: alreadyImageUrls));
+
+        return;
+      }
+    });
   }
 }

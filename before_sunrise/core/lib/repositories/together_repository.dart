@@ -142,6 +142,17 @@ class TogetherRepository {
     return _postCollection.add(data);
   }
 
+  Future<DocumentSnapshot> updateTogether(
+      {@required Map<String, dynamic> data}) async {
+    String postID = data["postID"];
+    if (postID != null && postID.isEmpty == false) {
+      await _postCollection.document(postID).setData(data, merge: true);
+      return await _postCollection.document(postID).get();
+    }
+
+    return null;
+  }
+
   Future<void> removeTogether({@required String postID}) async {
     print("removeTogether $postID");
     QuerySnapshot likes = await _postCollection

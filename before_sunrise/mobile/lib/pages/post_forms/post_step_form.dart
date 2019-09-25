@@ -3,10 +3,7 @@ import 'package:before_sunrise/import.dart';
 class PostStepForm extends StatefulWidget {
   static const String routeName = "/postStepForm";
   const PostStepForm(
-      {Key key,
-      @required this.category,
-      @required this.editPost,
-      @required this.editImageMap})
+      {Key key, @required this.category, this.editPost, this.editImageMap})
       : super(key: key);
 
   final String category;
@@ -26,10 +23,11 @@ class PostStepFormState extends State<PostStepForm>
   final TextEditingController _contentsController = new TextEditingController();
   final TextEditingController _youtubeController = new TextEditingController();
 
-  FocusNode _focusNode = new FocusNode();
+  FocusNode _titleFocusNode = new FocusNode();
+  FocusNode _contentsFocusNode = new FocusNode();
+  FocusNode _youtubeFocusNode = new FocusNode();
   GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 // multi image picker 이미지 데이터가 사라짐. 받아오면 바로 백업.
-  final List<ByteData> _selectedThumbDatas = List<ByteData>();
   final List<ByteData> _selectedOriginalDatas = List<ByteData>();
   Map<String, dynamic> _editImageMap = Map<String, dynamic>();
   List<String> _removeImageUrls = List<String>();
@@ -48,7 +46,6 @@ class PostStepFormState extends State<PostStepForm>
         var keys = widget.editImageMap.keys.toList();
         for (var key in keys) {
           ByteData byteData = widget.editImageMap[key];
-          _selectedThumbDatas.add(byteData);
           _selectedOriginalDatas.add(byteData);
           _editImageMap[key] = key;
         }
@@ -69,16 +66,19 @@ class PostStepFormState extends State<PostStepForm>
 
         _titleController.text = widget.editPost.title;
         _contentsController.text = widget.editPost.contents;
+        _youtubeController.text = widget.editPost.youtubeUrl;
+        _post.type = widget.editPost.type;
+
         if (widget.editPost.imageUrls == null) {
           return;
         }
-
-        for (int i = 0; i < widget.editPost.imageUrls.length; i++) {}
       });
 
   @override
   void dispose() {
-    _focusNode.dispose();
+    _titleFocusNode.dispose();
+    _contentsFocusNode.dispose();
+    _youtubeFocusNode.dispose();
     _post = Post();
     SuccessSnackbar().initialize(null);
     FailSnackbar().initialize(null);
@@ -216,10 +216,6 @@ class PostStepFormState extends State<PostStepForm>
   }
 
   Widget _buildContents() {
-    if (widget.editPost != null) {
-      _post.type = widget.editPost.type;
-    }
-
     return Card(
         elevation: 2.0,
         color: Colors.white,
@@ -228,7 +224,7 @@ class PostStepFormState extends State<PostStepForm>
         ),
         child: Container(
             width: kDeviceWidth - MainTheme.edgeInsets.left,
-            height: 400,
+            height: 410,
             child: Center(
                 child: new ListView(
               shrinkWrap: true,
@@ -253,6 +249,7 @@ class PostStepFormState extends State<PostStepForm>
                                       padding: EdgeInsets.only(
                                           left: 10.0, right: 10.0),
                                       child: new TextFormField(
+                                        focusNode: _titleFocusNode,
                                         controller: _titleController,
                                         decoration: new InputDecoration(
                                             labelText: "Title",
@@ -272,28 +269,31 @@ class PostStepFormState extends State<PostStepForm>
                                       ),
                                     ),
                                     Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 20, top: 5, bottom: 5),
-                                        child: TextField(
-                                          focusNode: _focusNode,
-                                          controller: _contentsController,
-                                          keyboardType: TextInputType.multiline,
-                                          maxLines: 15,
-                                          decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            icon: Icon(
-                                              FontAwesomeIcons.alignJustify,
-                                              size: 14.0,
-                                              color: Colors.black54,
-                                            ),
-                                            hintText: LocalizableLoader.of(
-                                                    context)
-                                                .text(
-                                                    "board_contents_hint_text"),
-                                            hintStyle:
-                                                TextStyle(fontSize: 17.0),
-                                          ),
-                                        )),
+                                      padding: EdgeInsets.only(
+                                          left: 10.0, right: 10.0),
+                                      child: new TextFormField(
+                                        maxLength: 512,
+                                        maxLines: 15,
+                                        focusNode: _contentsFocusNode,
+                                        controller: _contentsController,
+                                        decoration: new InputDecoration(
+                                            labelText: "Contents",
+                                            filled: false,
+                                            labelStyle: MainTheme.hintTextStyle,
+                                            prefixIcon: Padding(
+                                              padding: EdgeInsets.only(
+                                                  bottom: 10.0,
+                                                  top: 10.0,
+                                                  left: 10.0,
+                                                  right: 10.0),
+                                              child: Icon(
+                                                  FontAwesomeIcons.alignJustify,
+                                                  size: 14),
+                                            )),
+                                        keyboardType: TextInputType.multiline,
+                                        onChanged: (dd) {},
+                                      ),
+                                    ),
                                   ],
                                 ),
                               )),
@@ -323,7 +323,7 @@ class PostStepFormState extends State<PostStepForm>
                 ),
                 child: Container(
                   width: kDeviceWidth - MainTheme.edgeInsets.left,
-                  height: (_selectedThumbDatas.length > 0) ? 400 : 114,
+                  height: (_selectedOriginalDatas.length > 0) ? 400 : 114,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -341,7 +341,7 @@ class PostStepFormState extends State<PostStepForm>
                                     LocalizableLoader.of(context)
                                         .text("add_pictures_button"),
                                     [
-                                      _selectedThumbDatas.length,
+                                      _selectedOriginalDatas.length,
                                       maxPicturesCount
                                     ]),
                                 style: TextStyle(
@@ -349,7 +349,7 @@ class PostStepFormState extends State<PostStepForm>
                                     color: MainTheme.enabledButtonColor),
                               ),
                               onPressed: () {
-                                if (_selectedThumbDatas.length >=
+                                if (_selectedOriginalDatas.length >=
                                     maxPicturesCount) {
                                   FailSnackbar()
                                       .show("notice_remove_pictures", null);
@@ -367,7 +367,7 @@ class PostStepFormState extends State<PostStepForm>
                             color: Colors.grey[400],
                           )),
                       Expanded(child: _buildGridView(context)),
-                      _selectedThumbDatas.length == 0
+                      _selectedOriginalDatas.length == 0
                           ? Container()
                           : Padding(
                               padding: EdgeInsets.only(left: 10),
@@ -380,7 +380,7 @@ class PostStepFormState extends State<PostStepForm>
                       Padding(
                         padding: EdgeInsets.only(left: 20, top: 5, bottom: 5),
                         child: TextField(
-                          focusNode: _focusNode,
+                          focusNode: _youtubeFocusNode,
                           controller: _youtubeController,
                           keyboardType: TextInputType.multiline,
                           style: TextStyle(fontSize: 16.0, color: Colors.black),
@@ -409,15 +409,15 @@ class PostStepFormState extends State<PostStepForm>
   }
 
   Widget _buildGridView(BuildContext context) {
-    if (_selectedThumbDatas.length <= 0) {
+    if (_selectedOriginalDatas.length <= 0) {
       return Container();
     }
 
     return GridView.count(
       padding: MainTheme.edgeInsets,
       crossAxisCount: 4,
-      children: List.generate(_selectedThumbDatas.length, (index) {
-        ByteData data = _selectedThumbDatas[index];
+      children: List.generate(_selectedOriginalDatas.length, (index) {
+        ByteData data = _selectedOriginalDatas[index];
         return Stack(children: <Widget>[
           ThumbnailItem(
             data: data,
@@ -441,7 +441,6 @@ class PostStepFormState extends State<PostStepForm>
                   _editImageMap.remove(keys[index]);
                 }
 
-                _selectedThumbDatas.removeAt(index);
                 _selectedOriginalDatas.removeAt(index);
                 setState(() {});
                 print("deleted");
@@ -461,18 +460,11 @@ class PostStepFormState extends State<PostStepForm>
 
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: maxPicturesCount - _selectedThumbDatas.length,
+        maxImages: maxPicturesCount - _selectedOriginalDatas.length,
       );
 
       if (resultList.length > 0) {
         for (Asset asset in resultList) {
-          ByteData data = await asset.getThumbByteData(
-            100,
-            100,
-            quality: 50,
-          );
-          _selectedThumbDatas.add(data);
-
           ByteData originalData = await asset.getByteData();
           _selectedOriginalDatas.add(originalData);
         }
@@ -484,10 +476,8 @@ class PostStepFormState extends State<PostStepForm>
     if (!mounted) return;
 
     setState(() {
-      if (_selectedThumbDatas.length > maxPicturesCount) {
-        int end = _selectedThumbDatas.length - maxPicturesCount - 1;
-        _selectedThumbDatas.removeRange(0, end);
-
+      if (_selectedOriginalDatas.length > maxPicturesCount) {
+        int end = _selectedOriginalDatas.length - maxPicturesCount - 1;
         _selectedOriginalDatas.removeRange(0, end);
       }
 
@@ -560,11 +550,6 @@ class PostStepFormState extends State<PostStepForm>
       }
     }
 
-    // _removeImageUrls 삭제 된 이미지들
-    // _editImageMap 유지 된 이미지들
-    if (_editImageMap != null && _editImageMap.keys.length > 0) {}
-    // _selectedOriginalDatas에서 _editImageMap 갯수 이후는 추가 된 이미지들
-
     setState(() {
       if (currentStep < lastIndex) {
         currentStep = currentStep + 1;
@@ -573,8 +558,27 @@ class PostStepFormState extends State<PostStepForm>
         _post.contents = _contentsController.text;
         _post.youtubeUrl = _youtubeController.text;
 
-        _postBloc.dispatch(
-            CreatePostEvent(post: _post, byteDatas: _selectedOriginalDatas));
+        // _removeImageUrls 삭제 된 이미지들
+        // _editImageMap 유지 된 이미지들
+        List<String> alreadyImageUrls = List<String>();
+        if (_editImageMap != null && _editImageMap.keys.length > 0) {
+          var keys = _editImageMap.keys.toList();
+          for (var key in keys) {
+            alreadyImageUrls.add(key);
+          }
+
+          // _selectedOriginalDatas에서 _editImageMap 갯수 이후는 추가 된 이미지들
+          var length = _editImageMap.length;
+          for (int i = 0; i < length; i++) {
+            _selectedOriginalDatas.removeAt(0);
+          }
+        }
+
+        _postBloc.dispatch(CreatePostEvent(
+            post: _post,
+            byteDatas: _selectedOriginalDatas,
+            removedImageUrls: _removeImageUrls,
+            alreadyImageUrls: alreadyImageUrls));
 
         return;
       }

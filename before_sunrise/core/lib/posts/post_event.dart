@@ -112,7 +112,11 @@ class ToggleLikePostEvent extends PostEvent {
 }
 
 class CreatePostEvent extends PostEvent {
-  CreatePostEvent({@required this.post, @required this.byteDatas})
+  CreatePostEvent(
+      {@required this.post,
+      @required this.byteDatas,
+      this.removedImageUrls,
+      this.alreadyImageUrls})
       : _firestoreTimestamp = FieldValue.serverTimestamp();
   @override
   String toString() => 'CreatePostEvent';
@@ -121,6 +125,8 @@ class CreatePostEvent extends PostEvent {
   final IFImageProvider _imageProvider = FImageProvider();
   FieldValue _firestoreTimestamp;
   List<ByteData> byteDatas;
+  List<String> removedImageUrls;
+  List<String> alreadyImageUrls;
 
   Post post;
 
@@ -129,17 +135,31 @@ class CreatePostEvent extends PostEvent {
     try {
       String userID = await _authProvider.getUserID();
       List<String> imageUrls = List<String>();
-      Uuid uuid = Uuid();
-      String identifier = uuid.v4(options: {
-        'positionalArgs': [userID]
-      });
-      print("identifier : ${identifier}");
 
-      if (byteDatas != null) {
-        final String imageFolder = '$userID/posts/${identifier}';
+      if (post.imageFolder == null || post.imageFolder.isEmpty == true) {
+        Uuid uuid = Uuid();
+        String identifier = uuid.v4(options: {
+          'positionalArgs': [userID]
+        });
+        print("identifier : ${identifier}");
+        post.imageFolder = identifier;
+      }
+
+      if (removedImageUrls != null) {
+        for (int i = 0; i < removedImageUrls.length; i++) {
+          await _imageProvider.removeImage(imageUrl: removedImageUrls[i]);
+        }
+      }
+
+      if (byteDatas != null && byteDatas.length > 0) {
+        final String imageFolder = '$userID/posts/${post.imageFolder}';
 
         imageUrls = await _imageProvider.uploadPostImages(
             imageFolder: imageFolder, byteDatas: byteDatas);
+      }
+
+      if (alreadyImageUrls != null && alreadyImageUrls.length > 0) {
+        imageUrls.addAll(alreadyImageUrls);
       }
 
       post.userID = userID;

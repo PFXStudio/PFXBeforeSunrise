@@ -396,6 +396,21 @@ class _MenuButton extends StatelessWidget {
   void onClickMenu(item) {
     OptionItem optionItem = item;
 
+    if (optionItem.index == 2) {
+      Map<String, dynamic> infoMap = {"editPost": together};
+
+      downloadAllImages(together.imageUrls, (editImageMap) {
+        if (editImageMap != null) {
+          infoMap["editImageMap"] = editImageMap;
+        }
+
+        Navigator.pushNamed(OptionMenu.context, TogetherStepForm.routeName,
+            arguments: infoMap);
+      });
+
+      return;
+    }
+
     if (optionItem.index == 3) {
       bool isMine = together.userID == ProfileBloc().signedProfile.userID;
       if (isMine == false) {

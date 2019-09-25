@@ -89,7 +89,7 @@ class SuccessPostState extends PostState {
 
   @override
   PostState getStateCopy() {
-    return SuccessPostState();
+    return SuccessPostState(post: post);
   }
 }
 

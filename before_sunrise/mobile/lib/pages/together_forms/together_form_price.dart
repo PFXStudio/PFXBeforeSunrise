@@ -1,200 +1,37 @@
 import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart' as intl;
 
-double togetherTablePrice = 0;
-double togetherTipPrice = 0;
-typedef TogetherFormPriceCallback = void Function(int tablePrice, int tipPrice);
+class PriceInfo {
+  PriceInfo({this.tablePrice, this.tipPrice});
+  double tablePrice = 0;
+  double tipPrice = 0;
+}
+
+PriceInfo s_priceInfo = PriceInfo(tablePrice: 0, tipPrice: 0);
+typedef TogetherFormPriceCallback = void Function(PriceInfo priceInfo);
 
 class TogetherFormPrice extends StatefulWidget {
-  TogetherFormPrice({this.callback = null});
+  TogetherFormPrice({this.callback = null, this.editPriceInfo});
   @override
-  _TogetherFormPriceState createState() => _TogetherFormPriceState();
-  TogetherFormPriceCallback callback;
-}
+  _TogetherFormPriceState createState() {
+    if (editPriceInfo == null) {
+      return _TogetherFormPriceState();
+    }
 
-class TogetherFormPriceContentsWidget extends StatefulWidget {
-  @override
-  _TogetherFormPriceContentsWidgetState createState() =>
-      _TogetherFormPriceContentsWidgetState();
-}
-
-class _TogetherFormPriceContentsWidgetState
-    extends State<TogetherFormPriceContentsWidget> {
-  @override
-  final double maxPrice = 1000;
-  Widget build(BuildContext context) {
-    return Container(
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(10),
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                    flex: 1,
-                    child: IconButton(
-                      padding: EdgeInsets.only(top: 28),
-                      icon: Icon(FontAwesomeIcons.caretLeft),
-                      color: Colors.blue,
-                      onPressed: () {
-                        setState(() {
-                          if (togetherTablePrice > 10) {
-                            togetherTablePrice = togetherTablePrice - 1;
-                          }
-                        });
-                      },
-                    )),
-                Expanded(
-                    flex: 10,
-                    child: FlutterSlider(
-                      values: [togetherTablePrice],
-                      rangeSlider: false,
-                      max: maxPrice,
-                      min: 0,
-                      step: 1,
-                      jump: true,
-                      trackBar: FlutterSliderTrackBar(
-                        activeDisabledTrackBarColor: Colors.red,
-                        inactiveTrackBarHeight: 2,
-                        activeTrackBarHeight: 3,
-                      ),
-                      disabled: false,
-                      handler: customHandler(FontAwesomeIcons.circle),
-                      tooltip: FlutterSliderTooltip(
-                        alwaysShowTooltip: true,
-                        numberFormat: intl.NumberFormat(),
-                        // leftPrefix: Icon(
-                        //   FontAwesomeIcons.wonSign,
-                        //   size: 14,
-                        //   color: Colors.black45,
-                        // ),
-                        rightSuffix: Padding(
-                            padding: EdgeInsets.only(left: 5),
-                            child: Text(
-                                LocalizableLoader.of(context).text("manwon"),
-                                style: TextStyle(
-                                    color: Colors.black54,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold))),
-                        textStyle: TextStyle(
-                            fontSize: 14,
-                            color: Colors.black54,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      onDragCompleted: (handlerIndex, lowerValue, upperValue) {
-                        setState(() {
-                          togetherTablePrice = lowerValue;
-                        });
-                      },
-                    )),
-                Expanded(
-                    flex: 1,
-                    child: IconButton(
-                      padding: EdgeInsets.only(top: 28),
-                      icon: Icon(FontAwesomeIcons.caretRight),
-                      color: Colors.blue,
-                      onPressed: () {
-                        setState(() {
-                          if (togetherTablePrice < maxPrice) {
-                            togetherTablePrice = togetherTablePrice + 1;
-                          }
-                        });
-                      },
-                    )),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.all(10),
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                    flex: 1,
-                    child: IconButton(
-                      padding: EdgeInsets.only(top: 28),
-                      icon: Icon(FontAwesomeIcons.caretLeft),
-                      color: Colors.blue,
-                      onPressed: () {
-                        setState(() {
-                          if (togetherTipPrice > 0) {
-                            togetherTipPrice = togetherTipPrice - 1;
-                          }
-                        });
-                      },
-                    )),
-                Expanded(
-                    flex: 10,
-                    child: FlutterSlider(
-                      values: [togetherTipPrice],
-                      rangeSlider: false,
-                      max: 10,
-                      min: 0,
-                      step: 1,
-                      jump: true,
-                      trackBar: FlutterSliderTrackBar(
-                        inactiveTrackBarHeight: 2,
-                        activeTrackBarHeight: 3,
-                      ),
-                      disabled: false,
-                      handler: customHandler(FontAwesomeIcons.circle),
-                      tooltip: FlutterSliderTooltip(
-                        alwaysShowTooltip: true,
-                        numberFormat: intl.NumberFormat(),
-                        // leftPrefix: Icon(
-                        //   FontAwesomeIcons.wonSign,
-                        //   size: 14,
-                        //   color: Colors.black45,
-                        // ),
-                        rightSuffix: Padding(
-                            padding: EdgeInsets.only(left: 5),
-                            child: Text(
-                                LocalizableLoader.of(context).text("manwon"),
-                                style: TextStyle(
-                                    color: Colors.black54,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold))),
-                        textStyle: TextStyle(
-                            fontSize: 14,
-                            color: Colors.black54,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      onDragCompleted: (handlerIndex, lowerValue, upperValue) {
-                        setState(() {
-                          togetherTipPrice = lowerValue;
-                        });
-                      },
-                    )),
-                Expanded(
-                    flex: 1,
-                    child: IconButton(
-                      padding: EdgeInsets.only(top: 28),
-                      icon: Icon(FontAwesomeIcons.caretRight),
-                      color: Colors.blue,
-                      onPressed: () {
-                        setState(() {
-                          if (togetherTipPrice < maxPrice) {
-                            togetherTipPrice = togetherTipPrice + 1;
-                          }
-                        });
-                      },
-                    )),
-              ],
-            )
-          ],
-        ));
+    s_priceInfo.tablePrice = editPriceInfo.tablePrice;
+    s_priceInfo.tipPrice = editPriceInfo.tipPrice;
+    return _TogetherFormPriceState();
   }
+
+  TogetherFormPriceCallback callback;
+  PriceInfo editPriceInfo;
 }
 
 class _TogetherFormPriceState extends State<TogetherFormPrice> {
   @override
   void dispose() {
-    togetherTablePrice = 0;
-    togetherTipPrice = 0;
+    s_priceInfo.tablePrice = 0;
+    s_priceInfo.tipPrice = 0;
     super.dispose();
   }
 
@@ -203,8 +40,8 @@ class _TogetherFormPriceState extends State<TogetherFormPrice> {
     return FlatIconTextButton(
         iconData: FontAwesomeIcons.wonSign,
         color: MainTheme.enabledButtonColor,
-        text: togetherTablePrice != 0
-            ? "${togetherTablePrice.toInt()} + ${togetherTipPrice.toInt()} = ${togetherTablePrice.toInt() + togetherTipPrice.toInt()}만원"
+        text: s_priceInfo.tablePrice != 0
+            ? "${s_priceInfo.tablePrice.toInt()} + ${s_priceInfo.tipPrice.toInt()} = ${s_priceInfo.tablePrice.toInt() + s_priceInfo.tipPrice.toInt()}만원"
             : LocalizableLoader.of(context).text("price_select"),
         onPressed: () {
           showDialog(
@@ -233,8 +70,7 @@ class _TogetherFormPriceState extends State<TogetherFormPrice> {
                               return;
                             }
 
-                            widget.callback(togetherTablePrice.toInt(),
-                                togetherTipPrice.toInt());
+                            widget.callback(s_priceInfo);
                             setState(() {});
                           },
                         )
@@ -270,4 +106,182 @@ customHandler(IconData icon) {
       ),
     ),
   );
+}
+
+class TogetherFormPriceContentsWidget extends StatefulWidget {
+  @override
+  _TogetherFormPriceContentsWidgetState createState() =>
+      _TogetherFormPriceContentsWidgetState();
+}
+
+class _TogetherFormPriceContentsWidgetState
+    extends State<TogetherFormPriceContentsWidget> {
+  @override
+  final double maxPrice = 1000;
+  Widget build(BuildContext context) {
+    return Container(
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(10),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      padding: EdgeInsets.only(top: 28),
+                      icon: Icon(FontAwesomeIcons.caretLeft),
+                      color: Colors.blue,
+                      onPressed: () {
+                        setState(() {
+                          if (s_priceInfo.tablePrice > 10) {
+                            s_priceInfo.tablePrice = s_priceInfo.tablePrice - 1;
+                          }
+                        });
+                      },
+                    )),
+                Expanded(
+                    flex: 10,
+                    child: FlutterSlider(
+                      values: [s_priceInfo.tablePrice],
+                      rangeSlider: false,
+                      max: maxPrice,
+                      min: 0,
+                      step: 1,
+                      jump: true,
+                      trackBar: FlutterSliderTrackBar(
+                        activeDisabledTrackBarColor: Colors.red,
+                        inactiveTrackBarHeight: 2,
+                        activeTrackBarHeight: 3,
+                      ),
+                      disabled: false,
+                      handler: customHandler(FontAwesomeIcons.circle),
+                      tooltip: FlutterSliderTooltip(
+                        alwaysShowTooltip: true,
+                        numberFormat: intl.NumberFormat(),
+                        // leftPrefix: Icon(
+                        //   FontAwesomeIcons.wonSign,
+                        //   size: 14,
+                        //   color: Colors.black45,
+                        // ),
+                        rightSuffix: Padding(
+                            padding: EdgeInsets.only(left: 5),
+                            child: Text(
+                                LocalizableLoader.of(context).text("manwon"),
+                                style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold))),
+                        textStyle: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onDragCompleted: (handlerIndex, lowerValue, upperValue) {
+                        setState(() {
+                          s_priceInfo.tablePrice = lowerValue;
+                        });
+                      },
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      padding: EdgeInsets.only(top: 28),
+                      icon: Icon(FontAwesomeIcons.caretRight),
+                      color: Colors.blue,
+                      onPressed: () {
+                        setState(() {
+                          if (s_priceInfo.tablePrice < maxPrice) {
+                            s_priceInfo.tablePrice = s_priceInfo.tablePrice + 1;
+                          }
+                        });
+                      },
+                    )),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.all(10),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      padding: EdgeInsets.only(top: 28),
+                      icon: Icon(FontAwesomeIcons.caretLeft),
+                      color: Colors.blue,
+                      onPressed: () {
+                        setState(() {
+                          if (s_priceInfo.tipPrice > 0) {
+                            s_priceInfo.tipPrice = s_priceInfo.tipPrice - 1;
+                          }
+                        });
+                      },
+                    )),
+                Expanded(
+                    flex: 10,
+                    child: FlutterSlider(
+                      values: [s_priceInfo.tipPrice],
+                      rangeSlider: false,
+                      max: 10,
+                      min: 0,
+                      step: 1,
+                      jump: true,
+                      trackBar: FlutterSliderTrackBar(
+                        inactiveTrackBarHeight: 2,
+                        activeTrackBarHeight: 3,
+                      ),
+                      disabled: false,
+                      handler: customHandler(FontAwesomeIcons.circle),
+                      tooltip: FlutterSliderTooltip(
+                        alwaysShowTooltip: true,
+                        numberFormat: intl.NumberFormat(),
+                        // leftPrefix: Icon(
+                        //   FontAwesomeIcons.wonSign,
+                        //   size: 14,
+                        //   color: Colors.black45,
+                        // ),
+                        rightSuffix: Padding(
+                            padding: EdgeInsets.only(left: 5),
+                            child: Text(
+                                LocalizableLoader.of(context).text("manwon"),
+                                style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold))),
+                        textStyle: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onDragCompleted: (handlerIndex, lowerValue, upperValue) {
+                        setState(() {
+                          s_priceInfo.tipPrice = lowerValue;
+                        });
+                      },
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      padding: EdgeInsets.only(top: 28),
+                      icon: Icon(FontAwesomeIcons.caretRight),
+                      color: Colors.blue,
+                      onPressed: () {
+                        setState(() {
+                          if (s_priceInfo.tipPrice < maxPrice) {
+                            s_priceInfo.tipPrice = s_priceInfo.tipPrice + 1;
+                          }
+                        });
+                      },
+                    )),
+              ],
+            )
+          ],
+        ));
+  }
 }

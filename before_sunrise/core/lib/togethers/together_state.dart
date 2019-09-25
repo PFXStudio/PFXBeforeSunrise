@@ -71,14 +71,15 @@ class ErrorTogetherState extends TogetherState {
 }
 
 class SuccessTogetherState extends TogetherState {
-  SuccessTogetherState();
+  SuccessTogetherState({this.together});
 
   @override
   String toString() => 'SuccessTogetherState';
+  final Together together;
 
   @override
   TogetherState getStateCopy() {
-    return SuccessTogetherState();
+    return SuccessTogetherState(together: together);
   }
 }
 

@@ -165,7 +165,10 @@ class HomeScreenState extends State<HomeScreen> {
               }
 
               if (_homeBloc.currentState is TogetherTabState) {
-                Navigator.pushNamed(context, TogetherStepForm.routeName);
+                Map<String, dynamic> infoMap = {};
+
+                Navigator.pushNamed(context, TogetherStepForm.routeName,
+                    arguments: infoMap);
                 return;
               }
             },

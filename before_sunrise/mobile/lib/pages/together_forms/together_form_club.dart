@@ -1,21 +1,18 @@
 import 'package:before_sunrise/import.dart';
 
-String togetherClubID = "";
 typedef TogetherFormClubCallback = void Function(String clubID);
 
 class TogetherFormClub extends StatefulWidget {
-  TogetherFormClub({this.callback = null});
+  TogetherFormClub({this.callback, this.editSelectedClubID});
   @override
   _TogetherFormClubState createState() => _TogetherFormClubState();
-  TogetherFormClubCallback callback;
+  final TogetherFormClubCallback callback;
+  String editSelectedClubID;
 }
 
 class _TogetherFormClubState extends State<TogetherFormClub> {
-  double selectedPrice = 0;
-
   @override
   void dispose() {
-    togetherClubID = "";
     super.dispose();
   }
 
@@ -42,13 +39,13 @@ class _TogetherFormClubState extends State<TogetherFormClub> {
                           fontWeight: FontWeight.bold),
                     )),
                 onTap: () {
-                  togetherClubID = DefineStrings.clubNames[index];
+                  widget.editSelectedClubID = DefineStrings.clubNames[index];
                   Navigator.pop(context);
                   if (widget.callback == null) {
                     return;
                   }
 
-                  widget.callback(togetherClubID);
+                  widget.callback(widget.editSelectedClubID);
                   setState(() {});
                 },
               );
@@ -60,8 +57,9 @@ class _TogetherFormClubState extends State<TogetherFormClub> {
     return FlatIconTextButton(
         iconData: FontAwesomeIcons.mapMarkerAlt,
         color: MainTheme.enabledButtonColor,
-        text: togetherClubID != null && togetherClubID.length > 0
-            ? togetherClubID
+        text: widget.editSelectedClubID != null &&
+                widget.editSelectedClubID.length > 0
+            ? widget.editSelectedClubID
             : LocalizableLoader.of(context).text("club_name_select"),
         onPressed: () {
           showDialog(
@@ -90,7 +88,7 @@ class _TogetherFormClubState extends State<TogetherFormClub> {
                               return;
                             }
 
-                            widget.callback(togetherClubID);
+                            widget.callback(widget.editSelectedClubID);
                             setState(() {});
                           },
                         )

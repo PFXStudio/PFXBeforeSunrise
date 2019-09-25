@@ -23,6 +23,8 @@ abstract class ITogetherProvider {
       {@required Together lastVisibleTogether, @required String userID});
   Future<DocumentReference> createTogether(
       {@required Map<String, dynamic> data});
+  Future<DocumentSnapshot> updateTogether(
+      {@required Map<String, dynamic> data});
   Future<void> removeTogether({@required String postID});
 }
 
@@ -106,6 +108,11 @@ class TogetherProvider implements ITogetherProvider {
   Future<DocumentReference> createTogether(
       {@required Map<String, dynamic> data}) async {
     return await _togetherRepository.createTogether(data: data);
+  }
+
+  Future<DocumentSnapshot> updateTogether(
+      {@required Map<String, dynamic> data}) async {
+    return await _togetherRepository.updateTogether(data: data);
   }
 
   Future<void> removeTogether({@required String postID}) async {

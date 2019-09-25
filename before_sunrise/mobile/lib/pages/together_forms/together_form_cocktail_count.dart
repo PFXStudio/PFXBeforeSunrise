@@ -1,40 +1,65 @@
 import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart' as intl;
 
-double togetherHardCount = 0;
-double togetherChampagneCount = 0;
-double togetherServiceCount = 0;
+class CocktailCountInfo {
+  CocktailCountInfo({this.hardCount, this.champagneCount, this.serviceCount});
+  double hardCount = 0;
+  double champagneCount = 0;
+  double serviceCount = 0;
+}
+
+CocktailCountInfo s_cocktailCountInfo =
+    CocktailCountInfo(hardCount: 0, champagneCount: 0, serviceCount: 0);
 typedef TogetherFormCocktailCountCallback = void Function(
-    int hardCount, int champagneCount, int serviceCount);
+    CocktailCountInfo editCocktailCountInfo);
 
 class TogetherFormCocktailCount extends StatefulWidget {
-  TogetherFormCocktailCount({this.callback = null});
+  TogetherFormCocktailCount({
+    this.callback,
+    this.editCocktailCountInfo,
+  });
   @override
-  _TogetherFormCocktailCountState createState() =>
-      _TogetherFormCocktailCountState();
-  TogetherFormCocktailCountCallback callback;
+  _TogetherFormCocktailCountState createState() {
+    if (editCocktailCountInfo == null) {
+      return _TogetherFormCocktailCountState();
+    }
+
+    s_cocktailCountInfo.hardCount = editCocktailCountInfo.hardCount;
+    s_cocktailCountInfo.champagneCount = editCocktailCountInfo.champagneCount;
+    s_cocktailCountInfo.serviceCount = editCocktailCountInfo.serviceCount;
+    return _TogetherFormCocktailCountState();
+  }
+
+  final TogetherFormCocktailCountCallback callback;
+  final CocktailCountInfo editCocktailCountInfo;
 }
 
 class _TogetherFormCocktailCountState extends State<TogetherFormCocktailCount> {
   @override
-  void dispose() {
-    togetherHardCount = 0;
-    togetherChampagneCount = 0;
-    togetherServiceCount = 0;
-    super.dispose();
+  void initState() {
+    super.initState();
   }
 
-  Widget _buildContents(BuildContext context) {
-    return TogetherFormCocktailCountContentsWidget();
+  @override
+  void dispose() {
+    s_cocktailCountInfo.hardCount = 0;
+    s_cocktailCountInfo.champagneCount = 0;
+    s_cocktailCountInfo.serviceCount = 0;
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(s_cocktailCountInfo.hardCount.toInt());
+    print(s_cocktailCountInfo.champagneCount.toInt());
+    print(s_cocktailCountInfo.serviceCount.toInt());
     return FlatIconTextButton(
         iconData: FontAwesomeIcons.cocktail,
         color: MainTheme.enabledButtonColor,
-        text: togetherHardCount != 0 || togetherChampagneCount != 0
-            ? "${togetherHardCount.toInt()}하드, ${togetherChampagneCount.toInt()}샴, ${togetherServiceCount.toInt()}서비스"
+        text: s_cocktailCountInfo.hardCount != 0 ||
+                s_cocktailCountInfo.champagneCount != 0
+            ? "${s_cocktailCountInfo.hardCount.toInt()}하드, ${s_cocktailCountInfo.champagneCount.toInt()}샴, ${s_cocktailCountInfo.serviceCount.toInt()}서비스"
             : LocalizableLoader.of(context).text("cocktail_count_select"),
         onPressed: () {
           showDialog(
@@ -63,10 +88,7 @@ class _TogetherFormCocktailCountState extends State<TogetherFormCocktailCount> {
                               return;
                             }
 
-                            widget.callback(
-                                togetherHardCount.toInt(),
-                                togetherChampagneCount.toInt(),
-                                togetherServiceCount.toInt());
+                            widget.callback(s_cocktailCountInfo);
                             setState(() {});
                           },
                         )
@@ -106,8 +128,9 @@ class _TogetherFormCocktailCountContentsWidgetState
                     color: Colors.blueAccent,
                     onPressed: () {
                       setState(() {
-                        if (togetherHardCount > 0) {
-                          togetherHardCount = togetherHardCount - 1;
+                        if (s_cocktailCountInfo.hardCount > 0) {
+                          s_cocktailCountInfo.hardCount =
+                              s_cocktailCountInfo.hardCount - 1;
                         }
                       });
                     },
@@ -116,7 +139,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                 Expanded(
                     flex: 10,
                     child: FlutterSlider(
-                      values: [togetherHardCount],
+                      values: [s_cocktailCountInfo.hardCount],
                       rangeSlider: false,
                       max: maxCount,
                       min: 0,
@@ -146,7 +169,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                       ),
                       onDragCompleted: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
-                          togetherHardCount = lowerValue;
+                          s_cocktailCountInfo.hardCount = lowerValue;
                         });
                       },
                     )),
@@ -158,8 +181,9 @@ class _TogetherFormCocktailCountContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (togetherHardCount < maxCount) {
-                            togetherHardCount = togetherHardCount + 1;
+                          if (s_cocktailCountInfo.hardCount < maxCount) {
+                            s_cocktailCountInfo.hardCount =
+                                s_cocktailCountInfo.hardCount + 1;
                           }
                         });
                       },
@@ -180,8 +204,9 @@ class _TogetherFormCocktailCountContentsWidgetState
                     color: Colors.blueAccent,
                     onPressed: () {
                       setState(() {
-                        if (togetherChampagneCount > 0) {
-                          togetherChampagneCount = togetherChampagneCount - 1;
+                        if (s_cocktailCountInfo.champagneCount > 0) {
+                          s_cocktailCountInfo.champagneCount =
+                              s_cocktailCountInfo.champagneCount - 1;
                         }
                       });
                     },
@@ -190,7 +215,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                 Expanded(
                     flex: 10,
                     child: FlutterSlider(
-                      values: [togetherChampagneCount],
+                      values: [s_cocktailCountInfo.champagneCount],
                       rangeSlider: false,
                       max: maxCount,
                       min: 0,
@@ -220,7 +245,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                       ),
                       onDragCompleted: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
-                          togetherChampagneCount = lowerValue;
+                          s_cocktailCountInfo.champagneCount = lowerValue;
                         });
                       },
                     )),
@@ -232,8 +257,9 @@ class _TogetherFormCocktailCountContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (togetherChampagneCount < maxCount) {
-                            togetherChampagneCount = togetherChampagneCount + 1;
+                          if (s_cocktailCountInfo.champagneCount < maxCount) {
+                            s_cocktailCountInfo.champagneCount =
+                                s_cocktailCountInfo.champagneCount + 1;
                           }
                         });
                       },
@@ -254,8 +280,9 @@ class _TogetherFormCocktailCountContentsWidgetState
                     color: Colors.blueAccent,
                     onPressed: () {
                       setState(() {
-                        if (togetherServiceCount > 0) {
-                          togetherServiceCount = togetherServiceCount - 1;
+                        if (s_cocktailCountInfo.serviceCount > 0) {
+                          s_cocktailCountInfo.serviceCount =
+                              s_cocktailCountInfo.serviceCount - 1;
                         }
                       });
                     },
@@ -264,7 +291,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                 Expanded(
                     flex: 10,
                     child: FlutterSlider(
-                      values: [togetherServiceCount],
+                      values: [s_cocktailCountInfo.serviceCount],
                       rangeSlider: false,
                       max: maxCount,
                       min: 0,
@@ -294,7 +321,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                       ),
                       onDragCompleted: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
-                          togetherServiceCount = lowerValue;
+                          s_cocktailCountInfo.serviceCount = lowerValue;
                         });
                       },
                     )),
@@ -306,8 +333,9 @@ class _TogetherFormCocktailCountContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (togetherServiceCount < maxCount) {
-                            togetherServiceCount = togetherServiceCount + 1;
+                          if (s_cocktailCountInfo.serviceCount < maxCount) {
+                            s_cocktailCountInfo.serviceCount =
+                                s_cocktailCountInfo.serviceCount + 1;
                           }
                         });
                       },

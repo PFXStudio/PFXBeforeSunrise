@@ -131,7 +131,11 @@ class ViewTogetherEvent extends TogetherEvent {
 }
 
 class CreateTogetherEvent extends TogetherEvent {
-  CreateTogetherEvent({@required this.together, @required this.byteDatas})
+  CreateTogetherEvent(
+      {@required this.together,
+      @required this.byteDatas,
+      this.removedImageUrls,
+      this.alreadyImageUrls})
       : _firestoreTimestamp = FieldValue.serverTimestamp();
   @override
   String toString() => 'CreateTogetherEvent';
@@ -140,6 +144,8 @@ class CreateTogetherEvent extends TogetherEvent {
   final IFImageProvider _imageProvider = FImageProvider();
   FieldValue _firestoreTimestamp;
   List<ByteData> byteDatas;
+  List<String> removedImageUrls;
+  List<String> alreadyImageUrls;
 
   Together together;
 
@@ -148,24 +154,55 @@ class CreateTogetherEvent extends TogetherEvent {
       {TogetherState currentState, TogetherBloc bloc}) async {
     try {
       String userID = await _authProvider.getUserID();
-      Uuid uuid = Uuid();
-      String identifier = uuid.v4(options: {
-        'positionalArgs': [userID]
-      });
-      print("identifier : ${identifier}");
+      if (together.imageFolder == null ||
+          together.imageFolder.isEmpty == true) {
+        Uuid uuid = Uuid();
+        String identifier = uuid.v4(options: {
+          'positionalArgs': [userID]
+        });
+        print("identifier : ${identifier}");
+        together.imageFolder = identifier;
+      }
+
+      if (removedImageUrls != null) {
+        for (int i = 0; i < removedImageUrls.length; i++) {
+          await _imageProvider.removeImage(imageUrl: removedImageUrls[i]);
+        }
+      }
 
       List<String> imageUrls = List<String>();
       if (byteDatas != null) {
-        final String imageFolder = '$userID/posts/$identifier';
+        final String imageFolder = '$userID/posts/${together.imageFolder}';
 
         imageUrls = await _imageProvider.uploadPostImages(
             imageFolder: imageFolder, byteDatas: byteDatas);
+      }
+
+      if (alreadyImageUrls != null && alreadyImageUrls.length > 0) {
+        imageUrls.addAll(alreadyImageUrls);
       }
 
       together.userID = userID;
       together.created = _firestoreTimestamp;
       together.lastUpdate = _firestoreTimestamp;
       together.imageUrls = imageUrls;
+
+      if (together.postID != null && together.postID.isEmpty == false) {
+        DocumentSnapshot snapshot =
+            await _togetherProvider.updateTogether(data: together.data());
+
+        Together updatedPost = Together();
+        updatedPost.initialize(snapshot);
+        updatedPost.profile = together.profile;
+        updatedPost.isLike = together.isLike;
+        updatedPost.likeCount = together.likeCount;
+        updatedPost.commentCount = together.commentCount;
+        updatedPost.warningCount = together.warningCount;
+        updatedPost.viewCount = together.viewCount;
+
+        return new SuccessTogetherState(together: updatedPost);
+      }
+
       DocumentReference reference =
           await _togetherProvider.createTogether(data: together.data());
       if (reference == null) {

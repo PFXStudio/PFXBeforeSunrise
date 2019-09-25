@@ -180,12 +180,13 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
       alignment: Alignment.center,
       children: <Widget>[
         Container(
+          padding: EdgeInsets.all(5),
           child: _post.imageUrls != null && _post.imageUrls.length > 0
               ? _buildPostImageCarousel()
               : Container(),
           // Image.asset('assets/avatars/bg-avatar.png', fit: BoxFit.cover),
         ),
-        _buildPostImageSynopsis(),
+        // _buildPostImageSynopsis(),
         _post.imageUrls.length > 1
             ? _buildPostImageCarouselIndicator()
             : Container(),
@@ -307,6 +308,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
         '${_post.contents}',
         overflow: TextOverflow.ellipsis,
         style: MainTheme.contentsTextStyle,
+        maxLines: 15,
       ),
       trailing: LikePostWidget.icon(
         isLike: _post.isLike,
@@ -410,7 +412,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
       children: <Widget>[
         Card(
           margin: EdgeInsets.only(left: 10, right: 10),
-          elevation: 8.0,
+          elevation: 5.0,
           child: InkWell(
             onTap: () => _navigateToPostDetailsPage(),
             child: Container(

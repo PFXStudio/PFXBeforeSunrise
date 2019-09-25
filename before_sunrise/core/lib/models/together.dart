@@ -15,6 +15,7 @@ class Together {
     this.tipPrice = 0,
     this.title = "",
     this.contents = "",
+    this.imageFolder = "",
     this.imageUrls,
     this.youtubeUrl = "",
     this.created,
@@ -41,6 +42,7 @@ class Together {
   int tipPrice;
   String title;
   String contents;
+  String imageFolder;
   List<dynamic> imageUrls;
   String youtubeUrl;
   dynamic created;
@@ -68,6 +70,7 @@ class Together {
     this.tipPrice = snapshot.data["tipPrice"];
     this.title = snapshot.data["title"];
     this.contents = snapshot.data["contents"];
+    this.imageFolder = snapshot.data["imageFolder"];
     this.imageUrls = snapshot.data["imageUrls"];
     this.youtubeUrl = snapshot.data["youtubeUrl"];
     this.created = snapshot.data["created"];
@@ -77,7 +80,7 @@ class Together {
   Object data() {
     return {
       "userID": userID,
-      // "postID": postID, // 저장 할 이유 없음.
+      "postID": postID,
       "clubID": clubID,
       "dateString": dateString,
       "totalCount": totalCount,
@@ -89,6 +92,7 @@ class Together {
       "tipPrice": tipPrice,
       "title": title,
       "contents": contents,
+      "imageFolder": imageFolder,
       "imageUrls": imageUrls,
       "youtubeUrl": youtubeUrl,
       'created': created,
@@ -110,6 +114,7 @@ class Together {
     int tipPrice,
     String title,
     String contents,
+    String imageFolder,
     List<dynamic> imageUrls,
     String youtubeUrl,
     DateTime created,
@@ -125,7 +130,7 @@ class Together {
     return Together(
       userID: userID ?? this.userID,
       postID: postID ?? this.postID,
-      clubID: postID ?? this.clubID,
+      clubID: clubID ?? this.clubID,
       dateString: dateString ?? this.dateString,
       totalCount: totalCount ?? this.totalCount,
       restCount: restCount ?? this.restCount,
@@ -136,6 +141,7 @@ class Together {
       tipPrice: tipPrice ?? this.tipPrice,
       title: title ?? this.title,
       contents: contents ?? this.contents,
+      imageFolder: imageFolder ?? this.imageFolder,
       imageUrls: imageUrls ?? this.imageUrls,
       youtubeUrl: youtubeUrl ?? this.youtubeUrl,
       created: created ?? this.created,
@@ -208,6 +214,7 @@ class Together {
       tipPrice.hashCode ^
       title.hashCode ^
       contents.hashCode ^
+      imageFolder.hashCode ^
       imageUrls.hashCode ^
       youtubeUrl.hashCode ^
       created.hashCode ^
