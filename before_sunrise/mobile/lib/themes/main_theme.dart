@@ -43,19 +43,19 @@ class MainTheme {
       TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black);
 
   static const TextStyle titleTextStyle = TextStyle(
-      fontSize: 34, fontWeight: FontWeight.bold, color: Colors.black87);
+      fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87);
 
   static const TextStyle barTitleTextStyle = TextStyle(
-      fontSize: 17, fontWeight: FontWeight.w600, color: Colors.black87);
+      fontSize: 19, fontWeight: FontWeight.w600, color: Colors.black87);
 
   static const TextStyle subTitleTextStyle = TextStyle(
-      fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black87);
+      fontSize: 17, fontWeight: FontWeight.w600, color: Colors.black87);
 
   static const TextStyle contentsTextStyle =
-      TextStyle(fontSize: 13, color: Colors.black87);
+      TextStyle(fontSize: 15, color: Colors.black87);
 
   static const TextStyle hintTextStyle =
-      TextStyle(fontSize: 13, color: Colors.black54);
+      TextStyle(fontSize: 15, color: Colors.black54);
 
   static const TextStyle timeTextStyle =
       TextStyle(fontSize: 13, color: Colors.black54);

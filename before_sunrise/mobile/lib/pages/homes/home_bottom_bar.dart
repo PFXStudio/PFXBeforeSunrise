@@ -76,7 +76,7 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
   }
 
   double _getItemSize({@required int index}) {
-    return index == _activeIndex ? 40.0 : 35.0;
+    return index == _activeIndex ? 35.0 : 30.0;
   }
 
   Color _getItemColor({@required int index}) {

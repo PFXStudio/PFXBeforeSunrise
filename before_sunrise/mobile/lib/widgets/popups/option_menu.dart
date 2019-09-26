@@ -39,8 +39,8 @@ typedef OptionMenuCallback = Function(OptionMenuProvider item);
  * popup menu
  */
 class OptionMenu {
-  static var itemWidth = 72.0;
-  static var itemHeight = 65.0;
+  static var itemWidth = 62.0;
+  static var itemHeight = 62.0;
   static var arrowHeight = 10.0;
   OverlayEntry _entry;
   List<OptionItem> items;

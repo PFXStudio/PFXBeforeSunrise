@@ -395,6 +395,11 @@ class _MenuButton extends StatelessWidget {
 
   void onClickMenu(item) {
     OptionItem optionItem = item;
+    if (optionItem.index == 0) {
+      ShareExtend.share(together.contents, together.title);
+
+      return;
+    }
 
     if (optionItem.index == 2) {
       Map<String, dynamic> infoMap = {"editPost": together};

@@ -197,7 +197,7 @@ class CreateTogetherEvent extends TogetherEvent {
         updatedPost.isLike = together.isLike;
         updatedPost.likeCount = together.likeCount;
         updatedPost.commentCount = together.commentCount;
-        updatedPost.warningCount = together.warningCount;
+        updatedPost.reportCount = together.reportCount;
         updatedPost.viewCount = together.viewCount;
 
         return new SuccessTogetherState(together: updatedPost);

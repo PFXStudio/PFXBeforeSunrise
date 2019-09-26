@@ -18,7 +18,8 @@ class Post {
     this.isLike = false,
     this.likeCount = 0,
     this.commentCount = 0,
-    this.warningCount = 0,
+    this.isReport = false,
+    this.reportCount = 0,
     this.viewCount = 0,
     this.profile,
     this.comments,
@@ -41,7 +42,8 @@ class Post {
   bool isLike;
   int likeCount;
   int commentCount;
-  int warningCount;
+  bool isReport;
+  int reportCount;
   int viewCount;
   Profile profile;
   List<Comment> comments;
@@ -97,7 +99,8 @@ class Post {
     bool isLike,
     int likeCount,
     int commentCount,
-    int warningCount,
+    bool isReport,
+    int reportCount,
     int viewCount,
     Profile profile,
     List<Comment> comments,
@@ -119,7 +122,8 @@ class Post {
       isLike: isLike ?? this.isLike,
       likeCount: likeCount ?? this.likeCount,
       commentCount: commentCount ?? this.commentCount,
-      warningCount: warningCount ?? this.warningCount,
+      isReport: isReport ?? this.isReport,
+      reportCount: reportCount ?? this.reportCount,
       viewCount: viewCount ?? this.viewCount,
       profile: profile ?? this.profile,
       comments: comments ?? this.comments,

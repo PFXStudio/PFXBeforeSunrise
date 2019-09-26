@@ -25,6 +25,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   int _currentPostImageIndex = 0;
   GlobalKey moreMenuKey = GlobalKey();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _isMine = false;
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     _post = widget._post.copyWith();
     SuccessSnackbar().initialize(_scaffoldKey);
     FailSnackbar().initialize(_scaffoldKey);
+    _isMine = _post.userID == ProfileBloc().signedProfile.userID;
   }
 
   @override
@@ -297,55 +299,30 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     );
   }
 
-  Widget _buildCommentTag() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        LikePostWidget.icon(
-          isSparkleStay: false,
-          isLike: _post.isLike,
-          counter: _post.likeCount,
-          defaultIcon: FontAwesomeIcons.kissBeam,
-          filledIcon: FontAwesomeIcons.solidKissWinkHeart,
-          countCircleColor: MainTheme.enabledButtonColor,
-          defaultIconColor: MainTheme.enabledButtonColor,
-          hasShadow: true,
-          sparkleColor: MainTheme.pivotColor,
-          shadowColor: MainTheme.enabledButtonColor,
-          filledIconColor: MainTheme.enabledButtonColor,
-          clapFabCallback: (callback) {
-            PostBloc().dispatch(
-                ToggleLikePostEvent(post: _post, isLike: !_post.isLike));
-            _post.isLike = !_post.isLike;
-            if (_post.isLike == true) {
-              _post.likeCount++;
-            } else {
-              _post.likeCount--;
-            }
-
-            if (callback == null) {
-              return;
-            }
-
-            print("isLike : ${_post.isLike}, count : ${_post.likeCount}");
-            callback(_post.isLike, _post.likeCount);
-
-            // });
-          },
-        ),
-      ],
-    );
-  }
-
   Widget _buildPostTitleInfo() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          timeago.format(_post.lastUpdate.toDate(), locale: 'ko'),
-          style: MainTheme.timeTextStyle,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            _buildLike(),
+            _buildViewCount(),
+            Icon(
+              FontAwesomeIcons.clock,
+              color: MainTheme.timeTextStyle.color,
+              size: 15,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10, right: 10),
+              child: Text(
+                timeago.format(_post.lastUpdate.toDate(), locale: 'ko'),
+                style: MainTheme.timeTextStyle,
+              ),
+            ),
+          ],
         ),
-        SizedBox(height: 5.0),
+        SizedBox(height: 10.0),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -356,12 +333,79 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                 style: MainTheme.titleTextStyle,
               ),
             ),
-            _buildCommentTag(),
           ],
         ),
         SizedBox(height: 10.0),
       ],
     );
+  }
+
+  Widget _buildLike() {
+    return _isMine == true
+        ? SizedBox()
+        : Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: LikePostWidget.icon(
+              isSparkleStay: false,
+              isLike: _post.isLike,
+              counter: _post.likeCount,
+              defaultIcon: FontAwesomeIcons.kissBeam,
+              filledIcon: FontAwesomeIcons.solidKissWinkHeart,
+              countCircleColor: MainTheme.enabledButtonColor,
+              defaultIconColor: MainTheme.enabledButtonColor,
+              hasShadow: true,
+              sparkleColor: MainTheme.pivotColor,
+              shadowColor: MainTheme.enabledButtonColor,
+              filledIconColor: MainTheme.enabledButtonColor,
+              clapFabCallback: (callback) {
+                PostBloc().dispatch(
+                    ToggleLikePostEvent(post: _post, isLike: !_post.isLike));
+                _post.isLike = !_post.isLike;
+                if (_post.isLike == true) {
+                  _post.likeCount++;
+                } else {
+                  _post.likeCount--;
+                }
+
+                if (callback == null) {
+                  return;
+                }
+
+                print("isLike : ${_post.isLike}, count : ${_post.likeCount}");
+                callback(_post.isLike, _post.likeCount);
+              },
+            ));
+  }
+
+  Widget _buildViewCount() {
+    if (_post.viewCount == null) {
+      return SizedBox(
+        width: 1,
+      );
+    }
+
+    return Padding(
+        padding: EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 10, right: 10),
+              child: Icon(
+                FontAwesomeIcons.eye,
+                color: MainTheme.timeTextStyle.color,
+                size: 15,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 20),
+              child: Text(
+                "${_post.viewCount}",
+                style: MainTheme.timeTextStyle,
+              ),
+            ),
+          ],
+        ));
   }
 
   Widget _buildContents() {
@@ -419,7 +463,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   Widget _buildPostDetails() {
-    final double _contentHeight = kDeviceHeight * 0.7;
+    final double _contentHeight = kDeviceHeight * 0.6;
 
     final double _contentWidthPadding =
         kDeviceWidth > 450.0 ? kDeviceWidth - 450.0 : 30.0;
@@ -571,7 +615,6 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   void _touchedMoreButton(BuildContext context) {
-    bool isMine = _post.userID == ProfileBloc().signedProfile.userID;
     List<OptionItem> menuItems = [
       OptionItem(
           index: 0,
@@ -582,19 +625,24 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           )),
       OptionItem(
           index: 1,
-          title: '신고',
-          image: Icon(
-            FontAwesomeIcons.handMiddleFinger,
-            color: Colors.white,
-          )),
+          title: _post.isReport == true ? '해제' : '신고',
+          image: _post.isReport == true
+              ? Icon(
+                  FontAwesomeIcons.solidHandshake,
+                  color: Colors.white,
+                )
+              : Icon(
+                  FontAwesomeIcons.handMiddleFinger,
+                  color: Colors.white,
+                )),
     ];
 
-    if (isMine == true) {
+    if (_isMine == true) {
       menuItems.add(OptionItem(
           index: 2,
           title: '편집',
           image: Icon(
-            FontAwesomeIcons.edit,
+            FontAwesomeIcons.solidEdit,
             color: Colors.white,
           )));
       menuItems.add(OptionItem(
@@ -618,6 +666,24 @@ class PostDetailScreenState extends State<PostDetailScreen> {
 
   void onClickMenu(item) async {
     OptionItem optionItem = item;
+
+    if (optionItem.index == 0) {
+      ShareExtend.share(_post.contents, "text");
+
+      return;
+    }
+
+    if (optionItem.index == 1) {
+      // if (_isMine == true) {
+      //   FailSnackbar().show("cant_report_mine", () {});
+
+      //   return;
+      // }
+      _postBloc.dispatch(
+          ToggleReportPostEvent(isReport: !_post.isReport, post: _post));
+      _post.isReport = !_post.isReport;
+      return;
+    }
 
     if (optionItem.index == 2) {
       Map<String, dynamic> infoMap = {

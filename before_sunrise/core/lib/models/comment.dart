@@ -12,7 +12,7 @@ class Comment {
     this.lastUpdate,
     this.isLike = false,
     this.likeCount = 0,
-    this.warningCount = 0,
+    this.reportCount = 0,
     this.isMine = false,
     this.profile,
     this.parentProfile,
@@ -30,7 +30,7 @@ class Comment {
   String parentText;
   bool isLike;
   int likeCount;
-  int warningCount;
+  int reportCount;
   bool isMine;
   Profile profile;
   Profile parentProfile;

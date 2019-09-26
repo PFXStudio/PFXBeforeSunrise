@@ -39,6 +39,23 @@ class LoadPostEvent extends PostEvent {
         profile.initialize(snapshot);
         post.profile = profile;
 
+        post.isReport = await _postProvider.isReport(
+            category: post.category, postID: post.postID, userID: userID);
+        DocumentSnapshot reportSnapshot =
+            await _shardsProvider.reportCount(postID: post.postID);
+        if (reportSnapshot != null && reportSnapshot.data != null) {
+          post.reportCount = reportSnapshot.data["count"];
+        }
+
+        if (post.reportCount >= 10) {
+          post.title = "다수의 신고 의견으로 게시물이 일시차단 되었습니다.";
+          post.contents = "**********";
+          post.imageUrls = [];
+          post.youtubeUrl = "";
+          posts.add(post);
+          continue;
+        }
+
         post.isLike = await _postProvider.isLike(
             category: post.category, postID: post.postID, userID: userID);
         DocumentSnapshot likeSnapshot =
@@ -51,12 +68,6 @@ class LoadPostEvent extends PostEvent {
             await _shardsProvider.commentCount(postID: post.postID);
         if (commentSnapshot != null && commentSnapshot.data != null) {
           post.commentCount = commentSnapshot.data["count"];
-        }
-
-        DocumentSnapshot reportSnapshot =
-            await _shardsProvider.reportCount(postID: post.postID);
-        if (reportSnapshot != null && reportSnapshot.data != null) {
-          post.warningCount = reportSnapshot.data["count"];
         }
 
         DocumentSnapshot viewSnapshot =
@@ -177,7 +188,7 @@ class CreatePostEvent extends PostEvent {
         updatedPost.isLike = post.isLike;
         updatedPost.likeCount = post.likeCount;
         updatedPost.commentCount = post.commentCount;
-        updatedPost.warningCount = post.warningCount;
+        updatedPost.reportCount = post.reportCount;
         updatedPost.viewCount = post.viewCount;
 
         return new SuccessPostState(post: updatedPost);
@@ -197,10 +208,10 @@ class CreatePostEvent extends PostEvent {
   }
 }
 
-class ReportPostEvent extends PostEvent {
-  ReportPostEvent({@required this.post, @required this.isReport});
+class ToggleReportPostEvent extends PostEvent {
+  ToggleReportPostEvent({@required this.post, @required this.isReport});
   @override
-  String toString() => 'ReportPostEvent';
+  String toString() => 'ToggleReportPostEvent';
   final IPostProvider _postProvider = PostProvider();
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();

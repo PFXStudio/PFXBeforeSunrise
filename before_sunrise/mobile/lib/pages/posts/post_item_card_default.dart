@@ -15,7 +15,7 @@ class PostItemCardDefault extends StatefulWidget {
 
 class _PostItemCardDefaultState extends State<PostItemCardDefault> {
   int _currentPostImageIndex = 0;
-  bool _isCurrentUserProfile = false;
+  bool _isMine = false;
 
   Post get _post => widget.post;
   bool get _isProfilePost => widget.isProfilePost;
@@ -28,8 +28,8 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
     if (signedProfile != null) {
       setState(() {
         signedProfile.userID == _post.profile.userID
-            ? _isCurrentUserProfile = true
-            : _isCurrentUserProfile = false;
+            ? _isMine = true
+            : _isMine = false;
       });
     }
   }
@@ -295,9 +295,41 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
       ),
       title: Text('${_post.profile.nickname}',
           style: MainTheme.simpleNickNameStyle),
-      trailing: _isCurrentUserProfile
-          ? null
-          : _isProfilePost ? null : _buildFollowTrailingButton(),
+      trailing: _isMine == true
+          ? SizedBox()
+          : Padding(
+              padding: EdgeInsets.only(left: 5),
+              child: LikePostWidget.icon(
+                isLike: _post.isLike,
+                counter: _post.likeCount,
+                defaultIcon: FontAwesomeIcons.kissBeam,
+                filledIcon: FontAwesomeIcons.solidKissWinkHeart,
+                countCircleColor: MainTheme.enabledButtonColor,
+                defaultIconColor: MainTheme.enabledButtonColor,
+                hasShadow: true,
+                sparkleColor: MainTheme.pivotColor,
+                shadowColor: MainTheme.enabledButtonColor,
+                filledIconColor: MainTheme.enabledButtonColor,
+                clapFabCallback: (callback) {
+                  PostBloc().dispatch(
+                      ToggleLikePostEvent(post: _post, isLike: !_post.isLike));
+                  _post.isLike = !_post.isLike;
+                  if (_post.isLike == true) {
+                    _post.likeCount++;
+                  } else {
+                    _post.likeCount--;
+                  }
+
+                  if (callback == null) {
+                    return;
+                  }
+
+                  print("isLike : ${_post.isLike}, count : ${_post.likeCount}");
+                  callback(_post.isLike, _post.likeCount);
+
+                  // });
+                },
+              )),
     );
   }
 
@@ -309,37 +341,6 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
         overflow: TextOverflow.ellipsis,
         style: MainTheme.contentsTextStyle,
         maxLines: 15,
-      ),
-      trailing: LikePostWidget.icon(
-        isLike: _post.isLike,
-        counter: _post.likeCount,
-        defaultIcon: FontAwesomeIcons.kissBeam,
-        filledIcon: FontAwesomeIcons.solidKissWinkHeart,
-        countCircleColor: MainTheme.enabledButtonColor,
-        defaultIconColor: MainTheme.enabledButtonColor,
-        hasShadow: true,
-        sparkleColor: MainTheme.pivotColor,
-        shadowColor: MainTheme.enabledButtonColor,
-        filledIconColor: MainTheme.enabledButtonColor,
-        clapFabCallback: (callback) {
-          PostBloc().dispatch(
-              ToggleLikePostEvent(post: _post, isLike: !_post.isLike));
-          _post.isLike = !_post.isLike;
-          if (_post.isLike == true) {
-            _post.likeCount++;
-          } else {
-            _post.likeCount--;
-          }
-
-          if (callback == null) {
-            return;
-          }
-
-          print("isLike : ${_post.isLike}, count : ${_post.likeCount}");
-          callback(_post.isLike, _post.likeCount);
-
-          // });
-        },
       ),
     );
   }

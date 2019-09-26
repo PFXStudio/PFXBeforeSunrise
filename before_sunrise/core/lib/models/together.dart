@@ -24,7 +24,7 @@ class Together {
     this.isLike = false,
     this.likeCount = 0,
     this.commentCount = 0,
-    this.warningCount = 0,
+    this.reportCount = 0,
     this.viewCount = 0,
     this.profile,
   });
@@ -52,7 +52,7 @@ class Together {
   bool isLike;
   int likeCount;
   int commentCount;
-  int warningCount;
+  int reportCount;
   int viewCount;
   Profile profile;
 
@@ -123,7 +123,7 @@ class Together {
     bool isLike,
     int likeCount,
     int commentCount,
-    int warningCount,
+    int reportCount,
     int viewCount,
     Profile profile,
   }) {
@@ -150,7 +150,7 @@ class Together {
       isLike: isLike ?? this.isLike,
       likeCount: likeCount ?? this.likeCount,
       commentCount: commentCount ?? this.commentCount,
-      warningCount: warningCount ?? this.warningCount,
+      reportCount: reportCount ?? this.reportCount,
       viewCount: viewCount ?? this.viewCount,
       profile: profile ?? this.profile,
     );

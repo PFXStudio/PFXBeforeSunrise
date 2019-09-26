@@ -224,7 +224,7 @@ class PostStepFormState extends State<PostStepForm>
         ),
         child: Container(
             width: kDeviceWidth - MainTheme.edgeInsets.left,
-            height: 410,
+            height: 360,
             child: Center(
                 child: new ListView(
               shrinkWrap: true,
@@ -249,6 +249,7 @@ class PostStepFormState extends State<PostStepForm>
                                       padding: EdgeInsets.only(
                                           left: 10.0, right: 10.0),
                                       child: new TextFormField(
+                                        maxLength: 64,
                                         focusNode: _titleFocusNode,
                                         controller: _titleController,
                                         decoration: new InputDecoration(
@@ -291,7 +292,6 @@ class PostStepFormState extends State<PostStepForm>
                                                   size: 14),
                                             )),
                                         keyboardType: TextInputType.multiline,
-                                        onChanged: (dd) {},
                                       ),
                                     ),
                                   ],
@@ -323,7 +323,7 @@ class PostStepFormState extends State<PostStepForm>
                 ),
                 child: Container(
                   width: kDeviceWidth - MainTheme.edgeInsets.left,
-                  height: (_selectedOriginalDatas.length > 0) ? 400 : 114,
+                  height: (_selectedOriginalDatas.length > 0) ? 360 : 114,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -494,7 +494,7 @@ class PostStepFormState extends State<PostStepForm>
         ),
         child: Container(
             width: kDeviceWidth - MainTheme.edgeInsets.left,
-            height: 210,
+            height: 227,
             child: Padding(
                 padding: EdgeInsets.all(10),
                 child: Column(
