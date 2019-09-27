@@ -1,28 +1,36 @@
 import 'package:before_sunrise/import.dart';
 
 class CommentList extends StatefulWidget {
-  CommentList({this.category, this.postID});
+  CommentList({this.category, this.postID, this.isReport});
   @override
   _CommentListState createState() => _CommentListState();
   String category;
   String postID;
+  bool isReport;
 }
 
 class _CommentListState extends State<CommentList> {
   List<Comment> _comments = List<Comment>();
   bool _isAllLoad = false;
   final TextEditingController _textController = TextEditingController();
-  ByteData _selectedThumbData;
   ByteData _selectedOriginalData;
+  ByteData _editSelectedOriginalData;
   final _commentBloc = CommentBloc();
   ScrollController _scrollController = ScrollController();
   Widget _commentLoadingIndicator = CircularProgressIndicator(
       strokeWidth: 2.0, backgroundColor: Colors.transparent);
 
+  Comment _editComment = null;
+
   @override
   void initState() {
     super.initState();
     print("commentlist init");
+
+    if (widget.isReport == true) {
+      return;
+    }
+
     this._commentBloc.dispatch(LoadCommentEvent(
         category: widget.category, comment: null, postID: widget.postID));
 
@@ -48,7 +56,7 @@ class _CommentListState extends State<CommentList> {
                     return;
                   } else if (state is SuccessCommentState) {
                     _textController.text = "";
-                    _selectedThumbData = null;
+                    _selectedOriginalData = null;
                     print("commentlist SuccessCommentState");
 
                     _isAllLoad = false;
@@ -59,6 +67,26 @@ class _CommentListState extends State<CommentList> {
                         postID: widget.postID));
 
                     return;
+                  } else if (state is EditCommentState) {
+                    _editComment = state.comment;
+                    if (_editComment == null) {
+                      return;
+                    }
+
+                    _textController.text = _editComment.text;
+                    if (_editComment.imageUrls == null ||
+                        _editComment.imageUrls.isEmpty == true) {
+                      setState(() {});
+                      return;
+                    }
+                    downloadAllImages(_editComment.imageUrls, (imageMap) {
+                      if (imageMap == null || imageMap.isEmpty == true) {
+                        return;
+                      }
+
+                      _selectedOriginalData = imageMap.values.first;
+                      setState(() {});
+                    });
                   } else {
                     _commentLoadingIndicator = SizedBox();
                     setState(() {});
@@ -127,7 +155,21 @@ class _CommentListState extends State<CommentList> {
                 children: <Widget>[
                   // Flexible(
                   //   child:
-                  _selectedThumbData == null
+                  _editComment == null
+                      ? SizedBox()
+                      : FlatIconTextButton(
+                          width: kDeviceWidth,
+                          color: MainTheme.enabledButtonColor,
+                          iconData: FontAwesomeIcons.solidTimesCircle,
+                          text: "편집 취소",
+                          onPressed: () {
+                            _editComment = null;
+                            _selectedOriginalData = null;
+                            _textController.text = "";
+                            setState(() {});
+                          },
+                        ),
+                  _selectedOriginalData == null
                       ? ListTile(
                           leading: IconButton(
                             icon: Icon(
@@ -153,11 +195,15 @@ class _CommentListState extends State<CommentList> {
                               hintText: LocalizableLoader.of(context)
                                   .text("comment_hint_text"),
                             ),
-                            maxLines: null,
+                            minLines: 1,
+                            maxLines: 5,
+                            maxLength: 128,
                           ),
                           trailing: IconButton(
                             icon: Icon(
-                              FontAwesomeIcons.paperPlane,
+                              _editComment == null
+                                  ? FontAwesomeIcons.paperPlane
+                                  : FontAwesomeIcons.solidEdit,
                               color: MainTheme.enabledButtonColor,
                             ),
                             onPressed: () {
@@ -195,13 +241,6 @@ class _CommentListState extends State<CommentList> {
       }
 
       for (Asset asset in resultList) {
-        ByteData data = await asset.getThumbByteData(
-          100,
-          100,
-          quality: 50,
-        );
-        _selectedThumbData = data;
-
         ByteData originalData = await asset.getByteData();
         _selectedOriginalData = originalData;
         setState(() {});
@@ -216,7 +255,7 @@ class _CommentListState extends State<CommentList> {
   }
 
   Widget _buildGridView(BuildContext context) {
-    if (_selectedThumbData == null) {
+    if (_selectedOriginalData == null) {
       return Container();
     }
 
@@ -224,7 +263,7 @@ class _CommentListState extends State<CommentList> {
       contentPadding: EdgeInsets.all(10),
       title: Stack(children: <Widget>[
         ThumbnailItem(
-          data: _selectedThumbData,
+          data: _selectedOriginalData,
           width: 50,
           height: 50,
           quality: 50,
@@ -237,7 +276,6 @@ class _CommentListState extends State<CommentList> {
             ),
             color: MainTheme.enabledIconColor,
             onPressed: () {
-              _selectedThumbData = null;
               _selectedOriginalData = null;
               setState(() {});
               print("deleted");
@@ -247,7 +285,9 @@ class _CommentListState extends State<CommentList> {
       ]),
       trailing: IconButton(
         icon: Icon(
-          FontAwesomeIcons.paperPlane,
+          _editComment == null
+              ? FontAwesomeIcons.paperPlane
+              : FontAwesomeIcons.solidEdit,
           color: MainTheme.enabledButtonColor,
         ),
         onPressed: () {
@@ -258,6 +298,11 @@ class _CommentListState extends State<CommentList> {
   }
 
   void _touchedSendButton() {
+    if (widget.isReport == true) {
+      FailSnackbar().show("fail_report_post", null);
+      return;
+    }
+
     if (_textController.text.length <= 0) {
       FailSnackbar().show("E41122", null);
       return;
@@ -274,6 +319,11 @@ class _CommentListState extends State<CommentList> {
   }
 
   void _touchedSendImageButton() {
+    if (widget.isReport == true) {
+      FailSnackbar().show("fail_report_post", null);
+      return;
+    }
+
     if (_selectedOriginalData == null) {
       FailSnackbar().show("E41123", null);
       return;

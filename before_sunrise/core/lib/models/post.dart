@@ -82,6 +82,27 @@ class Post {
     };
   }
 
+  bool isReported() {
+    if (this.reportCount >= 10) {
+      return true;
+    }
+
+    return false;
+  }
+
+  bool checkReported() {
+    if (isReported() == false) {
+      return false;
+    }
+
+    this.title = "**********";
+    this.contents = "다수의 신고 의견으로 게시물이 일시차단 되었습니다.";
+    this.imageUrls = [];
+    this.youtubeUrl = "";
+
+    return true;
+  }
+
   Post copyWith({
     String category,
     String userID,

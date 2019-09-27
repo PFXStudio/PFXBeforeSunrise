@@ -530,7 +530,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
         ),
         child: Container(
             width: kDeviceWidth - MainTheme.edgeInsets.left,
-            height: 260,
+            height: kDeviceHeight * 0.32,
             child: Padding(
                 padding: EdgeInsets.all(10),
                 child: Column(

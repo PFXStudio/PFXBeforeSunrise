@@ -46,6 +46,12 @@ class LoadTogetherEvent extends TogetherEvent {
         Profile userProfile = Profile();
         userProfile.initialize(profileSnapshot);
         together.profile = userProfile;
+
+        if (together.checkReported() == true) {
+          collection.togethers.add(together);
+          continue;
+        }
+
         DocumentSnapshot countSnapshot =
             await _shardsProvider.commentCount(postID: together.postID);
         if (countSnapshot != null && countSnapshot.data != null) {
@@ -93,6 +99,42 @@ class ToggleLikeTogetherEvent extends TogetherEvent {
         await _togetherProvider.removeFromLike(postID: postID, userID: userID);
         await _shardsProvider.decreasePostLikeCount(
             category: Together().category(), postID: postID);
+      }
+
+      return currentState;
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorTogetherState(_?.toString());
+    }
+  }
+}
+
+class ToggleReportTogetherEvent extends TogetherEvent {
+  ToggleReportTogetherEvent({@required this.together, @required this.isReport});
+  @override
+  String toString() => 'ToggleReportTogetherEvent';
+  final ITogetherProvider _togetherProvider = TogetherProvider();
+  final IAuthProvider _authProvider = AuthProvider();
+  final IShardsProvider _shardsProvider = ShardsProvider();
+
+  Together together;
+  bool isReport = false;
+
+  @override
+  Future<TogetherState> applyAsync(
+      {TogetherState currentState, TogetherBloc bloc}) async {
+    try {
+      String userID = await _authProvider.getUserID();
+      if (isReport == true) {
+        await _togetherProvider.addToReport(
+            postID: together.postID, userID: userID);
+        await _shardsProvider.increaseReportCount(
+            category: together.category(), postID: together.postID);
+      } else {
+        await _togetherProvider.removeFromReport(
+            postID: together.postID, userID: userID);
+        await _shardsProvider.decreaseReportCount(
+            category: together.category(), postID: together.postID);
       }
 
       return currentState;

@@ -172,7 +172,6 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
     );
   }
 
-  void touchedButton() {}
   Widget _panel() {
     final CommentBloc _commentBloc = CommentBloc();
     final Comment comment = Comment();
@@ -320,9 +319,10 @@ class _MenuButton extends StatelessWidget {
   final TogetherDetailScrollEffects scrollEffects;
   final Together together;
   GlobalKey moreMenuKey = GlobalKey();
-
+  bool _isMine = false;
   @override
   Widget build(BuildContext context) {
+    _isMine = together.userID == ProfileBloc().signedProfile.userID;
     return Positioned(
       top: MediaQuery.of(context).padding.top,
       right: 4.0,
@@ -348,7 +348,6 @@ class _MenuButton extends StatelessWidget {
   }
 
   void _touchedMoreButton(BuildContext context) {
-    bool isMine = together.userID == ProfileBloc().signedProfile.userID;
     List<OptionItem> menuItems = [
       OptionItem(
           index: 0,
@@ -366,7 +365,7 @@ class _MenuButton extends StatelessWidget {
           )),
     ];
 
-    if (isMine == true) {
+    if (_isMine == true) {
       menuItems.add(OptionItem(
           index: 2,
           title: '편집',
@@ -396,12 +395,36 @@ class _MenuButton extends StatelessWidget {
   void onClickMenu(item) {
     OptionItem optionItem = item;
     if (optionItem.index == 0) {
+      if (together.isReported() == true) {
+        FailSnackbar().show("fail_reported_post", () {});
+
+        return;
+      }
+
       ShareExtend.share(together.contents, together.title);
 
       return;
     }
 
+    if (optionItem.index == 1) {
+      if (_isMine == true) {
+        FailSnackbar().show("cant_report_mine", () {});
+
+        return;
+      }
+      TogetherBloc().dispatch(ToggleReportTogetherEvent(
+          isReport: !together.isReport, together: together));
+      together.isReport = !together.isReport;
+      return;
+    }
+
     if (optionItem.index == 2) {
+      if (together.isReported() == true) {
+        FailSnackbar().show("fail_reported_post", () {});
+
+        return;
+      }
+
       Map<String, dynamic> infoMap = {"editPost": together};
 
       downloadAllImages(together.imageUrls, (editImageMap) {
@@ -417,8 +440,13 @@ class _MenuButton extends StatelessWidget {
     }
 
     if (optionItem.index == 3) {
-      bool isMine = together.userID == ProfileBloc().signedProfile.userID;
-      if (isMine == false) {
+      if (together.isReported() == true) {
+        FailSnackbar().show("fail_reported_post", () {});
+
+        return;
+      }
+
+      if (_isMine == false) {
         FailSnackbar().show("error_not_mine", () {});
         return;
       }

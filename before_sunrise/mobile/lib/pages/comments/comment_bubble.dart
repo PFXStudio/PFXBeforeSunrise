@@ -15,6 +15,7 @@ class CommentBubble extends StatefulWidget {
 class _CommentBubbleState extends State<CommentBubble> {
   Comment get _comment => widget.comment;
   List colors = Colors.primaries;
+  GlobalKey commentKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -145,6 +146,9 @@ class _CommentBubbleState extends State<CommentBubble> {
 
   Widget _buildImage(BuildContext context, String imageUrl) {
     return GestureDetector(
+        onLongPress: () {
+          _touchedMyMenuButton(context);
+        },
         onTap: () {
           Navigator.push(context,
               MaterialPageRoute<void>(builder: (BuildContext context) {
@@ -173,7 +177,7 @@ class _CommentBubbleState extends State<CommentBubble> {
         ));
   }
 
-  Widget _buildTimeage(BuildContext context) {
+  Widget _buildTimeago(BuildContext context) {
     return Padding(
       padding: _comment.isMine
           ? EdgeInsets.only(
@@ -212,7 +216,7 @@ class _CommentBubbleState extends State<CommentBubble> {
             borderRadius: radius,
           ),
           constraints: BoxConstraints(
-            maxWidth: kDeviceWidth / 1.3,
+            maxWidth: kDeviceWidth * 0.7,
             minWidth: 20.0,
           ),
           child: Column(
@@ -222,22 +226,28 @@ class _CommentBubbleState extends State<CommentBubble> {
               // _comment.isMine == false ? _buildProfile(context) : SizedBox(),
               SizedBox(width: 2),
               SizedBox(),
-              Padding(
-                padding: EdgeInsets.all(
-                    (_comment.text != null && _comment.text.length > 0)
-                        ? 5
-                        : 0),
-                child: (_comment.text != null && _comment.text.length > 0)
-                    ? Text(
-                        _comment.text,
-                        style: TextStyle(color: Colors.white),
-                      )
-                    : _buildImage(context, _comment.imageUrls.first),
+              InkWell(
+                key: commentKey,
+                child: Padding(
+                  padding: EdgeInsets.all(
+                      (_comment.text != null && _comment.text.length > 0)
+                          ? 5
+                          : 0),
+                  child: (_comment.text != null && _comment.text.length > 0)
+                      ? Text(
+                          _comment.text,
+                          style: TextStyle(color: Colors.white),
+                        )
+                      : _buildImage(context, _comment.imageUrls.first),
+                ),
+                onLongPress: () {
+                  _touchedMyMenuButton(context);
+                },
               ),
             ],
           ),
         ),
-        _buildTimeage(context),
+        _buildTimeago(context),
       ],
     );
   }
@@ -288,7 +298,7 @@ class _CommentBubbleState extends State<CommentBubble> {
             ],
           ),
         ),
-        _buildTimeage(context),
+        _buildTimeago(context),
       ],
     );
   }
@@ -339,7 +349,7 @@ class _CommentBubbleState extends State<CommentBubble> {
             ],
           ),
         ),
-        _buildTimeage(context),
+        _buildTimeago(context),
       ],
     );
   }
@@ -387,8 +397,70 @@ class _CommentBubbleState extends State<CommentBubble> {
             ],
           ),
         ),
-        _buildTimeage(context),
+        _buildTimeago(context),
       ],
     );
   }
+
+  void _touchedMyMenuButton(BuildContext context) {
+    List<OptionItem> menuItems = [
+      OptionItem(
+          index: 0,
+          title: '복사',
+          image: Icon(
+            FontAwesomeIcons.copy,
+            color: Colors.white,
+          )),
+      OptionItem(
+          index: 1,
+          title: '답장',
+          image: Icon(
+            FontAwesomeIcons.reply,
+            color: Colors.white,
+          )),
+    ];
+
+    menuItems.add(OptionItem(
+        index: 2,
+        title: '편집',
+        image: Icon(
+          FontAwesomeIcons.solidEdit,
+          color: Colors.white,
+        )));
+    menuItems.add(OptionItem(
+        index: 3,
+        title: '삭제',
+        image: Icon(
+          FontAwesomeIcons.trash,
+          color: Colors.white,
+        )));
+
+    OptionMenu.context = context;
+    OptionMenu menu = OptionMenu(
+        backgroundColor: Colors.black54,
+        items: menuItems,
+        onClickMenu: onClickedMyMenu,
+        onDismiss: onDismiss);
+
+    menu.show(widgetKey: commentKey);
+  }
+
+  void onClickedMyMenu(item) async {
+    OptionItem optionItem = item;
+
+    if (optionItem.index == 0) {
+      return;
+    }
+
+    if (optionItem.index == 1) {
+      return;
+    }
+
+    if (optionItem.index == 2) {
+      CommentBloc().dispatch(EditCommentEvent(comment: _comment));
+      return;
+    }
+  }
+
+  void onDismiss() {}
 }

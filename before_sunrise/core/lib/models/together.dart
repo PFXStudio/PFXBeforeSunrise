@@ -24,6 +24,7 @@ class Together {
     this.isLike = false,
     this.likeCount = 0,
     this.commentCount = 0,
+    this.isReport = false,
     this.reportCount = 0,
     this.viewCount = 0,
     this.profile,
@@ -52,6 +53,7 @@ class Together {
   bool isLike;
   int likeCount;
   int commentCount;
+  bool isReport;
   int reportCount;
   int viewCount;
   Profile profile;
@@ -100,6 +102,36 @@ class Together {
     };
   }
 
+  bool isReported() {
+    if (this.reportCount >= 10) {
+      return true;
+    }
+
+    return false;
+  }
+
+  bool checkReported() {
+    if (isReported() == false) {
+      return false;
+    }
+
+    this.title = "**********";
+    this.contents = "다수의 신고 의견으로 게시물이 일시차단 되었습니다.";
+    this.clubID = "";
+    this.totalCount = 0;
+    this.restCount = 0;
+    this.hardCount = 0;
+    this.champagneCount = 0;
+    this.serviceCount = 0;
+    this.tablePrice = 0;
+    this.tipPrice = 0;
+    this.totalCount = 0;
+    this.imageUrls = [];
+    this.youtubeUrl = "";
+
+    return true;
+  }
+
   Together copyWith({
     String userID,
     String postID,
@@ -123,6 +155,7 @@ class Together {
     bool isLike,
     int likeCount,
     int commentCount,
+    bool isReport,
     int reportCount,
     int viewCount,
     Profile profile,
@@ -150,6 +183,7 @@ class Together {
       isLike: isLike ?? this.isLike,
       likeCount: likeCount ?? this.likeCount,
       commentCount: commentCount ?? this.commentCount,
+      isReport: isReport ?? this.isReport,
       reportCount: reportCount ?? this.reportCount,
       viewCount: viewCount ?? this.viewCount,
       profile: profile ?? this.profile,

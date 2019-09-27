@@ -47,11 +47,7 @@ class LoadPostEvent extends PostEvent {
           post.reportCount = reportSnapshot.data["count"];
         }
 
-        if (post.reportCount >= 10) {
-          post.title = "다수의 신고 의견으로 게시물이 일시차단 되었습니다.";
-          post.contents = "**********";
-          post.imageUrls = [];
-          post.youtubeUrl = "";
+        if (post.checkReported() == true) {
           posts.add(post);
           continue;
         }

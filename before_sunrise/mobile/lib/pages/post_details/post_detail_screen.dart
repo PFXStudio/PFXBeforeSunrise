@@ -308,18 +308,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           children: <Widget>[
             _buildLike(),
             _buildViewCount(),
-            Icon(
-              FontAwesomeIcons.clock,
-              color: MainTheme.timeTextStyle.color,
-              size: 15,
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 10, right: 10),
-              child: Text(
-                timeago.format(_post.lastUpdate.toDate(), locale: 'ko'),
-                style: MainTheme.timeTextStyle,
-              ),
-            ),
+            _buildTimeago(),
           ],
         ),
         SizedBox(height: 10.0),
@@ -406,6 +395,25 @@ class PostDetailScreenState extends State<PostDetailScreen> {
             ),
           ],
         ));
+  }
+
+  Widget _buildTimeago() {
+    return Row(
+      children: <Widget>[
+        Icon(
+          FontAwesomeIcons.clock,
+          color: MainTheme.timeTextStyle.color,
+          size: 15,
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 10, right: 10),
+          child: Text(
+            timeago.format(_post.lastUpdate.toDate(), locale: 'ko'),
+            style: MainTheme.timeTextStyle,
+          ),
+        )
+      ],
+    );
   }
 
   Widget _buildContents() {
@@ -504,6 +512,24 @@ class PostDetailScreenState extends State<PostDetailScreen> {
         Container(
           child: Column(
             children: <Widget>[
+              SizedBox(
+                height: 2,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    width: 30,
+                    height: 5,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 2,
+              ),
               _buildPostDetails(),
             ],
           ),
@@ -606,10 +632,12 @@ class PostDetailScreenState extends State<PostDetailScreen> {
             ],
           ),
         ),
-        CommentList(
-          category: widget._post.category,
-          postID: widget._post.postID,
-        ),
+        _post.isReported() == false
+            ? CommentList(
+                category: widget._post.category,
+                postID: widget._post.postID,
+              )
+            : Container(),
       ],
     );
   }
@@ -668,17 +696,23 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     OptionItem optionItem = item;
 
     if (optionItem.index == 0) {
+      if (_post.isReported() == true) {
+        FailSnackbar().show("fail_reported_post", () {});
+
+        return;
+      }
+
       ShareExtend.share(_post.contents, "text");
 
       return;
     }
 
     if (optionItem.index == 1) {
-      // if (_isMine == true) {
-      //   FailSnackbar().show("cant_report_mine", () {});
+      if (_isMine == true) {
+        FailSnackbar().show("cant_report_mine", () {});
 
-      //   return;
-      // }
+        return;
+      }
       _postBloc.dispatch(
           ToggleReportPostEvent(isReport: !_post.isReport, post: _post));
       _post.isReport = !_post.isReport;
@@ -686,6 +720,12 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     }
 
     if (optionItem.index == 2) {
+      if (_post.isReported() == true) {
+        FailSnackbar().show("fail_reported_post", () {});
+
+        return;
+      }
+
       Map<String, dynamic> infoMap = {
         "category": _post.category,
         "editPost": _post
@@ -704,6 +744,12 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     }
 
     if (optionItem.index == 3) {
+      if (_post.isReported() == true) {
+        FailSnackbar().show("fail_reported_post", () {});
+
+        return;
+      }
+
       bool isMine = _post.userID == ProfileBloc().signedProfile.userID;
       if (isMine == false) {
         FailSnackbar().show("error_not_mine", () {});

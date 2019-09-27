@@ -1,8 +1,8 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=/Users/succorer/Thirds/flutter"
-export "FLUTTER_APPLICATION_PATH=/Users/succorer/Sourcetree/PFXStudio.github/PFXBeforeSunrise.github/before_sunrise/mobile"
-export "FLUTTER_TARGET=/Users/succorer/Sourcetree/PFXStudio.github/PFXBeforeSunrise.github/before_sunrise/mobile/lib/main.dart"
+export "FLUTTER_APPLICATION_PATH=/Users/succorer/Documents/PFXStudio.github/PFXBeforeSunrise.github/PFXBeforeSunrise/before_sunrise/mobile"
+export "FLUTTER_TARGET=/Users/succorer/Documents/PFXStudio.github/PFXBeforeSunrise.github/PFXBeforeSunrise/before_sunrise/mobile/lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "SYMROOT=${SOURCE_ROOT}/../build/ios"
 export "FLUTTER_FRAMEWORK_DIR=/Users/succorer/Thirds/flutter/bin/cache/artifacts/engine/ios"

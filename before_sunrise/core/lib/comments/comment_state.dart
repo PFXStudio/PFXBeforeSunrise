@@ -90,3 +90,17 @@ class SuccessCommentState extends CommentState {
     return SuccessCommentState();
   }
 }
+
+class EditCommentState extends CommentState {
+  EditCommentState({@required this.comment});
+
+  final Comment comment;
+
+  @override
+  String toString() => 'EditCommentState';
+
+  @override
+  CommentState getStateCopy() {
+    return EditCommentState(comment: comment);
+  }
+}

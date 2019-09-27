@@ -160,3 +160,26 @@ class BindingCommentEvent extends CommentEvent {
     }
   }
 }
+
+class EditCommentEvent extends CommentEvent {
+  EditCommentEvent({
+    @required this.comment,
+  }) : _firestoreTimestamp = FieldValue.serverTimestamp();
+  @override
+  String toString() => 'EditCommentEvent';
+  final ICommentProvider _commentProvider = CommentProvider();
+  final FieldValue _firestoreTimestamp;
+
+  final Comment comment;
+
+  @override
+  Future<CommentState> applyAsync(
+      {CommentState currentState, CommentBloc bloc}) async {
+    try {
+      return new EditCommentState(comment: comment);
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorCommentState(_?.toString());
+    }
+  }
+}
