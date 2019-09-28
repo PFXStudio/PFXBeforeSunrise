@@ -4,9 +4,13 @@ import 'package:timeago/timeago.dart' as timeago;
 class CommentBubble extends StatefulWidget {
   CommentBubble({
     @required this.comment,
+    @required this.category,
+    @required this.postID,
   });
 
-  Comment comment;
+  final Comment comment;
+  final String category;
+  final String postID;
 
   @override
   _CommentBubbleState createState() => _CommentBubbleState();
@@ -147,6 +151,10 @@ class _CommentBubbleState extends State<CommentBubble> {
   Widget _buildImage(BuildContext context, String imageUrl) {
     return GestureDetector(
         onLongPress: () {
+          if (_comment.isRemove == true) {
+            return;
+          }
+
           _touchedMyMenuButton(context);
         },
         onTap: () {
@@ -241,6 +249,10 @@ class _CommentBubbleState extends State<CommentBubble> {
                       : _buildImage(context, _comment.imageUrls.first),
                 ),
                 onLongPress: () {
+                  if (_comment.isRemove == true) {
+                    return;
+                  }
+
                   _touchedMyMenuButton(context);
                 },
               ),
@@ -263,41 +275,43 @@ class _CommentBubbleState extends State<CommentBubble> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         Container(
-          margin: const EdgeInsets.all(3.0),
-          padding: const EdgeInsets.all(5.0),
-          decoration: BoxDecoration(
-            color: MainTheme.bgndColor,
-            borderRadius: radius,
-          ),
-          constraints: BoxConstraints(
-            maxWidth: kDeviceWidth / 1.3,
-            minWidth: 20.0,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              // _comment.isMine == false ? _buildProfile(context) : SizedBox(),
-              _buildParentComment(context),
-              SizedBox(height: 5),
-              Padding(
-                padding: EdgeInsets.all(
-                    (_comment.text != null && _comment.text.length > 0)
-                        ? 5
-                        : 0),
-                child: (_comment.text != null && _comment.text.length > 0)
-                    ? Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          _comment.text,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      )
-                    : _buildImage(context, _comment.imageUrls.first),
+            margin: const EdgeInsets.all(3.0),
+            padding: const EdgeInsets.all(5.0),
+            decoration: BoxDecoration(
+              color: MainTheme.bgndColor,
+              borderRadius: radius,
+            ),
+            constraints: BoxConstraints(
+              maxWidth: kDeviceWidth / 1.3,
+              minWidth: 20.0,
+            ),
+            child: InkWell(
+              key: commentKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  // _comment.isMine == false ? _buildProfile(context) : SizedBox(),
+                  _buildParentComment(context),
+                  SizedBox(height: 5),
+                  Padding(
+                    padding: EdgeInsets.all(
+                        (_comment.text != null && _comment.text.length > 0)
+                            ? 5
+                            : 0),
+                    child: (_comment.text != null && _comment.text.length > 0)
+                        ? Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              _comment.text,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        : _buildImage(context, _comment.imageUrls.first),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            )),
         _buildTimeago(context),
       ],
     );
@@ -453,11 +467,18 @@ class _CommentBubbleState extends State<CommentBubble> {
     }
 
     if (optionItem.index == 1) {
+      CommentBloc().dispatch(ReplyCommentEvent(parentComment: _comment));
       return;
     }
 
     if (optionItem.index == 2) {
       CommentBloc().dispatch(EditCommentEvent(comment: _comment));
+      return;
+    }
+
+    if (optionItem.index == 3) {
+      CommentBloc().dispatch(RemoveCommentEvent(
+          category: widget.category, postID: widget.postID, comment: _comment));
       return;
     }
   }

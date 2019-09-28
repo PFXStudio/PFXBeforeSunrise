@@ -7,11 +7,14 @@ class Comment {
     this.parentCommentID = "",
     this.text = "",
     this.parentText = "",
+    this.imageFolder = "",
     this.imageUrls,
+    this.isRemove = false,
     this.created,
     this.lastUpdate,
     this.isLike = false,
     this.likeCount = 0,
+    this.isReport = false,
     this.reportCount = 0,
     this.isMine = false,
     this.profile,
@@ -23,13 +26,16 @@ class Comment {
   String userID;
   String parentCommentID;
   String text;
+  String imageFolder;
   List<dynamic> imageUrls;
+  bool isRemove;
   dynamic created;
   dynamic lastUpdate;
   // other database.
   String parentText;
   bool isLike;
   int likeCount;
+  bool isReport;
   int reportCount;
   bool isMine;
   Profile profile;
@@ -41,7 +47,9 @@ class Comment {
     this.userID = snapshot.data["userID"];
     this.parentCommentID = snapshot.data["parentCommentID"];
     this.text = snapshot.data["text"];
+    this.imageFolder = snapshot.data["imageFolder"];
     this.imageUrls = snapshot.data["imageUrls"];
+    this.isRemove = snapshot.data["isRemove"];
     this.created = snapshot.data["created"];
     this.lastUpdate = snapshot.data["lastUpdate"];
   }
@@ -49,10 +57,12 @@ class Comment {
   Object data() {
     return {
       "userID": userID,
-      // "commentID": commentID, // 저장 할 이유 없음.
+      "commentID": commentID,
       "parentCommentID": parentCommentID,
       "text": text,
+      "imageFolder": imageFolder,
       "imageUrls": imageUrls,
+      'isRemove': isRemove,
       'created': created,
       'lastUpdate': lastUpdate,
     };
@@ -63,12 +73,16 @@ class Comment {
     String userID,
     String parentCommentID,
     String text,
+    String imageFolder,
     String parentText,
     List<dynamic> imageUrls,
+    bool isRemove,
     DateTime created,
     DateTime lastUpdate,
     bool isLike,
     int likeCount,
+    bool isReport,
+    int reportCount,
     bool isMine,
     Profile profile,
     Profile parentProfile,
@@ -79,12 +93,16 @@ class Comment {
         commentID: commentID ?? this.commentID,
         parentCommentID: parentCommentID ?? this.parentCommentID,
         text: text ?? this.text,
+        imageFolder: imageFolder ?? this.imageFolder,
         parentText: parentText ?? this.parentText,
         imageUrls: imageUrls ?? this.imageUrls,
+        isRemove: isRemove ?? this.isRemove,
         created: created ?? this.created,
         lastUpdate: lastUpdate ?? this.lastUpdate,
         isLike: isLike ?? this.isLike,
         likeCount: likeCount ?? this.likeCount,
+        isReport: isReport ?? this.isReport,
+        reportCount: reportCount ?? this.reportCount,
         isMine: isMine ?? this.isMine,
         profile: profile ?? this.profile,
         parentProfile: parentProfile ?? this.parentProfile,
@@ -99,73 +117,5 @@ class Comment {
           commentID == other.commentID;
 
   @override
-  int get hashCode =>
-      commentID.hashCode ^
-      userID.hashCode ^
-      parentCommentID.hashCode ^
-      text.hashCode ^
-      parentText.hashCode ^
-      imageUrls.hashCode ^
-      parentImageUrls.hashCode ^
-      created.hashCode ^
-      lastUpdate.hashCode;
-}
-
-class CommentImageData {
-  CommentImageData({
-    @required this.portraitSmall,
-    @required this.portraitMedium,
-    @required this.portraitLarge,
-    @required this.landscapeSmall,
-    @required this.landscapeBig,
-    @required this.landscapeHd,
-    @required this.landscapeHd2,
-  });
-
-  final String portraitSmall;
-  final String portraitMedium;
-  final String portraitLarge;
-  final String landscapeSmall;
-  final String landscapeBig;
-  final String landscapeHd;
-  final String landscapeHd2;
-
-  String get anyAvailableImage =>
-      portraitSmall ??
-      portraitMedium ??
-      portraitLarge ??
-      landscapeSmall ??
-      landscapeBig;
-
-  CommentImageData.empty()
-      : portraitSmall = null,
-        portraitMedium = null,
-        portraitLarge = null,
-        landscapeSmall = null,
-        landscapeBig = null,
-        landscapeHd = null,
-        landscapeHd2 = null;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is CommentImageData &&
-          runtimeType == other.runtimeType &&
-          portraitSmall == other.portraitSmall &&
-          portraitMedium == other.portraitMedium &&
-          portraitLarge == other.portraitLarge &&
-          landscapeSmall == other.landscapeSmall &&
-          landscapeBig == other.landscapeBig &&
-          landscapeHd == other.landscapeHd &&
-          landscapeHd2 == other.landscapeHd2;
-
-  @override
-  int get hashCode =>
-      portraitSmall.hashCode ^
-      portraitMedium.hashCode ^
-      portraitLarge.hashCode ^
-      landscapeSmall.hashCode ^
-      landscapeBig.hashCode ^
-      landscapeHd.hashCode ^
-      landscapeHd2.hashCode;
+  int get hashCode => commentID.hashCode ^ userID.hashCode;
 }

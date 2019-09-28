@@ -33,6 +33,10 @@ abstract class ICommentProvider {
       {@required String category,
       @required String postID,
       @required Map<String, dynamic> data});
+  Future<DocumentSnapshot> updateComment(
+      {@required String category,
+      @required String postID,
+      @required Map<String, dynamic> data});
   Future<void> removeComments({
     @required String category,
     @required String postID,
@@ -113,6 +117,14 @@ class CommentProvider implements ICommentProvider {
       @required String postID,
       @required Map<String, dynamic> data}) async {
     return _commentRepository.createComment(
+        category: category, postID: postID, data: data);
+  }
+
+  Future<DocumentSnapshot> updateComment(
+      {@required String category,
+      @required String postID,
+      @required Map<String, dynamic> data}) async {
+    return _commentRepository.updateComment(
         category: category, postID: postID, data: data);
   }
 

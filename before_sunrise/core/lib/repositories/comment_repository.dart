@@ -78,11 +78,11 @@ class CommentRepository {
         .collection(Config().root() + "${category}/${postID}/comments");
     return lastVisibleComment == null
         ? _postCollection
-            .orderBy('lastUpdate', descending: true)
+            .orderBy('created', descending: true)
             .limit(CoreConst.maxLoadCommentCount)
             .getDocuments()
         : _postCollection
-            .orderBy('lastUpdate', descending: true)
+            .orderBy('created', descending: true)
             .startAfter([lastVisibleComment.lastUpdate])
             .limit(CoreConst.maxLoadCommentCount)
             .getDocuments();
@@ -95,6 +95,21 @@ class CommentRepository {
     _postCollection = Firestore.instance
         .collection(Config().root() + "${category}/${postID}/comments");
     return _postCollection.add(data);
+  }
+
+  Future<DocumentSnapshot> updateComment(
+      {@required String category,
+      @required String postID,
+      @required Map<String, dynamic> data}) async {
+    _postCollection = Firestore.instance
+        .collection(Config().root() + "${category}/${postID}/comments");
+    String commentID = data["commentID"];
+    if (commentID != null && commentID.isEmpty == false) {
+      await _postCollection.document(commentID).setData(data, merge: true);
+      return await _postCollection.document(commentID).get();
+    }
+
+    return null;
   }
 
   Future<void> removeComments({

@@ -4,9 +4,9 @@ class CommentList extends StatefulWidget {
   CommentList({this.category, this.postID, this.isReport});
   @override
   _CommentListState createState() => _CommentListState();
-  String category;
-  String postID;
-  bool isReport;
+  final String category;
+  final String postID;
+  final bool isReport;
 }
 
 class _CommentListState extends State<CommentList> {
@@ -14,13 +14,14 @@ class _CommentListState extends State<CommentList> {
   bool _isAllLoad = false;
   final TextEditingController _textController = TextEditingController();
   ByteData _selectedOriginalData;
-  ByteData _editSelectedOriginalData;
+  ByteData _parentOriginalData;
   final _commentBloc = CommentBloc();
   ScrollController _scrollController = ScrollController();
   Widget _commentLoadingIndicator = CircularProgressIndicator(
       strokeWidth: 2.0, backgroundColor: Colors.transparent);
 
-  Comment _editComment = null;
+  Comment _editComment;
+  Comment _parentComment;
 
   @override
   void initState() {
@@ -57,6 +58,9 @@ class _CommentListState extends State<CommentList> {
                   } else if (state is SuccessCommentState) {
                     _textController.text = "";
                     _selectedOriginalData = null;
+                    _editComment = null;
+                    _parentComment = null;
+                    _parentOriginalData = null;
                     print("commentlist SuccessCommentState");
 
                     _isAllLoad = false;
@@ -68,6 +72,8 @@ class _CommentListState extends State<CommentList> {
 
                     return;
                   } else if (state is EditCommentState) {
+                    _parentComment = null;
+                    _parentOriginalData = null;
                     _editComment = state.comment;
                     if (_editComment == null) {
                       return;
@@ -87,6 +93,25 @@ class _CommentListState extends State<CommentList> {
                       _selectedOriginalData = imageMap.values.first;
                       setState(() {});
                     });
+                  } else if (state is ReplyCommentState) {
+                    _editComment = null;
+                    _selectedOriginalData = null;
+                    _parentComment = state.parentComment;
+                    if (_parentComment == null) {
+                      return;
+                    }
+
+                    _textController.text = "";
+                    if (_parentComment.imageUrls != null) {
+                      downloadAllImages(_parentComment.imageUrls, (imageMap) {
+                        if (imageMap == null || imageMap.isEmpty == true) {
+                          return;
+                        }
+
+                        _parentOriginalData = imageMap.values.first;
+                        setState(() {});
+                      });
+                    }
                   } else {
                     _commentLoadingIndicator = SizedBox();
                     setState(() {});
@@ -128,7 +153,10 @@ class _CommentListState extends State<CommentList> {
                         reverse: true,
                         itemBuilder: (BuildContext context, int index) {
                           Comment comment = _comments[index];
-                          return CommentBubble(comment: comment);
+                          return CommentBubble(
+                              category: widget.category,
+                              postID: widget.postID,
+                              comment: comment);
                         },
                       );
                     })),
@@ -155,6 +183,35 @@ class _CommentListState extends State<CommentList> {
                 children: <Widget>[
                   // Flexible(
                   //   child:
+                  _parentComment == null
+                      ? SizedBox()
+                      : Row(
+                          children: <Widget>[
+                            FlatIconTextButton(
+                              width: kDeviceWidth * 0.3,
+                              color: MainTheme.enabledButtonColor,
+                              iconData: FontAwesomeIcons.solidTimesCircle,
+                              text: "댓글 취소",
+                              onPressed: () {
+                                _parentComment = null;
+                                _parentOriginalData = null;
+                                _selectedOriginalData = null;
+                                _textController.text = "";
+                                setState(() {});
+                              },
+                            ),
+                            _parentOriginalData != null
+                                ? Padding(
+                                    padding: EdgeInsets.all(5),
+                                    child: ThumbnailItem(
+                                      data: _parentOriginalData,
+                                      width: 50,
+                                      height: 50,
+                                      quality: 50,
+                                    ))
+                                : Text(_parentComment.text),
+                          ],
+                        ),
                   _editComment == null
                       ? SizedBox()
                       : FlatIconTextButton(
@@ -199,17 +256,7 @@ class _CommentListState extends State<CommentList> {
                             maxLines: 5,
                             maxLength: 128,
                           ),
-                          trailing: IconButton(
-                            icon: Icon(
-                              _editComment == null
-                                  ? FontAwesomeIcons.paperPlane
-                                  : FontAwesomeIcons.solidEdit,
-                              color: MainTheme.enabledButtonColor,
-                            ),
-                            onPressed: () {
-                              _touchedSendButton();
-                            },
-                          ),
+                          trailing: _buildSendButton(),
                         )
                       : _buildGridView(context),
                   // ),
@@ -219,6 +266,40 @@ class _CommentListState extends State<CommentList> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSendButton() {
+    if (_editComment != null) {
+      return IconButton(
+        icon: Icon(
+          FontAwesomeIcons.solidEdit,
+          color: MainTheme.enabledButtonColor,
+        ),
+        onPressed: () {
+          _touchedSendButton();
+        },
+      );
+    } else if (_parentComment != null) {
+      return IconButton(
+        icon: Icon(
+          FontAwesomeIcons.reply,
+          color: MainTheme.enabledButtonColor,
+        ),
+        onPressed: () {
+          _touchedSendButton();
+        },
+      );
+    }
+
+    return IconButton(
+      icon: Icon(
+        FontAwesomeIcons.paperPlane,
+        color: MainTheme.enabledButtonColor,
+      ),
+      onPressed: () {
+        _touchedSendButton();
+      },
     );
   }
 
@@ -285,9 +366,11 @@ class _CommentListState extends State<CommentList> {
       ]),
       trailing: IconButton(
         icon: Icon(
-          _editComment == null
-              ? FontAwesomeIcons.paperPlane
-              : FontAwesomeIcons.solidEdit,
+          _parentComment != null
+              ? FontAwesomeIcons.reply
+              : _editComment == null
+                  ? FontAwesomeIcons.paperPlane
+                  : FontAwesomeIcons.solidEdit,
           color: MainTheme.enabledButtonColor,
         ),
         onPressed: () {
@@ -309,12 +392,23 @@ class _CommentListState extends State<CommentList> {
     }
 
     Comment comment = Comment();
+    if (_editComment != null) {
+      comment = _editComment.copyWith();
+    }
+
+    if (_parentComment != null) {
+      comment.parentCommentID = _parentComment.commentID;
+      comment.parentImageUrls = _parentComment.imageUrls;
+      comment.parentText = _parentComment.text;
+    }
+
     comment.text = _textController.text;
 
     this._commentBloc.dispatch(CreateCommentEvent(
         category: widget.category,
         postID: widget.postID,
         comment: comment,
+        editComment: _editComment,
         byteDatas: null));
   }
 
@@ -330,11 +424,21 @@ class _CommentListState extends State<CommentList> {
     }
 
     Comment comment = Comment();
+    if (_editComment != null) {
+      comment = _editComment.copyWith();
+    }
+
+    if (_parentComment != null) {
+      comment.parentCommentID = _parentComment.commentID;
+      comment.parentImageUrls = _parentComment.imageUrls;
+      comment.parentText = _parentComment.text;
+    }
 
     this._commentBloc.dispatch(CreateCommentEvent(
         category: widget.category,
         postID: widget.postID,
         comment: comment,
+        editComment: _editComment,
         byteDatas: [_selectedOriginalData]));
   }
 

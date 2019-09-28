@@ -95,8 +95,8 @@ class CreateCommentEvent extends CommentEvent {
   CreateCommentEvent(
       {@required this.category,
       @required this.postID,
-      @required this.imageFolder,
       @required this.comment,
+      @required this.editComment,
       @required this.byteDatas})
       : _firestoreTimestamp = FieldValue.serverTimestamp();
   @override
@@ -110,23 +110,77 @@ class CreateCommentEvent extends CommentEvent {
 
   String category;
   String postID;
-  String imageFolder;
   Comment comment;
+  Comment editComment;
 
   @override
   Future<CommentState> applyAsync(
       {CommentState currentState, CommentBloc bloc}) async {
     try {
       String userID = await _authProvider.getUserID();
+      if (comment.imageFolder == null || comment.imageFolder.isEmpty == true) {
+        Uuid uuid = Uuid();
+        String identifier = uuid.v4(options: {
+          'positionalArgs': [userID]
+        });
+        print("identifier : ${identifier}");
+        comment.imageFolder = identifier;
+      }
+
       List<String> imageUrls = List<String>();
       if (byteDatas != null) {
+        // 텍스트 -> 사진
+        comment.text = "";
+        if (editComment != null && editComment.imageUrls != null) {
+          // 사진 -> 사진 o
+          for (int i = 0; i < this.editComment.imageUrls.length; i++) {
+            await _imageProvider.removeImage(
+                imageUrl: this.editComment.imageUrls[i]);
+          }
+        }
+
+        final String imageFolder = '$userID/comments/${comment.imageFolder}';
+
         imageUrls = await _imageProvider.uploadCommentImages(
             imageFolder: imageFolder, byteDatas: byteDatas);
+      } else {
+        // 사진 -> 텍스트
+        comment.imageUrls = [];
+        if (editComment != null && editComment.imageUrls != null) {
+          for (int i = 0; i < this.editComment.imageUrls.length; i++) {
+            await _imageProvider.removeImage(
+                imageUrl: this.editComment.imageUrls[i]);
+          }
+        }
       }
+
       comment.userID = userID;
       comment.created = _firestoreTimestamp;
       comment.lastUpdate = _firestoreTimestamp;
       comment.imageUrls = imageUrls;
+
+      if (comment.commentID != null && comment.commentID.isEmpty == false) {
+        comment.created = editComment.created;
+        comment.lastUpdate = _firestoreTimestamp;
+
+        DocumentSnapshot snapshot = await _commentProvider.updateComment(
+            category: category, postID: postID, data: comment.data());
+
+        Comment updatedComment = Comment();
+        updatedComment.initialize(snapshot);
+        updatedComment.profile = comment.profile;
+        updatedComment.isLike = comment.isLike;
+        updatedComment.likeCount = comment.likeCount;
+        updatedComment.isReport = comment.isReport;
+        updatedComment.reportCount = comment.reportCount;
+        updatedComment.isMine = comment.isMine;
+        updatedComment.profile = comment.profile;
+        updatedComment.parentProfile = comment.parentProfile;
+        updatedComment.parentImageUrls = comment.parentImageUrls;
+
+        return new SuccessCommentState(comment: updatedComment);
+      }
+
       DocumentReference reference = await _commentProvider.createComment(
           category: category, postID: postID, data: comment.data());
       if (reference == null) {
@@ -177,6 +231,70 @@ class EditCommentEvent extends CommentEvent {
       {CommentState currentState, CommentBloc bloc}) async {
     try {
       return new EditCommentState(comment: comment);
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorCommentState(_?.toString());
+    }
+  }
+}
+
+class ReplyCommentEvent extends CommentEvent {
+  ReplyCommentEvent({
+    @required this.parentComment,
+  }) : _firestoreTimestamp = FieldValue.serverTimestamp();
+  @override
+  String toString() => 'ReplyCommentEvent';
+  final ICommentProvider _commentProvider = CommentProvider();
+  final FieldValue _firestoreTimestamp;
+
+  final Comment parentComment;
+
+  @override
+  Future<CommentState> applyAsync(
+      {CommentState currentState, CommentBloc bloc}) async {
+    try {
+      return new ReplyCommentState(parentComment: parentComment);
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorCommentState(_?.toString());
+    }
+  }
+}
+
+class RemoveCommentEvent extends CommentEvent {
+  RemoveCommentEvent({
+    @required this.comment,
+    @required this.category,
+    @required this.postID,
+  }) : _firestoreTimestamp = FieldValue.serverTimestamp();
+  @override
+  String toString() => 'RemoveCommentEvent';
+  final ICommentProvider _commentProvider = CommentProvider();
+  final IAuthProvider _authProvider = AuthProvider();
+  final IFImageProvider _imageProvider = FImageProvider();
+  final FieldValue _firestoreTimestamp;
+
+  final Comment comment;
+  final String category;
+  final String postID;
+
+  @override
+  Future<CommentState> applyAsync(
+      {CommentState currentState, CommentBloc bloc}) async {
+    try {
+      if (comment.imageUrls != null) {
+        for (int i = 0; i < comment.imageUrls.length; i++) {
+          await _imageProvider.removeImage(imageUrl: comment.imageUrls[i]);
+        }
+      }
+
+      comment.text = "삭제된 댓글입니다.";
+      comment.isRemove = true;
+
+      DocumentSnapshot snapshot = await _commentProvider.updateComment(
+          category: category, postID: postID, data: comment.data());
+
+      return new SuccessCommentState(comment: comment);
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorCommentState(_?.toString());

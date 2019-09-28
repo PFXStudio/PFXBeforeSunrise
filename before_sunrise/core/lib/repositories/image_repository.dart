@@ -141,7 +141,7 @@ class ImageRepository {
 
               final uuid = Uuid();
               final String fileName =
-                  Config().root() + "$imageFolder/comments/${uuid.v1()}";
+                  Config().root() + "/$imageFolder/${uuid.v1()}";
 
               StorageReference reference =
                   FirebaseStorage.instance.ref().child(fileName);
@@ -183,6 +183,10 @@ class ImageRepository {
     if (imageUrl.isNotEmpty) {
       final StorageReference reference =
           await FirebaseStorage.instance.getReferenceFromUrl(imageUrl);
+      if (reference == null) {
+        return null;
+      }
+
       return reference.delete();
     }
   }
