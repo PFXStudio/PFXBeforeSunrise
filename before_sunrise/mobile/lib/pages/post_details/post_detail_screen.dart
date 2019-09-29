@@ -608,7 +608,9 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                         listener: (context, state) async {
                           print(state.toString());
                           if (state is SuccessCommentState) {
-                            widget._post.commentCount++;
+                            if (state.isIncrease == true) {
+                              widget._post.commentCount++;
+                            }
                           }
                         },
                         child: BlocBuilder<CommentBloc, CommentState>(

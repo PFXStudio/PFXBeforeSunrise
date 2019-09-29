@@ -187,11 +187,12 @@ class CreateCommentEvent extends CommentEvent {
         return ErrorCommentState("error");
       }
 
-      _shardsProvider.increaseCommentCount(
+      await _shardsProvider.increaseCommentCount(
         category: category,
         postID: postID,
       );
-      return new SuccessCommentState();
+
+      return new SuccessCommentState(isIncrease: true);
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorCommentState(_?.toString());
@@ -290,11 +291,47 @@ class RemoveCommentEvent extends CommentEvent {
 
       comment.text = "삭제된 댓글입니다.";
       comment.isRemove = true;
+      comment.imageUrls = [];
 
       DocumentSnapshot snapshot = await _commentProvider.updateComment(
           category: category, postID: postID, data: comment.data());
 
-      return new SuccessCommentState(comment: comment);
+      Comment updatedComment = Comment();
+      updatedComment.initialize(snapshot);
+      updatedComment.profile = comment.profile;
+      updatedComment.isLike = comment.isLike;
+      updatedComment.likeCount = comment.likeCount;
+      updatedComment.isReport = comment.isReport;
+      updatedComment.reportCount = comment.reportCount;
+      updatedComment.isMine = comment.isMine;
+      updatedComment.profile = comment.profile;
+      updatedComment.parentProfile = comment.parentProfile;
+      updatedComment.parentImageUrls = comment.parentImageUrls;
+
+      return new SuccessCommentState(comment: updatedComment);
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorCommentState(_?.toString());
+    }
+  }
+}
+
+class MoveCommentEvent extends CommentEvent {
+  MoveCommentEvent({
+    @required this.commentID,
+  }) : _firestoreTimestamp = FieldValue.serverTimestamp();
+  @override
+  String toString() => 'MoveCommentEvent';
+  final ICommentProvider _commentProvider = CommentProvider();
+  final FieldValue _firestoreTimestamp;
+
+  final String commentID;
+
+  @override
+  Future<CommentState> applyAsync(
+      {CommentState currentState, CommentBloc bloc}) async {
+    try {
+      return new MoveCommentState(commentID: commentID);
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorCommentState(_?.toString());

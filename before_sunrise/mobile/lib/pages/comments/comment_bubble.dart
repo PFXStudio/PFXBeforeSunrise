@@ -99,64 +99,62 @@ class _CommentBubbleState extends State<CommentBubble> {
       return SizedBox();
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        color: _comment.isMine == false ? Colors.grey[50] : Colors.blue[50],
-        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-      ),
-      constraints: BoxConstraints(
-        minHeight: 25,
-        maxHeight: 157,
-        minWidth: 80,
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(5),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Container(
-              child: Text(
-                _comment.parentProfile.nickname,
-                style: TextStyle(
-                  color: MainTheme.enabledButtonColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
+    return InkWell(
+      child: Container(
+        decoration: BoxDecoration(
+          color: _comment.isMine == false ? Colors.grey[50] : Colors.blue[50],
+          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+        ),
+        constraints: BoxConstraints(
+          minHeight: 25,
+          maxHeight: 157,
+          minWidth: 80,
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(5),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                child: Text(
+                  _comment.parentProfile.nickname,
+                  style: TextStyle(
+                    color: MainTheme.enabledButtonColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                  maxLines: 1,
+                  textAlign: TextAlign.left,
                 ),
-                maxLines: 1,
-                textAlign: TextAlign.left,
+                alignment: Alignment.centerLeft,
               ),
-              alignment: Alignment.centerLeft,
-            ),
-            SizedBox(height: 2),
-            Container(
-              child: _comment.parentImageUrls != null &&
-                      _comment.parentImageUrls.length > 0
-                  ? _buildImage(context, _comment.parentImageUrls.first)
-                  : Text(
-                      _comment.parentText,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
+              SizedBox(height: 2),
+              Container(
+                child: _comment.parentImageUrls != null &&
+                        _comment.parentImageUrls.length > 0
+                    ? _buildImage(context, _comment.parentImageUrls.first)
+                    : Text(
+                        _comment.parentText,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                        ),
+                        maxLines: 2,
                       ),
-                      maxLines: 2,
-                    ),
-              alignment: Alignment.centerLeft,
-            ),
-          ],
+                alignment: Alignment.centerLeft,
+              ),
+            ],
+          ),
         ),
       ),
+      onTap: () {
+        CommentBloc().dispatch(MoveCommentEvent(commentID: _comment.commentID));
+      },
     );
   }
 
   Widget _buildImage(BuildContext context, String imageUrl) {
     return GestureDetector(
-        onLongPress: () {
-          if (_comment.isRemove == true) {
-            return;
-          }
-
-          _touchedMyMenuButton(context);
-        },
         onTap: () {
           Navigator.push(context,
               MaterialPageRoute<void>(builder: (BuildContext context) {
@@ -253,7 +251,7 @@ class _CommentBubbleState extends State<CommentBubble> {
                     return;
                   }
 
-                  _touchedMyMenuButton(context);
+                  _showMoreMenu(context);
                 },
               ),
             ],
@@ -285,16 +283,16 @@ class _CommentBubbleState extends State<CommentBubble> {
               maxWidth: kDeviceWidth / 1.3,
               minWidth: 20.0,
             ),
-            child: InkWell(
-              key: commentKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  // _comment.isMine == false ? _buildProfile(context) : SizedBox(),
-                  _buildParentComment(context),
-                  SizedBox(height: 5),
-                  Padding(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                // _comment.isMine == false ? _buildProfile(context) : SizedBox(),
+                _buildParentComment(context),
+                SizedBox(height: 5),
+                InkWell(
+                  key: commentKey,
+                  child: Padding(
                     padding: EdgeInsets.all(
                         (_comment.text != null && _comment.text.length > 0)
                             ? 5
@@ -309,8 +307,11 @@ class _CommentBubbleState extends State<CommentBubble> {
                           )
                         : _buildImage(context, _comment.imageUrls.first),
                   ),
-                ],
-              ),
+                  onLongPress: () {
+                    _showMoreMenu(context);
+                  },
+                ),
+              ],
             )),
         _buildTimeago(context),
       ],
@@ -345,21 +346,24 @@ class _CommentBubbleState extends State<CommentBubble> {
               _buildProfile(context),
               _buildParentComment(context),
               SizedBox(height: 5),
-              Padding(
-                padding: EdgeInsets.all(
-                    (_comment.text != null && _comment.text.length > 0)
-                        ? 5
-                        : 0),
-                child: (_comment.text != null && _comment.text.length > 0)
-                    ? Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          _comment.text,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      )
-                    : _buildImage(context, _comment.imageUrls.first),
-              ),
+              InkWell(
+                key: commentKey,
+                child: Padding(
+                  padding: EdgeInsets.all(
+                      (_comment.text != null && _comment.text.length > 0)
+                          ? 5
+                          : 0),
+                  child: (_comment.text != null && _comment.text.length > 0)
+                      ? Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            _comment.text,
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        )
+                      : _buildImage(context, _comment.imageUrls.first),
+                ),
+              )
             ],
           ),
         ),
@@ -394,20 +398,23 @@ class _CommentBubbleState extends State<CommentBubble> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               _buildProfile(context),
-              Padding(
-                padding: EdgeInsets.all(
-                    (_comment.text != null && _comment.text.length > 0)
-                        ? 5
-                        : 0),
-                child: (_comment.text != null && _comment.text.length > 0)
-                    ? Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          _comment.text,
-                          style: TextStyle(color: Colors.black),
-                        ))
-                    : _buildImage(context, _comment.imageUrls.first),
-              ),
+              InkWell(
+                key: commentKey,
+                child: Padding(
+                  padding: EdgeInsets.all(
+                      (_comment.text != null && _comment.text.length > 0)
+                          ? 5
+                          : 0),
+                  child: (_comment.text != null && _comment.text.length > 0)
+                      ? Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            _comment.text,
+                            style: TextStyle(color: Colors.black),
+                          ))
+                      : _buildImage(context, _comment.imageUrls.first),
+                ),
+              )
             ],
           ),
         ),
@@ -416,7 +423,7 @@ class _CommentBubbleState extends State<CommentBubble> {
     );
   }
 
-  void _touchedMyMenuButton(BuildContext context) {
+  void _showMoreMenu(BuildContext context) {
     List<OptionItem> menuItems = [
       OptionItem(
           index: 0,

@@ -80,15 +80,16 @@ class ErrorCommentState extends CommentState {
 }
 
 class SuccessCommentState extends CommentState {
-  SuccessCommentState({this.comment});
+  SuccessCommentState({this.isIncrease = false, this.comment});
 
   @override
   String toString() => 'SuccessCommentState';
   final Comment comment;
+  final bool isIncrease;
 
   @override
   CommentState getStateCopy() {
-    return SuccessCommentState(comment: comment);
+    return SuccessCommentState(isIncrease: isIncrease, comment: comment);
   }
 }
 
@@ -117,5 +118,18 @@ class ReplyCommentState extends CommentState {
   @override
   CommentState getStateCopy() {
     return ReplyCommentState(parentComment: parentComment);
+  }
+}
+
+class MoveCommentState extends CommentState {
+  MoveCommentState({this.commentID});
+  @override
+  String toString() => 'MoveCommentState';
+
+  final String commentID;
+
+  @override
+  CommentState getStateCopy() {
+    return MoveCommentState();
   }
 }

@@ -22,6 +22,7 @@ class _CommentListState extends State<CommentList> {
 
   Comment _editComment;
   Comment _parentComment;
+  String _moveCommentID;
 
   @override
   void initState() {
@@ -112,6 +113,34 @@ class _CommentListState extends State<CommentList> {
                         setState(() {});
                       });
                     }
+                  } else if (state is MoveCommentState) {
+                    bool isFind = false;
+                    _moveCommentID = state.commentID;
+                    for (var comment in _comments) {
+                      if (comment.commentID == _moveCommentID) {
+                        isFind = true;
+                        break;
+                      }
+                    }
+
+                    if (isFind == true) {
+                      // goto scroll.
+
+                      print("movecomment find $_moveCommentID");
+                      _moveCommentID = null;
+                      _moveScroll();
+                      return;
+                    }
+
+                    if (_isAllLoad == true) {
+                      // not found
+                      return;
+                    }
+
+                    this._commentBloc.dispatch(LoadCommentEvent(
+                        category: widget.category,
+                        comment: _comments.last,
+                        postID: widget.postID));
                   } else {
                     _commentLoadingIndicator = SizedBox();
                     setState(() {});
@@ -135,8 +164,27 @@ class _CommentListState extends State<CommentList> {
                             _isAllLoad = true;
                           }
 
-                          _comments.addAll(currentState.comments);
-                          currentState.comments.clear();
+                          if (_moveCommentID == null) {
+                            _comments.addAll(currentState.comments);
+                            currentState.comments.clear();
+                          } else {
+                            bool isFind = false;
+                            for (var comment in currentState.comments) {
+                              if (comment.commentID == _moveCommentID) {
+                                isFind = true;
+                                _comments.add(comment);
+                              }
+                            }
+
+                            if (isFind == true) {
+                              // goto scroll
+                              print("fetched find $_moveCommentID");
+                              _moveCommentID = null;
+                              _moveScroll();
+                            } else if (_isAllLoad == false) {
+                              _delayLoad();
+                            }
+                          }
 
                           this._commentBloc.dispatch(BindingCommentEvent());
                         }
@@ -458,5 +506,21 @@ class _CommentListState extends State<CommentList> {
             postID: widget.postID));
       }
     }
+  }
+
+  _delayLoad() => Future.delayed(Duration(seconds: 1), () async {
+        if (_moveCommentID == null) {
+          return;
+        }
+
+        this._commentBloc.dispatch(LoadCommentEvent(
+            category: widget.category,
+            comment: _comments.last,
+            postID: widget.postID));
+      });
+
+  void _moveScroll() {
+    _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+        duration: new Duration(seconds: 2), curve: Curves.ease);
   }
 }
