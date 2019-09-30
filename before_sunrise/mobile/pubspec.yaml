@@ -52,6 +52,7 @@ dependencies:
   network_image_to_byte: ^0.0.1
   image: ^2.1.4
   share_extend: ^1.0.9
+  scroll_to_index: ^1.0.2
 
 dev_dependencies:
   flutter_test:

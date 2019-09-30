@@ -2,15 +2,16 @@ import 'package:before_sunrise/import.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class CommentBubble extends StatefulWidget {
-  CommentBubble({
-    @required this.comment,
-    @required this.category,
-    @required this.postID,
-  });
+  CommentBubble(
+      {@required this.comment,
+      @required this.category,
+      @required this.postID,
+      this.itemHeight = 0});
 
   final Comment comment;
   final String category;
   final String postID;
+  double itemHeight = 0;
 
   @override
   _CommentBubbleState createState() => _CommentBubbleState();
@@ -148,7 +149,8 @@ class _CommentBubbleState extends State<CommentBubble> {
         ),
       ),
       onTap: () {
-        CommentBloc().dispatch(MoveCommentEvent(commentID: _comment.commentID));
+        CommentBloc()
+            .dispatch(MoveCommentEvent(commentID: _comment.parentCommentID));
       },
     );
   }

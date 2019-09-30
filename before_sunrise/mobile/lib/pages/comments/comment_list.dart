@@ -16,13 +16,14 @@ class _CommentListState extends State<CommentList> {
   ByteData _selectedOriginalData;
   ByteData _parentOriginalData;
   final _commentBloc = CommentBloc();
-  ScrollController _scrollController = ScrollController();
   Widget _commentLoadingIndicator = CircularProgressIndicator(
       strokeWidth: 2.0, backgroundColor: Colors.transparent);
 
   Comment _editComment;
   Comment _parentComment;
   String _moveCommentID;
+
+  AutoScrollController _autoScrollController;
 
   @override
   void initState() {
@@ -36,7 +37,12 @@ class _CommentListState extends State<CommentList> {
     this._commentBloc.dispatch(LoadCommentEvent(
         category: widget.category, comment: null, postID: widget.postID));
 
-    _scrollController.addListener(_scrollListener);
+    _autoScrollController = AutoScrollController(
+        viewportBoundaryGetter: () =>
+            Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
+        axis: Axis.vertical);
+
+    _autoScrollController.addListener(_scrollListener);
   }
 
   @override
@@ -56,7 +62,10 @@ class _CommentListState extends State<CommentList> {
                         strokeWidth: 2.0, backgroundColor: Colors.transparent);
                     setState(() {});
                     return;
-                  } else if (state is SuccessCommentState) {
+                  }
+
+                  _hideCommentLoading();
+                  if (state is SuccessCommentState) {
                     _textController.text = "";
                     _selectedOriginalData = null;
                     _editComment = null;
@@ -114,21 +123,22 @@ class _CommentListState extends State<CommentList> {
                       });
                     }
                   } else if (state is MoveCommentState) {
-                    bool isFind = false;
+                    int findIndex = -1;
                     _moveCommentID = state.commentID;
-                    for (var comment in _comments) {
+                    for (int i = 0; i < _comments.length; i++) {
+                      var comment = _comments[i];
                       if (comment.commentID == _moveCommentID) {
-                        isFind = true;
+                        findIndex = i;
                         break;
                       }
                     }
 
-                    if (isFind == true) {
+                    if (findIndex != -1) {
                       // goto scroll.
 
                       print("movecomment find $_moveCommentID");
                       _moveCommentID = null;
-                      _moveScroll();
+                      _moveScroll(findIndex);
                       return;
                     }
 
@@ -141,11 +151,6 @@ class _CommentListState extends State<CommentList> {
                         category: widget.category,
                         comment: _comments.last,
                         postID: widget.postID));
-                  } else {
-                    _commentLoadingIndicator = SizedBox();
-                    setState(() {});
-
-                    return;
                   }
                 },
                 child: BlocBuilder<CommentBloc, CommentState>(
@@ -168,43 +173,51 @@ class _CommentListState extends State<CommentList> {
                             _comments.addAll(currentState.comments);
                             currentState.comments.clear();
                           } else {
-                            bool isFind = false;
-                            for (var comment in currentState.comments) {
+                            int findIndex = -1;
+                            for (int i = 0;
+                                i < currentState.comments.length;
+                                i++) {
+                              var comment = currentState.comments[i];
                               if (comment.commentID == _moveCommentID) {
-                                isFind = true;
-                                _comments.add(comment);
+                                findIndex = i;
                               }
-                            }
 
-                            if (isFind == true) {
+                              _comments.add(comment);
+                            }
+                            if (findIndex != -1) {
                               // goto scroll
                               print("fetched find $_moveCommentID");
                               _moveCommentID = null;
-                              _moveScroll();
+                              _moveScroll(findIndex);
                             } else if (_isAllLoad == false) {
                               _delayLoad();
                             }
                           }
-
-                          this._commentBloc.dispatch(BindingCommentEvent());
                         }
+
+                        this._commentBloc.dispatch(BindingCommentEvent());
                       }
 
                       if (_comments == null || _comments.length <= 0) {
                         return Container();
                       }
 
+                      print("comments count ${_comments.length}");
+
                       return ListView.builder(
-                        controller: _scrollController,
+                        // controller: _scrollController,
+                        controller: _autoScrollController,
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         itemCount: _comments.length,
                         reverse: true,
                         itemBuilder: (BuildContext context, int index) {
                           Comment comment = _comments[index];
-                          return CommentBubble(
-                              category: widget.category,
-                              postID: widget.postID,
-                              comment: comment);
+                          return _wrapScrollTag(
+                              index: index,
+                              child: CommentBubble(
+                                  category: widget.category,
+                                  postID: widget.postID,
+                                  comment: comment));
                         },
                       );
                     })),
@@ -491,9 +504,9 @@ class _CommentListState extends State<CommentList> {
   }
 
   void _scrollListener() {
-    if (_scrollController.offset >=
-            _scrollController.position.maxScrollExtent &&
-        !_scrollController.position.outOfRange) {
+    if (_autoScrollController.offset >=
+            _autoScrollController.position.maxScrollExtent &&
+        !_autoScrollController.position.outOfRange) {
       if (_commentBloc.currentState is IdleCommentState) {
         if (_isAllLoad == true) {
           return;
@@ -508,6 +521,14 @@ class _CommentListState extends State<CommentList> {
     }
   }
 
+  Widget _wrapScrollTag({int index, Widget child}) => AutoScrollTag(
+        key: ValueKey(index),
+        controller: _autoScrollController,
+        index: index,
+        child: child,
+        highlightColor: Colors.black.withOpacity(0.1),
+      );
+
   _delayLoad() => Future.delayed(Duration(seconds: 1), () async {
         if (_moveCommentID == null) {
           return;
@@ -519,8 +540,19 @@ class _CommentListState extends State<CommentList> {
             postID: widget.postID));
       });
 
-  void _moveScroll() {
-    _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-        duration: new Duration(seconds: 2), curve: Curves.ease);
+  void _moveScroll(int index) async {
+    print("move index : $index");
+    Future.delayed(Duration(seconds: 1), () async {
+      await _autoScrollController.scrollToIndex(index,
+          preferPosition: AutoScrollPosition.begin);
+    });
+
+    // _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+    //     duration: new Duration(seconds: 1), curve: Curves.ease);
+  }
+
+  _hideCommentLoading() {
+    _commentLoadingIndicator = SizedBox();
+    setState(() {});
   }
 }
