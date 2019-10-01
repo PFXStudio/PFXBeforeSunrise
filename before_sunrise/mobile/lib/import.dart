@@ -49,6 +49,7 @@ export 'utils/widget_util.dart';
 export 'utils/string_checker.dart';
 export 'utils/url_linker.dart';
 export 'utils/image_util.dart';
+export 'utils/before_sunrise.dart';
 
 // modules
 export 'modules/localizables/localizable_delegate.dart';

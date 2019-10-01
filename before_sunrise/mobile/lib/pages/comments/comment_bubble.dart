@@ -253,7 +253,7 @@ class _CommentBubbleState extends State<CommentBubble> {
                     return;
                   }
 
-                  _showMoreMenu(context);
+                  _showMyMoreMenu(context);
                 },
               ),
             ],
@@ -310,7 +310,7 @@ class _CommentBubbleState extends State<CommentBubble> {
                         : _buildImage(context, _comment.imageUrls.first),
                   ),
                   onLongPress: () {
-                    _showMoreMenu(context);
+                    _showMyMoreMenu(context);
                   },
                 ),
               ],
@@ -345,8 +345,8 @@ class _CommentBubbleState extends State<CommentBubble> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               // _comment.isMine == false ? _buildProfile(context) : SizedBox(),
-              _buildProfile(context),
               _buildParentComment(context),
+              _buildProfile(context),
               SizedBox(height: 5),
               InkWell(
                 key: commentKey,
@@ -365,6 +365,13 @@ class _CommentBubbleState extends State<CommentBubble> {
                         )
                       : _buildImage(context, _comment.imageUrls.first),
                 ),
+                onLongPress: () {
+                  if (_comment.isRemove == true) {
+                    return;
+                  }
+
+                  _showYourMoreMenu(context);
+                },
               )
             ],
           ),
@@ -416,6 +423,13 @@ class _CommentBubbleState extends State<CommentBubble> {
                           ))
                       : _buildImage(context, _comment.imageUrls.first),
                 ),
+                onLongPress: () {
+                  if (_comment.isRemove == true) {
+                    return;
+                  }
+
+                  _showYourMoreMenu(context);
+                },
               )
             ],
           ),
@@ -425,7 +439,7 @@ class _CommentBubbleState extends State<CommentBubble> {
     );
   }
 
-  void _showMoreMenu(BuildContext context) {
+  void _showMyMoreMenu(BuildContext context) {
     List<OptionItem> menuItems = [
       OptionItem(
           index: 0,
@@ -488,6 +502,47 @@ class _CommentBubbleState extends State<CommentBubble> {
     if (optionItem.index == 3) {
       CommentBloc().dispatch(RemoveCommentEvent(
           category: widget.category, postID: widget.postID, comment: _comment));
+      return;
+    }
+  }
+
+  void _showYourMoreMenu(BuildContext context) {
+    List<OptionItem> menuItems = [
+      OptionItem(
+          index: 0,
+          title: '복사',
+          image: Icon(
+            FontAwesomeIcons.copy,
+            color: Colors.white,
+          )),
+      OptionItem(
+          index: 1,
+          title: '답장',
+          image: Icon(
+            FontAwesomeIcons.reply,
+            color: Colors.white,
+          )),
+    ];
+
+    OptionMenu.context = context;
+    OptionMenu menu = OptionMenu(
+        backgroundColor: Colors.black54,
+        items: menuItems,
+        onClickMenu: onClickedYourMenu,
+        onDismiss: onDismiss);
+
+    menu.show(widgetKey: commentKey);
+  }
+
+  void onClickedYourMenu(item) async {
+    OptionItem optionItem = item;
+
+    if (optionItem.index == 0) {
+      return;
+    }
+
+    if (optionItem.index == 1) {
+      CommentBloc().dispatch(ReplyCommentEvent(parentComment: _comment));
       return;
     }
   }

@@ -4,14 +4,13 @@ import 'package:core/import.dart';
 abstract class ProfileEvent {
   Future<ProfileState> applyAsync(
       {ProfileState currentState, ProfileBloc bloc});
-  final ProfileRepository _profileRepository = new ProfileRepository();
+  final IProfileProvider _profileProvider = ProfileProvider();
 }
 
 class LoadProfileEvent extends ProfileEvent {
   LoadProfileEvent({@required this.userID});
   @override
   String toString() => 'LoadProfileEvent';
-  final IProfileProvider _profileProvider = ProfileProvider();
 
   final String userID;
 

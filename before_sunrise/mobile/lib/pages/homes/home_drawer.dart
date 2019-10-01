@@ -32,42 +32,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 ) {
                   return Drawer(
                       child: Center(
-                          child: Column(
-                    children: <Widget>[
-                      RaisedButton(
-                          child: Text('account1'),
-                          onPressed: () {
-                            var authInfo = AuthInfo();
-                            authInfo.userID = "yo8FFTVESHROr9KkbXbwezHv57E2111";
-                            authInfo.nickname = "조국";
-                            authInfo.description = "살려줘";
-                            authInfo.phoneNumber = "+821056897311";
-                            authInfo.imageUrl = "";
-
-                            AuthBloc()
-                                .dispatch(TestAuthEvent(authInfo: authInfo));
-                          } // _authBloc.signout(),
-                          ),
-                      RaisedButton(
-                          child: Text('account2'),
-                          onPressed: () {} // _authBloc.signout(),
-                          ),
-                      RaisedButton(
-                          child: Text('account3'),
-                          onPressed: () {} // _authBloc.signout(),
-                          ),
-                      RaisedButton(
-                          child: Text('account4'),
-                          onPressed: () {} // _authBloc.signout(),
-                          ),
-                      RaisedButton(
-                          child: Text('Logout'),
-                          onPressed: () {
-                            AuthBloc().dispatch(SignoutEvent());
-                          } // _authBloc.signout(),
-                          ),
-                    ],
-                  )));
+                    child: RaisedButton(
+                        child: Text('Logout'),
+                        onPressed: () {
+                          AuthBloc().dispatch(SignoutEvent());
+                        } // _authBloc.signout(),
+                        ),
+                  ));
                 })));
   }
 }

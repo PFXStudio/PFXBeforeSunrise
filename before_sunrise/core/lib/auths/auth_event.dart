@@ -131,7 +131,6 @@ class TestAuthEvent extends AuthEvent {
   @override
   Future<AuthState> applyAsync({AuthState currentState, AuthBloc bloc}) async {
     try {
-      _authProvider.initializeTestAuth(authInfo);
       authInfo.created = _firestoreTimestamp;
       authInfo.lastUpdate = _firestoreTimestamp;
 

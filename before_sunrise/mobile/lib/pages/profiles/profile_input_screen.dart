@@ -2,23 +2,18 @@ import 'package:before_sunrise/import.dart';
 import 'package:before_sunrise/widgets/dialogs/dialog_gender_type_widget.dart';
 
 class ProfileInputScreen extends StatefulWidget {
-  const ProfileInputScreen(
-      {Key key, @required ProfileBloc profileBloc, @required this.userID})
-      : _profileBloc = profileBloc,
-        super(key: key);
-
-  final ProfileBloc _profileBloc;
+  const ProfileInputScreen({Key key, @required this.userID}) : super(key: key);
   final String userID;
 
   @override
   ProfileInputScreenState createState() {
-    return new ProfileInputScreenState(_profileBloc);
+    return new ProfileInputScreenState();
   }
 }
 
 class ProfileInputScreenState extends State<ProfileInputScreen> {
-  final ProfileBloc _profileBloc;
-  ProfileInputScreenState(this._profileBloc);
+  final ProfileBloc _profileBloc = ProfileBloc();
+  ProfileInputScreenState();
   TextEditingController nicknameController = new TextEditingController();
   TextEditingController descriptionController = new TextEditingController();
   final FocusNode nicknameFocusNode = FocusNode();
@@ -42,7 +37,7 @@ class ProfileInputScreenState extends State<ProfileInputScreen> {
   Widget build(BuildContext context) {
     initializeDeviceSize(context);
     return BlocListener(
-        bloc: widget._profileBloc,
+        bloc: _profileBloc,
         listener: (context, state) async {
           if (state is InProfileState) {
             ProfileBloc().signedProfile = state.profile.copyWith();
@@ -52,7 +47,7 @@ class ProfileInputScreenState extends State<ProfileInputScreen> {
           }
         },
         child: BlocBuilder<ProfileBloc, ProfileState>(
-            bloc: widget._profileBloc,
+            bloc: _profileBloc,
             builder: (
               BuildContext context,
               ProfileState currentState,

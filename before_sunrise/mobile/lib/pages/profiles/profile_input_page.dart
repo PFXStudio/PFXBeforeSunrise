@@ -7,15 +7,11 @@ class ProfileInputPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _profileBloc = new ProfileBloc();
     return new Scaffold(
       appBar: new AppBar(
         title: new Text("Profile"),
       ),
-      body: new ProfileInputScreen(
-        profileBloc: _profileBloc,
-        userID: userID,
-      ),
+      body: new ProfileInputScreen(userID: userID),
     );
   }
 }
