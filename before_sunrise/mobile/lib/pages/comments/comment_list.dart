@@ -24,6 +24,7 @@ class _CommentListState extends State<CommentList> {
   String _moveCommentID;
 
   AutoScrollController _autoScrollController;
+  int _findIndex = -1;
 
   @override
   void initState() {
@@ -135,7 +136,6 @@ class _CommentListState extends State<CommentList> {
 
                     if (findIndex != -1) {
                       // goto scroll.
-
                       print("movecomment find $_moveCommentID");
                       _moveCommentID = null;
                       _moveScroll(findIndex);
@@ -173,29 +173,36 @@ class _CommentListState extends State<CommentList> {
                             _comments.addAll(currentState.comments);
                             currentState.comments.clear();
                           } else {
-                            int findIndex = -1;
+                            int count = _comments.length;
                             for (int i = 0;
                                 i < currentState.comments.length;
                                 i++) {
                               var comment = currentState.comments[i];
                               if (comment.commentID == _moveCommentID) {
-                                findIndex = i;
+                                _findIndex = count + i;
                               }
 
                               _comments.add(comment);
-                            }
-                            if (findIndex != -1) {
-                              // goto scroll
-                              print("fetched find $_moveCommentID");
-                              _moveCommentID = null;
-                              _moveScroll(findIndex);
-                            } else if (_isAllLoad == false) {
-                              _delayLoad();
                             }
                           }
                         }
 
                         this._commentBloc.dispatch(BindingCommentEvent());
+                      }
+
+                      if (currentState is IdleCommentState) {
+                        if (_findIndex != -1 && _moveCommentID != null) {
+                          // goto scroll
+                          print("fetched find $_moveCommentID");
+                          _moveScroll(_findIndex);
+                          _findIndex = -1;
+                          _moveCommentID = null;
+                        } else if (_moveCommentID != null) {
+                          this._commentBloc.dispatch(LoadCommentEvent(
+                              category: widget.category,
+                              comment: _comments.last,
+                              postID: widget.postID));
+                        }
                       }
 
                       if (_comments == null || _comments.length <= 0) {
@@ -204,7 +211,7 @@ class _CommentListState extends State<CommentList> {
 
                       print("comments count ${_comments.length}");
 
-                      return ListView.builder(
+                      var listView = ListView.builder(
                         // controller: _scrollController,
                         controller: _autoScrollController,
                         padding: EdgeInsets.symmetric(horizontal: 10),
@@ -220,6 +227,8 @@ class _CommentListState extends State<CommentList> {
                                   comment: comment));
                         },
                       );
+
+                      return listView;
                     })),
           ),
           Align(
@@ -529,23 +538,12 @@ class _CommentListState extends State<CommentList> {
         highlightColor: Colors.black.withOpacity(0.1),
       );
 
-  _delayLoad() => Future.delayed(Duration(seconds: 1), () async {
-        if (_moveCommentID == null) {
-          return;
-        }
-
-        this._commentBloc.dispatch(LoadCommentEvent(
-            category: widget.category,
-            comment: _comments.last,
-            postID: widget.postID));
-      });
-
   void _moveScroll(int index) async {
-    print("move index : $index");
-    Future.delayed(Duration(seconds: 1), () async {
-      await _autoScrollController.scrollToIndex(index,
-          preferPosition: AutoScrollPosition.begin);
-    });
+    // print("move index : $index");
+    // Future.delayed(Duration(seconds: 1), () async {
+    await _autoScrollController.scrollToIndex(index,
+        preferPosition: AutoScrollPosition.begin);
+    // });
 
     // _scrollController.animateTo(_scrollController.position.maxScrollExtent,
     //     duration: new Duration(seconds: 1), curve: Curves.ease);

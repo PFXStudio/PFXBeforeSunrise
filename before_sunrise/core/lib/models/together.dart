@@ -199,7 +199,7 @@ class Together {
   }
 
   String priceText() {
-    return "${this.tablePrice}+${this.tipPrice} = ${this.tablePrice + this.tipPrice}만원";
+    return "테이블 ${this.tablePrice} + 수고비 ${this.tipPrice} = ${this.tablePrice + this.tipPrice}만원";
   }
 
   String douchPriceText() {

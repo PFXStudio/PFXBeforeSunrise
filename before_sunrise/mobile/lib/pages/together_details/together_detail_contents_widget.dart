@@ -39,63 +39,58 @@ class _TogetherDetailContentsWidgetState
           children: <Widget>[
             Row(
               children: <Widget>[
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      FlatIconTextButton(
-                          iconData: FontAwesomeIcons.calendar,
-                          color: MainTheme.contentsTextStyle.color,
-                          text: _isExpanded == false
-                              ? ""
-                              : widget.together.dateText(),
-                          onPressed: () => {}),
-                      FlatIconTextButton(
-                          iconData: FontAwesomeIcons.mapMarkerAlt,
-                          color: MainTheme.contentsTextStyle.color,
-                          text: _isExpanded == false
-                              ? ""
-                              : widget.together.clubID,
-                          onPressed: () => {}),
-                      FlatIconTextButton(
-                          iconData: FontAwesomeIcons.wonSign,
-                          color: MainTheme.contentsTextStyle.color,
-                          text: _isExpanded == false
-                              ? ""
-                              : widget.together.priceText(),
-                          onPressed: () => {}),
-                    ],
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    FlatIconTextButton(
+                        width: kDeviceWidth * 0.7,
+                        iconData: FontAwesomeIcons.calendar,
+                        color: MainTheme.contentsTextStyle.color,
+                        text: _isExpanded == false
+                            ? ""
+                            : widget.together.dateText(),
+                        onPressed: () => {}),
+                    FlatIconTextButton(
+                        width: kDeviceWidth * 0.7,
+                        iconData: FontAwesomeIcons.mapMarkerAlt,
+                        color: MainTheme.contentsTextStyle.color,
+                        text:
+                            _isExpanded == false ? "" : widget.together.clubID,
+                        onPressed: () => {}),
+                    FlatIconTextButton(
+                        width: kDeviceWidth * 0.7,
+                        iconData: FontAwesomeIcons.cocktail,
+                        color: MainTheme.contentsTextStyle.color,
+                        text: _isExpanded == false
+                            ? ""
+                            : widget.together.cocktailText(),
+                        onPressed: () => {}),
+                    FlatIconTextButton(
+                        width: kDeviceWidth * 0.7,
+                        iconData: FontAwesomeIcons.wonSign,
+                        color: MainTheme.contentsTextStyle.color,
+                        text: _isExpanded == false
+                            ? ""
+                            : widget.together.priceText(),
+                        onPressed: () => {}),
+                    FlatIconTextButton(
+                        width: kDeviceWidth * 0.7,
+                        iconData: FontAwesomeIcons.users,
+                        color: MainTheme.contentsTextStyle.color,
+                        text: _isExpanded == false
+                            ? ""
+                            : widget.together.countText(),
+                        onPressed: () => {}),
+                    FlatIconTextButton(
+                        width: kDeviceWidth * 0.7,
+                        iconData: FontAwesomeIcons.moneyBillWave,
+                        color: MainTheme.contentsTextStyle.color,
+                        text: _isExpanded == false
+                            ? ""
+                            : widget.together.douchPriceText(),
+                        onPressed: () => {}),
+                  ],
                 ),
-                Expanded(
-                    flex: 4,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        FlatIconTextButton(
-                            iconData: FontAwesomeIcons.users,
-                            color: MainTheme.contentsTextStyle.color,
-                            text: _isExpanded == false
-                                ? ""
-                                : widget.together.countText(),
-                            onPressed: () => {}),
-                        FlatIconTextButton(
-                            iconData: FontAwesomeIcons.cocktail,
-                            color: MainTheme.contentsTextStyle.color,
-                            text: _isExpanded == false
-                                ? ""
-                                : widget.together.cocktailText(),
-                            onPressed: () => {}),
-                        FlatIconTextButton(
-                            iconData: FontAwesomeIcons.moneyBillWave,
-                            color: MainTheme.contentsTextStyle.color,
-                            text: _isExpanded == false
-                                ? ""
-                                : widget.together.douchPriceText(),
-                            onPressed: () => {}),
-                      ],
-                    )),
               ],
             ),
             Divider(),
