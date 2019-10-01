@@ -115,3 +115,32 @@ class ErrorAuthEvent extends AuthEvent {
     }
   }
 }
+
+class TestAuthEvent extends AuthEvent {
+  TestAuthEvent({@required this.authInfo})
+      : _firestoreTimestamp = FieldValue.serverTimestamp();
+
+  @override
+  String toString() => 'TestAuthEvent';
+  FieldValue _firestoreTimestamp;
+
+  final IAuthProvider _authProvider = AuthProvider();
+  final IProfileProvider _profileProvider = ProfileProvider();
+  final AuthInfo authInfo;
+
+  @override
+  Future<AuthState> applyAsync({AuthState currentState, AuthBloc bloc}) async {
+    try {
+      _authProvider.initializeTestAuth(authInfo);
+      authInfo.created = _firestoreTimestamp;
+      authInfo.lastUpdate = _firestoreTimestamp;
+
+      _profileProvider.updateProfile(
+          userID: authInfo.userID, data: authInfo.data());
+      return InAuthState();
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return ErrorAuthState(_?.toString());
+    }
+  }
+}

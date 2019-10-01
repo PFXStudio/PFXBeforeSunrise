@@ -31,6 +31,7 @@ export 'models/profile.dart';
 export 'models/together.dart';
 export 'models/together_collection.dart';
 export 'models/club_info.dart';
+export 'models/auth_info.dart';
 
 export 'repositories/auth_repository.dart';
 export 'repositories/category_repository.dart';

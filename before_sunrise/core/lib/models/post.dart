@@ -159,17 +159,5 @@ class Post {
           postID == other.postID;
 
   @override
-  int get hashCode =>
-      postID.hashCode ^
-      userID.hashCode ^
-      type.hashCode ^
-      title.hashCode ^
-      contents.hashCode ^
-      imageFolder.hashCode ^
-      imageUrls.hashCode ^
-      youtubeUrl.hashCode ^
-      publishType.hashCode ^
-      enabledAnonymous.hashCode ^
-      created.hashCode ^
-      lastUpdate.hashCode;
+  int get hashCode => postID.hashCode ^ userID.hashCode;
 }

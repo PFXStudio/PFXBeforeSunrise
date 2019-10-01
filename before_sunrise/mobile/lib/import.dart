@@ -87,6 +87,7 @@ export 'pages/homes/blocs/home_state.dart';
 export 'pages/homes/home_screen.dart';
 export 'pages/homes/home_category_bar.dart';
 export 'pages/homes/home_app_bar.dart';
+export 'pages/homes/home_drawer.dart';
 export 'pages/comments/comment_bubble.dart';
 export 'pages/comments/comment_list.dart';
 

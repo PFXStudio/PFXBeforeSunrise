@@ -92,14 +92,7 @@ class HomeScreenState extends State<HomeScreen> {
           key: _scaffoldKey,
           resizeToAvoidBottomInset: false,
           appBar: HomeAppBar(scaffoldKey: _scaffoldKey),
-          drawer: Drawer(
-            child: Center(
-              child: RaisedButton(
-                  child: Text('Logout'),
-                  onPressed: () {} // _authBloc.signout(),
-                  ),
-            ),
-          ),
+          drawer: HomeDrawer(),
           bottomNavigationBar: HomeBottomBar(
             activeIndex: _activePageIndex,
             onActiveIndexChange: (int index) {
@@ -113,7 +106,14 @@ class HomeScreenState extends State<HomeScreen> {
             controller: _panelController,
             body: BlocListener(
                 bloc: _homeBloc,
-                listener: (context, state) async {},
+                listener: (context, state) async {
+                  if (state is UnAuthState) {
+                    Navigator.pushReplacementNamed(
+                        context, AuthScreen.routeName);
+
+                    return;
+                  }
+                },
                 child: BlocBuilder<HomeBloc, HomeState>(
                     bloc: _homeBloc,
                     builder: (
@@ -139,6 +139,7 @@ class HomeScreenState extends State<HomeScreen> {
                       if (currentState is ProfileTabState) {
                         return Container();
                       }
+
                       if (currentState is ErrorHomeState) {
                         return new Container(
                             child: new Center(
