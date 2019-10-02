@@ -47,8 +47,6 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   Widget build(BuildContext context) {
     double _panelHeightOpen = 575.0;
     double _panelHeightClosed = 95.0;
-    final double _initFabHeight = 120.0;
-    double _fabHeight;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -77,10 +75,6 @@ class PostDetailScreenState extends State<PostDetailScreen> {
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(18.0),
                 topRight: Radius.circular(18.0)),
-            onPanelSlide: (double pos) => setState(() {
-              _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) +
-                  _initFabHeight;
-            }),
           ),
         ],
       ),

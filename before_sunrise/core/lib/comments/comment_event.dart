@@ -4,6 +4,69 @@ import 'package:core/import.dart';
 abstract class CommentEvent {
   Future<CommentState> applyAsync(
       {CommentState currentState, CommentBloc bloc});
+
+  final ICommentProvider _commentProvider = CommentProvider();
+  final IAuthProvider _authProvider = AuthProvider();
+  final IShardsProvider _shardsProvider = ShardsProvider();
+  final IProfileProvider _profileProvider = ProfileProvider();
+  Future<Comment> loadProfile(String userID, Comment comment) async {
+    DocumentSnapshot snapshot =
+        await _profileProvider.fetchProfile(userID: comment.userID);
+
+    Profile profile = Profile();
+    profile.initialize(snapshot);
+    comment.profile = profile;
+    if (userID == comment.userID) {
+      comment.isMine = true;
+    }
+
+    return comment;
+  }
+
+  Future<Comment> loadParentInfo(
+      String category, String postID, Comment comment) async {
+    if (comment == null ||
+        comment.parentCommentID == null ||
+        comment.parentCommentID.length <= 0) {
+      return comment;
+    }
+
+    DocumentSnapshot documentSnapshot = await _commentProvider.fetchComment(
+        category: category, postID: postID, commentID: comment.parentCommentID);
+    if (documentSnapshot == null) {
+      return comment;
+    }
+
+    Comment parentComment = Comment();
+    parentComment.initialize(documentSnapshot);
+    comment.parentText = parentComment.text;
+    comment.parentImageUrls = parentComment.imageUrls;
+
+    DocumentSnapshot parentSnapshot =
+        await _profileProvider.fetchProfile(userID: parentComment.userID);
+    if (parentSnapshot != null) {
+      Profile parentProfile = Profile();
+      parentProfile.initialize(parentSnapshot);
+      comment.parentProfile = parentProfile;
+    }
+
+    return comment;
+  }
+
+  Comment cloneOtherDatabaseInfo(Comment sourceComment, Comment targetComment) {
+    targetComment.profile = sourceComment.profile;
+    targetComment.isLike = sourceComment.isLike;
+    targetComment.likeCount = sourceComment.likeCount;
+    targetComment.isReport = sourceComment.isReport;
+    targetComment.reportCount = sourceComment.reportCount;
+    targetComment.isMine = sourceComment.isMine;
+    targetComment.profile = sourceComment.profile;
+    targetComment.parentProfile = sourceComment.parentProfile;
+    targetComment.parentText = sourceComment.parentText;
+    targetComment.parentImageUrls = sourceComment.parentImageUrls;
+
+    return targetComment;
+  }
 }
 
 class LoadCommentEvent extends CommentEvent {
@@ -11,13 +74,9 @@ class LoadCommentEvent extends CommentEvent {
       {@required this.category, @required this.postID, @required this.comment});
   @override
   String toString() => 'LoadCommentEvent';
-  final ICommentProvider _commentProvider = CommentProvider();
-  final IProfileProvider _profileProvider = ProfileProvider();
-  final IAuthProvider _authProvider = AuthProvider();
-  final IShardsProvider _shardsProvider = ShardsProvider();
-  String category;
-  String postID;
-  Comment comment;
+  final String category;
+  final String postID;
+  final Comment comment;
 
   @override
   Future<CommentState> applyAsync(
@@ -38,47 +97,8 @@ class LoadCommentEvent extends CommentEvent {
       for (var document in snapshot.documents) {
         Comment infoComment = Comment();
         infoComment.initialize(document);
-        DocumentSnapshot snapshot =
-            await _profileProvider.fetchProfile(userID: infoComment.userID);
-
-        Profile profile = Profile();
-        profile.initialize(snapshot);
-        infoComment.profile = profile;
-        if (userID == infoComment.userID) {
-          infoComment.isMine = true;
-        }
-
-        if (infoComment.parentCommentID != null &&
-            infoComment.parentCommentID.length > 0) {
-          print(infoComment.parentCommentID);
-          DocumentSnapshot documentSnapshot =
-              await _commentProvider.fetchComment(
-                  category: category,
-                  postID: postID,
-                  commentID: infoComment.parentCommentID);
-          if (documentSnapshot != null) {
-            Comment parentComment = Comment();
-            parentComment.initialize(documentSnapshot);
-            infoComment.parentText = parentComment.text;
-            infoComment.parentImageUrls = parentComment.imageUrls;
-
-            DocumentSnapshot parentSnapshot = await _profileProvider
-                .fetchProfile(userID: parentComment.userID);
-            if (parentSnapshot != null) {
-              Profile parentProfile = Profile();
-              parentProfile.initialize(parentSnapshot);
-              infoComment.parentProfile = parentProfile;
-            }
-          }
-        }
-
-        // infoComment.isLike = await _commentProvider.isLike(
-        //     postID: postID, commentID: infoComment.commentID);
-        // DocumentSnapshot shardsSnapshot = await _shardsProvider
-        //     .commentLikedCount(commentID: infoComment.commentID);
-        // if (shardsSnapshot != null && shardsSnapshot.data != null) {
-        //   infoComment.likeCount = shardsSnapshot.data["count"];
-        // }
+        infoComment = await loadProfile(userID, infoComment);
+        infoComment = await loadParentInfo(category, postID, infoComment);
 
         comments.add(infoComment);
       }
@@ -106,12 +126,12 @@ class CreateCommentEvent extends CommentEvent {
   final IFImageProvider _imageProvider = FImageProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
   FieldValue _firestoreTimestamp;
-  List<ByteData> byteDatas;
+  final List<ByteData> byteDatas;
 
-  String category;
-  String postID;
-  Comment comment;
-  Comment editComment;
+  final String category;
+  final String postID;
+  final Comment comment;
+  final Comment editComment;
 
   @override
   Future<CommentState> applyAsync(
@@ -159,6 +179,7 @@ class CreateCommentEvent extends CommentEvent {
       comment.lastUpdate = _firestoreTimestamp;
       comment.imageUrls = imageUrls;
 
+// Edit
       if (comment.commentID != null && comment.commentID.isEmpty == false) {
         comment.created = editComment.created;
         comment.lastUpdate = _firestoreTimestamp;
@@ -166,33 +187,35 @@ class CreateCommentEvent extends CommentEvent {
         DocumentSnapshot snapshot = await _commentProvider.updateComment(
             category: category, postID: postID, data: comment.data());
 
-        Comment updatedComment = Comment();
-        updatedComment.initialize(snapshot);
-        updatedComment.profile = comment.profile;
-        updatedComment.isLike = comment.isLike;
-        updatedComment.likeCount = comment.likeCount;
-        updatedComment.isReport = comment.isReport;
-        updatedComment.reportCount = comment.reportCount;
-        updatedComment.isMine = comment.isMine;
-        updatedComment.profile = comment.profile;
-        updatedComment.parentProfile = comment.parentProfile;
-        updatedComment.parentImageUrls = comment.parentImageUrls;
+        Comment updateComment = Comment();
+        updateComment.initialize(snapshot);
+        updateComment = cloneOtherDatabaseInfo(comment, updateComment);
 
-        return new SuccessCommentState(comment: updatedComment);
+        return new SuccessCommentState(comment: updateComment);
       }
 
       DocumentReference reference = await _commentProvider.createComment(
           category: category, postID: postID, data: comment.data());
       if (reference == null) {
-        return ErrorCommentState("error");
+        return ErrorCommentState("error1");
       }
+
+      DocumentSnapshot insertSnapshot = await reference.get();
+      if (insertSnapshot == null) {
+        return ErrorCommentState("error2");
+      }
+
+      Comment updatedComment = Comment();
+      updatedComment.initialize(insertSnapshot);
+      updatedComment = await loadProfile(userID, updatedComment);
+      updatedComment = await loadParentInfo(category, postID, updatedComment);
 
       await _shardsProvider.increaseCommentCount(
         category: category,
         postID: postID,
       );
 
-      return new SuccessCommentState(isIncrease: true);
+      return new SuccessCommentState(comment: updatedComment, isIncrease: true);
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorCommentState(_?.toString());
@@ -292,23 +315,16 @@ class RemoveCommentEvent extends CommentEvent {
       comment.text = "삭제된 댓글입니다.";
       comment.isRemove = true;
       comment.imageUrls = [];
+      comment.lastUpdate = _firestoreTimestamp;
 
       DocumentSnapshot snapshot = await _commentProvider.updateComment(
           category: category, postID: postID, data: comment.data());
 
-      Comment updatedComment = Comment();
-      updatedComment.initialize(snapshot);
-      updatedComment.profile = comment.profile;
-      updatedComment.isLike = comment.isLike;
-      updatedComment.likeCount = comment.likeCount;
-      updatedComment.isReport = comment.isReport;
-      updatedComment.reportCount = comment.reportCount;
-      updatedComment.isMine = comment.isMine;
-      updatedComment.profile = comment.profile;
-      updatedComment.parentProfile = comment.parentProfile;
-      updatedComment.parentImageUrls = comment.parentImageUrls;
+      Comment updateComment = Comment();
+      updateComment.initialize(snapshot);
+      updateComment = cloneOtherDatabaseInfo(comment, updateComment);
 
-      return new SuccessCommentState(comment: updatedComment);
+      return new SuccessCommentState(comment: updateComment);
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorCommentState(_?.toString());

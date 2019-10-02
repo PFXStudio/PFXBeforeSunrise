@@ -74,12 +74,16 @@ class _CommentListState extends State<CommentList> {
                     _parentOriginalData = null;
                     print("commentlist SuccessCommentState");
 
-                    _isAllLoad = false;
-                    _comments.clear();
-                    this._commentBloc.dispatch(LoadCommentEvent(
-                        category: widget.category,
-                        comment: null,
-                        postID: widget.postID));
+                    Comment updateComment = state.comment;
+                    if (state.isIncrease == true) {
+                      _comments.insert(0, updateComment);
+
+                      setState(() {
+                        _moveScroll(0);
+                      });
+                    } else {
+                      _updateEditComment(updateComment);
+                    }
 
                     return;
                   } else if (state is EditCommentState) {
@@ -190,6 +194,10 @@ class _CommentListState extends State<CommentList> {
                         this._commentBloc.dispatch(BindingCommentEvent());
                       }
 
+                      if (currentState is SuccessCommentState) {
+                        this._commentBloc.dispatch(BindingCommentEvent());
+                      }
+
                       if (currentState is IdleCommentState) {
                         if (_findIndex != -1 && _moveCommentID != null) {
                           // goto scroll
@@ -212,7 +220,6 @@ class _CommentListState extends State<CommentList> {
                       print("comments count ${_comments.length}");
 
                       var listView = ListView.builder(
-                        // controller: _scrollController,
                         controller: _autoScrollController,
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         itemCount: _comments.length,
@@ -530,6 +537,19 @@ class _CommentListState extends State<CommentList> {
     }
   }
 
+  void _updateEditComment(Comment editComment) {
+    for (int i = 0; i < _comments.length; i++) {
+      var comment = _comments[i];
+      if (comment.commentID != editComment.commentID) {
+        continue;
+      }
+
+      _comments[i] = editComment.copyWith();
+      setState(() {});
+      break;
+    }
+  }
+
   Widget _wrapScrollTag({int index, Widget child}) => AutoScrollTag(
         key: ValueKey(index),
         controller: _autoScrollController,
@@ -539,11 +559,8 @@ class _CommentListState extends State<CommentList> {
       );
 
   void _moveScroll(int index) async {
-    // print("move index : $index");
-    // Future.delayed(Duration(seconds: 1), () async {
     await _autoScrollController.scrollToIndex(index,
         preferPosition: AutoScrollPosition.begin);
-    // });
 
     // _scrollController.animateTo(_scrollController.position.maxScrollExtent,
     //     duration: new Duration(seconds: 1), curve: Curves.ease);
