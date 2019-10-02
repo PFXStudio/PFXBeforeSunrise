@@ -131,9 +131,9 @@ class CreatePostEvent extends PostEvent {
   final IAuthProvider _authProvider = AuthProvider();
   final IFImageProvider _imageProvider = FImageProvider();
   FieldValue _firestoreTimestamp;
-  List<ByteData> byteDatas;
-  List<String> removedImageUrls;
-  List<String> alreadyImageUrls;
+  final List<ByteData> byteDatas;
+  final List<String> removedImageUrls;
+  final List<String> alreadyImageUrls;
 
   Post post;
 
@@ -212,8 +212,8 @@ class ToggleReportPostEvent extends PostEvent {
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
 
-  Post post;
-  bool isReport = false;
+  final Post post;
+  final bool isReport;
 
   @override
   Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
@@ -246,8 +246,8 @@ class ViewPostEvent extends PostEvent {
   final IPostProvider _postProvider = PostProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
 
-  String userID;
-  Post post;
+  final String userID;
+  final Post post;
 
   @override
   Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
@@ -275,7 +275,7 @@ class RemovePostEvent extends PostEvent {
   final IFImageProvider _imageProvider = FImageProvider();
   final ICommentProvider _commentProvider = CommentProvider();
 
-  Post post;
+  final Post post;
 
   @override
   Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {

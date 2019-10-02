@@ -139,42 +139,6 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
         }).toList());
   }
 
-  Widget _buildPostPriceTag() {
-    return Positioned(
-      top: 20.0,
-      right: 0.0,
-      child: Container(
-          height: 30.0,
-          alignment: Alignment.center,
-          padding: EdgeInsets.symmetric(horizontal: 10.0),
-          decoration: BoxDecoration(
-            color: Colors.black54,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15.0),
-                bottomLeft: Radius.circular(15.0)),
-          ),
-          child: Row(
-            children: <Widget>[
-              Icon(
-                FontAwesomeIcons.comment,
-                size: 20.0,
-                color: MainTheme.enabledIconColor,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 5),
-              ),
-              Text(
-                '${_post.commentCount}',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold),
-              ),
-            ],
-          )),
-    );
-  }
-
   Widget _buildPostCardBackgroundImage() {
     return Stack(
       alignment: Alignment.center,
@@ -250,7 +214,6 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
   }
 
   Widget _buildUserListTile() {
-    Post post = _post;
     return ListTile(
       onTap: _isProfilePost ? null : () => _navigateToProfilePage(),
       leading: Container(
@@ -386,6 +349,21 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
               padding: EdgeInsets.only(right: 20),
               child: Text(
                 "${_post.viewCount}",
+                style: MainTheme.timeTextStyle,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10, right: 10),
+              child: Icon(
+                FontAwesomeIcons.comment,
+                color: MainTheme.timeTextStyle.color,
+                size: 15,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 20),
+              child: Text(
+                "${_post.commentCount}",
                 style: MainTheme.timeTextStyle,
               ),
             ),

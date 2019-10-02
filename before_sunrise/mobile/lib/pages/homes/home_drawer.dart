@@ -11,6 +11,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   Widget build(BuildContext context) {
     initializeDeviceSize(context);
     return Scaffold(
+        backgroundColor: Colors.transparent,
         key: _scaffoldKey,
         body: BlocListener(
             bloc: _authBloc,

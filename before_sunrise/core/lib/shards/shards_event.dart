@@ -10,8 +10,8 @@ class RemovePostLikeCountEvent extends ShardsEvent {
   @override
   String toString() => 'RemovePostLikeCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
-  String postID;
-  String category;
+  final String postID;
+  final String category;
 
   @override
   Future<ShardsState> applyAsync(
@@ -31,8 +31,8 @@ class IncreasePostLikeCountEvent extends ShardsEvent {
   @override
   String toString() => 'IncreasePostLikeCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
-  String postID;
-  String category;
+  final String postID;
+  final String category;
 
   @override
   Future<ShardsState> applyAsync(
@@ -52,8 +52,8 @@ class DecreasePostLikeCountEvent extends ShardsEvent {
   @override
   String toString() => 'DecreasePostLikeCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
-  String postID;
-  String category;
+  final String postID;
+  final String category;
 
   @override
   Future<ShardsState> applyAsync(
@@ -73,8 +73,8 @@ class RemoveCommentCountEvent extends ShardsEvent {
   @override
   String toString() => 'RemoveCommentCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
-  String postID;
-  String category;
+  final String postID;
+  final String category;
 
   @override
   Future<ShardsState> applyAsync(
@@ -94,8 +94,8 @@ class IncreaseCommentCountEvent extends ShardsEvent {
   @override
   String toString() => 'IncreaseCommentCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
-  String postID;
-  String category;
+  final String postID;
+  final String category;
 
   @override
   Future<ShardsState> applyAsync(
@@ -115,8 +115,8 @@ class DecreaseCommentCountEvent extends ShardsEvent {
   @override
   String toString() => 'DecreaseCommentCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
-  String postID;
-  String category;
+  final String postID;
+  final String category;
 
   @override
   Future<ShardsState> applyAsync(
@@ -136,8 +136,8 @@ class RemoveReportCountEvent extends ShardsEvent {
   @override
   String toString() => 'RemoveReportCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
-  String postID;
-  String category;
+  final String postID;
+  final String category;
 
   @override
   Future<ShardsState> applyAsync(
@@ -157,8 +157,8 @@ class IncreaseReportCountEvent extends ShardsEvent {
   @override
   String toString() => 'IncreaseReportCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
-  String postID;
-  String category;
+  final String postID;
+  final String category;
 
   @override
   Future<ShardsState> applyAsync(
@@ -178,8 +178,8 @@ class DecreaseReportCountEvent extends ShardsEvent {
   @override
   String toString() => 'DecreaseReportCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
-  String postID;
-  String category;
+  final String postID;
+  final String category;
 
   @override
   Future<ShardsState> applyAsync(
@@ -199,8 +199,8 @@ class RemoveViewCountEvent extends ShardsEvent {
   @override
   String toString() => 'RemoveViewCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
-  String postID;
-  String category;
+  final String postID;
+  final String category;
 
   @override
   Future<ShardsState> applyAsync(
@@ -220,8 +220,8 @@ class IncreaseViewCountEvent extends ShardsEvent {
   @override
   String toString() => 'IncreaseViewCountEvent';
   final IShardsProvider _shardsProvider = ShardsProvider();
-  String postID;
-  String category;
+  final String postID;
+  final String category;
 
   @override
   Future<ShardsState> applyAsync(

@@ -16,8 +16,8 @@ class LoadTogetherEvent extends TogetherEvent {
   final IProfileProvider _profileProvider = ProfileProvider();
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
-  DateTime dateTime;
-  Together lastVisibleTogether;
+  final DateTime dateTime;
+  final Together lastVisibleTogether;
 
   @override
   Future<TogetherState> applyAsync(
@@ -117,8 +117,8 @@ class ToggleReportTogetherEvent extends TogetherEvent {
   final IAuthProvider _authProvider = AuthProvider();
   final IShardsProvider _shardsProvider = ShardsProvider();
 
-  Together together;
-  bool isReport = false;
+  final Together together;
+  final bool isReport;
 
   @override
   Future<TogetherState> applyAsync(
@@ -185,11 +185,11 @@ class CreateTogetherEvent extends TogetherEvent {
   final IAuthProvider _authProvider = AuthProvider();
   final IFImageProvider _imageProvider = FImageProvider();
   FieldValue _firestoreTimestamp;
-  List<ByteData> byteDatas;
-  List<String> removedImageUrls;
-  List<String> alreadyImageUrls;
+  final List<ByteData> byteDatas;
+  final List<String> removedImageUrls;
+  final List<String> alreadyImageUrls;
 
-  Together together;
+  final Together together;
 
   @override
   Future<TogetherState> applyAsync(
@@ -269,7 +269,7 @@ class RemoveTogetherEvent extends TogetherEvent {
   final IFImageProvider _imageProvider = FImageProvider();
   final ICommentProvider _commentProvider = CommentProvider();
 
-  Together together;
+  final Together together;
 
   @override
   Future<TogetherState> applyAsync(

@@ -8,7 +8,7 @@ class CocktailCountInfo {
   double serviceCount = 0;
 }
 
-CocktailCountInfo s_cocktailCountInfo =
+CocktailCountInfo cocktailCountInfo =
     CocktailCountInfo(hardCount: 0, champagneCount: 0, serviceCount: 0);
 typedef TogetherFormCocktailCountCallback = void Function(
     CocktailCountInfo editCocktailCountInfo);
@@ -24,9 +24,9 @@ class TogetherFormCocktailCount extends StatefulWidget {
       return _TogetherFormCocktailCountState();
     }
 
-    s_cocktailCountInfo.hardCount = editCocktailCountInfo.hardCount;
-    s_cocktailCountInfo.champagneCount = editCocktailCountInfo.champagneCount;
-    s_cocktailCountInfo.serviceCount = editCocktailCountInfo.serviceCount;
+    cocktailCountInfo.hardCount = editCocktailCountInfo.hardCount;
+    cocktailCountInfo.champagneCount = editCocktailCountInfo.champagneCount;
+    cocktailCountInfo.serviceCount = editCocktailCountInfo.serviceCount;
     return _TogetherFormCocktailCountState();
   }
 
@@ -42,24 +42,24 @@ class _TogetherFormCocktailCountState extends State<TogetherFormCocktailCount> {
 
   @override
   void dispose() {
-    s_cocktailCountInfo.hardCount = 0;
-    s_cocktailCountInfo.champagneCount = 0;
-    s_cocktailCountInfo.serviceCount = 0;
+    cocktailCountInfo.hardCount = 0;
+    cocktailCountInfo.champagneCount = 0;
+    cocktailCountInfo.serviceCount = 0;
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(s_cocktailCountInfo.hardCount.toInt());
-    print(s_cocktailCountInfo.champagneCount.toInt());
-    print(s_cocktailCountInfo.serviceCount.toInt());
+    print(cocktailCountInfo.hardCount.toInt());
+    print(cocktailCountInfo.champagneCount.toInt());
+    print(cocktailCountInfo.serviceCount.toInt());
     return FlatIconTextButton(
         iconData: FontAwesomeIcons.cocktail,
         color: MainTheme.enabledButtonColor,
-        text: s_cocktailCountInfo.hardCount != 0 ||
-                s_cocktailCountInfo.champagneCount != 0
-            ? "${s_cocktailCountInfo.hardCount.toInt()}하드, ${s_cocktailCountInfo.champagneCount.toInt()}샴, ${s_cocktailCountInfo.serviceCount.toInt()}서비스"
+        text: cocktailCountInfo.hardCount != 0 ||
+                cocktailCountInfo.champagneCount != 0
+            ? "${cocktailCountInfo.hardCount.toInt()}하드, ${cocktailCountInfo.champagneCount.toInt()}샴, ${cocktailCountInfo.serviceCount.toInt()}서비스"
             : LocalizableLoader.of(context).text("cocktail_count_select"),
         onPressed: () {
           showDialog(
@@ -88,7 +88,7 @@ class _TogetherFormCocktailCountState extends State<TogetherFormCocktailCount> {
                               return;
                             }
 
-                            widget.callback(s_cocktailCountInfo);
+                            widget.callback(cocktailCountInfo);
                             setState(() {});
                           },
                         )
@@ -128,9 +128,9 @@ class _TogetherFormCocktailCountContentsWidgetState
                     color: Colors.blueAccent,
                     onPressed: () {
                       setState(() {
-                        if (s_cocktailCountInfo.hardCount > 0) {
-                          s_cocktailCountInfo.hardCount =
-                              s_cocktailCountInfo.hardCount - 1;
+                        if (cocktailCountInfo.hardCount > 0) {
+                          cocktailCountInfo.hardCount =
+                              cocktailCountInfo.hardCount - 1;
                         }
                       });
                     },
@@ -139,7 +139,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                 Expanded(
                     flex: 10,
                     child: FlutterSlider(
-                      values: [s_cocktailCountInfo.hardCount],
+                      values: [cocktailCountInfo.hardCount],
                       rangeSlider: false,
                       max: maxCount,
                       min: 0,
@@ -169,7 +169,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                       ),
                       onDragCompleted: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
-                          s_cocktailCountInfo.hardCount = lowerValue;
+                          cocktailCountInfo.hardCount = lowerValue;
                         });
                       },
                     )),
@@ -181,9 +181,9 @@ class _TogetherFormCocktailCountContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (s_cocktailCountInfo.hardCount < maxCount) {
-                            s_cocktailCountInfo.hardCount =
-                                s_cocktailCountInfo.hardCount + 1;
+                          if (cocktailCountInfo.hardCount < maxCount) {
+                            cocktailCountInfo.hardCount =
+                                cocktailCountInfo.hardCount + 1;
                           }
                         });
                       },
@@ -204,9 +204,9 @@ class _TogetherFormCocktailCountContentsWidgetState
                     color: Colors.blueAccent,
                     onPressed: () {
                       setState(() {
-                        if (s_cocktailCountInfo.champagneCount > 0) {
-                          s_cocktailCountInfo.champagneCount =
-                              s_cocktailCountInfo.champagneCount - 1;
+                        if (cocktailCountInfo.champagneCount > 0) {
+                          cocktailCountInfo.champagneCount =
+                              cocktailCountInfo.champagneCount - 1;
                         }
                       });
                     },
@@ -215,7 +215,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                 Expanded(
                     flex: 10,
                     child: FlutterSlider(
-                      values: [s_cocktailCountInfo.champagneCount],
+                      values: [cocktailCountInfo.champagneCount],
                       rangeSlider: false,
                       max: maxCount,
                       min: 0,
@@ -245,7 +245,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                       ),
                       onDragCompleted: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
-                          s_cocktailCountInfo.champagneCount = lowerValue;
+                          cocktailCountInfo.champagneCount = lowerValue;
                         });
                       },
                     )),
@@ -257,9 +257,9 @@ class _TogetherFormCocktailCountContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (s_cocktailCountInfo.champagneCount < maxCount) {
-                            s_cocktailCountInfo.champagneCount =
-                                s_cocktailCountInfo.champagneCount + 1;
+                          if (cocktailCountInfo.champagneCount < maxCount) {
+                            cocktailCountInfo.champagneCount =
+                                cocktailCountInfo.champagneCount + 1;
                           }
                         });
                       },
@@ -280,9 +280,9 @@ class _TogetherFormCocktailCountContentsWidgetState
                     color: Colors.blueAccent,
                     onPressed: () {
                       setState(() {
-                        if (s_cocktailCountInfo.serviceCount > 0) {
-                          s_cocktailCountInfo.serviceCount =
-                              s_cocktailCountInfo.serviceCount - 1;
+                        if (cocktailCountInfo.serviceCount > 0) {
+                          cocktailCountInfo.serviceCount =
+                              cocktailCountInfo.serviceCount - 1;
                         }
                       });
                     },
@@ -291,7 +291,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                 Expanded(
                     flex: 10,
                     child: FlutterSlider(
-                      values: [s_cocktailCountInfo.serviceCount],
+                      values: [cocktailCountInfo.serviceCount],
                       rangeSlider: false,
                       max: maxCount,
                       min: 0,
@@ -321,7 +321,7 @@ class _TogetherFormCocktailCountContentsWidgetState
                       ),
                       onDragCompleted: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
-                          s_cocktailCountInfo.serviceCount = lowerValue;
+                          cocktailCountInfo.serviceCount = lowerValue;
                         });
                       },
                     )),
@@ -333,9 +333,9 @@ class _TogetherFormCocktailCountContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (s_cocktailCountInfo.serviceCount < maxCount) {
-                            s_cocktailCountInfo.serviceCount =
-                                s_cocktailCountInfo.serviceCount + 1;
+                          if (cocktailCountInfo.serviceCount < maxCount) {
+                            cocktailCountInfo.serviceCount =
+                                cocktailCountInfo.serviceCount + 1;
                           }
                         });
                       },
