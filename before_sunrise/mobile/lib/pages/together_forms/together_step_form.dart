@@ -262,7 +262,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
         ),
         child: Container(
             width: kDeviceWidth - MainTheme.edgeInsets.left,
-            height: 410,
+            height: 400,
             child: Center(
                 child: new ListView(
               shrinkWrap: true,
@@ -311,7 +311,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                                           left: 10.0, right: 10.0, bottom: 10),
                                       child: new TextFormField(
                                         maxLength: 512,
-                                        maxLines: 15,
+                                        maxLines: 10,
                                         focusNode: _contentsFocusNode,
                                         controller: _contentsController,
                                         decoration: new InputDecoration(
@@ -530,7 +530,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
         ),
         child: Container(
             width: kDeviceWidth - MainTheme.edgeInsets.left,
-            height: kDeviceHeight * 0.32,
+            height: kDeviceHeight * 0.45,
             child: Padding(
                 padding: EdgeInsets.all(10),
                 child: Column(

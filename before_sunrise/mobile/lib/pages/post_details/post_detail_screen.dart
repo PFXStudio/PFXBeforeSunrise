@@ -465,7 +465,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   Widget _buildPostDetails() {
-    final double _contentHeight = kDeviceHeight * 0.6;
+    final double _contentHeight = kDeviceHeight * 0.88;
 
     final double _contentWidthPadding =
         kDeviceWidth > 450.0 ? kDeviceWidth - 450.0 : 30.0;
@@ -489,6 +489,9 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                     _buildPostTitleInfo(),
                     _buildContents(),
                     _buildYoutube(),
+                    SizedBox(
+                      height: 60,
+                    )
                     // add similar posts
                   ],
                 ),

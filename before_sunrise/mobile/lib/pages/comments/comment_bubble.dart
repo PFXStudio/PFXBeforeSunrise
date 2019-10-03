@@ -485,6 +485,16 @@ class _CommentBubbleState extends State<CommentBubble> {
     OptionItem optionItem = item;
 
     if (optionItem.index == 0) {
+      ClipboardManager.copyToClipBoard(_comment.text).then((result) {
+        final snackBar = SnackBar(
+          content: Text('Copied to Clipboard'),
+          action: SnackBarAction(
+            label: 'Undo',
+            onPressed: () {},
+          ),
+        );
+        Scaffold.of(context).showSnackBar(snackBar);
+      });
       return;
     }
 

@@ -494,7 +494,7 @@ class PostStepFormState extends State<PostStepForm>
         ),
         child: Container(
             width: kDeviceWidth - MainTheme.edgeInsets.left,
-            height: 227,
+            height: 250,
             child: Padding(
                 padding: EdgeInsets.all(10),
                 child: Column(

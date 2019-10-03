@@ -40,6 +40,7 @@ export 'package:url_launcher/url_launcher.dart';
 export 'package:flutter_map/flutter_map.dart';
 export 'package:share_extend/share_extend.dart';
 export 'package:scroll_to_index/scroll_to_index.dart';
+export 'package:clipboard_manager/clipboard_manager.dart';
 
 export 'package:core/import.dart';
 

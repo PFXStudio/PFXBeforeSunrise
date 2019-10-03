@@ -81,6 +81,7 @@ class PostScreenState extends State<PostScreen> {
 
   Widget _buildPosts(List<Post> posts, bool isBottomLoading) {
     _enabeldMorePosts = false;
+    print("buildPosts $posts");
     if (posts != null) {
       if (posts.length >= CoreConst.maxLoadPostCount) {
         _enabeldMorePosts = true;
@@ -129,6 +130,7 @@ class PostScreenState extends State<PostScreen> {
 
   void _loadMore() {
     if (_enabeldMorePosts == false) {
+      print("_enabeldMorePosts is false");
       return;
     }
 

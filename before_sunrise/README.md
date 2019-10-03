@@ -1,14 +1,6 @@
-# before_sunrise...
+# before_sunrise
 
-[iOS]
-Podfile
-target 'Runner' do
-use_frameworks!
-
-Runner.xcodeproj
-8.0 -> 11.1
-
-A new Flutter project.
+Before Sunrise
 
 ## Getting Started
 
