@@ -286,7 +286,14 @@ class _CommentListState extends State<CommentList> {
                                       height: 50,
                                       quality: 50,
                                     ))
-                                : Text(_parentComment.text),
+                                : Flexible(
+                                    child: Padding(
+                                    padding: EdgeInsets.only(right: 15),
+                                    child: Text(
+                                      _parentComment.text,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ))
                           ],
                         ),
                   _editComment == null

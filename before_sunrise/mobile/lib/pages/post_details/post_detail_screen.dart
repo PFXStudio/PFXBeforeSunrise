@@ -649,7 +649,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           )),
       OptionItem(
           index: 1,
-          title: _post.isReport == true ? '해제' : '신고',
+          title: _post.isReport == true ? '신고 취소' : '신고',
           image: _post.isReport == true
               ? Icon(
                   FontAwesomeIcons.solidHandshake,
