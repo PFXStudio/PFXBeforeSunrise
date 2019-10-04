@@ -90,6 +90,22 @@ class _CommentBubbleState extends State<CommentBubble> {
       ),
       title: Text('${profile.nickname}',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+      trailing: _comment.isWriter == true
+          ? Container(
+              padding: const EdgeInsets.all(3.0),
+              decoration: BoxDecoration(
+                  color: MainTheme.enabledButtonColor,
+                  border: Border.all(color: MainTheme.enabledButtonColor),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
+              child: Text(
+                "작성자",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12),
+              ),
+            )
+          : Text(""),
     );
   }
 

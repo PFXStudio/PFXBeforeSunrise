@@ -1,11 +1,12 @@
 import 'package:before_sunrise/import.dart';
 
 class CommentList extends StatefulWidget {
-  CommentList({this.category, this.postID, this.isReport});
+  CommentList({this.category, this.postID, this.writerID, this.isReport});
   @override
   _CommentListState createState() => _CommentListState();
   final String category;
   final String postID;
+  final String writerID;
   final bool isReport;
 }
 
@@ -226,6 +227,10 @@ class _CommentListState extends State<CommentList> {
                         reverse: true,
                         itemBuilder: (BuildContext context, int index) {
                           Comment comment = _comments[index];
+                          if (comment.userID == widget.writerID) {
+                            comment.isWriter = true;
+                          }
+
                           return _wrapScrollTag(
                               index: index,
                               child: CommentBubble(

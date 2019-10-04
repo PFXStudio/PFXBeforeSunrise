@@ -81,23 +81,25 @@ class ErrorPostState extends PostState {
 }
 
 class SuccessPostState extends PostState {
-  SuccessPostState({this.post});
+  SuccessPostState({this.post, this.isUpdate});
 
   @override
   String toString() => 'SuccessPostState';
   final Post post;
+  final bool isUpdate;
 
   @override
   PostState getStateCopy() {
-    return SuccessPostState(post: post);
+    return SuccessPostState(post: post, isUpdate: isUpdate);
   }
 }
 
 class SuccessRemovePostState extends PostState {
-  SuccessRemovePostState();
+  SuccessRemovePostState({this.post});
 
   @override
   String toString() => 'SuccessRemovePostState';
+  final Post post;
 
   @override
   PostState getStateCopy() {

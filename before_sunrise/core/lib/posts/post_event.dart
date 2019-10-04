@@ -2,6 +2,12 @@ import 'package:core/import.dart';
 
 @immutable
 abstract class PostEvent {
+  final IPostProvider _postProvider = PostProvider();
+  final IProfileProvider _profileProvider = ProfileProvider();
+  final IAuthProvider _authProvider = AuthProvider();
+  final IShardsProvider _shardsProvider = ShardsProvider();
+  final IFImageProvider _imageProvider = FImageProvider();
+  final ICommentProvider _commentProvider = CommentProvider();
   Future<PostState> applyAsync({PostState currentState, PostBloc bloc});
 }
 
@@ -9,10 +15,6 @@ class LoadPostEvent extends PostEvent {
   LoadPostEvent({@required this.category, @required this.post});
   @override
   String toString() => 'LoadPostEvent';
-  final IPostProvider _postProvider = PostProvider();
-  final IProfileProvider _profileProvider = ProfileProvider();
-  final IAuthProvider _authProvider = AuthProvider();
-  final IShardsProvider _shardsProvider = ShardsProvider();
   final String category;
   final Post post;
 
@@ -23,10 +25,10 @@ class LoadPostEvent extends PostEvent {
           category: category, lastVisiblePost: post);
       List<Post> posts = List<Post>();
       if (snapshot == null) {
-        return EmptyPostState();
+        return IdlePostState();
       }
       if (snapshot.documents.length <= 0) {
-        return EmptyPostState();
+        return IdlePostState();
       }
 
       String userID = await _authProvider.getUserID();
@@ -87,10 +89,6 @@ class ToggleLikePostEvent extends PostEvent {
   ToggleLikePostEvent({@required this.post, this.isLike});
   @override
   String toString() => 'ToggleLikePostEvent';
-  final IPostProvider _postProvider = PostProvider();
-  final IAuthProvider _authProvider = AuthProvider();
-  final IShardsProvider _shardsProvider = ShardsProvider();
-
   final Post post;
   final bool isLike;
 
@@ -110,7 +108,7 @@ class ToggleLikePostEvent extends PostEvent {
             category: post.category, postID: post.postID);
       }
 
-      return currentState;
+      return IdlePostState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorPostState(_?.toString());
@@ -127,15 +125,12 @@ class CreatePostEvent extends PostEvent {
       : _firestoreTimestamp = FieldValue.serverTimestamp();
   @override
   String toString() => 'CreatePostEvent';
-  final IPostProvider _postProvider = PostProvider();
-  final IAuthProvider _authProvider = AuthProvider();
-  final IFImageProvider _imageProvider = FImageProvider();
-  FieldValue _firestoreTimestamp;
+  final FieldValue _firestoreTimestamp;
   final List<ByteData> byteDatas;
   final List<String> removedImageUrls;
   final List<String> alreadyImageUrls;
 
-  Post post;
+  final Post post;
 
   @override
   Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
@@ -187,7 +182,7 @@ class CreatePostEvent extends PostEvent {
         updatedPost.reportCount = post.reportCount;
         updatedPost.viewCount = post.viewCount;
 
-        return new SuccessPostState(post: updatedPost);
+        return new SuccessPostState(post: updatedPost, isUpdate: true);
       }
 
       DocumentReference reference = await _postProvider.createPost(
@@ -196,7 +191,7 @@ class CreatePostEvent extends PostEvent {
         return ErrorPostState("error");
       }
 
-      return new SuccessPostState();
+      return new SuccessPostState(post: post);
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorPostState(_?.toString());
@@ -208,10 +203,6 @@ class ToggleReportPostEvent extends PostEvent {
   ToggleReportPostEvent({@required this.post, @required this.isReport});
   @override
   String toString() => 'ToggleReportPostEvent';
-  final IPostProvider _postProvider = PostProvider();
-  final IAuthProvider _authProvider = AuthProvider();
-  final IShardsProvider _shardsProvider = ShardsProvider();
-
   final Post post;
   final bool isReport;
 
@@ -231,7 +222,7 @@ class ToggleReportPostEvent extends PostEvent {
             category: post.category, postID: post.postID);
       }
 
-      return currentState;
+      return IdlePostState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorPostState(_?.toString());
@@ -243,9 +234,6 @@ class ViewPostEvent extends PostEvent {
   ViewPostEvent({@required this.post, @required this.userID});
   @override
   String toString() => 'ViewPostEvent';
-  final IPostProvider _postProvider = PostProvider();
-  final IShardsProvider _shardsProvider = ShardsProvider();
-
   final String userID;
   final Post post;
 
@@ -257,7 +245,7 @@ class ViewPostEvent extends PostEvent {
       await _shardsProvider.increaseViewCount(
           category: post.category, postID: post.postID);
 
-      return FetchedPostState();
+      return IdlePostState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorPostState(_?.toString());
@@ -269,11 +257,6 @@ class RemovePostEvent extends PostEvent {
   RemovePostEvent({@required this.post});
   @override
   String toString() => 'RemovePostEvent';
-  final IPostProvider _postProvider = PostProvider();
-  final IShardsProvider _shardsProvider = ShardsProvider();
-  final IProfileProvider _profileProvider = ProfileProvider();
-  final IFImageProvider _imageProvider = FImageProvider();
-  final ICommentProvider _commentProvider = CommentProvider();
 
   final Post post;
 
@@ -297,7 +280,23 @@ class RemovePostEvent extends PostEvent {
       await _postProvider.removePost(
           postID: post.postID, category: post.category);
 
-      return new SuccessRemovePostState();
+      return new SuccessRemovePostState(post: post);
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorPostState(_?.toString());
+    }
+  }
+}
+
+class BindPostEvent extends PostEvent {
+  BindPostEvent();
+  @override
+  String toString() => 'BindPostEvent';
+
+  @override
+  Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
+    try {
+      return new IdlePostState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorPostState(_?.toString());

@@ -638,6 +638,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
             ? CommentList(
                 category: widget._post.category,
                 postID: widget._post.postID,
+                writerID: widget._post.userID,
               )
             : Container(),
       ],

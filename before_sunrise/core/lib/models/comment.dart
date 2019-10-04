@@ -20,6 +20,7 @@ class Comment {
     this.profile,
     this.parentProfile,
     this.parentImageUrls,
+    this.isWriter,
   });
 
   String commentID;
@@ -41,6 +42,7 @@ class Comment {
   Profile profile;
   Profile parentProfile;
   List<dynamic> parentImageUrls;
+  bool isWriter;
 
   void initialize(DocumentSnapshot snapshot) {
     this.commentID = snapshot.documentID;
@@ -68,26 +70,26 @@ class Comment {
     };
   }
 
-  Comment copyWith({
-    String commentID,
-    String userID,
-    String parentCommentID,
-    String text,
-    String imageFolder,
-    String parentText,
-    List<dynamic> imageUrls,
-    bool isRemove,
-    DateTime created,
-    DateTime lastUpdate,
-    bool isLike,
-    int likeCount,
-    bool isReport,
-    int reportCount,
-    bool isMine,
-    Profile profile,
-    Profile parentProfile,
-    List<dynamic> parentImageUrls,
-  }) {
+  Comment copyWith(
+      {String commentID,
+      String userID,
+      String parentCommentID,
+      String text,
+      String imageFolder,
+      String parentText,
+      List<dynamic> imageUrls,
+      bool isRemove,
+      DateTime created,
+      DateTime lastUpdate,
+      bool isLike,
+      int likeCount,
+      bool isReport,
+      int reportCount,
+      bool isMine,
+      Profile profile,
+      Profile parentProfile,
+      List<dynamic> parentImageUrls,
+      bool isWriter}) {
     return Comment(
         userID: userID ?? this.userID,
         commentID: commentID ?? this.commentID,
@@ -106,7 +108,8 @@ class Comment {
         isMine: isMine ?? this.isMine,
         profile: profile ?? this.profile,
         parentProfile: parentProfile ?? this.parentProfile,
-        parentImageUrls: parentImageUrls ?? this.parentImageUrls);
+        parentImageUrls: parentImageUrls ?? this.parentImageUrls,
+        isWriter: isWriter ?? this.isWriter);
   }
 
   @override

@@ -43,11 +43,60 @@ class PostScreenState extends State<PostScreen> {
         bloc: _postBloc,
         listener: (context, state) async {
           print(state.toString());
-          if (state is SuccessRemovePostState || state is SuccessPostState) {
-            _posts.clear();
-            _enabeldMorePosts = true;
-            _postBloc.dispatch(
-                LoadPostEvent(category: widget._category, post: null));
+          if (state is SuccessRemovePostState) {
+            var deletePost = state.post;
+            for (int i = 0; i < _posts.length; i++) {
+              var post = _posts[i];
+              if (post.postID != deletePost.postID) {
+                continue;
+              }
+
+              _posts.removeAt(i);
+              break;
+            }
+
+            _postBloc.dispatch(BindPostEvent());
+            return;
+          }
+
+          if (state is SuccessPostState) {
+            var post = state.post;
+            var isUpdate = state.isUpdate;
+            if (isUpdate == false) {
+              _posts.insert(0, post);
+            } else {
+              for (int i = 0; i < _posts.length; i++) {
+                var checkPost = _posts[i];
+                if (checkPost.postID != post.postID) {
+                  continue;
+                }
+
+                _posts.removeAt(i);
+                _posts.insert(i, post);
+                break;
+              }
+            }
+            _postBloc.dispatch(BindPostEvent());
+            return;
+          }
+
+          if (state is FetchedPostState) {
+            var posts = state.posts;
+            _enabeldMorePosts = false;
+            print("buildPosts $posts");
+            if (posts != null) {
+              if (posts.length >= CoreConst.maxLoadPostCount) {
+                _enabeldMorePosts = true;
+              }
+
+              if (posts.length > 0) {
+                _posts.addAll(posts);
+                posts.clear();
+              }
+            }
+
+            _postBloc.dispatch(BindPostEvent());
+            return;
           }
         },
         child: BlocBuilder<PostBloc, PostState>(
@@ -68,30 +117,14 @@ class PostScreenState extends State<PostScreen> {
                   );
                 }
 
-                return _buildPosts(null, true);
+                return _buildPosts(true);
               }
 
-              if (currentState is FetchedPostState) {
-                return _buildPosts(currentState.posts, false);
-              }
-
-              return _buildPosts(null, false);
+              return _buildPosts(false);
             }));
   }
 
-  Widget _buildPosts(List<Post> posts, bool isBottomLoading) {
-    _enabeldMorePosts = false;
-    print("buildPosts $posts");
-    if (posts != null) {
-      if (posts.length >= CoreConst.maxLoadPostCount) {
-        _enabeldMorePosts = true;
-      }
-
-      if (posts.length > 0) {
-        _posts.addAll(posts);
-        posts.clear();
-      }
-    }
+  Widget _buildPosts(bool isBottomLoading) {
     return RefreshIndicator(
         onRefresh: () async {
           _posts.clear();

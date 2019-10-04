@@ -191,7 +191,7 @@ class Together {
   }
 
   String countText() {
-    return "총 인원 : ${this.totalCount}, 모집 인원 : ${this.restCount}";
+    return "총 인원 : ${this.totalCount}명, 모집 인원 : ${this.restCount}명";
   }
 
   String cocktailText() {
@@ -199,7 +199,7 @@ class Together {
   }
 
   String priceText() {
-    return "테이블 ${this.tablePrice} + 수고비 ${this.tipPrice} = ${this.tablePrice + this.tipPrice}만원";
+    return "테이블 ${this.tablePrice}만원 + 수고비 ${this.tipPrice}만원 = ${this.tablePrice + this.tipPrice}만원";
   }
 
   String douchPriceText() {

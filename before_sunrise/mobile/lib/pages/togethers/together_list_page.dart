@@ -3,8 +3,8 @@ import 'package:before_sunrise/pages/together_details/together_detail_widget.dar
 
 class TogetherListPage extends StatelessWidget {
   TogetherListPage({@required this.togethers, @required this.isBottomLoading});
-  List<Together> togethers;
-  bool isBottomLoading = false;
+  final List<Together> togethers;
+  final bool isBottomLoading;
 
   @override
   Widget build(BuildContext context) {

@@ -48,6 +48,16 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
   Widget build(BuildContext context) {
     final content = <Widget>[
       _Header(widget.together),
+      Container(
+        child: Padding(
+          padding: EdgeInsets.only(left: 15, top: 5),
+          child: Text(
+            widget.together.title,
+            style: MainTheme.titleTextStyle,
+          ),
+        ),
+        color: Colors.white,
+      )
     ];
 
     addIfNonNull(_buildSynopsis(), content);
@@ -241,6 +251,7 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
         CommentList(
           category: widget.together.category(),
           postID: widget.together.postID,
+          writerID: widget.together.userID,
         ),
       ],
     );
@@ -539,36 +550,18 @@ class TogetherInfo extends StatelessWidget {
     final genres = "";
 
     return [
-      Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: FlatIconTextButton(
-                  iconData: FontAwesomeIcons.idBadge,
-                  color: MainTheme.contentsTextStyle.color,
-                  text: together.profile.nickname,
-                  onPressed: () => {}),
-            ),
-            Expanded(
-              flex: 2,
-              child: FlatIconTextButton(
-                  iconData: FontAwesomeIcons.mobile,
-                  color: MainTheme.contentsTextStyle.color,
-                  text: together.profile.displayPhoneNumber(),
-                  onPressed: () => {}),
-            )
-          ],
-        ),
+      Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
+        FlatIconTextButton(
+            iconData: FontAwesomeIcons.idBadge,
+            color: MainTheme.contentsTextStyle.color,
+            text: together.profile.nickname,
+            onPressed: () => {}),
+        FlatIconTextButton(
+            iconData: FontAwesomeIcons.mobile,
+            color: MainTheme.contentsTextStyle.color,
+            text: together.profile.displayPhoneNumber(),
+            onPressed: () => {}),
       ]),
-      Padding(
-        padding: EdgeInsets.only(left: 5, top: 5),
-        child: Text(
-          together.title,
-          style: MainTheme.titleTextStyle,
-        ),
-      )
     ];
   }
 

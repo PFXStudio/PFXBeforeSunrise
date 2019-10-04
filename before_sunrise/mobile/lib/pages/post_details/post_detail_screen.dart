@@ -465,10 +465,8 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   Widget _buildPostDetails() {
-    final double _contentHeight = kDeviceHeight * 0.88;
-
-    final double _contentWidthPadding =
-        kDeviceWidth > 450.0 ? kDeviceWidth - 450.0 : 30.0;
+    final double _contentHeight = kDeviceHeight * 0.9;
+    final double _contentWidthPadding = 20;
 
     return Material(
       elevation: 5.0,
@@ -635,6 +633,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
             ? CommentList(
                 category: widget._post.category,
                 postID: widget._post.postID,
+                writerID: widget._post.userID,
               )
             : Container(),
       ],
