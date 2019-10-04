@@ -41,6 +41,7 @@ export 'package:flutter_map/flutter_map.dart';
 export 'package:share_extend/share_extend.dart';
 export 'package:scroll_to_index/scroll_to_index.dart';
 export 'package:clipboard_manager/clipboard_manager.dart';
+export 'package:grouped_list/grouped_list.dart';
 
 export 'package:core/import.dart';
 
@@ -128,7 +129,7 @@ export 'pages/together_details/together_detail_gallery_grid_widget.dart';
 export 'pages/together_details/together_detail_member_scroller_widget.dart';
 export 'pages/together_details/together_detail_scroll_effects.dart';
 
-export 'pages/infos/info_screen.dart';
+export 'pages/club_infos/club_info_screen.dart';
 
 export 'widgets/loadings/loading_contents.dart';
 export 'widgets/images/image_detail_screen.dart';

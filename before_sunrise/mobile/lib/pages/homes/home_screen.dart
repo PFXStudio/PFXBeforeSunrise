@@ -131,9 +131,7 @@ class HomeScreenState extends State<HomeScreen> {
                       }
 
                       if (currentState is InfoTabState) {
-                        return InfoScreen(
-                          infoBloc: InfoBloc(),
-                        );
+                        return ClubInfoScreen();
                       }
 
                       if (currentState is ProfileTabState) {
