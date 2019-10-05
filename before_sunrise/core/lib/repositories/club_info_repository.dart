@@ -1,67 +1,119 @@
 import 'package:core/import.dart';
 
 class ClubInfoRepository {
-  final CollectionReference _infoCollection;
+  final CollectionReference _postCollection;
 
   ClubInfoRepository()
-      : _infoCollection =
-            Firestore.instance.collection(Config().root() + "/info/clubs");
+      : _postCollection = Firestore.instance
+            .collection(Config().root() + CoreConst.clubInfoCategory);
 
-  Future<bool> isLike(
-      {@required String infoID, @required String userID}) async {
-    final DocumentSnapshot snapshot = await _infoCollection
-        .document(infoID)
-        .collection('likes')
+  Future<bool> isFavorite(
+      {@required String postID, @required String userID}) async {
+    final DocumentSnapshot snapshot = await _postCollection
+        .document(postID)
+        .collection('favorites')
         .document(userID)
         .get();
 
     return snapshot.exists;
   }
 
-  Future<void> addToLike({@required String infoID, @required String userID}) {
-    return _infoCollection
-        .document(infoID)
-        .collection('likes')
+  Future<void> addToFavorite(
+      {@required String postID, @required String userID}) {
+    return _postCollection
+        .document(postID)
+        .collection('favorites')
         .document(userID)
         .setData({
       'isLike': true,
     });
   }
 
-  Future<void> removeFromLike(
-      {@required String infoID, @required String userID}) {
-    return _infoCollection
-        .document(infoID)
-        .collection('likes')
+  Future<void> removeFromFavorite(
+      {@required String postID, @required String userID}) {
+    return _postCollection
+        .document(postID)
+        .collection('favorites')
         .document(userID)
         .delete();
   }
 
-  Future<DocumentSnapshot> fetchClubInfo({@required String infoID}) {
-    return _infoCollection.document(infoID).get();
+  Future<bool> isReport(
+      {@required String postID, @required String userID}) async {
+    final DocumentSnapshot snapshot = await _postCollection
+        .document(postID)
+        .collection('reports')
+        .document(userID)
+        .get();
+
+    return snapshot.exists;
+  }
+
+  Future<void> addToReport({@required String postID, @required String userID}) {
+    return _postCollection
+        .document(postID)
+        .collection('reports')
+        .document(userID)
+        .setData({
+      'isReported': true,
+    }, merge: true);
+  }
+
+  Future<void> removeFromReport(
+      {@required String postID, @required String userID}) {
+    return _postCollection
+        .document(postID)
+        .collection('reports')
+        .document(userID)
+        .delete();
+  }
+
+  Future<bool> isView(
+      {@required String postID, @required String userID}) async {
+    final DocumentSnapshot snapshot = await _postCollection
+        .document(postID)
+        .collection('views')
+        .document(userID)
+        .get();
+
+    return snapshot.exists;
+  }
+
+  Future<void> addToView({@required String postID, @required String userID}) {
+    return _postCollection
+        .document(postID)
+        .collection('views')
+        .document(userID)
+        .setData({
+      'viewed': true,
+    }, merge: true);
+  }
+
+  Future<DocumentSnapshot> fetchClubInfo({@required String postID}) {
+    return _postCollection.document(postID).get();
   }
 
   Future<QuerySnapshot> fetchSubscribedLatestClubInfos(
       {@required String userID}) {
-    return _infoCollection
+    return _postCollection
         .orderBy('lastUpdate', descending: true)
         .where('userID', isEqualTo: userID)
         .limit(1)
         .getDocuments();
   }
 
-  Future<QuerySnapshot> fetchClubInfoLikes({@required String infoID}) {
-    return _infoCollection.document(infoID).collection('likes').getDocuments();
+  Future<QuerySnapshot> fetchClubInfoLikes({@required String postID}) {
+    return _postCollection.document(postID).collection('likes').getDocuments();
   }
 
   Future<QuerySnapshot> fetchClubInfos(
       {@required ClubInfo lastVisibleClubInfo}) {
     return lastVisibleClubInfo == null
-        ? _infoCollection
+        ? _postCollection
             .orderBy('lastUpdate', descending: true)
             .limit(CoreConst.maxLoadPostCount)
             .getDocuments()
-        : _infoCollection
+        : _postCollection
             .orderBy('lastUpdate', descending: true)
             .startAfter([lastVisibleClubInfo.lastUpdate])
             .limit(CoreConst.maxLoadPostCount)
@@ -71,12 +123,12 @@ class ClubInfoRepository {
   Future<QuerySnapshot> fetchProfileClubInfos(
       {@required ClubInfo lastVisibleClubInfo, @required String userID}) {
     return lastVisibleClubInfo == null
-        ? _infoCollection
+        ? _postCollection
             .where('userID', isEqualTo: userID)
             .orderBy('lastUpdate', descending: true)
             .limit(CoreConst.maxLoadPostCount)
             .getDocuments()
-        : _infoCollection
+        : _postCollection
             .where('userID', isEqualTo: userID)
             .orderBy('lastUpdate', descending: true)
             .startAfter([lastVisibleClubInfo.lastUpdate])
@@ -86,6 +138,52 @@ class ClubInfoRepository {
 
   Future<DocumentReference> createClubInfo(
       {@required Map<String, dynamic> data}) {
-    return _infoCollection.add(data);
+    return _postCollection.add(data);
+  }
+
+  Future<DocumentSnapshot> updateClubInfo(
+      {@required Map<String, dynamic> data}) async {
+    String postID = data["postID"];
+    if (postID != null && postID.isEmpty == false) {
+      await _postCollection.document(postID).setData(data, merge: true);
+      return await _postCollection.document(postID).get();
+    }
+
+    return null;
+  }
+
+  Future<void> removeClubInfo({@required String postID}) async {
+    print("removeClubInfo $postID");
+    QuerySnapshot favorites = await _postCollection
+        .document(postID)
+        .collection("favorites")
+        .getDocuments();
+    if (favorites.documents != null && favorites.documents.length > 0) {
+      for (var doc in favorites.documents) {
+        doc.reference.delete();
+      }
+    }
+
+    QuerySnapshot reports = await _postCollection
+        .document(postID)
+        .collection("reports")
+        .getDocuments();
+    if (reports.documents != null && reports.documents.length > 0) {
+      for (var doc in reports.documents) {
+        doc.reference.delete();
+      }
+    }
+
+    QuerySnapshot views = await _postCollection
+        .document(postID)
+        .collection("views")
+        .getDocuments();
+    if (views.documents != null && views.documents.length > 0) {
+      for (var doc in views.documents) {
+        doc.reference.delete();
+      }
+    }
+
+    return await _postCollection.document(postID).delete();
   }
 }

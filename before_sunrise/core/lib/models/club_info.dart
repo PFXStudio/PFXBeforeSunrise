@@ -6,7 +6,7 @@ class ClubInfo {
     this.postID = "",
     this.zone = "",
     this.name = "",
-    this.type = 0,
+    this.genreType = 0,
     this.address = "",
     this.openTimeMap,
     this.entrancePrice = "",
@@ -16,13 +16,14 @@ class ClubInfo {
     this.notice = "",
     this.scheduleMap,
     this.imageFolder = "",
-    this.bgndImageUrl = "",
+    this.imageUrls,
     this.created,
     this.lastUpdate,
     // other databases
     this.isFavorite = false,
     this.favoriteCount = 0,
     this.viewCount = 0,
+    this.commentCount = 0,
     this.comments,
     this.youtubeUrls,
   });
@@ -31,7 +32,7 @@ class ClubInfo {
   String postID;
   String zone;
   String name;
-  int type;
+  int genreType;
   String address;
   Map<String, String> openTimeMap;
   String entrancePrice;
@@ -41,7 +42,7 @@ class ClubInfo {
   String notice;
   Map<String, List<dynamic>> scheduleMap;
   String imageFolder;
-  String bgndImageUrl;
+  List<dynamic> imageUrls;
   dynamic created;
   dynamic lastUpdate;
   // other database.
@@ -49,6 +50,7 @@ class ClubInfo {
   bool isFavorite;
   int favoriteCount;
   int viewCount;
+  int commentCount;
   List<Comment> comments;
 
   void initialize(DocumentSnapshot snapshot) {
@@ -56,7 +58,7 @@ class ClubInfo {
     this.userID = snapshot.data["userID"];
     this.zone = snapshot.data["zone"];
     this.name = snapshot.data["name"];
-    this.type = snapshot.data["type"];
+    this.genreType = snapshot.data["genreType"];
     this.address = snapshot.data["address"];
     this.openTimeMap = snapshot.data["openTimeMap"];
     this.entrancePrice = snapshot.data["entrancePrice"];
@@ -67,7 +69,7 @@ class ClubInfo {
     this.drinkMap = snapshot.data["drinkMap"];
     this.scheduleMap = snapshot.data["scheduleMap"];
     this.imageFolder = snapshot.data["imageFolder"];
-    this.bgndImageUrl = snapshot.data["bgndImageUrl"];
+    this.imageUrls = snapshot.data["imageUrls"];
     this.created = snapshot.data["created"];
     this.lastUpdate = snapshot.data["lastUpdate"];
   }
@@ -78,7 +80,7 @@ class ClubInfo {
       "userID": userID,
       "zone": zone,
       "name": name,
-      "type": type,
+      "genreType": genreType,
       "address": address,
       "openTimeMap": openTimeMap,
       "entrancePrice": entrancePrice,
@@ -88,7 +90,7 @@ class ClubInfo {
       "notice": notice,
       "scheduleMap": scheduleMap,
       "imageFolder": imageFolder,
-      "bgndImageUrl": bgndImageUrl,
+      "imageUrls": imageUrls,
       'created': created,
       'lastUpdate': lastUpdate,
     };
@@ -99,7 +101,7 @@ class ClubInfo {
       String postID,
       String zone,
       String name,
-      int type,
+      int genreType,
       String address,
       Map<String, String> openTimeMap,
       String entrancePrice,
@@ -109,7 +111,7 @@ class ClubInfo {
       String notice,
       Map<String, List<dynamic>> scheduleMap,
       String imageFolder,
-      String bgndImageUrl,
+      List<dynamic> imageUrls,
       dynamic created,
       dynamic lastUpdate,
       // other database.
@@ -117,13 +119,14 @@ class ClubInfo {
       bool isFavorite,
       int favoriteCount,
       int viewCount,
+      int commentCount,
       List<Comment> comments}) {
     return ClubInfo(
       userID: userID ?? this.userID,
       postID: postID ?? this.postID,
       zone: zone ?? this.zone,
       name: name ?? this.name,
-      type: type ?? this.type,
+      genreType: genreType ?? this.genreType,
       address: address ?? this.address,
       openTimeMap: openTimeMap ?? this.openTimeMap,
       entrancePrice: entrancePrice ?? this.entrancePrice,
@@ -133,13 +136,14 @@ class ClubInfo {
       notice: notice ?? this.notice,
       scheduleMap: scheduleMap ?? this.scheduleMap,
       imageFolder: imageFolder ?? this.imageFolder,
-      bgndImageUrl: bgndImageUrl ?? this.bgndImageUrl,
+      imageUrls: imageUrls ?? this.imageUrls,
       created: created ?? this.created,
       lastUpdate: lastUpdate ?? this.lastUpdate,
       youtubeUrls: youtubeUrls ?? this.youtubeUrls,
       isFavorite: isFavorite ?? this.isFavorite,
       favoriteCount: favoriteCount ?? this.favoriteCount,
       viewCount: viewCount ?? this.viewCount,
+      commentCount: commentCount ?? this.commentCount,
       comments: comments ?? this.comments,
     );
   }

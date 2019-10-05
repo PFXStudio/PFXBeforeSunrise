@@ -26,6 +26,12 @@ abstract class IShardsProvider {
       {@required String category, @required String postID});
   Future<void> decreaseViewCount(
       {@required String category, @required String postID});
+  Future<void> removeClubInfoFavoriteCount({@required String postID});
+  Future<DocumentSnapshot> clubInfoFavoriteCount({@required String postID});
+  Future<void> increaseClubInfoFavoriteCount(
+      {@required String category, @required String postID});
+  Future<void> decreaseClubInfoFavoriteCount(
+      {@required String category, @required String postID});
 }
 
 class ShardsProvider implements IShardsProvider {
@@ -114,4 +120,12 @@ class ShardsProvider implements IShardsProvider {
     return await _shardsRepository.decreaseViewCount(
         category: category, postID: postID);
   }
+
+  Future<void> removeClubInfoFavoriteCount({@required String postID}) async {}
+  Future<DocumentSnapshot> clubInfoFavoriteCount(
+      {@required String postID}) async {}
+  Future<void> increaseClubInfoFavoriteCount(
+      {@required String category, @required String postID}) async {}
+  Future<void> decreaseClubInfoFavoriteCount(
+      {@required String category, @required String postID}) async {}
 }

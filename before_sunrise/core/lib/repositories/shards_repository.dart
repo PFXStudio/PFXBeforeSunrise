@@ -5,6 +5,7 @@ class ShardsRepository {
   final CollectionReference _shardsCommentCounters;
   final CollectionReference _shardsReportCounters;
   final CollectionReference _shardsViewCounters;
+  final CollectionReference _shardsClubInfoFavoriteCounters;
 
   ShardsRepository()
       : _shardsPostLikeCounters = Firestore.instance
@@ -14,7 +15,9 @@ class ShardsRepository {
         _shardsReportCounters = Firestore.instance
             .collection(Config().root() + "/shards/reportCounters"),
         _shardsViewCounters = Firestore.instance
-            .collection(Config().root() + "/shards/viewCounters");
+            .collection(Config().root() + "/shards/viewCounters"),
+        _shardsClubInfoFavoriteCounters = Firestore.instance
+            .collection(Config().root() + "/shards/ClubInfoFavoriteCounters");
 
   Future<void> removePostLikeCount({@required String postID}) async {
     return await _shardsPostLikeCounters.document(postID).delete();
@@ -296,6 +299,78 @@ class ShardsRepository {
 
     final totalCount = snapshot.documents.length;
     return _shardsViewCounters
+        .document(postID)
+        .setData({"count": totalCount}, merge: true);
+  }
+
+  Future<void> removeClubInfoFavoriteCount({@required String postID}) async {
+    return await _shardsClubInfoFavoriteCounters.document(postID).delete();
+  }
+
+  Future<DocumentSnapshot> clubInfoFavoriteCount(
+      {@required String postID}) async {
+    return await _shardsClubInfoFavoriteCounters.document(postID).get();
+  }
+
+  Future<void> increaseClubInfoFavoriteCount({@required String postID}) async {
+    CollectionReference _postCollection = Firestore.instance
+        .collection(Config().root() + CoreConst.clubInfoCategory);
+
+    Stream<QuerySnapshot> querySnapshot = await _postCollection
+        .document(postID)
+        .collection("favorites")
+        .snapshots();
+    if (querySnapshot == null) {
+      return _shardsClubInfoFavoriteCounters
+          .document(postID)
+          .setData({"count": 0}, merge: true);
+    }
+
+    QuerySnapshot snapshot = await querySnapshot.first;
+    if (snapshot == null) {
+      return _shardsClubInfoFavoriteCounters
+          .document(postID)
+          .setData({"count": 0}, merge: true);
+    }
+    if (snapshot.documents == null) {
+      return _shardsClubInfoFavoriteCounters
+          .document(postID)
+          .setData({"count": 0}, merge: true);
+    }
+
+    final totalCount = snapshot.documents.length;
+    return _shardsClubInfoFavoriteCounters
+        .document(postID)
+        .setData({"count": totalCount}, merge: true);
+  }
+
+  Future<void> decreaseClubInfoFavoriteCount({@required String postID}) async {
+    CollectionReference _postCollection = Firestore.instance
+        .collection(Config().root() + CoreConst.clubInfoCategory);
+    Stream<QuerySnapshot> querySnapshot = await _postCollection
+        .document(postID)
+        .collection("favorites")
+        .snapshots();
+    if (querySnapshot == null) {
+      return _shardsClubInfoFavoriteCounters
+          .document(postID)
+          .setData({"count": 0}, merge: true);
+    }
+
+    QuerySnapshot snapshot = await querySnapshot.first;
+    if (snapshot == null) {
+      return _shardsClubInfoFavoriteCounters
+          .document(postID)
+          .setData({"count": 0}, merge: true);
+    }
+    if (snapshot.documents == null) {
+      return _shardsClubInfoFavoriteCounters
+          .document(postID)
+          .setData({"count": 0}, merge: true);
+    }
+
+    final totalCount = snapshot.documents.length;
+    return _shardsClubInfoFavoriteCounters
         .document(postID)
         .setData({"count": totalCount}, merge: true);
   }

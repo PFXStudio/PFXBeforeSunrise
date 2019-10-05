@@ -23,7 +23,7 @@ class LoadTabEvent extends HomeEvent {
       }
 
       if (this.index == 2) {
-        return InfoTabState();
+        return ClubInfoTabState();
       }
 
       return new InHomeState();

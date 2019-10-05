@@ -1,5 +1,4 @@
 import 'package:before_sunrise/import.dart';
-import 'package:before_sunrise/widgets/dialogs/dialog_gender_type_widget.dart';
 
 class ProfileInputScreen extends StatefulWidget {
   const ProfileInputScreen({Key key, @required this.userID}) : super(key: key);
@@ -192,12 +191,7 @@ class ProfileInputScreenState extends State<ProfileInputScreen> {
                                                 child: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    DialogGenderTypeWidget(
-                                                        callback: (type) {
-                                                      genderType = type;
-                                                    }),
-                                                  ],
+                                                  children: <Widget>[],
                                                 ),
                                               ),
                                             ],

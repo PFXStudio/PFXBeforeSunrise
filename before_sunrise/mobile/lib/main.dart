@@ -91,6 +91,14 @@ class _MainAppState extends State<MainApp> {
             editImageMap: infoMap["editImageMap"],
           );
         },
+        ClubInfoStepForm.routeName: (context) {
+          Map<String, dynamic> infoMap =
+              ModalRoute.of(context).settings.arguments;
+          return ClubInfoStepForm(
+            editClubInfo: infoMap["editClubInfo"],
+            editImageMap: infoMap["editImageMap"],
+          );
+        },
       },
     );
   }

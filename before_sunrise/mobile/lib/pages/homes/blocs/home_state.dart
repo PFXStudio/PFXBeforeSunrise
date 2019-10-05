@@ -53,13 +53,13 @@ class TogetherTabState extends HomeState {
 }
 
 /// InfoTab
-class InfoTabState extends HomeState {
+class ClubInfoTabState extends HomeState {
   @override
-  String toString() => 'InfoTabState';
+  String toString() => 'ClubInfoTabState';
 
   @override
   HomeState getStateCopy() {
-    return InfoTabState();
+    return ClubInfoTabState();
   }
 }
 

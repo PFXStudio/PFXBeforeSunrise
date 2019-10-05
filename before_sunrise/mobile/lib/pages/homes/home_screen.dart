@@ -130,7 +130,7 @@ class HomeScreenState extends State<HomeScreen> {
                         );
                       }
 
-                      if (currentState is InfoTabState) {
+                      if (currentState is ClubInfoTabState) {
                         return ClubInfoScreen();
                       }
 
@@ -167,6 +167,14 @@ class HomeScreenState extends State<HomeScreen> {
                 Map<String, dynamic> infoMap = {};
 
                 Navigator.pushNamed(context, TogetherStepForm.routeName,
+                    arguments: infoMap);
+                return;
+              }
+
+              if (_homeBloc.currentState is ClubInfoTabState) {
+                Map<String, dynamic> infoMap = {};
+
+                Navigator.pushNamed(context, ClubInfoStepForm.routeName,
                     arguments: infoMap);
                 return;
               }

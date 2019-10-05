@@ -1,12 +1,10 @@
 import 'package:before_sunrise/import.dart';
 
 class ClubInfoStepForm extends StatefulWidget {
-  static const String routeName = "/infoStepForm";
-  const ClubInfoStepForm(
-      {Key key, @required this.category, this.editClubInfo, this.editImageMap})
+  static const String routeName = "/clubInfoStepForm";
+  const ClubInfoStepForm({Key key, this.editClubInfo, this.editImageMap})
       : super(key: key);
 
-  final String category;
   final ClubInfo editClubInfo;
   final Map<String, dynamic> editImageMap;
   @override
@@ -20,7 +18,17 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   ClubInfoBloc _clubInfoBloc = ClubInfoBloc();
   final TextEditingController _nameController = new TextEditingController();
+  final TextEditingController _zoneController = new TextEditingController();
   final TextEditingController _addressController = new TextEditingController();
+  final TextEditingController _genreTypeController =
+      new TextEditingController();
+  final TextEditingController _entrancePriceController =
+      new TextEditingController();
+  final TextEditingController _tablePriceController =
+      new TextEditingController();
+  final TextEditingController _noticeController = new TextEditingController();
+  final TextEditingController _openTimeMapController =
+      new TextEditingController();
   final TextEditingController _youtubeController = new TextEditingController();
 
   FocusNode _titleFocusNode = new FocusNode();
@@ -51,7 +59,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
         }
       }
     } else {
-      _clubInfo = ClubInfo(category: widget.category);
+      _clubInfo = ClubInfo();
     }
 
     SuccessSnackbar().initialize(_scaffoldKey);
@@ -65,30 +73,13 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
         }
 
         _nameController.text = widget.editClubInfo.name;
-        _nameController.zone = widget.editClubInfo.zone;
-        _nameController.address = widget.editClubInfo.address;
-        _nameController.entrancePrice = widget.editClubInfo.entrancePrice;
-        _nameController.tablePrice = widget.editClubInfo.tablePrice;
-        _nameController.notice = widget.editClubInfo.notice;
-        _nameController.text = widget.editClubInfo.name;
+        _zoneController.text = widget.editClubInfo.zone;
         _addressController.text = widget.editClubInfo.address;
-        _youtubeController.text = widget.editClubInfo.;
-        _clubInfo.type = widget.editClubInfo.type;
-
-            this. = "",
-    this. = "",
-    this.type = 0,
-    this. = "",
-    this.openTimeMap,
-    this. = "",
-    this. = "",
-    this.tableMap,
-    this.drinkMap,
-    this. = "",
-    this.scheduleMap,
-    this.imageFolder = "",
-    this.bgndImageUrl = "",
-
+        // _typeController.text = widget.editClubInfo.type;
+        _entrancePriceController.text = widget.editClubInfo.entrancePrice;
+        _tablePriceController.text = widget.editClubInfo.tablePrice;
+        _noticeController.text = widget.editClubInfo.notice;
+        // _openTimeMapController.text = widget.editClubInfo.openTimeMap;
 
         if (widget.editClubInfo.imageUrls == null) {
           return;
@@ -110,10 +101,10 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
   @override
   Widget build(BuildContext context) {
     var typeStep = new Step(
-        title: const Text('게시판 종류'),
+        title: const Text('주소'),
         isActive: true,
         state: StepState.indexed,
-        content: _buildType());
+        content: _buildAddress());
 
     var contentsStep = new Step(
         title: const Text('내용'),
@@ -154,7 +145,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
               ClubInfoState currentState,
             ) {
               return Scaffold(
-                appBar: ClubInfoFormTopBar(),
+                appBar: ClubInfoStepBar(),
                 key: _scaffoldKey,
                 body: Container(
                   child: new ListView(
@@ -190,6 +181,36 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
             }));
   }
 
+  Widget _buildAddress() {
+    if (widget.editClubInfo != null) {
+      return Card(
+          elevation: 2.0,
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Container(
+              width: kDeviceWidth - MainTheme.edgeInsets.left,
+              height: 45,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  FlatIconTextButton(
+                    iconData: FontAwesomeIcons.thLarge,
+                    color: MainTheme.enabledButtonColor,
+                    text: "type",
+                    enabled: false,
+                  )
+                ],
+              )));
+    }
+    return DialogClubInfoAddress(
+      callback: (String address) {
+        print(address);
+      },
+    );
+  }
+
   Widget _buildType() {
     if (widget.editClubInfo != null) {
       return Card(
@@ -207,7 +228,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                   FlatIconTextButton(
                     iconData: FontAwesomeIcons.thLarge,
                     color: MainTheme.enabledButtonColor,
-                    text: getClubInfoType(_clubInfo.category),
+                    text: "type",
                     enabled: false,
                   )
                 ],
@@ -225,10 +246,10 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                DialogClubInfoType(
+                DialogClubInfoGenreType(
                   callback: (type) {
                     setState(() {
-                      _clubInfo.type = type;
+                      _clubInfo.genreType = type;
                     });
                   },
                 ),
@@ -545,8 +566,8 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
 
   void _touchedRegistButton(int lastIndex) {
     if (currentStep == 0 || currentStep == lastIndex) {
-      if (_clubInfo.type == null) {
-        FailSnackbar().show("error_clubInfo_form_type", null);
+      if (_clubInfo.genreType == 0) {
+        FailSnackbar().show("error_clubInfo_form_genre_type", null);
         return;
       }
     }
@@ -575,9 +596,9 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
       if (currentStep < lastIndex) {
         currentStep = currentStep + 1;
       } else {
-        _clubInfo.title = _nameController.text;
-        _clubInfo.contents = _addressController.text;
-        _clubInfo.youtubeUrl = _youtubeController.text;
+        _clubInfo.name = _nameController.text;
+        _clubInfo.address = _addressController.text;
+        _clubInfo.youtubeUrls = [_youtubeController.text];
 
         // _removeImageUrls 삭제 된 이미지들
         // _editImageMap 유지 된 이미지들
