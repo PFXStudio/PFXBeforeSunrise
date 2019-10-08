@@ -43,7 +43,8 @@ class AuthScreenState extends State<AuthScreen> {
               callback: (verificationID) {
                 _verifyAuthScreen.phoneNumber = phoneNumber;
                 if (verificationID == null) {
-                  _authBloc.dispatch(ErrorAuthEvent(errorCode: "E12334"));
+                  _authBloc.dispatch(
+                      ErrorAuthEvent(errorCode: "error_wrong_verification"));
                   return;
                 }
 
@@ -54,7 +55,7 @@ class AuthScreenState extends State<AuthScreen> {
         context: context,
         callback: (verifyCode) {
           if (_verificationID == null || _verificationID.length <= 0) {
-            FailSnackbar().show("E22223", () {});
+            FailSnackbar().show("error_wrong_verification", () {});
             return;
           }
 

@@ -8,6 +8,7 @@ class ProfileInputPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: new AppBar(
         title: new Text("Profile"),
       ),

@@ -49,36 +49,37 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     double _panelHeightClosed = 95.0;
 
     return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: MainTheme.bgndColor,
-      body: Stack(
-        children: [
-          _buildRemovePost(),
-          SlidingUpPanel(
-            maxHeight: _panelHeightOpen,
-            minHeight: _panelHeightClosed,
-            parallaxEnabled: true,
-            parallaxOffset: .5,
-            body: Stack(
-              children: <Widget>[
-                SafeArea(
-                  child: CustomScrollView(
+        key: _scaffoldKey,
+        resizeToAvoidBottomInset: false,
+        backgroundColor: MainTheme.bgndColor,
+        body: SafeArea(
+          child: Stack(children: [
+            _buildRemovePost(),
+            SlidingUpPanel(
+              maxHeight: _panelHeightOpen,
+              minHeight: _panelHeightClosed,
+              parallaxEnabled: true,
+              parallaxOffset: .5,
+              body: Stack(
+                children: <Widget>[
+                  CustomScrollView(
                     slivers: <Widget>[
                       _buildSliverAppBar(context, deviceHeight: kDeviceHeight),
                       _buildSliverList(),
                     ],
                   ),
-                )
-              ],
+                ],
+              ),
+              panel: _panel(),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(18.0),
+                  topRight: Radius.circular(18.0)),
             ),
-            panel: _panel(),
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(18.0),
-                topRight: Radius.circular(18.0)),
-          ),
-        ],
-      ),
-    );
+          ]),
+        ),
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.transparent,
+        ));
   }
 
   Widget _buildActivePostImage() {
@@ -465,7 +466,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   Widget _buildPostDetails() {
-    final double _contentHeight = kDeviceHeight * 0.9;
+    final double _contentHeight = kDeviceHeight - 70;
     final double _contentWidthPadding = 20;
 
     return Material(
@@ -488,7 +489,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                     _buildContents(),
                     _buildYoutube(),
                     SizedBox(
-                      height: 60,
+                      height: 100,
                     )
                     // add similar posts
                   ],
@@ -505,10 +506,11 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     return SliverList(
       delegate: SliverChildListDelegate([
         Container(
+          color: Colors.white,
           child: Column(
             children: <Widget>[
               SizedBox(
-                height: 2,
+                height: 5,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

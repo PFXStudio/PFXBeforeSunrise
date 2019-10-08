@@ -49,8 +49,11 @@ class _CommentListState extends State<CommentList> {
 
   @override
   Widget build(BuildContext context) {
+    var height = kDeviceHeight - (kDeviceHeight - 500);
+    var bottom = MediaQuery.of(context).viewInsets.bottom;
+
     return Container(
-      height: kDeviceHeight - (kDeviceHeight - 500),
+      height: height - bottom,
       child: Column(
         children: <Widget>[
           _commentLoadingIndicator,
@@ -476,7 +479,7 @@ class _CommentListState extends State<CommentList> {
     }
 
     if (_textController.text.length <= 0) {
-      FailSnackbar().show("E41122", null);
+      FailSnackbar().show("error_empty_text", null);
       return;
     }
 
@@ -508,7 +511,7 @@ class _CommentListState extends State<CommentList> {
     }
 
     if (_selectedOriginalData == null) {
-      FailSnackbar().show("E41123", null);
+      FailSnackbar().show("error_empty_image", null);
       return;
     }
 
@@ -532,6 +535,7 @@ class _CommentListState extends State<CommentList> {
   }
 
   void _scrollListener() {
+    FocusScope.of(context).requestFocus(FocusNode());
     if (_autoScrollController.offset >=
             _autoScrollController.position.maxScrollExtent &&
         !_autoScrollController.position.outOfRange) {

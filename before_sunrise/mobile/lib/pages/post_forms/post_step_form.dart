@@ -133,6 +133,7 @@ class PostStepFormState extends State<PostStepForm>
               PostState currentState,
             ) {
               return Scaffold(
+                resizeToAvoidBottomInset: false,
                 appBar: PostFormTopBar(),
                 key: _scaffoldKey,
                 body: Container(

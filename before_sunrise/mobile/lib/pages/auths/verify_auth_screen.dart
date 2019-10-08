@@ -55,7 +55,7 @@ class VerifyAuthScreen extends StatelessWidget {
 
   Future<void> _touchedVerifyButton() async {
     if (!_verifyFormKey.currentState.validate()) {
-      FailSnackbar().show("E22222", () {});
+      FailSnackbar().show("error_wrong_verify_number", () {});
       return;
     }
 

@@ -127,6 +127,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
               TogetherState currentState,
             ) {
               return Scaffold(
+                resizeToAvoidBottomInset: false,
                 appBar: PreferredSize(
                   preferredSize: const Size.fromHeight(kToolbarHeight),
                   child: TogetherFormTopBar(),

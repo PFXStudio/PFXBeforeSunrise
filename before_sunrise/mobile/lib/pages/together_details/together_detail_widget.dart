@@ -87,6 +87,7 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
     final TogetherBloc _togetherBloc = TogetherBloc();
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         key: _scaffoldKey,
         body: GestureDetector(
           onTapDown: (tap) {
