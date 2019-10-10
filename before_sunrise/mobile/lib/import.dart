@@ -43,6 +43,7 @@ export 'package:scroll_to_index/scroll_to_index.dart';
 export 'package:clipboard_manager/clipboard_manager.dart';
 export 'package:grouped_list/grouped_list.dart';
 export 'package:webview_flutter/webview_flutter.dart';
+export 'package:keyboard_actions/keyboard_actions.dart';
 
 export 'package:core/import.dart';
 
@@ -139,6 +140,7 @@ export 'widgets/loadings/loading_contents.dart';
 export 'widgets/images/image_detail_screen.dart';
 export 'widgets/loadings/platform_adaptive_progress_indicator.dart';
 export 'widgets/items/thumbnail_item.dart';
+export 'widgets/items/keyboard_item.dart';
 export 'widgets/buttons/flat_icon_text_button.dart';
 export 'widgets/dialogs/dialog_bottom_widget.dart';
 export 'widgets/dialogs/dialog_publish_type_widget.dart';

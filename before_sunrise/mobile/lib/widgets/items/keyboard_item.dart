@@ -1,11 +1,12 @@
 import 'package:before_sunrise/import.dart';
+import 'package:flutter/cupertino.dart';
 
 class KeyboardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: Color(Const.doneButtonBg),
+      color: Colors.transparent,
       child: Align(
         alignment: Alignment.topRight,
         child: Padding(
@@ -17,7 +18,7 @@ class KeyboardItem extends StatelessWidget {
             },
             child: Text("Done",
                 style: TextStyle(
-                    color: Color(Const.colorPrimary),
+                    color: MainTheme.enabledButtonColor,
                     fontWeight: FontWeight.bold)),
           ),
         ),

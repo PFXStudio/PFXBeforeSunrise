@@ -58,6 +58,7 @@ dependencies:
   # webview_flutter -> Info.plist -> io.flutter.embedded_views_preview -> YES
   # webview_flutter -> App Transport Security Settings -> YES
   webview_flutter: ^0.3.14+1
+  keyboard_actions: ^2.1.2
 
 dev_dependencies:
   flutter_test:
