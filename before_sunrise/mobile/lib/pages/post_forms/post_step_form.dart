@@ -40,6 +40,7 @@ class PostStepFormState extends State<PostStepForm>
   @override
   void initState() {
     super.initState();
+    _postBloc.dispatch(EditPostEvent());
     if (widget.editPost != null) {
       _post = widget.editPost.copyWith();
       if (widget.editImageMap != null) {
@@ -59,7 +60,7 @@ class PostStepFormState extends State<PostStepForm>
     _updateEditMode();
   }
 
-  _updateEditMode() => Future.delayed(Duration(seconds: 1), () async {
+  _updateEditMode() => Future.delayed(Duration(milliseconds: 500), () async {
         if (widget.editPost == null) {
           return;
         }
@@ -82,12 +83,15 @@ class PostStepFormState extends State<PostStepForm>
     _post = Post();
     SuccessSnackbar().initialize(null);
     FailSnackbar().initialize(null);
+    _postBloc.dispatch(BindPostEvent());
+    KeyboardDector().setContext(null, 0);
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    KeyboardDector().setContext(context, 0);
     var typeStep = new Step(
         title: const Text('게시판 종류'),
         isActive: true,

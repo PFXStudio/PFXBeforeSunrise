@@ -26,6 +26,7 @@ class _CommentListState extends State<CommentList> {
 
   AutoScrollController _autoScrollController;
   int _findIndex = -1;
+  GlobalKey _inputBarKey = GlobalKey();
 
   @override
   void initState() {
@@ -48,9 +49,27 @@ class _CommentListState extends State<CommentList> {
   }
 
   @override
+  void dispose() {
+    KeyboardDector().setContext(null, 0);
+    OptionMenu().dismiss();
+    super.dispose();
+  }
+
+  _updateKeyboard() => Future.delayed(Duration(milliseconds: 500), () async {
+        if (this.mounted == false) {
+          KeyboardDector().setContext(context, 0);
+          return;
+        }
+
+        KeyboardDector()
+            .setContext(context, _inputBarKey.currentContext.size.height + 4);
+      });
+
+  @override
   Widget build(BuildContext context) {
     var height = kDeviceHeight - (kDeviceHeight - 500);
     var bottom = MediaQuery.of(context).viewInsets.bottom;
+    _updateKeyboard();
 
     return Container(
       height: height - bottom,
@@ -247,6 +266,7 @@ class _CommentListState extends State<CommentList> {
                     })),
           ),
           Align(
+            key: _inputBarKey,
             alignment: Alignment.bottomCenter,
             child: Container(
 //                height: 140,
@@ -282,6 +302,8 @@ class _CommentListState extends State<CommentList> {
                                 _parentOriginalData = null;
                                 _selectedOriginalData = null;
                                 _textController.text = "";
+                                FocusScope.of(this.context)
+                                    .requestFocus(new FocusNode());
                                 setState(() {});
                               },
                             ),
@@ -315,6 +337,8 @@ class _CommentListState extends State<CommentList> {
                             _editComment = null;
                             _selectedOriginalData = null;
                             _textController.text = "";
+                            FocusScope.of(this.context)
+                                .requestFocus(new FocusNode());
                             setState(() {});
                           },
                         ),
@@ -450,6 +474,7 @@ class _CommentListState extends State<CommentList> {
             color: MainTheme.enabledIconColor,
             onPressed: () {
               _selectedOriginalData = null;
+              FocusScope.of(this.context).requestFocus(new FocusNode());
               setState(() {});
               print("deleted");
             },
@@ -535,6 +560,7 @@ class _CommentListState extends State<CommentList> {
   }
 
   void _scrollListener() {
+    OptionMenu().dismiss();
     FocusScope.of(context).requestFocus(FocusNode());
     if (_autoScrollController.offset >=
             _autoScrollController.position.maxScrollExtent &&

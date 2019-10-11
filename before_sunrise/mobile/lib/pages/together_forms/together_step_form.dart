@@ -60,7 +60,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
     _updateEditMode();
   }
 
-  _updateEditMode() => Future.delayed(Duration(seconds: 1), () async {
+  _updateEditMode() => Future.delayed(Duration(milliseconds: 500), () async {
         if (widget.editPost == null) {
           return;
         }

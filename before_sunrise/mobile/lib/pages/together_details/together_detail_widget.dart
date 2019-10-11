@@ -395,13 +395,13 @@ class _MenuButton extends StatelessWidget {
     }
 
     OptionMenu.context = context;
-    OptionMenu menu = OptionMenu(
+    OptionMenu().initialize(
         backgroundColor: Colors.black54,
         items: menuItems,
         onClickMenu: onClickMenu,
         onDismiss: onDismiss);
 
-    menu.show(widgetKey: moreMenuKey);
+    OptionMenu().show(widgetKey: moreMenuKey);
   }
 
   void onClickMenu(item) {
@@ -473,7 +473,9 @@ class _MenuButton extends StatelessWidget {
     print('menu is ${isShow ? 'showing' : 'closed'}');
   }
 
-  void onDismiss() {}
+  void onDismiss() {
+    OptionMenu.context = null;
+  }
 }
 
 class _Header extends StatelessWidget {

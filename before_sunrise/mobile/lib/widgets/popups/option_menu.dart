@@ -39,6 +39,12 @@ typedef OptionMenuCallback = Function(OptionMenuProvider item);
  * popup menu
  */
 class OptionMenu {
+  static final OptionMenu _instance = new OptionMenu._internal();
+  factory OptionMenu() {
+    return _instance;
+  }
+  OptionMenu._internal();
+
   static var itemWidth = 62.0;
   static var itemHeight = 62.0;
   static var arrowHeight = 10.0;
@@ -59,7 +65,7 @@ class OptionMenu {
   Color _highlightColor;
   Color _lineColor;
 
-  OptionMenu(
+  void initialize(
       {OptionMenuCallback onClickMenu,
       BuildContext context,
       VoidCallback onDismiss,
@@ -304,10 +310,16 @@ class OptionMenu {
   }
 
   void dismiss() {
+    if (_entry == null) {
+      return;
+    }
+
     _entry.remove();
     if (dismissCallback != null) {
       dismissCallback();
     }
+
+    _entry = null;
   }
 }
 

@@ -48,38 +48,70 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     double _panelHeightOpen = 575.0;
     double _panelHeightClosed = 95.0;
 
-    return Scaffold(
-        key: _scaffoldKey,
-        resizeToAvoidBottomInset: false,
-        backgroundColor: MainTheme.bgndColor,
-        body: SafeArea(
-          child: Stack(children: [
-            _buildRemovePost(),
-            SlidingUpPanel(
-              maxHeight: _panelHeightOpen,
-              minHeight: _panelHeightClosed,
-              parallaxEnabled: true,
-              parallaxOffset: .5,
-              body: Stack(
-                children: <Widget>[
-                  CustomScrollView(
-                    slivers: <Widget>[
-                      _buildSliverAppBar(context, deviceHeight: kDeviceHeight),
-                      _buildSliverList(),
-                    ],
+    return BlocListener(
+        bloc: _postBloc,
+        listener: (context, state) async {
+          print(state.toString());
+          if (state is SuccessRemovePostState) {
+            SuccessSnackbar().show("success_remove_post", () {
+              Navigator.pop(context);
+            });
+          }
+
+          if (state is SuccessPostState) {
+            _post = state.post.copyWith();
+          }
+        },
+        child: BlocBuilder<PostBloc, PostState>(
+            bloc: _postBloc,
+            builder: (
+              BuildContext context,
+              PostState currentState,
+            ) {
+              if (currentState is EditPostState) {
+                return Container();
+              }
+
+              return Scaffold(
+                  key: _scaffoldKey,
+                  resizeToAvoidBottomInset: false,
+                  backgroundColor: MainTheme.bgndColor,
+                  body: SafeArea(
+                    child: Stack(children: [
+                      SlidingUpPanel(
+                        onPanelSlide: (value) {
+                          if (OptionMenu.context == null) {
+                            return;
+                          }
+
+                          OptionMenu().dismiss();
+                        },
+                        maxHeight: _panelHeightOpen,
+                        minHeight: _panelHeightClosed,
+                        parallaxEnabled: true,
+                        parallaxOffset: .5,
+                        body: Stack(
+                          children: <Widget>[
+                            CustomScrollView(
+                              slivers: <Widget>[
+                                _buildSliverAppBar(context,
+                                    deviceHeight: kDeviceHeight),
+                                _buildSliverList(),
+                              ],
+                            ),
+                          ],
+                        ),
+                        panel: _panel(),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(18.0),
+                            topRight: Radius.circular(18.0)),
+                      ),
+                    ]),
                   ),
-                ],
-              ),
-              panel: _panel(),
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(18.0),
-                  topRight: Radius.circular(18.0)),
-            ),
-          ]),
-        ),
-        bottomNavigationBar: BottomAppBar(
-          color: Colors.transparent,
-        ));
+                  bottomNavigationBar: BottomAppBar(
+                    color: Colors.transparent,
+                  ));
+            }));
   }
 
   Widget _buildActivePostImage() {
@@ -535,34 +567,6 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     );
   }
 
-  Widget _buildRemovePost() {
-    return Container(
-      width: 150,
-      child: BlocListener(
-          bloc: _postBloc,
-          listener: (context, state) async {
-            print(state.toString());
-            if (state is SuccessRemovePostState) {
-              SuccessSnackbar().show("success_remove_post", () {
-                Navigator.pop(context);
-              });
-            }
-
-            if (state is SuccessPostState) {
-              _post = state.post.copyWith();
-            }
-          },
-          child: BlocBuilder<PostBloc, PostState>(
-              bloc: _postBloc,
-              builder: (
-                BuildContext context,
-                PostState currentState,
-              ) {
-                return Container();
-              })),
-    );
-  }
-
   Widget _panel() {
     final CommentBloc _commentBloc = CommentBloc();
     final Comment comment = Comment();
@@ -683,13 +687,13 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     }
 
     OptionMenu.context = context;
-    OptionMenu menu = OptionMenu(
+    OptionMenu().initialize(
         backgroundColor: Colors.black54,
         items: menuItems,
         onClickMenu: onClickMenu,
         onDismiss: onDismiss);
 
-    menu.show(widgetKey: moreMenuKey);
+    OptionMenu().show(widgetKey: moreMenuKey);
   }
 
   void onClickMenu(item) async {
@@ -766,5 +770,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     print('menu is ${isShow ? 'showing' : 'closed'}');
   }
 
-  void onDismiss() {}
+  void onDismiss() {
+    OptionMenu.context = null;
+  }
 }

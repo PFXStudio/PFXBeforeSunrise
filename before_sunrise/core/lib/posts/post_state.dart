@@ -106,3 +106,13 @@ class SuccessRemovePostState extends PostState {
     return SuccessRemovePostState();
   }
 }
+
+class EditPostState extends PostState {
+  @override
+  String toString() => 'EditPostState';
+
+  @override
+  PostState getStateCopy() {
+    return EditPostState();
+  }
+}

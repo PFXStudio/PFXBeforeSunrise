@@ -455,6 +455,11 @@ class _CommentBubbleState extends State<CommentBubble> {
   }
 
   void _showMyMoreMenu(BuildContext context) {
+    if (OptionMenu.context != null) {
+      OptionMenu().dismiss();
+      OptionMenu.context = null;
+    }
+
     List<OptionItem> menuItems = [
       OptionItem(
           index: 0,
@@ -488,13 +493,13 @@ class _CommentBubbleState extends State<CommentBubble> {
         )));
 
     OptionMenu.context = context;
-    OptionMenu menu = OptionMenu(
+    OptionMenu().initialize(
         backgroundColor: Colors.black54,
         items: menuItems,
         onClickMenu: onClickedMyMenu,
         onDismiss: onDismiss);
 
-    menu.show(widgetKey: commentKey);
+    OptionMenu().show(widgetKey: commentKey);
   }
 
   void onClickedMyMenu(item) async {
@@ -550,13 +555,13 @@ class _CommentBubbleState extends State<CommentBubble> {
     ];
 
     OptionMenu.context = context;
-    OptionMenu menu = OptionMenu(
+    OptionMenu().initialize(
         backgroundColor: Colors.black54,
         items: menuItems,
         onClickMenu: onClickedYourMenu,
         onDismiss: onDismiss);
 
-    menu.show(widgetKey: commentKey);
+    OptionMenu().show(widgetKey: commentKey);
   }
 
   void onClickedYourMenu(item) async {
@@ -572,5 +577,7 @@ class _CommentBubbleState extends State<CommentBubble> {
     }
   }
 
-  void onDismiss() {}
+  void onDismiss() {
+    OptionMenu.context = null;
+  }
 }

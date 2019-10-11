@@ -303,3 +303,19 @@ class BindPostEvent extends PostEvent {
     }
   }
 }
+
+class EditPostEvent extends PostEvent {
+  EditPostEvent();
+  @override
+  String toString() => 'EditPostEvent';
+
+  @override
+  Future<PostState> applyAsync({PostState currentState, PostBloc bloc}) async {
+    try {
+      return new EditPostState();
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorPostState(_?.toString());
+    }
+  }
+}

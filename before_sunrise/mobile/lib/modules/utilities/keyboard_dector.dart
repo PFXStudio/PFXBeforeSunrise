@@ -6,6 +6,7 @@ class KeyboardDector {
   bool _isKeyboardVisible = false;
   OverlayEntry overlayEntry;
   BuildContext context;
+  double bottomHeight = 0;
 
   factory KeyboardDector() {
     return _instance;
@@ -32,19 +33,38 @@ class KeyboardDector {
     );
   }
 
-  void setContext(BuildContext context) {
+  void setContext(BuildContext context, double bottomHeight) {
     this.context = context;
+    this.bottomHeight = bottomHeight;
   }
 
   showOverlay() {
+    var size = this.context.size;
     if (overlayEntry != null) return;
     OverlayState overlayState = Overlay.of(context);
     overlayEntry = OverlayEntry(builder: (context) {
       return Positioned(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
+          bottom: MediaQuery.of(context).viewInsets.bottom + this.bottomHeight,
           right: 0.0,
           left: 0.0,
-          child: KeyboardItem());
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                FocusScope.of(this.context).requestFocus(new FocusNode());
+              },
+              child: Container(
+                width: size.width,
+                height: size.height,
+                child: Text(
+                  'Hide keyboard',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ));
+
+      // KeyboardItem());
     });
 
     overlayState.insert(overlayEntry);
@@ -54,6 +74,7 @@ class KeyboardDector {
     if (overlayEntry != null) {
       overlayEntry.remove();
       overlayEntry = null;
+      bottomHeight = 0;
     }
   }
 }

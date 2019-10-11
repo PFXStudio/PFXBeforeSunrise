@@ -67,7 +67,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
     _updateEditMode();
   }
 
-  _updateEditMode() => Future.delayed(Duration(seconds: 1), () async {
+  _updateEditMode() => Future.delayed(Duration(milliseconds: 500), () async {
         if (widget.editClubInfo == null) {
           return;
         }
