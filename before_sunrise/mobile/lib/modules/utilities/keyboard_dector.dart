@@ -34,6 +34,7 @@ class KeyboardDector {
   }
 
   void setContext(BuildContext context, double bottomHeight) {
+    print("=== keyboard setContext $bottomHeight");
     this.context = context;
     this.bottomHeight = bottomHeight;
   }

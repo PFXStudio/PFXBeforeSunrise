@@ -50,10 +50,10 @@ class HomeScreenState extends State<HomeScreen> {
     print('Menu is closed');
   }
 
-  Container _buildPageBody(double _deviceHeight, double _deviceWidth) {
+  Container _buildPageBody() {
     return Container(
-      height: _deviceHeight,
-      width: _deviceWidth,
+      height: kDeviceHeight,
+      width: kDeviceWidth,
       child: Column(
         children: <Widget>[
           HomeCategoryBar(
@@ -77,7 +77,7 @@ class HomeScreenState extends State<HomeScreen> {
       controller: _pageController,
       onPageChanged: (int index) async {},
       children: <Widget>[
-        _buildPageBody(kDeviceHeight, kDeviceWidth),
+        _buildPageBody(),
       ],
     );
     return WillPopScope(
@@ -146,44 +146,48 @@ class HomeScreenState extends State<HomeScreen> {
                       }
                       return new Container(
                           child: new Center(
-                        child: new Text("В разработке"),
+                        child: new Text("Empty"),
                       ));
                     })),
             panel: Container(),
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              if (_homeBloc.currentState is PostTabState) {
-                Map<String, dynamic> infoMap = {
-                  "category": categoryName(_activePageIndex.toString()),
-                };
-
-                Navigator.pushNamed(context, PostStepForm.routeName,
-                    arguments: infoMap);
-                return;
-              }
-
-              if (_homeBloc.currentState is TogetherTabState) {
-                Map<String, dynamic> infoMap = {};
-
-                Navigator.pushNamed(context, TogetherStepForm.routeName,
-                    arguments: infoMap);
-                return;
-              }
-
-              if (_homeBloc.currentState is ClubInfoTabState) {
-                Map<String, dynamic> infoMap = {};
-
-                Navigator.pushNamed(context, ClubInfoStepForm.routeName,
-                    arguments: infoMap);
-                return;
-              }
-            },
-            tooltip: LocalizableLoader.of(context).text("hint_post"),
-            child: const Icon(FontAwesomeIcons.plus),
-            backgroundColor: MainTheme.enabledButtonColor,
-          ),
+          floatingActionButton: _buildFloatingActionButton(),
         ));
+  }
+
+  Widget _buildFloatingActionButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        if (_homeBloc.currentState is PostTabState) {
+          Map<String, dynamic> infoMap = {
+            "category": categoryName(_activePageIndex.toString()),
+          };
+
+          Navigator.pushNamed(context, PostStepForm.routeName,
+              arguments: infoMap);
+          return;
+        }
+
+        if (_homeBloc.currentState is TogetherTabState) {
+          Map<String, dynamic> infoMap = {};
+
+          Navigator.pushNamed(context, TogetherStepForm.routeName,
+              arguments: infoMap);
+          return;
+        }
+
+        if (_homeBloc.currentState is ClubInfoTabState) {
+          Map<String, dynamic> infoMap = {};
+
+          Navigator.pushNamed(context, ClubInfoStepForm.routeName,
+              arguments: infoMap);
+          return;
+        }
+      },
+      tooltip: LocalizableLoader.of(context).text("hint_post"),
+      child: const Icon(FontAwesomeIcons.plus),
+      backgroundColor: MainTheme.enabledButtonColor,
+    );
   }
 
   Future<bool> _showExitAlertDialog(BuildContext context) {

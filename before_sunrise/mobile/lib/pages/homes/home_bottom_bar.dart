@@ -52,7 +52,7 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
                   children: <Widget>[
                     _buildHomeBottomBarItem(
                       index: 0,
-                      icon: FontAwesomeIcons.rss,
+                      icon: FontAwesomeIcons.quoteLeft,
                     ),
                     _buildHomeBottomBarItem(
                       index: 1,
@@ -60,7 +60,7 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
                     ),
                     _buildHomeBottomBarItem(
                       index: 2,
-                      icon: Icons.thumb_up,
+                      icon: FontAwesomeIcons.cocktail,
                     ),
                     // Container(
                     //   width: _deviceWidth / 6,

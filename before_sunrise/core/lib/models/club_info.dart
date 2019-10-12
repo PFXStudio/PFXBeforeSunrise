@@ -4,10 +4,12 @@ class ClubInfo {
   ClubInfo({
     this.userID = "",
     this.postID = "",
-    this.zone = "",
     this.name = "",
     this.genreType = 0,
+    this.regionKey = "",
     this.address = "",
+    this.latitude = 0,
+    this.longitude = 0,
     this.openTimeMap,
     this.entrancePrice = "",
     this.tablePrice = "",
@@ -30,10 +32,12 @@ class ClubInfo {
 
   String userID;
   String postID;
-  String zone;
   String name;
-  int genreType;
+  String regionKey;
   String address;
+  double latitude;
+  double longitude;
+  int genreType;
   Map<String, String> openTimeMap;
   String entrancePrice;
   String tablePrice;
@@ -56,8 +60,11 @@ class ClubInfo {
   void initialize(DocumentSnapshot snapshot) {
     this.postID = snapshot.documentID;
     this.userID = snapshot.data["userID"];
-    this.zone = snapshot.data["zone"];
     this.name = snapshot.data["name"];
+    this.regionKey = snapshot.data["regionKey"];
+    this.address = snapshot.data["address"];
+    this.latitude = snapshot.data["latitude"];
+    this.longitude = snapshot.data["longitude"];
     this.genreType = snapshot.data["genreType"];
     this.address = snapshot.data["address"];
     this.openTimeMap = snapshot.data["openTimeMap"];
@@ -78,8 +85,11 @@ class ClubInfo {
     return {
       "postID": postID,
       "userID": userID,
-      "zone": zone,
       "name": name,
+      "regionKey": regionKey,
+      "address": address,
+      "latitude": latitude,
+      "longitude": longitude,
       "genreType": genreType,
       "address": address,
       "openTimeMap": openTimeMap,
@@ -99,10 +109,12 @@ class ClubInfo {
   ClubInfo copyWith(
       {String userID,
       String postID,
-      String zone,
       String name,
-      int genreType,
+      String regionKey,
       String address,
+      double latitude,
+      double longitude,
+      int genreType,
       Map<String, String> openTimeMap,
       String entrancePrice,
       String tablePrice,
@@ -124,10 +136,12 @@ class ClubInfo {
     return ClubInfo(
       userID: userID ?? this.userID,
       postID: postID ?? this.postID,
-      zone: zone ?? this.zone,
       name: name ?? this.name,
-      genreType: genreType ?? this.genreType,
+      regionKey: regionKey ?? this.regionKey,
       address: address ?? this.address,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      genreType: genreType ?? this.genreType,
       openTimeMap: openTimeMap ?? this.openTimeMap,
       entrancePrice: entrancePrice ?? this.entrancePrice,
       tablePrice: tablePrice ?? this.tablePrice,
@@ -157,4 +171,8 @@ class ClubInfo {
 
   @override
   int get hashCode => postID.hashCode ^ userID.hashCode;
+
+  String category() {
+    return "/club_info/posts";
+  }
 }

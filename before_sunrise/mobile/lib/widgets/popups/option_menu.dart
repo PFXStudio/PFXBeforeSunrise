@@ -58,7 +58,7 @@ class OptionMenu {
   OptionMenuCallback onClickMenu;
   Rect _showRect; // 显示在哪个view的rect
   bool _isDown = true; // 是显示在下方还是上方，通过计算得到
-  static BuildContext context;
+  BuildContext context;
   // The max column count, default is 4.
   int _maxColumn;
   Color _backgroundColor;
@@ -66,14 +66,15 @@ class OptionMenu {
   Color _lineColor;
 
   void initialize(
-      {OptionMenuCallback onClickMenu,
-      BuildContext context,
+      {BuildContext context,
+      OptionMenuCallback onClickMenu,
       VoidCallback onDismiss,
       int maxColumn,
       Color backgroundColor,
       Color highlightColor,
       Color lineColor,
       List<OptionItem> items}) {
+    this.context = context;
     this.onClickMenu = onClickMenu;
     this.dismissCallback = onDismiss;
     this.items = items;
@@ -81,9 +82,6 @@ class OptionMenu {
     this._backgroundColor = backgroundColor ?? Color(0xff232323);
     this._lineColor = lineColor ?? Color(0xff353535);
     this._highlightColor = highlightColor ?? Color(0x55000000);
-    if (context != null) {
-      OptionMenu.context = context;
-    }
   }
 
   void show({Rect rect, GlobalKey widgetKey, List<OptionItem> items}) {
@@ -96,13 +94,13 @@ class OptionMenu {
     this._showRect = rect ?? OptionMenu.getWidgetGlobalRect(widgetKey);
     this.dismissCallback = dismissCallback;
 
-    _calculatePosition(OptionMenu.context);
+    _calculatePosition(this.context);
 
     _entry = OverlayEntry(builder: (context) {
       return buildOptionMenuLayout(_offset);
     });
 
-    Overlay.of(OptionMenu.context).insert(_entry);
+    Overlay.of(this.context).insert(_entry);
   }
 
   static Rect getWidgetGlobalRect(GlobalKey key) {
@@ -115,7 +113,7 @@ class OptionMenu {
   void _calculatePosition(BuildContext context) {
     _col = _calculateColCount();
     _row = _calculateRowCount();
-    _offset = _calculateOffset(OptionMenu.context);
+    _offset = _calculateOffset(this.context);
   }
 
   Offset _calculateOffset(BuildContext context) {
@@ -319,6 +317,7 @@ class OptionMenu {
       dismissCallback();
     }
 
+    this.context = null;
     _entry = null;
   }
 }

@@ -106,3 +106,13 @@ class SuccessRemoveClubInfoState extends ClubInfoState {
     return SuccessRemoveClubInfoState();
   }
 }
+
+class EditClubInfoState extends ClubInfoState {
+  @override
+  String toString() => 'EditClubInfoState';
+
+  @override
+  ClubInfoState getStateCopy() {
+    return EditClubInfoState();
+  }
+}

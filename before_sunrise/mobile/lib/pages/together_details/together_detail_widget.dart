@@ -80,8 +80,6 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
       ],
     );
 
-    final double _initFabHeight = 120.0;
-    double _fabHeight;
     double _panelHeightOpen = 575.0;
     double _panelHeightClosed = 95.0;
     final TogetherBloc _togetherBloc = TogetherBloc();
@@ -93,59 +91,46 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
           onTapDown: (tap) {
             print("tap");
           },
-          child: Stack(
-            children: [
-              // Container(
-              //   decoration: new BoxDecoration(
-              //     gradient: MainTheme.primaryLinearGradient,
-              //   ),
-              // ),
-              Container(
-                child: BlocListener(
-                    bloc: _togetherBloc,
-                    listener: (context, state) async {
-                      print(state.toString());
-                      if (state is SuccessRemoveTogetherState) {
-                        SuccessSnackbar().show("success_remove_post", () {
-                          Navigator.pop(context);
-                        });
-                      }
-                    },
-                    child: BlocBuilder<TogetherBloc, TogetherState>(
-                        bloc: _togetherBloc,
-                        builder: (
-                          BuildContext context,
-                          TogetherState currentState,
-                        ) {
-                          return Container();
-                        })),
-              ),
-
-              SlidingUpPanel(
-                maxHeight: _panelHeightOpen,
-                minHeight: _panelHeightClosed,
-                parallaxEnabled: true,
-                parallaxOffset: .5,
-                body: Stack(
-                  children: <Widget>[
-                    _buildEventBackdrop(),
-                    slivers,
-                    _BackButton(_scrollEffects),
-                    _MenuButton(_scrollEffects, widget.together),
-                    _buildStatusBarBackground(),
-                  ],
-                ),
-                panel: _panel(),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(18.0),
-                    topRight: Radius.circular(18.0)),
-                onPanelSlide: (double pos) => setState(() {
-                  _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) +
-                      _initFabHeight;
-                }),
-              ),
-            ],
-          ),
+          child: BlocListener(
+              bloc: _togetherBloc,
+              listener: (context, state) async {
+                print(state.toString());
+                if (state is SuccessRemoveTogetherState) {
+                  SuccessSnackbar().show("success_remove_post", () {
+                    Navigator.pop(context);
+                  });
+                }
+              },
+              child: BlocBuilder<TogetherBloc, TogetherState>(
+                  bloc: _togetherBloc,
+                  builder: (
+                    BuildContext context,
+                    TogetherState currentState,
+                  ) {
+                    return Stack(
+                      children: [
+                        SlidingUpPanel(
+                          maxHeight: _panelHeightOpen,
+                          minHeight: _panelHeightClosed,
+                          parallaxEnabled: true,
+                          parallaxOffset: .5,
+                          body: Stack(
+                            children: <Widget>[
+                              _buildEventBackdrop(),
+                              slivers,
+                              _BackButton(_scrollEffects),
+                              _MenuButton(_scrollEffects, widget.together),
+                              _buildStatusBarBackground(),
+                            ],
+                          ),
+                          panel: _panel(),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(18.0),
+                              topRight: Radius.circular(18.0)),
+                        ),
+                      ],
+                    );
+                  })),
         ));
   }
 
@@ -184,6 +169,10 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
   }
 
   Widget _panel() {
+    if (TogetherBloc().currentState is EditTogetherState == true) {
+      return Container();
+    }
+
     final CommentBloc _commentBloc = CommentBloc();
     final Comment comment = Comment();
     return Column(
@@ -394,8 +383,8 @@ class _MenuButton extends StatelessWidget {
           )));
     }
 
-    OptionMenu.context = context;
     OptionMenu().initialize(
+        context: context,
         backgroundColor: Colors.black54,
         items: menuItems,
         onClickMenu: onClickMenu,
@@ -439,12 +428,14 @@ class _MenuButton extends StatelessWidget {
 
       Map<String, dynamic> infoMap = {"editPost": together};
 
+      var context = OptionMenu().context;
       downloadAllImages(together.imageUrls, (editImageMap) {
         if (editImageMap != null) {
           infoMap["editImageMap"] = editImageMap;
         }
 
-        Navigator.pushNamed(OptionMenu.context, TogetherStepForm.routeName,
+        infoMap["editPost"] = together;
+        Navigator.pushNamed(context, TogetherStepForm.routeName,
             arguments: infoMap);
       });
 
@@ -474,7 +465,7 @@ class _MenuButton extends StatelessWidget {
   }
 
   void onDismiss() {
-    OptionMenu.context = null;
+    print("onDismiss");
   }
 }
 

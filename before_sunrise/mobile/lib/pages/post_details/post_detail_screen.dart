@@ -68,10 +68,6 @@ class PostDetailScreenState extends State<PostDetailScreen> {
               BuildContext context,
               PostState currentState,
             ) {
-              if (currentState is EditPostState) {
-                return Container();
-              }
-
               return Scaffold(
                   key: _scaffoldKey,
                   resizeToAvoidBottomInset: false,
@@ -80,10 +76,6 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                     child: Stack(children: [
                       SlidingUpPanel(
                         onPanelSlide: (value) {
-                          if (OptionMenu.context == null) {
-                            return;
-                          }
-
                           OptionMenu().dismiss();
                         },
                         maxHeight: _panelHeightOpen,
@@ -101,7 +93,9 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                             ),
                           ],
                         ),
-                        panel: _panel(),
+                        panel: (currentState is EditPostState) == true
+                            ? Container()
+                            : _panel(),
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(18.0),
                             topRight: Radius.circular(18.0)),
@@ -686,8 +680,8 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           )));
     }
 
-    OptionMenu.context = context;
     OptionMenu().initialize(
+        context: context,
         backgroundColor: Colors.black54,
         items: menuItems,
         onClickMenu: onClickMenu,
@@ -770,7 +764,5 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     print('menu is ${isShow ? 'showing' : 'closed'}');
   }
 
-  void onDismiss() {
-    OptionMenu.context = null;
-  }
+  void onDismiss() {}
 }

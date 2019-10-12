@@ -455,10 +455,7 @@ class _CommentBubbleState extends State<CommentBubble> {
   }
 
   void _showMyMoreMenu(BuildContext context) {
-    if (OptionMenu.context != null) {
-      OptionMenu().dismiss();
-      OptionMenu.context = null;
-    }
+    OptionMenu().dismiss();
 
     List<OptionItem> menuItems = [
       OptionItem(
@@ -492,8 +489,8 @@ class _CommentBubbleState extends State<CommentBubble> {
           color: Colors.white,
         )));
 
-    OptionMenu.context = context;
     OptionMenu().initialize(
+        context: context,
         backgroundColor: Colors.black54,
         items: menuItems,
         onClickMenu: onClickedMyMenu,
@@ -554,8 +551,8 @@ class _CommentBubbleState extends State<CommentBubble> {
           )),
     ];
 
-    OptionMenu.context = context;
     OptionMenu().initialize(
+        context: context,
         backgroundColor: Colors.black54,
         items: menuItems,
         onClickMenu: onClickedYourMenu,
@@ -577,7 +574,5 @@ class _CommentBubbleState extends State<CommentBubble> {
     }
   }
 
-  void onDismiss() {
-    OptionMenu.context = null;
-  }
+  void onDismiss() {}
 }

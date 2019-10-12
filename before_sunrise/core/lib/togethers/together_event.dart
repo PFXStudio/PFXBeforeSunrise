@@ -298,3 +298,37 @@ class RemoveTogetherEvent extends TogetherEvent {
     }
   }
 }
+
+class BindTogetherEvent extends TogetherEvent {
+  BindTogetherEvent();
+  @override
+  String toString() => 'BindTogetherEvent';
+
+  @override
+  Future<TogetherState> applyAsync(
+      {TogetherState currentState, TogetherBloc bloc}) async {
+    try {
+      return new IdleTogetherState();
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorTogetherState(_?.toString());
+    }
+  }
+}
+
+class EditTogetherEvent extends TogetherEvent {
+  EditTogetherEvent();
+  @override
+  String toString() => 'EditTogetherEvent';
+
+  @override
+  Future<TogetherState> applyAsync(
+      {TogetherState currentState, TogetherBloc bloc}) async {
+    try {
+      return new EditTogetherState();
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorTogetherState(_?.toString());
+    }
+  }
+}

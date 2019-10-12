@@ -56,6 +56,17 @@ class EmptyTogetherState extends TogetherState {
   }
 }
 
+class IdleTogetherState extends TogetherState {
+  IdleTogetherState();
+  @override
+  String toString() => 'IdleTogetherState';
+
+  @override
+  TogetherState getStateCopy() {
+    return IdleTogetherState();
+  }
+}
+
 class ErrorTogetherState extends TogetherState {
   final String errorMessage;
 
@@ -92,5 +103,17 @@ class SuccessRemoveTogetherState extends TogetherState {
   @override
   TogetherState getStateCopy() {
     return SuccessRemoveTogetherState();
+  }
+}
+
+class EditTogetherState extends TogetherState {
+  EditTogetherState();
+
+  @override
+  String toString() => 'EditTogetherState';
+
+  @override
+  TogetherState getStateCopy() {
+    return EditTogetherState();
   }
 }

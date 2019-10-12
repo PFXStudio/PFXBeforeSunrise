@@ -41,6 +41,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
   @override
   void initState() {
     super.initState();
+    _togetherBloc.dispatch(EditTogetherEvent());
     if (widget.editPost != null) {
       _together = widget.editPost.copyWith();
       if (widget.editImageMap != null) {
@@ -80,12 +81,16 @@ class _TogetherStepFormState extends State<TogetherStepForm>
     _contentsFocusNode.dispose();
     _youtubeFocusNode.dispose();
     _together = null;
+    KeyboardDector().setContext(null, 0);
+    _togetherBloc.dispatch(BindTogetherEvent());
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    KeyboardDector().setContext(context, 0);
+
     final List<Step> steps = [
       new Step(
           title: const Text('정보'),

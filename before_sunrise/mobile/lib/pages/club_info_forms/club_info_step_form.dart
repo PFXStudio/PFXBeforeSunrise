@@ -73,7 +73,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
         }
 
         _nameController.text = widget.editClubInfo.name;
-        _zoneController.text = widget.editClubInfo.zone;
+        _zoneController.text = widget.editClubInfo.address;
         _addressController.text = widget.editClubInfo.address;
         // _typeController.text = widget.editClubInfo.type;
         _entrancePriceController.text = widget.editClubInfo.entrancePrice;
@@ -94,12 +94,14 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
     _clubInfo = ClubInfo();
     SuccessSnackbar().initialize(null);
     FailSnackbar().initialize(null);
+    KeyboardDector().setContext(null, 0);
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    KeyboardDector().setContext(context, 0);
     var typeStep = new Step(
         title: const Text('주소'),
         isActive: true,

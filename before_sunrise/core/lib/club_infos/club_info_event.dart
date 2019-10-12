@@ -82,12 +82,12 @@ class ToggleFavoriteClubInfoEvent extends ClubInfoEvent {
       if (isFavorite == true) {
         await _postProvider.addToFavorite(postID: post.postID, userID: userID);
         await _shardsProvider.increaseClubInfoFavoriteCount(
-            postID: post.postID);
+            category: post.category(), postID: post.postID);
       } else {
         await _postProvider.removeFromFavorite(
             postID: post.postID, userID: userID);
         await _shardsProvider.decreaseClubInfoFavoriteCount(
-            postID: post.postID);
+            category: post.category(), postID: post.postID);
       }
 
       return IdleClubInfoState();
@@ -193,7 +193,8 @@ class ViewClubInfoEvent extends ClubInfoEvent {
       {ClubInfoState currentState, ClubInfoBloc bloc}) async {
     try {
       await _postProvider.addToView(postID: post.postID, userID: userID);
-      await _shardsProvider.increaseViewCount(postID: post.postID);
+      await _shardsProvider.increaseViewCount(
+          category: post.category(), postID: post.postID);
 
       return IdleClubInfoState();
     } catch (_, stackTrace) {
@@ -248,6 +249,23 @@ class BindClubInfoEvent extends ClubInfoEvent {
       {ClubInfoState currentState, ClubInfoBloc bloc}) async {
     try {
       return new IdleClubInfoState();
+    } catch (_, stackTrace) {
+      print('$_ $stackTrace');
+      return new ErrorClubInfoState(_?.toString());
+    }
+  }
+}
+
+class EditClubInfoEvent extends ClubInfoEvent {
+  EditClubInfoEvent();
+  @override
+  String toString() => 'EditClubInfoEvent';
+
+  @override
+  Future<ClubInfoState> applyAsync(
+      {ClubInfoState currentState, ClubInfoBloc bloc}) async {
+    try {
+      return new EditClubInfoState();
     } catch (_, stackTrace) {
       print('$_ $stackTrace');
       return new ErrorClubInfoState(_?.toString());
