@@ -18,7 +18,13 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   ClubInfoBloc _clubInfoBloc = ClubInfoBloc();
   final TextEditingController _nameController = new TextEditingController();
-  final TextEditingController _zoneController = new TextEditingController();
+  final TextEditingController _regionController = new TextEditingController();
+  final TextEditingController _addressController = new TextEditingController();
+  final TextEditingController _entrancePriceController =
+      new TextEditingController();
+  final TextEditingController _tablePriceController =
+      new TextEditingController();
+  final TextEditingController _addressController = new TextEditingController();
   final TextEditingController _addressController = new TextEditingController();
   final TextEditingController _genreTypeController =
       new TextEditingController();
@@ -32,6 +38,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
   final TextEditingController _youtubeController = new TextEditingController();
 
   FocusNode _titleFocusNode = new FocusNode();
+  FocusNode _zoneFocusNode = new FocusNode();
   FocusNode _contentsFocusNode = new FocusNode();
   FocusNode _youtubeFocusNode = new FocusNode();
   GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -103,10 +110,10 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
   Widget build(BuildContext context) {
     KeyboardDector().setContext(context, 0);
     var typeStep = new Step(
-        title: const Text('주소'),
+        title: const Text('정보'),
         isActive: true,
         state: StepState.indexed,
-        content: _buildAddress());
+        content: _buildInfos());
 
     var contentsStep = new Step(
         title: const Text('내용'),
@@ -183,59 +190,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
             }));
   }
 
-  Widget _buildAddress() {
-    if (widget.editClubInfo != null) {
-      return Card(
-          elevation: 2.0,
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: Container(
-              width: kDeviceWidth - MainTheme.edgeInsets.left,
-              height: 45,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  FlatIconTextButton(
-                    iconData: FontAwesomeIcons.thLarge,
-                    color: MainTheme.enabledButtonColor,
-                    text: "type",
-                    enabled: false,
-                  )
-                ],
-              )));
-    }
-    return DialogClubInfoAddress(
-      callback: (String address) {
-        print(address);
-      },
-    );
-  }
-
-  Widget _buildType() {
-    if (widget.editClubInfo != null) {
-      return Card(
-          elevation: 2.0,
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: Container(
-              width: kDeviceWidth - MainTheme.edgeInsets.left,
-              height: 45,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  FlatIconTextButton(
-                    iconData: FontAwesomeIcons.thLarge,
-                    color: MainTheme.enabledButtonColor,
-                    text: "type",
-                    enabled: false,
-                  )
-                ],
-              )));
-    }
+  Widget _buildInfos() {
     return Card(
         elevation: 2.0,
         color: Colors.white,
@@ -244,17 +199,101 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
         ),
         child: Container(
             width: kDeviceWidth - MainTheme.edgeInsets.left,
-            height: 45,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            height: 360,
+            child: new ListView(
+              shrinkWrap: true,
+              reverse: false,
               children: <Widget>[
-                DialogClubInfoGenreType(
-                  callback: (type) {
-                    setState(() {
-                      _clubInfo.genreType = type;
-                    });
-                  },
-                ),
+                new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new Stack(
+                      children: <Widget>[
+                        Padding(
+                            padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                            child: new Form(
+                              autovalidate: false,
+                              child: new Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  new TextFormField(
+                                    maxLength: 64,
+                                    focusNode: _titleFocusNode,
+                                    controller: _nameController,
+                                    decoration: new InputDecoration(
+                                      labelText: "Name",
+                                      filled: false,
+                                      prefixIcon: Icon(
+                                        FontAwesomeIcons.cocktail,
+                                        size: 14,
+                                      ),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                  ),
+                                  new TextFormField(
+                                    maxLength: 64,
+                                    focusNode: _titleFocusNode,
+                                    controller: _nameController,
+                                    decoration: new InputDecoration(
+                                      labelText: "Region",
+                                      filled: false,
+                                      prefixIcon: Icon(
+                                        FontAwesomeIcons.mapSigns,
+                                        size: 14,
+                                      ),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                  ),
+                                  new TextFormField(
+                                    maxLength: 64,
+                                    focusNode: _titleFocusNode,
+                                    controller: _nameController,
+                                    decoration: new InputDecoration(
+                                      labelText: "Address",
+                                      filled: false,
+                                      prefixIcon: Icon(
+                                        FontAwesomeIcons.mapMarkerAlt,
+                                        size: 14,
+                                      ),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                  ),
+                                  new TextFormField(
+                                    maxLength: 64,
+                                    focusNode: _titleFocusNode,
+                                    controller: _nameController,
+                                    decoration: new InputDecoration(
+                                      labelText: "entrancePrice",
+                                      filled: false,
+                                      prefixIcon: Icon(
+                                        FontAwesomeIcons.wonSign,
+                                        size: 14,
+                                      ),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                  ),
+                                  new TextFormField(
+                                    maxLength: 64,
+                                    focusNode: _titleFocusNode,
+                                    controller: _nameController,
+                                    decoration: new InputDecoration(
+                                      labelText: "tablePrice",
+                                      filled: false,
+                                      prefixIcon: Icon(
+                                        FontAwesomeIcons.wonSign,
+                                        size: 14,
+                                      ),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                  ),
+                                ],
+                              ),
+                            )),
+                      ],
+                    ),
+                  ],
+                )
               ],
             )));
   }
@@ -269,85 +308,61 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
         child: Container(
             width: kDeviceWidth - MainTheme.edgeInsets.left,
             height: 360,
-            child: Center(
-                child: new ListView(
+            child: new ListView(
               shrinkWrap: true,
               reverse: false,
               children: <Widget>[
                 new Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    new Center(
-                        child: new Center(
-                      child: new Stack(
-                        children: <Widget>[
-                          Padding(
-                              padding: EdgeInsets.only(left: 30.0, right: 30.0),
-                              child: new Form(
-                                autovalidate: false,
-                                child: new Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    new Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 10.0, right: 10.0),
-                                      child: new TextFormField(
-                                        maxLength: 64,
-                                        focusNode: _titleFocusNode,
-                                        controller: _nameController,
-                                        decoration: new InputDecoration(
-                                            labelText: "Title",
-                                            filled: false,
-                                            prefixIcon: Padding(
-                                              padding: EdgeInsets.only(
-                                                  bottom: 10.0,
-                                                  top: 10.0,
-                                                  left: 10.0,
-                                                  right: 10.0),
-                                              child: Icon(
-                                                FontAwesomeIcons.quoteLeft,
-                                                size: 14,
-                                              ),
-                                            )),
-                                        keyboardType: TextInputType.text,
+                    new Stack(
+                      children: <Widget>[
+                        Padding(
+                            padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                            child: new Form(
+                              autovalidate: false,
+                              child: new Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  new TextFormField(
+                                    maxLength: 64,
+                                    focusNode: _titleFocusNode,
+                                    controller: _nameController,
+                                    decoration: new InputDecoration(
+                                      labelText: "Title",
+                                      filled: false,
+                                      prefixIcon: Icon(
+                                        FontAwesomeIcons.quoteLeft,
+                                        size: 14,
                                       ),
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 10.0, right: 10.0),
-                                      child: new TextFormField(
-                                        maxLength: 512,
-                                        maxLines: 10,
-                                        focusNode: _contentsFocusNode,
-                                        controller: _addressController,
-                                        decoration: new InputDecoration(
-                                            labelText: "Contents",
-                                            filled: false,
-                                            labelStyle: MainTheme.hintTextStyle,
-                                            prefixIcon: Padding(
-                                              padding: EdgeInsets.only(
-                                                  bottom: 10.0,
-                                                  top: 10.0,
-                                                  left: 10.0,
-                                                  right: 10.0),
-                                              child: Icon(
-                                                  FontAwesomeIcons.alignJustify,
-                                                  size: 14),
-                                            )),
-                                        keyboardType: TextInputType.multiline,
-                                      ),
+                                    keyboardType: TextInputType.text,
+                                  ),
+                                  new TextFormField(
+                                    maxLength: 512,
+                                    maxLines: 10,
+                                    focusNode: _contentsFocusNode,
+                                    controller: _addressController,
+                                    decoration: new InputDecoration(
+                                      labelText: "Contents",
+                                      filled: false,
+                                      labelStyle: MainTheme.hintTextStyle,
+                                      prefixIcon: Icon(
+                                          FontAwesomeIcons.alignJustify,
+                                          size: 14),
                                     ),
-                                  ],
-                                ),
-                              )),
-                        ],
-                      ),
-                    ))
+                                    keyboardType: TextInputType.multiline,
+                                  ),
+                                ],
+                              ),
+                            )),
+                      ],
+                    ),
                   ],
                 )
               ],
-            ))));
+            )));
   }
 
   Widget _buildGalleryFiles(BuildContext context) {

@@ -38,11 +38,7 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
     super.dispose();
   }
 
-  void _scrollListener() {
-    setState(() {
-      _scrollEffects.updateScrollOffset(context, _scrollController.offset);
-    });
-  }
+  void _scrollListener() {}
 
   @override
   Widget build(BuildContext context) {
@@ -109,20 +105,21 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
                   ) {
                     return Stack(
                       children: [
+                        Stack(
+                          children: <Widget>[
+                            _buildEventBackdrop(),
+                            slivers,
+                            _BackButton(_scrollEffects),
+                            _MenuButton(_scrollEffects, widget.together),
+                            _buildStatusBarBackground(),
+                          ],
+                        ),
                         SlidingUpPanel(
                           maxHeight: _panelHeightOpen,
                           minHeight: _panelHeightClosed,
                           parallaxEnabled: true,
                           parallaxOffset: .5,
-                          body: Stack(
-                            children: <Widget>[
-                              _buildEventBackdrop(),
-                              slivers,
-                              _BackButton(_scrollEffects),
-                              _MenuButton(_scrollEffects, widget.together),
-                              _buildStatusBarBackground(),
-                            ],
-                          ),
+                          body: Container(),
                           panel: _panel(),
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(18.0),

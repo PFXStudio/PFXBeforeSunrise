@@ -41,7 +41,7 @@ class TogetherDetailPoster extends StatelessWidget {
   Widget build(BuildContext context) {
     final content = <Widget>[
       const Icon(
-        FontAwesomeIcons.cocktail,
+        FontAwesomeIcons.user,
         color: Colors.white,
         size: 20.0,
       ),
