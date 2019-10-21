@@ -54,14 +54,13 @@ export 'utils/string_checker.dart';
 export 'utils/url_linker.dart';
 export 'utils/image_util.dart';
 export 'utils/before_sunrise.dart';
-
-// modules
-export 'modules/localizables/localizable_delegate.dart';
-export 'modules/localizables/localizable_loader.dart';
-export 'modules/localizables/localizable_manager.dart';
-export 'modules/utilities/bottom_loader.dart';
-export 'modules/utilities/splash_page.dart';
-export 'modules/utilities/keyboard_dector.dart';
+export 'utils/text_focus_creator.dart';
+export 'utils/localizables/localizable_delegate.dart';
+export 'utils/localizables/localizable_loader.dart';
+export 'utils/localizables/localizable_manager.dart';
+export 'utils/bottom_loader.dart';
+export 'utils/splash_page.dart';
+export 'utils/keyboard_dector.dart';
 
 export 'themes/main_theme.dart';
 export 'defines/define_enums.dart';
@@ -103,7 +102,6 @@ export 'pages/profiles/profile_navbar.dart';
 export 'pages/profiles/profile_tab_page.dart';
 export 'pages/profiles/timeline_tab_page.dart';
 export 'pages/post_forms/post_form_top_bar.dart';
-export 'pages/post_forms/post_form_screen.dart';
 export 'pages/post_forms/post_step_form.dart';
 export 'pages/posts/post_screen.dart';
 export 'pages/posts/post_page.dart';

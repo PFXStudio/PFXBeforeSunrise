@@ -17,30 +17,12 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
     with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   ClubInfoBloc _clubInfoBloc = ClubInfoBloc();
-  final TextEditingController _nameController = new TextEditingController();
-  final TextEditingController _regionController = new TextEditingController();
-  final TextEditingController _addressController = new TextEditingController();
-  final TextEditingController _entrancePriceController =
-      new TextEditingController();
-  final TextEditingController _tablePriceController =
-      new TextEditingController();
-  final TextEditingController _addressController = new TextEditingController();
-  final TextEditingController _addressController = new TextEditingController();
-  final TextEditingController _genreTypeController =
-      new TextEditingController();
-  final TextEditingController _entrancePriceController =
-      new TextEditingController();
-  final TextEditingController _tablePriceController =
-      new TextEditingController();
-  final TextEditingController _noticeController = new TextEditingController();
-  final TextEditingController _openTimeMapController =
-      new TextEditingController();
-  final TextEditingController _youtubeController = new TextEditingController();
+  final TextFocusCreator _nameTextFocusCreator = new TextFocusCreator();
+  final TextFocusCreator _regionTextFocusCreator = new TextFocusCreator();
+  final TextFocusCreator _addressTextFocusCreator = new TextFocusCreator();
+  final TextFocusCreator _noticeTextFocusCreator = new TextFocusCreator();
+  final TextFocusCreator _youtubeTextFocusCreator = new TextFocusCreator();
 
-  FocusNode _titleFocusNode = new FocusNode();
-  FocusNode _zoneFocusNode = new FocusNode();
-  FocusNode _contentsFocusNode = new FocusNode();
-  FocusNode _youtubeFocusNode = new FocusNode();
   GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 // multi image picker 이미지 데이터가 사라짐. 받아오면 바로 백업.
   final List<ByteData> _selectedOriginalDatas = List<ByteData>();
@@ -79,14 +61,14 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
           return;
         }
 
-        _nameController.text = widget.editClubInfo.name;
-        _zoneController.text = widget.editClubInfo.address;
-        _addressController.text = widget.editClubInfo.address;
-        // _typeController.text = widget.editClubInfo.type;
-        _entrancePriceController.text = widget.editClubInfo.entrancePrice;
-        _tablePriceController.text = widget.editClubInfo.tablePrice;
-        _noticeController.text = widget.editClubInfo.notice;
-        // _openTimeMapController.text = widget.editClubInfo.openTimeMap;
+        _nameTextFocusCreator.textEditingController.text =
+            widget.editClubInfo.name;
+        _regionTextFocusCreator.textEditingController.text =
+            widget.editClubInfo.regionKey;
+        _addressTextFocusCreator.textEditingController.text =
+            widget.editClubInfo.address;
+        _noticeTextFocusCreator.textEditingController.text =
+            widget.editClubInfo.notice;
 
         if (widget.editClubInfo.imageUrls == null) {
           return;
@@ -95,9 +77,11 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
 
   @override
   void dispose() {
-    _titleFocusNode.dispose();
-    _contentsFocusNode.dispose();
-    _youtubeFocusNode.dispose();
+    _nameTextFocusCreator.focusNode.dispose();
+    _regionTextFocusCreator.focusNode.dispose();
+    _addressTextFocusCreator.focusNode.dispose();
+    _noticeTextFocusCreator.focusNode.dispose();
+
     _clubInfo = ClubInfo();
     SuccessSnackbar().initialize(null);
     FailSnackbar().initialize(null);
@@ -116,10 +100,10 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
         content: _buildInfos());
 
     var contentsStep = new Step(
-        title: const Text('내용'),
+        title: const Text('공지'),
         isActive: true,
         state: StepState.indexed,
-        content: _buildContents());
+        content: _buildNotice());
     var mediaStep = new Step(
         title: const Text('미디어'),
         isActive: true,
@@ -219,8 +203,9 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                                 children: <Widget>[
                                   new TextFormField(
                                     maxLength: 64,
-                                    focusNode: _titleFocusNode,
-                                    controller: _nameController,
+                                    focusNode: _nameTextFocusCreator.focusNode,
+                                    controller: _nameTextFocusCreator
+                                        .textEditingController,
                                     decoration: new InputDecoration(
                                       labelText: "Name",
                                       filled: false,
@@ -233,8 +218,10 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                                   ),
                                   new TextFormField(
                                     maxLength: 64,
-                                    focusNode: _titleFocusNode,
-                                    controller: _nameController,
+                                    focusNode:
+                                        _regionTextFocusCreator.focusNode,
+                                    controller: _regionTextFocusCreator
+                                        .textEditingController,
                                     decoration: new InputDecoration(
                                       labelText: "Region",
                                       filled: false,
@@ -247,41 +234,15 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                                   ),
                                   new TextFormField(
                                     maxLength: 64,
-                                    focusNode: _titleFocusNode,
-                                    controller: _nameController,
+                                    focusNode:
+                                        _addressTextFocusCreator.focusNode,
+                                    controller: _addressTextFocusCreator
+                                        .textEditingController,
                                     decoration: new InputDecoration(
                                       labelText: "Address",
                                       filled: false,
                                       prefixIcon: Icon(
                                         FontAwesomeIcons.mapMarkerAlt,
-                                        size: 14,
-                                      ),
-                                    ),
-                                    keyboardType: TextInputType.text,
-                                  ),
-                                  new TextFormField(
-                                    maxLength: 64,
-                                    focusNode: _titleFocusNode,
-                                    controller: _nameController,
-                                    decoration: new InputDecoration(
-                                      labelText: "entrancePrice",
-                                      filled: false,
-                                      prefixIcon: Icon(
-                                        FontAwesomeIcons.wonSign,
-                                        size: 14,
-                                      ),
-                                    ),
-                                    keyboardType: TextInputType.text,
-                                  ),
-                                  new TextFormField(
-                                    maxLength: 64,
-                                    focusNode: _titleFocusNode,
-                                    controller: _nameController,
-                                    decoration: new InputDecoration(
-                                      labelText: "tablePrice",
-                                      filled: false,
-                                      prefixIcon: Icon(
-                                        FontAwesomeIcons.wonSign,
                                         size: 14,
                                       ),
                                     ),
@@ -298,7 +259,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
             )));
   }
 
-  Widget _buildContents() {
+  Widget _buildNotice() {
     return Card(
         elevation: 2.0,
         color: Colors.white,
@@ -326,24 +287,12 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   new TextFormField(
-                                    maxLength: 64,
-                                    focusNode: _titleFocusNode,
-                                    controller: _nameController,
-                                    decoration: new InputDecoration(
-                                      labelText: "Title",
-                                      filled: false,
-                                      prefixIcon: Icon(
-                                        FontAwesomeIcons.quoteLeft,
-                                        size: 14,
-                                      ),
-                                    ),
-                                    keyboardType: TextInputType.text,
-                                  ),
-                                  new TextFormField(
                                     maxLength: 512,
                                     maxLines: 10,
-                                    focusNode: _contentsFocusNode,
-                                    controller: _addressController,
+                                    focusNode:
+                                        _noticeTextFocusCreator.focusNode,
+                                    controller: _noticeTextFocusCreator
+                                        .textEditingController,
                                     decoration: new InputDecoration(
                                       labelText: "Contents",
                                       filled: false,
@@ -439,8 +388,9 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                       Padding(
                         padding: EdgeInsets.only(left: 20, top: 5, bottom: 5),
                         child: TextField(
-                          focusNode: _youtubeFocusNode,
-                          controller: _youtubeController,
+                          focusNode: _youtubeTextFocusCreator.focusNode,
+                          controller:
+                              _youtubeTextFocusCreator.textEditingController,
                           keyboardType: TextInputType.multiline,
                           style: TextStyle(fontSize: 16.0, color: Colors.black),
                           decoration: InputDecoration(
@@ -590,13 +540,18 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
     }
 
     if (currentStep == 1 || currentStep == lastIndex) {
-      if (_nameController.text.length <= 0) {
-        FailSnackbar().show("error_clubInfo_form_title", null);
+      if (_nameTextFocusCreator.textEditingController.text.length <= 0) {
+        FailSnackbar().show("error_clubInfo_form_name", null);
         return;
       }
 
-      if (_addressController.text.length <= 0) {
-        FailSnackbar().show("error_clubInfo_form_title", null);
+      if (_regionTextFocusCreator.textEditingController.text.length <= 0) {
+        FailSnackbar().show("error_clubInfo_form_region", null);
+        return;
+      }
+
+      if (_addressTextFocusCreator.textEditingController.text.length <= 0) {
+        FailSnackbar().show("error_clubInfo_form_address", null);
         return;
       }
     }
@@ -613,9 +568,11 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
       if (currentStep < lastIndex) {
         currentStep = currentStep + 1;
       } else {
-        _clubInfo.name = _nameController.text;
-        _clubInfo.address = _addressController.text;
-        _clubInfo.youtubeUrls = [_youtubeController.text];
+        _clubInfo.name = _nameTextFocusCreator.textEditingController.text;
+        _clubInfo.address = _addressTextFocusCreator.textEditingController.text;
+        _clubInfo.youtubeUrls = [
+          _youtubeTextFocusCreator.textEditingController.text
+        ];
 
         // _removeImageUrls 삭제 된 이미지들
         // _editImageMap 유지 된 이미지들
