@@ -6,4 +6,7 @@ class CoreConst {
   static DateFormat togetherDateFormat = DateFormat("yyyy-MM-dd");
   static DateFormat togetherDateTextFormat = DateFormat("MM월 dd일(E)");
   static String clubInfoCategory = "/clubinfo/posts";
+
+  static int edmType = 1;
+  static int hiphopType = 1 << 1;
 }

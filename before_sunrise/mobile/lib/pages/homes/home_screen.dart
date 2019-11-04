@@ -72,6 +72,8 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   Widget build(BuildContext context) {
+    Profile signedProfile = ProfileBloc().signedProfile;
+    var phoneNumber = signedProfile.phoneNumber;
     initializeDeviceSize(context);
     _pageView = PageView(
       controller: _pageController,
@@ -81,84 +83,95 @@ class HomeScreenState extends State<HomeScreen> {
       ],
     );
     return WillPopScope(
-        onWillPop: () {
-          if (_panelController.isPanelOpen()) {
-            _panelController.close();
-          } else {
-            return _showExitAlertDialog(context);
-          }
-        },
-        child: Scaffold(
-          key: _scaffoldKey,
-          resizeToAvoidBottomInset: false,
-          appBar: HomeAppBar(scaffoldKey: _scaffoldKey),
-          drawer: HomeDrawer(),
-          bottomNavigationBar: HomeBottomBar(
-            activeIndex: _activePageIndex,
-            onActiveIndexChange: (int index) {
-              _activePageIndex = index;
-              _homeBloc.dispatch(LoadTabEvent(index: _activePageIndex));
-            },
-          ),
-          body: SlidingUpPanel(
-            minHeight: 50.0,
-            renderPanelSheet: false,
-            controller: _panelController,
-            body: BlocListener(
-                bloc: _homeBloc,
-                listener: (context, state) async {
-                  if (state is UnAuthState) {
-                    Navigator.pushReplacementNamed(
-                        context, AuthScreen.routeName);
+      onWillPop: () {
+        if (_panelController.isPanelOpen()) {
+          _panelController.close();
+        } else {
+          return _showExitAlertDialog(context);
+        }
+      },
+      child: BlocListener(
+          bloc: _homeBloc,
+          listener: (context, state) async {
+            if (state is UnAuthState) {
+              Navigator.pushReplacementNamed(context, AuthScreen.routeName);
 
-                    return;
-                  }
-                },
-                child: BlocBuilder<HomeBloc, HomeState>(
-                    bloc: _homeBloc,
-                    builder: (
-                      BuildContext context,
-                      HomeState currentState,
-                    ) {
-                      if (currentState is PostTabState) {
-                        return _pageView;
-                      }
-
-                      if (currentState is TogetherTabState) {
-                        return TogetherScreen(
-                          togetherBloc: TogetherBloc(),
-                        );
-                      }
-
-                      if (currentState is ClubInfoTabState) {
-                        return ClubInfoScreen();
-                      }
-
-                      if (currentState is ProfileTabState) {
-                        return Container();
-                      }
-
-                      if (currentState is ErrorHomeState) {
-                        return new Container(
-                            child: new Center(
-                          child: new Text('Error'),
-                        ));
-                      }
-                      return new Container(
-                          child: new Center(
-                        child: new Text("Empty"),
-                      ));
-                    })),
-            panel: Container(),
-          ),
-          floatingActionButton: _buildFloatingActionButton(),
-        ));
+              return;
+            }
+          },
+          child: BlocBuilder<HomeBloc, HomeState>(
+              bloc: _homeBloc,
+              builder: (
+                BuildContext context,
+                HomeState currentState,
+              ) {
+                return Scaffold(
+                  key: _scaffoldKey,
+                  resizeToAvoidBottomInset: false,
+                  appBar: HomeAppBar(scaffoldKey: _scaffoldKey),
+                  drawer: HomeDrawer(),
+                  bottomNavigationBar: HomeBottomBar(
+                    activeIndex: _activePageIndex,
+                    onActiveIndexChange: (int index) {
+                      _activePageIndex = index;
+                      _homeBloc.dispatch(LoadTabEvent(index: _activePageIndex));
+                    },
+                  ),
+                  body: SlidingUpPanel(
+                    minHeight: 50.0,
+                    renderPanelSheet: false,
+                    controller: _panelController,
+                    body: _buildContents(currentState),
+                    panel: Container(),
+                  ),
+                  floatingActionButton:
+                      _buildFloatingActionButton(currentState, phoneNumber),
+                );
+              })),
+    );
   }
 
-  Widget _buildFloatingActionButton() {
+  Widget _buildContents(HomeState state) {
+    if (state is PostTabState) {
+      return _pageView;
+    }
+
+    if (state is TogetherTabState) {
+      return TogetherScreen(
+        togetherBloc: TogetherBloc(),
+      );
+    }
+
+    if (state is ClubInfoTabState) {
+      return ClubInfoScreen();
+    }
+
+    if (state is ProfileTabState) {
+      return Container();
+    }
+
+    if (state is ErrorHomeState) {
+      return new Container(
+          child: new Center(
+        child: new Text('Error'),
+      ));
+    }
+    return new Container(
+        child: new Center(
+      child: new Text("Empty"),
+    ));
+  }
+
+  Widget _buildFloatingActionButton(HomeState state, String phoneNumber) {
+    print("$phoneNumber");
+    if (state is ClubInfoTabState &&
+        BeforeSunrise.isAdminPhoneNumber(phoneNumber) == false) {
+      return Container();
+    }
+
     return FloatingActionButton(
       onPressed: () {
-        if (_homeBloc.currentState is PostTabState) {
+        if (state is PostTabState) {
           Map<String, dynamic> infoMap = {
             "category": categoryName(_activePageIndex.toString()),
           };
@@ -168,7 +181,7 @@ class HomeScreenState extends State<HomeScreen> {
           return;
         }
 
-        if (_homeBloc.currentState is TogetherTabState) {
+        if (state is TogetherTabState) {
           Map<String, dynamic> infoMap = {};
 
           Navigator.pushNamed(context, TogetherStepForm.routeName,
@@ -176,7 +189,7 @@ class HomeScreenState extends State<HomeScreen> {
           return;
         }
 
-        if (_homeBloc.currentState is ClubInfoTabState) {
+        if (state is ClubInfoTabState) {
           Map<String, dynamic> infoMap = {};
 
           Navigator.pushNamed(context, ClubInfoStepForm.routeName,

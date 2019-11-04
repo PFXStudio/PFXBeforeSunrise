@@ -175,6 +175,10 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
   }
 
   Widget _buildInfos() {
+    // var check = CoreConst.hiphopType; // | CoreConst.hiphopType;
+    // print("edm ${check & 1}");
+    // print("hiphop ${check & (1 << 1)}");
+
     return Card(
         elevation: 2.0,
         color: Colors.white,
@@ -194,7 +198,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                     new Stack(
                       children: <Widget>[
                         Padding(
-                            padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                            padding: EdgeInsets.only(left: 20.0, right: 20.0),
                             child: new Form(
                               autovalidate: false,
                               child: new Column(
