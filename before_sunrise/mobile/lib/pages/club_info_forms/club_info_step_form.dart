@@ -29,7 +29,8 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
   Map<String, dynamic> _editImageMap = Map<String, dynamic>();
   List<String> _removeImageUrls = List<String>();
 
-  bool sanctionAgreeEnabled = false;
+  bool enabledHiphop = false;
+  bool enabledEDM = false;
   int currentStep = 0;
   final int maxPicturesCount = 20;
   String _error;
@@ -198,67 +199,100 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                     new Stack(
                       children: <Widget>[
                         Padding(
-                            padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                            child: new Form(
-                              autovalidate: false,
-                              child: new Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  new TextFormField(
-                                    maxLength: 64,
-                                    focusNode: _nameTextFocusCreator.focusNode,
-                                    controller: _nameTextFocusCreator
-                                        .textEditingController,
-                                    decoration: new InputDecoration(
-                                      labelText: "Name",
-                                      filled: false,
-                                      prefixIcon: Icon(
-                                        FontAwesomeIcons.cocktail,
-                                        size: 14,
-                                      ),
+                          padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                          child: new Form(
+                            autovalidate: false,
+                            child: new Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                new TextFormField(
+                                  maxLength: 64,
+                                  focusNode: _nameTextFocusCreator.focusNode,
+                                  controller: _nameTextFocusCreator
+                                      .textEditingController,
+                                  decoration: new InputDecoration(
+                                    labelText: "Name",
+                                    filled: false,
+                                    prefixIcon: Icon(
+                                      FontAwesomeIcons.cocktail,
+                                      size: 14,
                                     ),
-                                    keyboardType: TextInputType.text,
                                   ),
-                                  new TextFormField(
-                                    maxLength: 64,
-                                    focusNode:
-                                        _regionTextFocusCreator.focusNode,
-                                    controller: _regionTextFocusCreator
-                                        .textEditingController,
-                                    decoration: new InputDecoration(
-                                      labelText: "Region",
-                                      filled: false,
-                                      prefixIcon: Icon(
-                                        FontAwesomeIcons.mapSigns,
-                                        size: 14,
-                                      ),
+                                  keyboardType: TextInputType.text,
+                                ),
+                                new TextFormField(
+                                  maxLength: 64,
+                                  focusNode: _regionTextFocusCreator.focusNode,
+                                  controller: _regionTextFocusCreator
+                                      .textEditingController,
+                                  decoration: new InputDecoration(
+                                    labelText: "Region",
+                                    filled: false,
+                                    prefixIcon: Icon(
+                                      FontAwesomeIcons.mapSigns,
+                                      size: 14,
                                     ),
-                                    keyboardType: TextInputType.text,
                                   ),
-                                  new TextFormField(
-                                    maxLength: 64,
-                                    focusNode:
-                                        _addressTextFocusCreator.focusNode,
-                                    controller: _addressTextFocusCreator
-                                        .textEditingController,
-                                    decoration: new InputDecoration(
-                                      labelText: "Address",
-                                      filled: false,
-                                      prefixIcon: Icon(
-                                        FontAwesomeIcons.mapMarkerAlt,
-                                        size: 14,
-                                      ),
+                                  keyboardType: TextInputType.text,
+                                ),
+                                new TextFormField(
+                                  maxLength: 64,
+                                  focusNode: _addressTextFocusCreator.focusNode,
+                                  controller: _addressTextFocusCreator
+                                      .textEditingController,
+                                  decoration: new InputDecoration(
+                                    labelText: "Address",
+                                    filled: false,
+                                    prefixIcon: Icon(
+                                      FontAwesomeIcons.mapMarkerAlt,
+                                      size: 14,
                                     ),
-                                    keyboardType: TextInputType.text,
                                   ),
-                                ],
-                              ),
-                            )),
+                                  keyboardType: TextInputType.text,
+                                ),
+                                Column(
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Checkbox(
+                                          value: enabledHiphop,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              enabledHiphop = value;
+                                            });
+                                          },
+                                        ),
+                                        Text(
+                                          LocalizableLoader.of(context)
+                                              .text("hiphop_genre_checkbox"),
+                                          style: MainTheme.contentsTextStyle,
+                                        ),
+                                        Checkbox(
+                                          value: enabledEDM,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              enabledEDM = value;
+                                            });
+                                          },
+                                        ),
+                                        Text(
+                                          LocalizableLoader.of(context)
+                                              .text("edm_genre_checkbox"),
+                                          style: MainTheme.contentsTextStyle,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ],
-                )
+                ),
               ],
             )));
   }
@@ -515,21 +549,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                     SanctionContents(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Checkbox(
-                          value: sanctionAgreeEnabled,
-                          onChanged: (bool value) {
-                            setState(() {
-                              sanctionAgreeEnabled = value;
-                            });
-                          },
-                        ),
-                        Text(
-                          LocalizableLoader.of(context)
-                              .text("sanction_agree_checkbox"),
-                          style: MainTheme.contentsTextStyle,
-                        ),
-                      ],
+                      children: <Widget>[],
                     ),
                   ],
                 ))));
@@ -561,12 +581,6 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
     }
 
     if (currentStep == 2 || currentStep == lastIndex) {}
-    if (currentStep == 3 || currentStep == lastIndex) {
-      if (sanctionAgreeEnabled == false) {
-        FailSnackbar().show("error_agree_check", null);
-        return;
-      }
-    }
 
     setState(() {
       if (currentStep < lastIndex) {
