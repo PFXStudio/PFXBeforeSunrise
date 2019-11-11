@@ -103,7 +103,10 @@ flutter:
         - asset: assets/fonts/Quicksand-Light.ttf
         - asset: assets/fonts/Quicksand-Medium.ttf
         - asset: assets/fonts/Quicksand-Bold.ttf
-          weight: 700
+
+    - family: SpoqaHanSansRegular
+      fonts:
+        - asset: assets/fonts/SpoqaHanSansRegular.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

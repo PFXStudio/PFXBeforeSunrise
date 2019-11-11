@@ -44,7 +44,7 @@ class _MainAppState extends State<MainApp> {
       debugShowCheckedModeBanner: false,
       title: 'Before Sunrise',
       theme: ThemeData(
-        fontFamily: 'Roboto',
+        fontFamily: 'SpoqaHanSansRegular',
         primaryColor: MainTheme.bgndColor,
         accentColor: MainTheme.activeIndicatorColor,
       ),
