@@ -106,7 +106,10 @@ flutter:
 
     - family: SpoqaHanSansRegular
       fonts:
+        - asset: assets/fonts/SpoqaHanSansBold.ttf
+        - asset: assets/fonts/SpoqaHanSansLight.ttf
         - asset: assets/fonts/SpoqaHanSansRegular.ttf
+        - asset: assets/fonts/SpoqaHanSansThin.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

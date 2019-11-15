@@ -146,6 +146,7 @@ export 'widgets/dialogs/dialog_header_widget.dart';
 export 'widgets/dialogs/dialog_post_type.dart';
 export 'widgets/dialogs/dialog_club_info_genre_type.dart';
 export 'widgets/dialogs/dialog_club_info_address.dart';
+export 'widgets/dialogs/dialog_weekday.dart';
 export 'widgets/popups/option_menu.dart';
 export 'widgets/popups/triangle_mark.dart';
 

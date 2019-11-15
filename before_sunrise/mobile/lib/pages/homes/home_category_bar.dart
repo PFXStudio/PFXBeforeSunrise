@@ -34,7 +34,7 @@ class _HomeCategoryBarState extends State<HomeCategoryBar> {
     ];
 
     return Container(
-      height: 40.0,
+      height: 43.0,
       width: double.infinity,
       child: ListView.builder(
         itemCount: _categories.length,

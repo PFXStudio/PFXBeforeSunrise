@@ -31,6 +31,14 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
 
   bool enabledHiphop = false;
   bool enabledEDM = false;
+
+  bool enabledSun = false;
+  bool enabledMon = false;
+  bool enabledTue = false;
+  bool enabledWed = false;
+  bool enabledThu = false;
+  bool enabledFri = false;
+  bool enabledSat = false;
   int currentStep = 0;
   final int maxPicturesCount = 20;
   String _error;
@@ -94,17 +102,16 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
   @override
   Widget build(BuildContext context) {
     KeyboardDector().setContext(context, 0);
-    var typeStep = new Step(
-        title: const Text('정보'),
+    var defaultInfoStep = new Step(
+        title: const Text('기본정보'),
         isActive: true,
         state: StepState.indexed,
-        content: _buildInfos());
-
-    var contentsStep = new Step(
-        title: const Text('공지'),
+        content: _buildDefaultInfos());
+    var detailInfoStep = new Step(
+        title: const Text('운영정보'),
         isActive: true,
         state: StepState.indexed,
-        content: _buildNotice());
+        content: _buildDetailInfos());
     var mediaStep = new Step(
         title: const Text('미디어'),
         isActive: true,
@@ -116,8 +123,8 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
         state: StepState.complete,
         content: _buildAgree());
     List<Step> steps = [];
-    steps.add(typeStep);
-    steps.add(contentsStep);
+    steps.add(defaultInfoStep);
+    steps.add(detailInfoStep);
     steps.add(mediaStep);
     steps.add(registStep);
 
@@ -175,7 +182,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
             }));
   }
 
-  Widget _buildInfos() {
+  Widget _buildDefaultInfos() {
     // var check = CoreConst.hiphopType; // | CoreConst.hiphopType;
     // print("edm ${check & 1}");
     // print("hiphop ${check & (1 << 1)}");
@@ -285,6 +292,129 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                                     ),
                                   ],
                                 ),
+                                Column(
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Checkbox(
+                                          value: enabledSun,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              enabledSun = value;
+                                            });
+                                          },
+                                        ),
+                                        Text(
+                                          LocalizableLoader.of(context)
+                                              .text("weekday_sun"),
+                                          style: MainTheme.contentsTextStyle,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Checkbox(
+                                          value: enabledMon,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              enabledMon = value;
+                                            });
+                                          },
+                                        ),
+                                        Text(
+                                          LocalizableLoader.of(context)
+                                              .text("weekday_mon"),
+                                          style: MainTheme.contentsTextStyle,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Checkbox(
+                                          value: enabledTue,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              enabledTue = value;
+                                            });
+                                          },
+                                        ),
+                                        Text(
+                                          LocalizableLoader.of(context)
+                                              .text("weekday_tue"),
+                                          style: MainTheme.contentsTextStyle,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Checkbox(
+                                          value: enabledWed,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              enabledWed = value;
+                                            });
+                                          },
+                                        ),
+                                        Text(
+                                          LocalizableLoader.of(context)
+                                              .text("weekday_wed"),
+                                          style: MainTheme.contentsTextStyle,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Checkbox(
+                                          value: enabledThu,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              enabledThu = value;
+                                            });
+                                          },
+                                        ),
+                                        Text(
+                                          LocalizableLoader.of(context)
+                                              .text("weekday_thu"),
+                                          style: MainTheme.contentsTextStyle,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Checkbox(
+                                          value: enabledFri,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              enabledFri = value;
+                                            });
+                                          },
+                                        ),
+                                        Text(
+                                          LocalizableLoader.of(context)
+                                              .text("weekday_fri"),
+                                          style: MainTheme.contentsTextStyle,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Checkbox(
+                                          value: enabledSat,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              enabledSat = value;
+                                            });
+                                          },
+                                        ),
+                                        Text(
+                                          LocalizableLoader.of(context)
+                                              .text("weekday_sat"),
+                                          style: MainTheme.contentsTextStyle,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
@@ -297,7 +427,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
             )));
   }
 
-  Widget _buildNotice() {
+  Widget _buildDetailInfos() {
     return Card(
         elevation: 2.0,
         color: Colors.white,
@@ -317,13 +447,43 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                     new Stack(
                       children: <Widget>[
                         Padding(
-                            padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                            padding: EdgeInsets.only(left: 20.0, right: 20.0),
                             child: new Form(
                               autovalidate: false,
                               child: new Column(
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
+                                  new TextFormField(
+                                    maxLength: 64,
+                                    focusNode: _nameTextFocusCreator.focusNode,
+                                    controller: _nameTextFocusCreator
+                                        .textEditingController,
+                                    decoration: new InputDecoration(
+                                      labelText: "Entrance fee",
+                                      filled: false,
+                                      prefixIcon: Icon(
+                                        FontAwesomeIcons.wonSign,
+                                        size: 14,
+                                      ),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                  ),
+                                  new TextFormField(
+                                    maxLength: 64,
+                                    focusNode: _nameTextFocusCreator.focusNode,
+                                    controller: _nameTextFocusCreator
+                                        .textEditingController,
+                                    decoration: new InputDecoration(
+                                      labelText: "Table fee",
+                                      filled: false,
+                                      prefixIcon: Icon(
+                                        FontAwesomeIcons.vectorSquare,
+                                        size: 14,
+                                      ),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                  ),
                                   new TextFormField(
                                     maxLength: 512,
                                     maxLines: 10,
@@ -369,7 +529,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                 ),
                 child: Container(
                   width: kDeviceWidth - MainTheme.edgeInsets.left,
-                  height: (_selectedOriginalDatas.length > 0) ? 360 : 114,
+                  height: (_selectedOriginalDatas.length > 0) ? 360 : 118,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[

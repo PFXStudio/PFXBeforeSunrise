@@ -123,7 +123,7 @@ class _CommentBubbleState extends State<CommentBubble> {
         ),
         constraints: BoxConstraints(
           minHeight: 25,
-          maxHeight: 157,
+          maxHeight: 160,
           minWidth: 80,
         ),
         child: Padding(
