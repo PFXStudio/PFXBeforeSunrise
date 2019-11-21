@@ -1,4 +1,5 @@
 import 'package:before_sunrise/import.dart';
+import 'package:intl/intl.dart';
 
 class ClubInfoStepForm extends StatefulWidget {
   static const String routeName = "/clubInfoStepForm";
@@ -32,13 +33,14 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
   bool enabledHiphop = false;
   bool enabledEDM = false;
 
-  bool enabledSun = false;
-  bool enabledMon = false;
-  bool enabledTue = false;
-  bool enabledWed = false;
-  bool enabledThu = false;
-  bool enabledFri = false;
-  bool enabledSat = false;
+  String timeSun = "";
+  String timeMon = "";
+  String timeTue = "";
+  String timeWed = "";
+  String timeThu = "";
+  String timeFri = "";
+  String timeSat = "";
+
   int currentStep = 0;
   final int maxPicturesCount = 20;
   String _error;
@@ -206,223 +208,177 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                     new Stack(
                       children: <Widget>[
                         Padding(
-                          padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                          child: new Form(
-                            autovalidate: false,
-                            child: new Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                new TextFormField(
-                                  maxLength: 64,
-                                  focusNode: _nameTextFocusCreator.focusNode,
-                                  controller: _nameTextFocusCreator
-                                      .textEditingController,
-                                  decoration: new InputDecoration(
-                                    labelText: "Name",
-                                    filled: false,
-                                    prefixIcon: Icon(
-                                      FontAwesomeIcons.cocktail,
-                                      size: 14,
+                            padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                            child: new Form(
+                              autovalidate: false,
+                              child: new Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  new TextFormField(
+                                    maxLength: 64,
+                                    focusNode: _nameTextFocusCreator.focusNode,
+                                    controller: _nameTextFocusCreator
+                                        .textEditingController,
+                                    decoration: new InputDecoration(
+                                      labelText: "Name",
+                                      filled: false,
+                                      prefixIcon: Icon(
+                                        FontAwesomeIcons.cocktail,
+                                        size: 14,
+                                      ),
                                     ),
+                                    keyboardType: TextInputType.text,
                                   ),
-                                  keyboardType: TextInputType.text,
-                                ),
-                                new TextFormField(
-                                  maxLength: 64,
-                                  focusNode: _regionTextFocusCreator.focusNode,
-                                  controller: _regionTextFocusCreator
-                                      .textEditingController,
-                                  decoration: new InputDecoration(
-                                    labelText: "Region",
-                                    filled: false,
-                                    prefixIcon: Icon(
-                                      FontAwesomeIcons.mapSigns,
-                                      size: 14,
+                                  new TextFormField(
+                                    maxLength: 64,
+                                    focusNode:
+                                        _regionTextFocusCreator.focusNode,
+                                    controller: _regionTextFocusCreator
+                                        .textEditingController,
+                                    decoration: new InputDecoration(
+                                      labelText: "Region",
+                                      filled: false,
+                                      prefixIcon: Icon(
+                                        FontAwesomeIcons.mapSigns,
+                                        size: 14,
+                                      ),
                                     ),
+                                    keyboardType: TextInputType.text,
                                   ),
-                                  keyboardType: TextInputType.text,
-                                ),
-                                new TextFormField(
-                                  maxLength: 64,
-                                  focusNode: _addressTextFocusCreator.focusNode,
-                                  controller: _addressTextFocusCreator
-                                      .textEditingController,
-                                  decoration: new InputDecoration(
-                                    labelText: "Address",
-                                    filled: false,
-                                    prefixIcon: Icon(
-                                      FontAwesomeIcons.mapMarkerAlt,
-                                      size: 14,
+                                  new TextFormField(
+                                    maxLength: 64,
+                                    focusNode:
+                                        _addressTextFocusCreator.focusNode,
+                                    controller: _addressTextFocusCreator
+                                        .textEditingController,
+                                    decoration: new InputDecoration(
+                                      labelText: "Address",
+                                      filled: false,
+                                      prefixIcon: Icon(
+                                        FontAwesomeIcons.mapMarkerAlt,
+                                        size: 14,
+                                      ),
                                     ),
+                                    keyboardType: TextInputType.text,
                                   ),
-                                  keyboardType: TextInputType.text,
-                                ),
-                                Column(
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Checkbox(
-                                          value: enabledHiphop,
-                                          onChanged: (bool value) {
-                                            setState(() {
-                                              enabledHiphop = value;
-                                            });
-                                          },
-                                        ),
-                                        Text(
-                                          LocalizableLoader.of(context)
-                                              .text("hiphop_genre_checkbox"),
-                                          style: MainTheme.contentsTextStyle,
-                                        ),
-                                        Checkbox(
-                                          value: enabledEDM,
-                                          onChanged: (bool value) {
-                                            setState(() {
-                                              enabledEDM = value;
-                                            });
-                                          },
-                                        ),
-                                        Text(
-                                          LocalizableLoader.of(context)
-                                              .text("edm_genre_checkbox"),
-                                          style: MainTheme.contentsTextStyle,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Checkbox(
-                                          value: enabledSun,
-                                          onChanged: (bool value) {
-                                            setState(() {
-                                              enabledSun = value;
-                                            });
-                                          },
-                                        ),
-                                        Text(
-                                          LocalizableLoader.of(context)
-                                              .text("weekday_sun"),
-                                          style: MainTheme.contentsTextStyle,
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: <Widget>[
-                                        Checkbox(
-                                          value: enabledMon,
-                                          onChanged: (bool value) {
-                                            setState(() {
-                                              enabledMon = value;
-                                            });
-                                          },
-                                        ),
-                                        Text(
-                                          LocalizableLoader.of(context)
-                                              .text("weekday_mon"),
-                                          style: MainTheme.contentsTextStyle,
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: <Widget>[
-                                        Checkbox(
-                                          value: enabledTue,
-                                          onChanged: (bool value) {
-                                            setState(() {
-                                              enabledTue = value;
-                                            });
-                                          },
-                                        ),
-                                        Text(
-                                          LocalizableLoader.of(context)
-                                              .text("weekday_tue"),
-                                          style: MainTheme.contentsTextStyle,
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: <Widget>[
-                                        Checkbox(
-                                          value: enabledWed,
-                                          onChanged: (bool value) {
-                                            setState(() {
-                                              enabledWed = value;
-                                            });
-                                          },
-                                        ),
-                                        Text(
-                                          LocalizableLoader.of(context)
-                                              .text("weekday_wed"),
-                                          style: MainTheme.contentsTextStyle,
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: <Widget>[
-                                        Checkbox(
-                                          value: enabledThu,
-                                          onChanged: (bool value) {
-                                            setState(() {
-                                              enabledThu = value;
-                                            });
-                                          },
-                                        ),
-                                        Text(
-                                          LocalizableLoader.of(context)
-                                              .text("weekday_thu"),
-                                          style: MainTheme.contentsTextStyle,
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: <Widget>[
-                                        Checkbox(
-                                          value: enabledFri,
-                                          onChanged: (bool value) {
-                                            setState(() {
-                                              enabledFri = value;
-                                            });
-                                          },
-                                        ),
-                                        Text(
-                                          LocalizableLoader.of(context)
-                                              .text("weekday_fri"),
-                                          style: MainTheme.contentsTextStyle,
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: <Widget>[
-                                        Checkbox(
-                                          value: enabledSat,
-                                          onChanged: (bool value) {
-                                            setState(() {
-                                              enabledSat = value;
-                                            });
-                                          },
-                                        ),
-                                        Text(
-                                          LocalizableLoader.of(context)
-                                              .text("weekday_sat"),
-                                          style: MainTheme.contentsTextStyle,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                                  Column(
+                                    children: <Widget>[
+                                      Row(
+                                        children: <Widget>[
+                                          Checkbox(
+                                            value: enabledHiphop,
+                                            onChanged: (bool value) {
+                                              setState(() {
+                                                enabledHiphop = value;
+                                              });
+                                            },
+                                          ),
+                                          Text(
+                                            LocalizableLoader.of(context)
+                                                .text("hiphop_genre_checkbox"),
+                                            style: MainTheme.contentsTextStyle,
+                                          ),
+                                          Checkbox(
+                                            value: enabledEDM,
+                                            onChanged: (bool value) {
+                                              setState(() {
+                                                enabledEDM = value;
+                                              });
+                                            },
+                                          ),
+                                          Text(
+                                            LocalizableLoader.of(context)
+                                                .text("edm_genre_checkbox"),
+                                            style: MainTheme.contentsTextStyle,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )),
                       ],
                     ),
                   ],
                 ),
+                Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      DialogOpenCloseTime(
+                        title: timeSun.isNotEmpty
+                            ? timeSun
+                            : LocalizableLoader.of(context).text("weekday_sun"),
+                        callback: (time) {
+                          setState(() {
+                            timeSun = time;
+                          });
+                        },
+                      ),
+                      DialogOpenCloseTime(
+                        title: timeMon.isNotEmpty
+                            ? timeMon
+                            : LocalizableLoader.of(context).text("weekday_mon"),
+                        callback: (time) {
+                          setState(() {
+                            timeMon = time;
+                          });
+                        },
+                      ),
+                      DialogOpenCloseTime(
+                        title: timeTue.isNotEmpty
+                            ? timeTue
+                            : LocalizableLoader.of(context).text("weekday_tue"),
+                        callback: (time) {
+                          setState(() {
+                            timeTue = time;
+                          });
+                        },
+                      ),
+                      DialogOpenCloseTime(
+                        title: timeWed.isNotEmpty
+                            ? timeWed
+                            : LocalizableLoader.of(context).text("weekday_wed"),
+                        callback: (time) {
+                          setState(() {
+                            timeWed = time;
+                          });
+                        },
+                      ),
+                      DialogOpenCloseTime(
+                        title: timeThu.isNotEmpty
+                            ? timeThu
+                            : LocalizableLoader.of(context).text("weekday_thu"),
+                        callback: (time) {
+                          setState(() {
+                            timeThu = time;
+                          });
+                        },
+                      ),
+                      DialogOpenCloseTime(
+                        title: timeFri.isNotEmpty
+                            ? timeFri
+                            : LocalizableLoader.of(context).text("weekday_fri"),
+                        callback: (time) {
+                          setState(() {
+                            timeFri = time;
+                          });
+                        },
+                      ),
+                      DialogOpenCloseTime(
+                        title: timeSat.isNotEmpty
+                            ? timeSat
+                            : LocalizableLoader.of(context).text("weekday_sat"),
+                        callback: (time) {
+                          setState(() {
+                            timeSat = time;
+                          });
+                        },
+                      ),
+                    ]),
               ],
             )));
   }

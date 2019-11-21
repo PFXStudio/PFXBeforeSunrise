@@ -44,6 +44,7 @@ export 'package:clipboard_manager/clipboard_manager.dart';
 export 'package:grouped_list/grouped_list.dart';
 export 'package:webview_flutter/webview_flutter.dart';
 export 'package:keyboard_actions/keyboard_actions.dart';
+export 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 
 export 'package:core/import.dart';
 
@@ -146,7 +147,7 @@ export 'widgets/dialogs/dialog_header_widget.dart';
 export 'widgets/dialogs/dialog_post_type.dart';
 export 'widgets/dialogs/dialog_club_info_genre_type.dart';
 export 'widgets/dialogs/dialog_club_info_address.dart';
-export 'widgets/dialogs/dialog_weekday.dart';
+export 'widgets/dialogs/dialog_open_close_time.dart';
 export 'widgets/popups/option_menu.dart';
 export 'widgets/popups/triangle_mark.dart';
 
