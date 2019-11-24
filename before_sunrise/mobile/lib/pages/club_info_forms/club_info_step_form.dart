@@ -188,7 +188,8 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
     // var check = CoreConst.hiphopType; // | CoreConst.hiphopType;
     // print("edm ${check & 1}");
     // print("hiphop ${check & (1 << 1)}");
-
+    var selectOperatingTime =
+        LocalizableLoader.of(context).text("select_operating_time");
     return Card(
         elevation: 2.0,
         color: Colors.white,
@@ -221,7 +222,8 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                                     controller: _nameTextFocusCreator
                                         .textEditingController,
                                     decoration: new InputDecoration(
-                                      labelText: "Name",
+                                      labelText: LocalizableLoader.of(context)
+                                          .text("input_club_name"),
                                       filled: false,
                                       prefixIcon: Icon(
                                         FontAwesomeIcons.cocktail,
@@ -237,7 +239,8 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                                     controller: _regionTextFocusCreator
                                         .textEditingController,
                                     decoration: new InputDecoration(
-                                      labelText: "Region",
+                                      labelText: LocalizableLoader.of(context)
+                                          .text("input_club_region"),
                                       filled: false,
                                       prefixIcon: Icon(
                                         FontAwesomeIcons.mapSigns,
@@ -253,7 +256,8 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                                     controller: _addressTextFocusCreator
                                         .textEditingController,
                                     decoration: new InputDecoration(
-                                      labelText: "Address",
+                                      labelText: LocalizableLoader.of(context)
+                                          .text("input_club_address"),
                                       filled: false,
                                       prefixIcon: Icon(
                                         FontAwesomeIcons.mapMarkerAlt,
@@ -308,76 +312,114 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      DialogOpenCloseTime(
-                        title: timeSun.isNotEmpty
-                            ? timeSun
-                            : LocalizableLoader.of(context).text("weekday_sun"),
-                        callback: (time) {
-                          setState(() {
-                            timeSun = time;
-                          });
-                        },
+                      Padding(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Row(
+                          children: <Widget>[
+                            Text(LocalizableLoader.of(context).text("day_sun")),
+                            DialogOperatingTime(
+                              title: timeSun.isNotEmpty
+                                  ? timeSun
+                                  : selectOperatingTime,
+                              callback: (time) {
+                                setState(() {
+                                  timeSun = time;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                      DialogOpenCloseTime(
-                        title: timeMon.isNotEmpty
-                            ? timeMon
-                            : LocalizableLoader.of(context).text("weekday_mon"),
-                        callback: (time) {
-                          setState(() {
-                            timeMon = time;
-                          });
-                        },
-                      ),
-                      DialogOpenCloseTime(
-                        title: timeTue.isNotEmpty
-                            ? timeTue
-                            : LocalizableLoader.of(context).text("weekday_tue"),
-                        callback: (time) {
-                          setState(() {
-                            timeTue = time;
-                          });
-                        },
-                      ),
-                      DialogOpenCloseTime(
-                        title: timeWed.isNotEmpty
-                            ? timeWed
-                            : LocalizableLoader.of(context).text("weekday_wed"),
-                        callback: (time) {
-                          setState(() {
-                            timeWed = time;
-                          });
-                        },
-                      ),
-                      DialogOpenCloseTime(
-                        title: timeThu.isNotEmpty
-                            ? timeThu
-                            : LocalizableLoader.of(context).text("weekday_thu"),
-                        callback: (time) {
-                          setState(() {
-                            timeThu = time;
-                          });
-                        },
-                      ),
-                      DialogOpenCloseTime(
-                        title: timeFri.isNotEmpty
-                            ? timeFri
-                            : LocalizableLoader.of(context).text("weekday_fri"),
-                        callback: (time) {
-                          setState(() {
-                            timeFri = time;
-                          });
-                        },
-                      ),
-                      DialogOpenCloseTime(
-                        title: timeSat.isNotEmpty
-                            ? timeSat
-                            : LocalizableLoader.of(context).text("weekday_sat"),
-                        callback: (time) {
-                          setState(() {
-                            timeSat = time;
-                          });
-                        },
-                      ),
+                      Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Row(children: <Widget>[
+                            Text(LocalizableLoader.of(context).text("day_mon")),
+                            DialogOperatingTime(
+                              title: timeMon.isNotEmpty
+                                  ? timeMon
+                                  : selectOperatingTime,
+                              callback: (time) {
+                                setState(() {
+                                  timeMon = time;
+                                });
+                              },
+                            ),
+                          ])),
+                      Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Row(children: <Widget>[
+                            Text(LocalizableLoader.of(context).text("day_tue")),
+                            DialogOperatingTime(
+                              title: timeTue.isNotEmpty
+                                  ? timeTue
+                                  : selectOperatingTime,
+                              callback: (time) {
+                                setState(() {
+                                  timeTue = time;
+                                });
+                              },
+                            ),
+                          ])),
+                      Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Row(children: <Widget>[
+                            Text(LocalizableLoader.of(context).text("day_wed")),
+                            DialogOperatingTime(
+                              title: timeWed.isNotEmpty
+                                  ? timeWed
+                                  : selectOperatingTime,
+                              callback: (time) {
+                                setState(() {
+                                  timeWed = time;
+                                });
+                              },
+                            ),
+                          ])),
+                      Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Row(children: <Widget>[
+                            Text(LocalizableLoader.of(context).text("day_thu")),
+                            DialogOperatingTime(
+                              title: timeThu.isNotEmpty
+                                  ? timeThu
+                                  : selectOperatingTime,
+                              callback: (time) {
+                                setState(() {
+                                  timeThu = time;
+                                });
+                              },
+                            ),
+                          ])),
+                      Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Row(children: <Widget>[
+                            Text(LocalizableLoader.of(context).text("day_fri")),
+                            DialogOperatingTime(
+                              title: timeFri.isNotEmpty
+                                  ? timeFri
+                                  : selectOperatingTime,
+                              callback: (time) {
+                                setState(() {
+                                  timeFri = time;
+                                });
+                              },
+                            ),
+                          ])),
+                      Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Row(children: <Widget>[
+                            Text(LocalizableLoader.of(context).text("day_sat")),
+                            DialogOperatingTime(
+                              title: timeSat.isNotEmpty
+                                  ? timeSat
+                                  : selectOperatingTime,
+                              callback: (time) {
+                                setState(() {
+                                  timeSat = time;
+                                });
+                              },
+                            ),
+                          ]))
                     ]),
               ],
             )));
@@ -416,7 +458,8 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                                     controller: _nameTextFocusCreator
                                         .textEditingController,
                                     decoration: new InputDecoration(
-                                      labelText: "Entrance fee",
+                                      labelText: LocalizableLoader.of(context)
+                                          .text("title_entrance_price"),
                                       filled: false,
                                       prefixIcon: Icon(
                                         FontAwesomeIcons.wonSign,
@@ -431,7 +474,8 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                                     controller: _nameTextFocusCreator
                                         .textEditingController,
                                     decoration: new InputDecoration(
-                                      labelText: "Table fee",
+                                      labelText: LocalizableLoader.of(context)
+                                          .text("title_table_price"),
                                       filled: false,
                                       prefixIcon: Icon(
                                         FontAwesomeIcons.vectorSquare,

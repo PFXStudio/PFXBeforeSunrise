@@ -1,20 +1,20 @@
 import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart';
 
-typedef DialogOpenCloseTimeCallback = void Function(String time);
+typedef DialogOperatingTimeCallback = void Function(String time);
 
 DateTime dialogOpenDateTime;
 DateTime dialogCloseDateTime;
 
-class DialogOpenCloseTime extends StatefulWidget {
-  DialogOpenCloseTime({@required this.callback, @required this.title});
+class DialogOperatingTime extends StatefulWidget {
+  DialogOperatingTime({@required this.callback, @required this.title});
   @override
-  _DialogOpenCloseTimeState createState() => _DialogOpenCloseTimeState();
+  _DialogOperatingTimeState createState() => _DialogOperatingTimeState();
   final String title;
-  final DialogOpenCloseTimeCallback callback;
+  final DialogOperatingTimeCallback callback;
 }
 
-class _DialogOpenCloseTimeState extends State<DialogOpenCloseTime> {
+class _DialogOperatingTimeState extends State<DialogOperatingTime> {
   String selectedText;
 
   Widget build(BuildContext context) {
@@ -115,14 +115,14 @@ class _DialogOpenCloseTimeState extends State<DialogOpenCloseTime> {
   }
 }
 
-class DialogOpenCloseTimeContents extends StatefulWidget {
+class DialogOperatingTimeContents extends StatefulWidget {
   @override
-  _DialogOpenCloseTimeContentsState createState() =>
-      _DialogOpenCloseTimeContentsState();
+  _DialogOperatingTimeContentsState createState() =>
+      _DialogOperatingTimeContentsState();
 }
 
-class _DialogOpenCloseTimeContentsState
-    extends State<DialogOpenCloseTimeContents> {
+class _DialogOperatingTimeContentsState
+    extends State<DialogOperatingTimeContents> {
   @override
   Widget build(BuildContext context) {
     return Container(
