@@ -23,6 +23,9 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
   final TextFocusCreator _addressTextFocusCreator = new TextFocusCreator();
   final TextFocusCreator _noticeTextFocusCreator = new TextFocusCreator();
   final TextFocusCreator _youtubeTextFocusCreator = new TextFocusCreator();
+  final TextFocusCreator _entrancePriceTextFocusCreator =
+      new TextFocusCreator();
+  final TextFocusCreator _tablePriceTextFocusCreator = new TextFocusCreator();
 
   GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 // multi image picker 이미지 데이터가 사라짐. 받아오면 바로 백업.
@@ -80,6 +83,10 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
             widget.editClubInfo.address;
         _noticeTextFocusCreator.textEditingController.text =
             widget.editClubInfo.notice;
+        _entrancePriceTextFocusCreator.textEditingController.text =
+            widget.editClubInfo.entrancePrice;
+        _tablePriceTextFocusCreator.textEditingController.text =
+            widget.editClubInfo.tablePrice;
 
         if (widget.editClubInfo.imageUrls == null) {
           return;
@@ -92,6 +99,8 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
     _regionTextFocusCreator.focusNode.dispose();
     _addressTextFocusCreator.focusNode.dispose();
     _noticeTextFocusCreator.focusNode.dispose();
+    _entrancePriceTextFocusCreator.focusNode.dispose();
+    _tablePriceTextFocusCreator.focusNode.dispose();
 
     _clubInfo = ClubInfo();
     SuccessSnackbar().initialize(null);
@@ -105,22 +114,22 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
   Widget build(BuildContext context) {
     KeyboardDector().setContext(context, 0);
     var defaultInfoStep = new Step(
-        title: const Text('기본정보'),
+        title: Text(LocalizableLoader.of(context).text("title_default_info")),
         isActive: true,
         state: StepState.indexed,
         content: _buildDefaultInfos());
     var detailInfoStep = new Step(
-        title: const Text('운영정보'),
+        title: Text(LocalizableLoader.of(context).text("title_operation_info")),
         isActive: true,
         state: StepState.indexed,
         content: _buildDetailInfos());
     var mediaStep = new Step(
-        title: const Text('미디어'),
+        title: Text(LocalizableLoader.of(context).text("title_media_info")),
         isActive: true,
         state: StepState.indexed,
         content: _buildGalleryFiles(context));
     var registStep = new Step(
-        title: const Text('등록'),
+        title: Text(LocalizableLoader.of(context).text("title_regist")),
         isActive: true,
         state: StepState.complete,
         content: _buildAgree());
@@ -454,8 +463,9 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                                 children: <Widget>[
                                   new TextFormField(
                                     maxLength: 64,
-                                    focusNode: _nameTextFocusCreator.focusNode,
-                                    controller: _nameTextFocusCreator
+                                    focusNode: _entrancePriceTextFocusCreator
+                                        .focusNode,
+                                    controller: _entrancePriceTextFocusCreator
                                         .textEditingController,
                                     decoration: new InputDecoration(
                                       labelText: LocalizableLoader.of(context)
@@ -470,8 +480,9 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                                   ),
                                   new TextFormField(
                                     maxLength: 64,
-                                    focusNode: _nameTextFocusCreator.focusNode,
-                                    controller: _nameTextFocusCreator
+                                    focusNode:
+                                        _tablePriceTextFocusCreator.focusNode,
+                                    controller: _tablePriceTextFocusCreator
                                         .textEditingController,
                                     decoration: new InputDecoration(
                                       labelText: LocalizableLoader.of(context)
@@ -492,7 +503,8 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                                     controller: _noticeTextFocusCreator
                                         .textEditingController,
                                     decoration: new InputDecoration(
-                                      labelText: "Contents",
+                                      labelText: LocalizableLoader.of(context)
+                                          .text("title_notice"),
                                       filled: false,
                                       labelStyle: MainTheme.hintTextStyle,
                                       prefixIcon: Icon(
@@ -740,7 +752,18 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
       }
     }
 
-    if (currentStep == 2 || currentStep == lastIndex) {}
+    if (currentStep == 2 || currentStep == lastIndex) {
+      if (_entrancePriceTextFocusCreator.textEditingController.text.length <=
+          0) {
+        FailSnackbar().show("error_clubInfo_form_entrance", null);
+        return;
+      }
+
+      if (_tablePriceTextFocusCreator.textEditingController.text.length <= 0) {
+        FailSnackbar().show("error_clubInfo_form_table", null);
+        return;
+      }
+    }
 
     setState(() {
       if (currentStep < lastIndex) {
@@ -751,6 +774,11 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
         _clubInfo.youtubeUrls = [
           _youtubeTextFocusCreator.textEditingController.text
         ];
+
+        _clubInfo.entrancePrice =
+            _entrancePriceTextFocusCreator.textEditingController.text;
+        _clubInfo.tablePrice =
+            _tablePriceTextFocusCreator.textEditingController.text;
 
         // _removeImageUrls 삭제 된 이미지들
         // _editImageMap 유지 된 이미지들

@@ -131,9 +131,9 @@ export 'pages/together_details/together_detail_member_scroller_widget.dart';
 export 'pages/together_details/together_detail_scroll_effects.dart';
 
 export 'pages/club_infos/club_info_screen.dart';
-export 'pages/club_info_forms/club_info_step_form.dart';
-export 'pages/club_info_forms/club_info_step_bar.dart';
-export 'pages/club_info_forms/club_info_step_address.dart';
+export 'pages/club_info_steps/club_info_step_form.dart';
+export 'pages/club_info_steps/club_info_step_bar.dart';
+export 'pages/club_info_steps/club_info_step_address.dart';
 
 export 'widgets/loadings/loading_contents.dart';
 export 'widgets/images/image_detail_screen.dart';

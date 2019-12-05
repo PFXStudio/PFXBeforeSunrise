@@ -1,5 +1,12 @@
 import 'package:before_sunrise/import.dart';
 
+// 규칙.
+// 콘트롤명 X, 최대한 간소화, 알아 볼 수 있는 단어 입력
+// cancel
+// confirm
+// input_error
+// cancel
+
 class LocalizableLoader {
   Locale locale;
   static Map<dynamic, dynamic> _localisedValues;
