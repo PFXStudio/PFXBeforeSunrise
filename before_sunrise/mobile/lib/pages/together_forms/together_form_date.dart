@@ -21,7 +21,7 @@ class _TogetherFormDateState extends State<TogetherFormDate> {
       color: MainTheme.enabledButtonColor,
       text: selectedDate() != null
           ? CoreConst.togetherDateTextFormat.format(selectedDate())
-          : LocalizableLoader.of(context).text("date_select"),
+          : LocalizableLoader.of(context).text("date_select_hint"),
       onPressed: () async {
         final date = await showDatePicker(
             context: context,

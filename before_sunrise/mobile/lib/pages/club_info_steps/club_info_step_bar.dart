@@ -27,7 +27,7 @@ class _ClubInfoStepBarState extends State<ClubInfoStepBar>
         },
       ),
       title: Text(
-        LocalizableLoader.of(context).text("board_regist_title"),
+        LocalizableLoader.of(context).text("regist"),
         style: MainTheme.navTitleTextStyle,
       ),
     );

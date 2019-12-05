@@ -42,7 +42,7 @@ class _TogetherFormPriceState extends State<TogetherFormPrice> {
         color: MainTheme.enabledButtonColor,
         text: s_priceInfo.tablePrice != 0
             ? "${s_priceInfo.tablePrice.toInt()} + ${s_priceInfo.tipPrice.toInt()} = ${s_priceInfo.tablePrice.toInt() + s_priceInfo.tipPrice.toInt()}만원"
-            : LocalizableLoader.of(context).text("price_select"),
+            : LocalizableLoader.of(context).text("price_select_hint"),
         onPressed: () {
           showDialog(
               context: context,
@@ -55,7 +55,7 @@ class _TogetherFormPriceState extends State<TogetherFormPrice> {
                       children: <Widget>[
                         DialogHeaderWidget(
                             title: LocalizableLoader.of(context)
-                                .text("price_select")),
+                                .text("price_select_hint")),
                         Material(
                           type: MaterialType.transparency,
                           child: TogetherFormPriceContentsWidget(),

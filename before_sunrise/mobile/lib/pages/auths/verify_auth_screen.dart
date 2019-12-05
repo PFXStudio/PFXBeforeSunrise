@@ -69,7 +69,7 @@ class VerifyAuthScreen extends StatelessWidget {
         Row(
           children: <Widget>[
             Text(
-              LocalizableLoader.of(context).text("app_title"),
+              LocalizableLoader.of(context).text("app_name"),
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 35.0,

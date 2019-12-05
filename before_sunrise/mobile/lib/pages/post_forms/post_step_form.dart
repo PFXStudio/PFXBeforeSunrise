@@ -344,7 +344,7 @@ class PostStepFormState extends State<PostStepForm>
                               label: Text(
                                 sprintf(
                                     LocalizableLoader.of(context)
-                                        .text("add_pictures_button"),
+                                        .text("add_pictures"),
                                     [
                                       _selectedOriginalDatas.length,
                                       maxPicturesCount
@@ -356,8 +356,7 @@ class PostStepFormState extends State<PostStepForm>
                               onPressed: () {
                                 if (_selectedOriginalDatas.length >=
                                     maxPicturesCount) {
-                                  FailSnackbar()
-                                      .show("notice_remove_pictures", null);
+                                  FailSnackbar().show("remove_pictures", null);
 
                                   return;
                                 }
@@ -397,7 +396,7 @@ class PostStepFormState extends State<PostStepForm>
                               size: 18.0,
                             ),
                             hintText: LocalizableLoader.of(context)
-                                .text("board_youtube_hint_text"),
+                                .text("youtube_hint"),
                             hintStyle: TextStyle(fontSize: 17.0),
                           ),
                         ),

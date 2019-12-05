@@ -29,7 +29,7 @@ class _BoardTopBarWidgetState extends State<TogetherFormTopBar>
           Navigator.pop(context);
         },
       ),
-      title: Text(LocalizableLoader.of(context).text("board_regist_title")),
+      title: Text(LocalizableLoader.of(context).text("regist")),
     );
   }
 }

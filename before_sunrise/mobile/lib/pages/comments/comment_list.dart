@@ -366,7 +366,7 @@ class _CommentListState extends State<CommentList> {
                               hoverColor: Colors.black,
                               contentPadding: EdgeInsets.all(10.0),
                               hintText: LocalizableLoader.of(context)
-                                  .text("comment_hint_text"),
+                                  .text("comment_hint"),
                             ),
                             minLines: 1,
                             maxLines: 5,

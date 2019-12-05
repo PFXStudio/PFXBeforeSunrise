@@ -114,22 +114,22 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
   Widget build(BuildContext context) {
     KeyboardDector().setContext(context, 0);
     var defaultInfoStep = new Step(
-        title: Text(LocalizableLoader.of(context).text("title_default_info")),
+        title: Text(LocalizableLoader.of(context).text("default_info")),
         isActive: true,
         state: StepState.indexed,
         content: _buildDefaultInfos());
     var detailInfoStep = new Step(
-        title: Text(LocalizableLoader.of(context).text("title_operation_info")),
+        title: Text(LocalizableLoader.of(context).text("operation_info")),
         isActive: true,
         state: StepState.indexed,
         content: _buildDetailInfos());
     var mediaStep = new Step(
-        title: Text(LocalizableLoader.of(context).text("title_media_info")),
+        title: Text(LocalizableLoader.of(context).text("media_info")),
         isActive: true,
         state: StepState.indexed,
         content: _buildGalleryFiles(context));
     var registStep = new Step(
-        title: Text(LocalizableLoader.of(context).text("title_regist")),
+        title: Text(LocalizableLoader.of(context).text("regist")),
         isActive: true,
         state: StepState.complete,
         content: _buildAgree());
@@ -557,7 +557,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                               label: Text(
                                 sprintf(
                                     LocalizableLoader.of(context)
-                                        .text("add_pictures_button"),
+                                        .text("add_pictures"),
                                     [
                                       _selectedOriginalDatas.length,
                                       maxPicturesCount
@@ -569,8 +569,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                               onPressed: () {
                                 if (_selectedOriginalDatas.length >=
                                     maxPicturesCount) {
-                                  FailSnackbar()
-                                      .show("notice_remove_pictures", null);
+                                  FailSnackbar().show("remove_pictures", null);
 
                                   return;
                                 }
@@ -611,7 +610,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                               size: 18.0,
                             ),
                             hintText: LocalizableLoader.of(context)
-                                .text("board_youtube_hint_text"),
+                                .text("youtube_hint"),
                             hintStyle: TextStyle(fontSize: 17.0),
                           ),
                         ),

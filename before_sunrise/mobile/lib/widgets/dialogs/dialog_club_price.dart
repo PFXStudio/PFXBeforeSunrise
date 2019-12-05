@@ -44,7 +44,7 @@ class _DialogClubPriceState extends State<DialogClubPrice> {
             color: MainTheme.enabledButtonColor,
             text: s_clubPriceInfo.entrance != 0
                 ? "${s_clubPriceInfo.entrance.toInt()}만원"
-                : LocalizableLoader.of(context).text("price_select"),
+                : LocalizableLoader.of(context).text("price_select_hint"),
             onPressed: () {
               showDialog(
                   context: context,
@@ -57,7 +57,7 @@ class _DialogClubPriceState extends State<DialogClubPrice> {
                           children: <Widget>[
                             DialogHeaderWidget(
                                 title: LocalizableLoader.of(context)
-                                    .text("price_select")),
+                                    .text("price_select_hint")),
                             Material(
                               type: MaterialType.transparency,
                               child: DialogClubPriceContentsWidget(),
@@ -83,7 +83,7 @@ class _DialogClubPriceState extends State<DialogClubPrice> {
             color: MainTheme.enabledButtonColor,
             text: s_clubPriceInfo.entrance != 0
                 ? "${s_clubPriceInfo.entrance.toInt()}만원"
-                : LocalizableLoader.of(context).text("price_select"),
+                : LocalizableLoader.of(context).text("price_select_hint"),
             onPressed: () {
               showDialog(
                   context: context,
@@ -96,7 +96,7 @@ class _DialogClubPriceState extends State<DialogClubPrice> {
                           children: <Widget>[
                             DialogHeaderWidget(
                                 title: LocalizableLoader.of(context)
-                                    .text("price_select")),
+                                    .text("price_select_hint")),
                             Material(
                               type: MaterialType.transparency,
                               child: DialogClubPriceContentsWidget(),

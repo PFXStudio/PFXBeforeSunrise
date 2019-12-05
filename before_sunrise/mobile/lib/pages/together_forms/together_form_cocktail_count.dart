@@ -60,7 +60,7 @@ class _TogetherFormCocktailCountState extends State<TogetherFormCocktailCount> {
         text: cocktailCountInfo.hardCount != 0 ||
                 cocktailCountInfo.champagneCount != 0
             ? "${cocktailCountInfo.hardCount.toInt()}하드, ${cocktailCountInfo.champagneCount.toInt()}샴, ${cocktailCountInfo.serviceCount.toInt()}서비스"
-            : LocalizableLoader.of(context).text("cocktail_count_select"),
+            : LocalizableLoader.of(context).text("cocktail_count_select_hint"),
         onPressed: () {
           showDialog(
               context: context,
@@ -73,7 +73,7 @@ class _TogetherFormCocktailCountState extends State<TogetherFormCocktailCount> {
                       children: <Widget>[
                         DialogHeaderWidget(
                             title: LocalizableLoader.of(context)
-                                .text("cocktail_count_select")),
+                                .text("cocktail_count_select_hint")),
                         Material(
                           type: MaterialType.transparency,
                           child: TogetherFormCocktailCountContentsWidget(),

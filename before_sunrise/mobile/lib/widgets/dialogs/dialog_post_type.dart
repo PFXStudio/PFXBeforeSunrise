@@ -19,7 +19,7 @@ class _DialogPostTypeState extends State<DialogPostType> {
         iconData: FontAwesomeIcons.thLarge,
         color: MainTheme.enabledButtonColor,
         text: selectedText == null
-            ? LocalizableLoader.of(context).text("post_type_select")
+            ? LocalizableLoader.of(context).text("post_type_hint")
             : selectedText,
         onPressed: () {
           showDialog(
@@ -33,7 +33,7 @@ class _DialogPostTypeState extends State<DialogPostType> {
                       children: <Widget>[
                         DialogHeaderWidget(
                             title: LocalizableLoader.of(context)
-                                .text("post_type_select")),
+                                .text("post_type_hint")),
                         Material(
                           type: MaterialType.transparency,
                           child: DialogPostTypeContents(),

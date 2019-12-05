@@ -45,7 +45,7 @@ class _TogetherFormMemberCountState extends State<TogetherFormMemberCount> {
         color: MainTheme.enabledButtonColor,
         text: s_memberCountInfo.totalCount > 2
             ? "총 인원 : ${s_memberCountInfo.totalCount.toInt()}, 모집 인원 : ${s_memberCountInfo.restCount.toInt()}"
-            : LocalizableLoader.of(context).text("member_count_select"),
+            : LocalizableLoader.of(context).text("member_count_select_hint"),
         onPressed: () {
           showDialog(
               context: context,
@@ -58,7 +58,7 @@ class _TogetherFormMemberCountState extends State<TogetherFormMemberCount> {
                       children: <Widget>[
                         DialogHeaderWidget(
                             title: LocalizableLoader.of(context)
-                                .text("member_count_select")),
+                                .text("member_count_select_hint")),
                         Material(
                           type: MaterialType.transparency,
                           child: TogetherFormMemberCountContentsWidget(),

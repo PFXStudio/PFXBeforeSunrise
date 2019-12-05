@@ -382,7 +382,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                               label: Text(
                                 sprintf(
                                     LocalizableLoader.of(context)
-                                        .text("add_pictures_button"),
+                                        .text("add_pictures"),
                                     [
                                       _selectedOriginalDatas.length,
                                       maxPicturesCount
@@ -392,8 +392,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                               onPressed: () {
                                 if (_selectedOriginalDatas.length >=
                                     maxPicturesCount) {
-                                  FailSnackbar()
-                                      .show("notice_remove_pictures", null);
+                                  FailSnackbar().show("remove_pictures", null);
 
                                   return;
                                 }
@@ -433,7 +432,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                               size: 15.0,
                             ),
                             hintText: LocalizableLoader.of(context)
-                                .text("board_youtube_hint_text"),
+                                .text("youtube_hint"),
                             hintStyle: MainTheme.hintTextStyle,
                           ),
                         ),

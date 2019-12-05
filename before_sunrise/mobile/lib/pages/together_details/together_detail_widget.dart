@@ -272,7 +272,7 @@ Widget _buildJoin(BuildContext context) {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 42.0),
           child: Text(
-            LocalizableLoader.of(context).text("together_join_button"),
+            LocalizableLoader.of(context).text("request_join"),
             style: TextStyle(
               color: Colors.white,
               fontSize: 20.0,

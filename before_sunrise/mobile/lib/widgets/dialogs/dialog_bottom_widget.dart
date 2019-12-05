@@ -18,7 +18,7 @@ class _DialogBottomWidgetState extends State<DialogBottomWidget> {
             children: <Widget>[
               FlatButton(
                   child: Text(
-                    LocalizableLoader.of(context).text("cancel_button"),
+                    LocalizableLoader.of(context).text("cancel"),
                     style: TextStyle(color: Colors.black54),
                   ),
                   onPressed: () {
@@ -26,7 +26,7 @@ class _DialogBottomWidgetState extends State<DialogBottomWidget> {
                   }),
               FlatButton(
                   child: Text(
-                    LocalizableLoader.of(context).text("done_button"),
+                    LocalizableLoader.of(context).text("done"),
                     style: TextStyle(color: MainTheme.enabledButtonColor),
                   ),
                   onPressed: () {

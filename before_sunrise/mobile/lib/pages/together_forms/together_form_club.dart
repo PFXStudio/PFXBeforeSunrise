@@ -60,7 +60,7 @@ class _TogetherFormClubState extends State<TogetherFormClub> {
         text: widget.editSelectedClubID != null &&
                 widget.editSelectedClubID.length > 0
             ? widget.editSelectedClubID
-            : LocalizableLoader.of(context).text("club_name_select"),
+            : LocalizableLoader.of(context).text("club_select_hint"),
         onPressed: () {
           showDialog(
               context: context,
@@ -73,7 +73,7 @@ class _TogetherFormClubState extends State<TogetherFormClub> {
                       children: <Widget>[
                         DialogHeaderWidget(
                             title: LocalizableLoader.of(context)
-                                .text("club_name_select")),
+                                .text("club_select_hint")),
                         Material(
                           type: MaterialType.transparency,
                           child: _buildContents(context),
