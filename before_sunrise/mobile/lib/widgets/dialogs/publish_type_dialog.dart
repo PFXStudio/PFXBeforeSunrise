@@ -1,18 +1,17 @@
 import 'package:before_sunrise/import.dart';
 
-typedef DialogPublishTypeWidgetCallback = void Function(String type);
+typedef PublishTypeDialogCallback = void Function(String type);
 
 PublishType dialogPublishType = PublishType.all;
 
-class DialogPublishTypeWidget extends StatefulWidget {
-  DialogPublishTypeWidget({this.callback = null});
+class PublishTypeDialog extends StatefulWidget {
+  PublishTypeDialog({this.callback = null});
   @override
-  _DialogPublishTypeWidgetState createState() =>
-      _DialogPublishTypeWidgetState();
-  DialogPublishTypeWidgetCallback callback;
+  _PublishTypeDialogState createState() => _PublishTypeDialogState();
+  PublishTypeDialogCallback callback;
 }
 
-class _DialogPublishTypeWidgetState extends State<DialogPublishTypeWidget> {
+class _PublishTypeDialogState extends State<PublishTypeDialog> {
   @override
   String selectedText;
   Widget build(BuildContext context) {
@@ -32,14 +31,14 @@ class _DialogPublishTypeWidgetState extends State<DialogPublishTypeWidget> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        DialogHeaderWidget(
+                        HeaderDialog(
                             title: LocalizableLoader.of(context)
                                 .text("publish_type_select")),
                         Material(
                           type: MaterialType.transparency,
-                          child: DialogPublishTypeWidgetContentsWidget(),
+                          child: PublishTypeDialogContentsWidget(),
                         ),
-                        DialogBottomWidget(
+                        BottomDialog(
                           cancelCallback: () {
                             Navigator.pop(context);
                           },
@@ -57,14 +56,14 @@ class _DialogPublishTypeWidgetState extends State<DialogPublishTypeWidget> {
   }
 }
 
-class DialogPublishTypeWidgetContentsWidget extends StatefulWidget {
+class PublishTypeDialogContentsWidget extends StatefulWidget {
   @override
-  _DialogPublishTypeWidgetContentsWidgetState createState() =>
-      _DialogPublishTypeWidgetContentsWidgetState();
+  _PublishTypeDialogContentsWidgetState createState() =>
+      _PublishTypeDialogContentsWidgetState();
 }
 
-class _DialogPublishTypeWidgetContentsWidgetState
-    extends State<DialogPublishTypeWidgetContentsWidget> {
+class _PublishTypeDialogContentsWidgetState
+    extends State<PublishTypeDialogContentsWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(

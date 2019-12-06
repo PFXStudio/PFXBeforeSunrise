@@ -1,14 +1,14 @@
 import 'package:before_sunrise/import.dart';
 
-class DialogBottomWidget extends StatefulWidget {
+class BottomDialog extends StatefulWidget {
   @override
-  _DialogBottomWidgetState createState() => _DialogBottomWidgetState();
-  DialogBottomWidget({this.cancelCallback, this.confirmCallback});
+  _BottomDialogState createState() => _BottomDialogState();
+  BottomDialog({this.cancelCallback, this.confirmCallback});
   VoidCallback cancelCallback;
   VoidCallback confirmCallback;
 }
 
-class _DialogBottomWidgetState extends State<DialogBottomWidget> {
+class _BottomDialogState extends State<BottomDialog> {
   @override
   Widget build(BuildContext context) {
     return Container(

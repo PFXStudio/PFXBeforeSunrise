@@ -1,14 +1,14 @@
 import 'package:before_sunrise/import.dart';
 
-class DialogHeaderWidget extends StatefulWidget {
+class HeaderDialog extends StatefulWidget {
   @override
-  _DialogHeaderWidgetState createState() => _DialogHeaderWidgetState();
-  DialogHeaderWidget({this.title});
+  _HeaderDialogState createState() => _HeaderDialogState();
+  HeaderDialog({this.title});
 
   String title = "";
 }
 
-class _DialogHeaderWidgetState extends State<DialogHeaderWidget> {
+class _HeaderDialogState extends State<HeaderDialog> {
   @override
   Widget build(BuildContext context) {
     return Container(

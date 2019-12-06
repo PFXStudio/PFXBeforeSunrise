@@ -1,6 +1,6 @@
 import 'package:before_sunrise/import.dart';
 
-class LikePostWidget extends StatefulWidget {
+class LikePostButton extends StatefulWidget {
   bool isSparkleStay;
   bool isLike;
   int counter;
@@ -21,7 +21,7 @@ class LikePostWidget extends StatefulWidget {
   final filledImage;
   final filledImageColor;
 
-  LikePostWidget.icon(
+  LikePostButton.icon(
       {this.isSparkleStay,
       this.isLike,
       this.counter,
@@ -42,7 +42,7 @@ class LikePostWidget extends StatefulWidget {
         filledImage = null,
         filledImageColor = null;
 
-  LikePostWidget.image(
+  LikePostButton.image(
       {this.isSparkleStay,
       this.isLike,
       this.counter,
@@ -64,12 +64,12 @@ class LikePostWidget extends StatefulWidget {
         filledIconColor = null;
 
   @override
-  _LikePostWidgetState createState() => _LikePostWidgetState();
+  _LikePostButtonState createState() => _LikePostButtonState();
 }
 
 enum ScoreWidgetStatus { HIDDEN, BECOMING_VISIBLE, VISIBLE, BECOMING_INVISIBLE }
 
-class _LikePostWidgetState extends State<LikePostWidget>
+class _LikePostButtonState extends State<LikePostButton>
     with TickerProviderStateMixin {
   double _sparklesAngle = 0.0;
   ScoreWidgetStatus _scoreWidgetStatus = ScoreWidgetStatus.HIDDEN;

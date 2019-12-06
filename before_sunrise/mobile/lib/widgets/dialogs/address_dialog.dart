@@ -1,18 +1,17 @@
 import 'package:before_sunrise/import.dart';
 
-typedef DialogClubInfoGenreTypeCallback = void Function(int type);
+typedef AddressDialogCallback = void Function(String address);
 
-int dialogGenreType = 0;
+String dialogAddress = "";
 
-class DialogClubInfoGenreType extends StatefulWidget {
-  DialogClubInfoGenreType({@required this.callback = null});
+class AddressDialog extends StatefulWidget {
+  AddressDialog({@required this.callback});
   @override
-  _DialogClubInfoGenreTypeState createState() =>
-      _DialogClubInfoGenreTypeState();
-  DialogClubInfoGenreTypeCallback callback;
+  _AddressDialogState createState() => _AddressDialogState();
+  final AddressDialogCallback callback;
 }
 
-class _DialogClubInfoGenreTypeState extends State<DialogClubInfoGenreType> {
+class _AddressDialogState extends State<AddressDialog> {
   String selectedText;
 
   Widget build(BuildContext context) {
@@ -32,14 +31,17 @@ class _DialogClubInfoGenreTypeState extends State<DialogClubInfoGenreType> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        DialogHeaderWidget(
+                        HeaderDialog(
                             title: LocalizableLoader.of(context)
                                 .text("post_type_hint")),
                         Material(
                           type: MaterialType.transparency,
-                          child: DialogClubInfoGenreTypeContents(),
+                          child: Container(
+                              width: kDeviceWidth,
+                              height: 300,
+                              child: ClubInfoStepAddress()),
                         ),
-                        DialogBottomWidget(
+                        BottomDialog(
                           cancelCallback: () {
                             Navigator.pop(context);
                           },
@@ -47,7 +49,7 @@ class _DialogClubInfoGenreTypeState extends State<DialogClubInfoGenreType> {
                             selectedText = LocalizableLoader.of(context)
                                 .text("$dialogPostType");
                             if (widget.callback != null) {
-                              widget.callback(dialogGenreType);
+                              widget.callback(dialogAddress);
                             }
                             Navigator.pop(context);
                           },
@@ -57,14 +59,12 @@ class _DialogClubInfoGenreTypeState extends State<DialogClubInfoGenreType> {
   }
 }
 
-class DialogClubInfoGenreTypeContents extends StatefulWidget {
+class AddressDialogContents extends StatefulWidget {
   @override
-  _DialogClubInfoGenreTypeContentsState createState() =>
-      _DialogClubInfoGenreTypeContentsState();
+  _AddressDialogContentsState createState() => _AddressDialogContentsState();
 }
 
-class _DialogClubInfoGenreTypeContentsState
-    extends State<DialogClubInfoGenreTypeContents> {
+class _AddressDialogContentsState extends State<AddressDialogContents> {
   @override
   Widget build(BuildContext context) {
     return Container(

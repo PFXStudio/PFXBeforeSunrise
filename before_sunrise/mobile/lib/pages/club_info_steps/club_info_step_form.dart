@@ -105,14 +105,14 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
     _clubInfo = ClubInfo();
     SuccessSnackbar().initialize(null);
     FailSnackbar().initialize(null);
-    KeyboardDector().setContext(null, 0);
+    KeyboardDetector().setContext(null, 0);
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    KeyboardDector().setContext(context, 0);
+    KeyboardDetector().setContext(context, 0);
     var defaultInfoStep = new Step(
         title: Text(LocalizableLoader.of(context).text("default_info")),
         isActive: true,
@@ -326,7 +326,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                         child: Row(
                           children: <Widget>[
                             Text(LocalizableLoader.of(context).text("day_sun")),
-                            DialogOperatingTime(
+                            OperateTimeDialog(
                               title: timeSun.isNotEmpty
                                   ? timeSun
                                   : selectOperatingTime,
@@ -343,7 +343,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                           padding: EdgeInsets.only(left: 20),
                           child: Row(children: <Widget>[
                             Text(LocalizableLoader.of(context).text("day_mon")),
-                            DialogOperatingTime(
+                            OperateTimeDialog(
                               title: timeMon.isNotEmpty
                                   ? timeMon
                                   : selectOperatingTime,
@@ -358,7 +358,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                           padding: EdgeInsets.only(left: 20),
                           child: Row(children: <Widget>[
                             Text(LocalizableLoader.of(context).text("day_tue")),
-                            DialogOperatingTime(
+                            OperateTimeDialog(
                               title: timeTue.isNotEmpty
                                   ? timeTue
                                   : selectOperatingTime,
@@ -373,7 +373,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                           padding: EdgeInsets.only(left: 20),
                           child: Row(children: <Widget>[
                             Text(LocalizableLoader.of(context).text("day_wed")),
-                            DialogOperatingTime(
+                            OperateTimeDialog(
                               title: timeWed.isNotEmpty
                                   ? timeWed
                                   : selectOperatingTime,
@@ -388,7 +388,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                           padding: EdgeInsets.only(left: 20),
                           child: Row(children: <Widget>[
                             Text(LocalizableLoader.of(context).text("day_thu")),
-                            DialogOperatingTime(
+                            OperateTimeDialog(
                               title: timeThu.isNotEmpty
                                   ? timeThu
                                   : selectOperatingTime,
@@ -403,7 +403,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                           padding: EdgeInsets.only(left: 20),
                           child: Row(children: <Widget>[
                             Text(LocalizableLoader.of(context).text("day_fri")),
-                            DialogOperatingTime(
+                            OperateTimeDialog(
                               title: timeFri.isNotEmpty
                                   ? timeFri
                                   : selectOperatingTime,
@@ -418,7 +418,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                           padding: EdgeInsets.only(left: 20),
                           child: Row(children: <Widget>[
                             Text(LocalizableLoader.of(context).text("day_sat")),
-                            DialogOperatingTime(
+                            OperateTimeDialog(
                               title: timeSat.isNotEmpty
                                   ? timeSat
                                   : selectOperatingTime,

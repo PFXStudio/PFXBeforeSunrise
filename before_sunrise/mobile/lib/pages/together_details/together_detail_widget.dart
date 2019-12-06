@@ -380,14 +380,14 @@ class _MenuButton extends StatelessWidget {
           )));
     }
 
-    OptionMenu().initialize(
+    OptionMenuPopup().initialize(
         context: context,
         backgroundColor: Colors.black54,
         items: menuItems,
         onClickMenu: onClickMenu,
         onDismiss: onDismiss);
 
-    OptionMenu().show(widgetKey: moreMenuKey);
+    OptionMenuPopup().show(widgetKey: moreMenuKey);
   }
 
   void onClickMenu(item) {
@@ -425,7 +425,7 @@ class _MenuButton extends StatelessWidget {
 
       Map<String, dynamic> infoMap = {"editPost": together};
 
-      var context = OptionMenu().context;
+      var context = OptionMenuPopup().context;
       downloadAllImages(together.imageUrls, (editImageMap) {
         if (editImageMap != null) {
           infoMap["editImageMap"] = editImageMap;

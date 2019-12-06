@@ -81,7 +81,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
     _contentsFocusNode.dispose();
     _youtubeFocusNode.dispose();
     _together = null;
-    KeyboardDector().setContext(null, 0);
+    KeyboardDetector().setContext(null, 0);
     _togetherBloc.dispatch(BindTogetherEvent());
 
     super.dispose();
@@ -89,7 +89,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
 
   @override
   Widget build(BuildContext context) {
-    KeyboardDector().setContext(context, 0);
+    KeyboardDetector().setContext(context, 0);
 
     final List<Step> steps = [
       new Step(

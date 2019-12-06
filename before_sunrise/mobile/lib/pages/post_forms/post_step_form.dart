@@ -84,14 +84,14 @@ class PostStepFormState extends State<PostStepForm>
     SuccessSnackbar().initialize(null);
     FailSnackbar().initialize(null);
     _postBloc.dispatch(BindPostEvent());
-    KeyboardDector().setContext(null, 0);
+    KeyboardDetector().setContext(null, 0);
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    KeyboardDector().setContext(context, 0);
+    KeyboardDetector().setContext(context, 0);
     var typeStep = new Step(
         title: const Text('게시판 종류'),
         isActive: true,
@@ -209,7 +209,7 @@ class PostStepFormState extends State<PostStepForm>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                DialogPostType(
+                PostTypeDialog(
                   callback: (type) {
                     setState(() {
                       _post.type = type;

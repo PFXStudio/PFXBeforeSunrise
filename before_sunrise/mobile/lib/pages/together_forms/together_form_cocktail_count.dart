@@ -71,14 +71,14 @@ class _TogetherFormCocktailCountState extends State<TogetherFormCocktailCount> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        DialogHeaderWidget(
+                        HeaderDialog(
                             title: LocalizableLoader.of(context)
                                 .text("cocktail_count_select_hint")),
                         Material(
                           type: MaterialType.transparency,
                           child: TogetherFormCocktailCountContentsWidget(),
                         ),
-                        DialogBottomWidget(
+                        BottomDialog(
                           cancelCallback: () {
                             Navigator.pop(context);
                           },

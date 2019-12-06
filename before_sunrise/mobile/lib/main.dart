@@ -30,7 +30,7 @@ class _MainAppState extends State<MainApp> {
     super.initState();
     _localizableDelegate = LocalizableDelegate(newLocale: null);
     localizableManager.onLocaleChanged = onLocaleChange;
-    KeyboardDector().initialize();
+    KeyboardDetector().initialize();
   }
 
   void onLocaleChange(Locale locale) {

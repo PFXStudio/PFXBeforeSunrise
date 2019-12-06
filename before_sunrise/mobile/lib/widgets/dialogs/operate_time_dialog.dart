@@ -1,20 +1,20 @@
 import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart';
 
-typedef DialogOperatingTimeCallback = void Function(String time);
+typedef OperateTimeDialogCallback = void Function(String time);
 
 DateTime dialogOpenDateTime;
 DateTime dialogCloseDateTime;
 
-class DialogOperatingTime extends StatefulWidget {
-  DialogOperatingTime({@required this.callback, @required this.title});
+class OperateTimeDialog extends StatefulWidget {
+  OperateTimeDialog({@required this.callback, @required this.title});
   @override
-  _DialogOperatingTimeState createState() => _DialogOperatingTimeState();
+  _OperateTimeDialogState createState() => _OperateTimeDialogState();
   final String title;
-  final DialogOperatingTimeCallback callback;
+  final OperateTimeDialogCallback callback;
 }
 
-class _DialogOperatingTimeState extends State<DialogOperatingTime> {
+class _OperateTimeDialogState extends State<OperateTimeDialog> {
   String selectedText;
 
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class _DialogOperatingTimeState extends State<DialogOperatingTime> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        DialogHeaderWidget(
+                        HeaderDialog(
                             title: LocalizableLoader.of(context)
                                 .text("time_select")),
                         Material(
@@ -83,7 +83,7 @@ class _DialogOperatingTimeState extends State<DialogOperatingTime> {
                                     )),
                               ],
                             )),
-                        DialogBottomWidget(
+                        BottomDialog(
                           cancelCallback: () {
                             Navigator.pop(context);
                           },
@@ -115,14 +115,13 @@ class _DialogOperatingTimeState extends State<DialogOperatingTime> {
   }
 }
 
-class DialogOperatingTimeContents extends StatefulWidget {
+class OperateTimeDialogContents extends StatefulWidget {
   @override
-  _DialogOperatingTimeContentsState createState() =>
-      _DialogOperatingTimeContentsState();
+  _OperateTimeDialogContentsState createState() =>
+      _OperateTimeDialogContentsState();
 }
 
-class _DialogOperatingTimeContentsState
-    extends State<DialogOperatingTimeContents> {
+class _OperateTimeDialogContentsState extends State<OperateTimeDialogContents> {
   @override
   Widget build(BuildContext context) {
     return Container(

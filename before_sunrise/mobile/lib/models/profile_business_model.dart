@@ -1,9 +1,9 @@
 import 'package:before_sunrise/import.dart';
 
-class ProfileBusiness {
+class ProfileBusinessModel {
   final String businessName;
   final String businessDetails;
 
-  ProfileBusiness(
+  ProfileBusinessModel(
       {@required this.businessName, @required this.businessDetails});
 }

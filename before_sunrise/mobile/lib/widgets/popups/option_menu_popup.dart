@@ -1,15 +1,48 @@
 import 'dart:ui';
-
+import 'package:flutter/rendering.dart';
 import 'package:before_sunrise/import.dart';
 
-abstract class OptionMenuProvider {
+class TriangleMark extends CustomPainter {
+  bool isDown;
+  Color color;
+
+  TriangleMark({this.isDown = true, this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint _paint = new Paint();
+    _paint.strokeWidth = 2.0;
+    _paint.color = color;
+    _paint.style = PaintingStyle.fill;
+
+    Path path = new Path();
+    if (isDown) {
+      path.moveTo(0.0, -1.0);
+      path.lineTo(size.width, -1.0);
+      path.lineTo(size.width / 2.0, size.height);
+    } else {
+      path.moveTo(size.width / 2.0, 0.0);
+      path.lineTo(0.0, size.height + 1);
+      path.lineTo(size.width, size.height + 1);
+    }
+
+    canvas.drawPath(path, _paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
+abstract class OptionMenuPopupProvider {
   String get menuTitle;
   // Image get menu_image;
   Widget get menuImage;
   TextStyle get menuTextStyle;
 }
 
-class OptionItem extends OptionMenuProvider {
+class OptionItem extends OptionMenuPopupProvider {
   int index;
   Widget image; // 图标名称
   String title; // 菜单标题
@@ -33,17 +66,17 @@ class OptionItem extends OptionMenuProvider {
       textStyle ?? TextStyle(color: Color(0xffc5c5c5), fontSize: 12.0);
 }
 
-typedef OptionMenuCallback = Function(OptionMenuProvider item);
+typedef OptionMenuPopupCallback = Function(OptionMenuPopupProvider item);
 
 /**
  * popup menu
  */
-class OptionMenu {
-  static final OptionMenu _instance = new OptionMenu._internal();
-  factory OptionMenu() {
+class OptionMenuPopup {
+  static final OptionMenuPopup _instance = new OptionMenuPopup._internal();
+  factory OptionMenuPopup() {
     return _instance;
   }
-  OptionMenu._internal();
+  OptionMenuPopup._internal();
 
   static var itemWidth = 62.0;
   static var itemHeight = 62.0;
@@ -55,7 +88,7 @@ class OptionMenu {
   // The left top point of this menu.
   Offset _offset;
   VoidCallback dismissCallback;
-  OptionMenuCallback onClickMenu;
+  OptionMenuPopupCallback onClickMenu;
   Rect _showRect; // 显示在哪个view的rect
   bool _isDown = true; // 是显示在下方还是上方，通过计算得到
   BuildContext context;
@@ -67,7 +100,7 @@ class OptionMenu {
 
   void initialize(
       {BuildContext context,
-      OptionMenuCallback onClickMenu,
+      OptionMenuPopupCallback onClickMenu,
       VoidCallback onDismiss,
       int maxColumn,
       Color backgroundColor,
@@ -91,13 +124,13 @@ class OptionMenu {
     }
 
     this.items = items ?? this.items;
-    this._showRect = rect ?? OptionMenu.getWidgetGlobalRect(widgetKey);
+    this._showRect = rect ?? OptionMenuPopup.getWidgetGlobalRect(widgetKey);
     this.dismissCallback = dismissCallback;
 
     _calculatePosition(this.context);
 
     _entry = OverlayEntry(builder: (context) {
-      return buildOptionMenuLayout(_offset);
+      return buildOptionMenuPopupLayout(_offset);
     });
 
     Overlay.of(this.context).insert(_entry);
@@ -148,7 +181,7 @@ class OptionMenu {
     return itemHeight * _row;
   }
 
-  LayoutBuilder buildOptionMenuLayout(Offset offset) {
+  LayoutBuilder buildOptionMenuPopupLayout(Offset offset) {
     return LayoutBuilder(builder: (context, constraints) {
       return GestureDetector(
         behavior: HitTestBehavior.translucent,
@@ -299,7 +332,7 @@ class OptionMenu {
     );
   }
 
-  void itemClicked(OptionMenuProvider item) {
+  void itemClicked(OptionMenuPopupProvider item) {
     if (onClickMenu != null) {
       onClickMenu(item);
     }
@@ -330,7 +363,7 @@ class _OptionItemWidget extends StatefulWidget {
   final Color backgroundColor;
   final Color highlightColor;
 
-  final Function(OptionMenuProvider item) clickCallback;
+  final Function(OptionMenuPopupProvider item) clickCallback;
 
   _OptionItemWidget(
       {this.item,
@@ -378,8 +411,8 @@ class _OptionItemWidgetState extends State<_OptionItemWidget> {
         }
       },
       child: Container(
-          width: OptionMenu.itemWidth,
-          height: OptionMenu.itemHeight,
+          width: OptionMenuPopup.itemWidth,
+          height: OptionMenuPopup.itemHeight,
           decoration: BoxDecoration(
               color: color,
               border: Border(

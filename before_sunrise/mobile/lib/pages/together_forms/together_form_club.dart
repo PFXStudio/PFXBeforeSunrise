@@ -71,14 +71,14 @@ class _TogetherFormClubState extends State<TogetherFormClub> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        DialogHeaderWidget(
+                        HeaderDialog(
                             title: LocalizableLoader.of(context)
                                 .text("club_select_hint")),
                         Material(
                           type: MaterialType.transparency,
                           child: _buildContents(context),
                         ),
-                        DialogBottomWidget(
+                        BottomDialog(
                           cancelCallback: () {
                             Navigator.pop(context);
                           },

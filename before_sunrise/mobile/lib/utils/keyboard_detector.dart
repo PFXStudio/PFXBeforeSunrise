@@ -1,14 +1,14 @@
 import 'package:before_sunrise/import.dart';
 
-class KeyboardDector {
-  KeyboardDector._internal();
-  static final KeyboardDector _instance = new KeyboardDector._internal();
+class KeyboardDetector {
+  KeyboardDetector._internal();
+  static final KeyboardDetector _instance = new KeyboardDetector._internal();
   bool _isKeyboardVisible = false;
   OverlayEntry overlayEntry;
   BuildContext context;
   double bottomHeight = 0;
 
-  factory KeyboardDector() {
+  factory KeyboardDetector() {
     return _instance;
   }
 

@@ -262,7 +262,7 @@ class _PostItemCardDefaultState extends State<PostItemCardDefault> {
           ? SizedBox()
           : Padding(
               padding: EdgeInsets.only(left: 5),
-              child: LikePostWidget.icon(
+              child: LikePostButton.icon(
                 isLike: _post.isLike,
                 counter: _post.likeCount,
                 defaultIcon: FontAwesomeIcons.kissBeam,

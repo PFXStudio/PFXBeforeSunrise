@@ -1,17 +1,17 @@
 import 'package:before_sunrise/import.dart';
 
-typedef DialogPostTypeCallback = void Function(String type);
+typedef GenreTypeDialogCallback = void Function(int type);
 
-PostType dialogPostType = PostType.free;
+int dialogGenreType = 0;
 
-class DialogPostType extends StatefulWidget {
-  DialogPostType({@required this.callback = null});
+class GenreTypeDialog extends StatefulWidget {
+  GenreTypeDialog({@required this.callback = null});
   @override
-  _DialogPostTypeState createState() => _DialogPostTypeState();
-  DialogPostTypeCallback callback;
+  _GenreTypeDialogState createState() => _GenreTypeDialogState();
+  GenreTypeDialogCallback callback;
 }
 
-class _DialogPostTypeState extends State<DialogPostType> {
+class _GenreTypeDialogState extends State<GenreTypeDialog> {
   String selectedText;
 
   Widget build(BuildContext context) {
@@ -31,14 +31,14 @@ class _DialogPostTypeState extends State<DialogPostType> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        DialogHeaderWidget(
+                        HeaderDialog(
                             title: LocalizableLoader.of(context)
                                 .text("post_type_hint")),
                         Material(
                           type: MaterialType.transparency,
-                          child: DialogPostTypeContents(),
+                          child: GenreTypeDialogContents(),
                         ),
-                        DialogBottomWidget(
+                        BottomDialog(
                           cancelCallback: () {
                             Navigator.pop(context);
                           },
@@ -46,7 +46,7 @@ class _DialogPostTypeState extends State<DialogPostType> {
                             selectedText = LocalizableLoader.of(context)
                                 .text("$dialogPostType");
                             if (widget.callback != null) {
-                              widget.callback("$dialogPostType");
+                              widget.callback(dialogGenreType);
                             }
                             Navigator.pop(context);
                           },
@@ -56,12 +56,13 @@ class _DialogPostTypeState extends State<DialogPostType> {
   }
 }
 
-class DialogPostTypeContents extends StatefulWidget {
+class GenreTypeDialogContents extends StatefulWidget {
   @override
-  _DialogPostTypeContentsState createState() => _DialogPostTypeContentsState();
+  _GenreTypeDialogContentsState createState() =>
+      _GenreTypeDialogContentsState();
 }
 
-class _DialogPostTypeContentsState extends State<DialogPostTypeContents> {
+class _GenreTypeDialogContentsState extends State<GenreTypeDialogContents> {
   @override
   Widget build(BuildContext context) {
     return Container(

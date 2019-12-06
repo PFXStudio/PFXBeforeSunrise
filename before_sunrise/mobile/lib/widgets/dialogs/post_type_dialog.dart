@@ -1,17 +1,17 @@
 import 'package:before_sunrise/import.dart';
 
-typedef DialogClubInfoAddressCallback = void Function(String address);
+typedef PostTypeDialogCallback = void Function(String type);
 
-String dialogAddress = "";
+PostType dialogPostType = PostType.free;
 
-class DialogClubInfoAddress extends StatefulWidget {
-  DialogClubInfoAddress({@required this.callback});
+class PostTypeDialog extends StatefulWidget {
+  PostTypeDialog({@required this.callback = null});
   @override
-  _DialogClubInfoAddressState createState() => _DialogClubInfoAddressState();
-  final DialogClubInfoAddressCallback callback;
+  _PostTypeDialogState createState() => _PostTypeDialogState();
+  PostTypeDialogCallback callback;
 }
 
-class _DialogClubInfoAddressState extends State<DialogClubInfoAddress> {
+class _PostTypeDialogState extends State<PostTypeDialog> {
   String selectedText;
 
   Widget build(BuildContext context) {
@@ -31,17 +31,14 @@ class _DialogClubInfoAddressState extends State<DialogClubInfoAddress> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        DialogHeaderWidget(
+                        HeaderDialog(
                             title: LocalizableLoader.of(context)
                                 .text("post_type_hint")),
                         Material(
                           type: MaterialType.transparency,
-                          child: Container(
-                              width: kDeviceWidth,
-                              height: 300,
-                              child: ClubInfoStepAddress()),
+                          child: PostTypeDialogContents(),
                         ),
-                        DialogBottomWidget(
+                        BottomDialog(
                           cancelCallback: () {
                             Navigator.pop(context);
                           },
@@ -49,7 +46,7 @@ class _DialogClubInfoAddressState extends State<DialogClubInfoAddress> {
                             selectedText = LocalizableLoader.of(context)
                                 .text("$dialogPostType");
                             if (widget.callback != null) {
-                              widget.callback(dialogAddress);
+                              widget.callback("$dialogPostType");
                             }
                             Navigator.pop(context);
                           },
@@ -59,14 +56,12 @@ class _DialogClubInfoAddressState extends State<DialogClubInfoAddress> {
   }
 }
 
-class DialogClubInfoAddressContents extends StatefulWidget {
+class PostTypeDialogContents extends StatefulWidget {
   @override
-  _DialogClubInfoAddressContentsState createState() =>
-      _DialogClubInfoAddressContentsState();
+  _PostTypeDialogContentsState createState() => _PostTypeDialogContentsState();
 }
 
-class _DialogClubInfoAddressContentsState
-    extends State<DialogClubInfoAddressContents> {
+class _PostTypeDialogContentsState extends State<PostTypeDialogContents> {
   @override
   Widget build(BuildContext context) {
     return Container(

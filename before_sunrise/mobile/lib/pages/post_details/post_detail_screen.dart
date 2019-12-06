@@ -76,7 +76,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                     child: Stack(children: [
                       SlidingUpPanel(
                         onPanelSlide: (value) {
-                          OptionMenu().dismiss();
+                          OptionMenuPopup().dismiss();
                         },
                         maxHeight: _panelHeightOpen,
                         minHeight: _panelHeightClosed,
@@ -355,7 +355,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
         ? SizedBox()
         : Padding(
             padding: EdgeInsets.only(left: 20),
-            child: LikePostWidget.icon(
+            child: LikePostButton.icon(
               isSparkleStay: false,
               isLike: _post.isLike,
               counter: _post.likeCount,
@@ -680,14 +680,14 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           )));
     }
 
-    OptionMenu().initialize(
+    OptionMenuPopup().initialize(
         context: context,
         backgroundColor: Colors.black54,
         items: menuItems,
         onClickMenu: onClickMenu,
         onDismiss: onDismiss);
 
-    OptionMenu().show(widgetKey: moreMenuKey);
+    OptionMenuPopup().show(widgetKey: moreMenuKey);
   }
 
   void onClickMenu(item) async {

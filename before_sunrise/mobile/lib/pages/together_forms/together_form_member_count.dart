@@ -56,14 +56,14 @@ class _TogetherFormMemberCountState extends State<TogetherFormMemberCount> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        DialogHeaderWidget(
+                        HeaderDialog(
                             title: LocalizableLoader.of(context)
                                 .text("member_count_select_hint")),
                         Material(
                           type: MaterialType.transparency,
                           child: TogetherFormMemberCountContentsWidget(),
                         ),
-                        DialogBottomWidget(
+                        BottomDialog(
                           cancelCallback: () {
                             Navigator.pop(context);
                           },

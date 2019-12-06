@@ -53,14 +53,14 @@ class _TogetherFormPriceState extends State<TogetherFormPrice> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        DialogHeaderWidget(
+                        HeaderDialog(
                             title: LocalizableLoader.of(context)
                                 .text("price_select_hint")),
                         Material(
                           type: MaterialType.transparency,
                           child: TogetherFormPriceContentsWidget(),
                         ),
-                        DialogBottomWidget(
+                        BottomDialog(
                           cancelCallback: () {
                             Navigator.pop(context);
                           },

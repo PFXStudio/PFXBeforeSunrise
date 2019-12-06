@@ -8,26 +8,26 @@ class ClubPriceInfo {
 }
 
 ClubPriceInfo s_clubPriceInfo = ClubPriceInfo(entrance: 0, table: 0);
-typedef DialogClubPriceCallback = void Function(ClubPriceInfo priceInfo);
+typedef PriceDialogCallback = void Function(ClubPriceInfo priceInfo);
 
-class DialogClubPrice extends StatefulWidget {
-  DialogClubPrice({this.callback = null, this.editPriceInfo});
+class PriceDialog extends StatefulWidget {
+  PriceDialog({this.callback = null, this.editPriceInfo});
   @override
-  _DialogClubPriceState createState() {
+  _PriceDialogState createState() {
     if (editPriceInfo == null) {
-      return _DialogClubPriceState();
+      return _PriceDialogState();
     }
 
     s_clubPriceInfo.entrance = editPriceInfo.entrance;
     s_clubPriceInfo.table = editPriceInfo.table;
-    return _DialogClubPriceState();
+    return _PriceDialogState();
   }
 
-  DialogClubPriceCallback callback;
+  PriceDialogCallback callback;
   ClubPriceInfo editPriceInfo;
 }
 
-class _DialogClubPriceState extends State<DialogClubPrice> {
+class _PriceDialogState extends State<PriceDialog> {
   @override
   void dispose() {
     s_clubPriceInfo.entrance = 0;
@@ -55,14 +55,14 @@ class _DialogClubPriceState extends State<DialogClubPrice> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
-                            DialogHeaderWidget(
+                            HeaderDialog(
                                 title: LocalizableLoader.of(context)
                                     .text("price_select_hint")),
                             Material(
                               type: MaterialType.transparency,
-                              child: DialogClubPriceContentsWidget(),
+                              child: PriceDialogContentsWidget(),
                             ),
-                            DialogBottomWidget(
+                            BottomDialog(
                               cancelCallback: () {
                                 Navigator.pop(context);
                               },
@@ -94,14 +94,14 @@ class _DialogClubPriceState extends State<DialogClubPrice> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
-                            DialogHeaderWidget(
+                            HeaderDialog(
                                 title: LocalizableLoader.of(context)
                                     .text("price_select_hint")),
                             Material(
                               type: MaterialType.transparency,
-                              child: DialogClubPriceContentsWidget(),
+                              child: PriceDialogContentsWidget(),
                             ),
-                            DialogBottomWidget(
+                            BottomDialog(
                               cancelCallback: () {
                                 Navigator.pop(context);
                               },
@@ -151,14 +151,13 @@ priceHandler(IconData icon) {
   );
 }
 
-class DialogClubPriceContentsWidget extends StatefulWidget {
+class PriceDialogContentsWidget extends StatefulWidget {
   @override
-  _DialogClubPriceContentsWidgetState createState() =>
-      _DialogClubPriceContentsWidgetState();
+  _PriceDialogContentsWidgetState createState() =>
+      _PriceDialogContentsWidgetState();
 }
 
-class _DialogClubPriceContentsWidgetState
-    extends State<DialogClubPriceContentsWidget> {
+class _PriceDialogContentsWidgetState extends State<PriceDialogContentsWidget> {
   @override
   final double maxPrice = 1000;
   Widget build(BuildContext context) {

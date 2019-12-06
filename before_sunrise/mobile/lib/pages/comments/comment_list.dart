@@ -50,18 +50,18 @@ class _CommentListState extends State<CommentList> {
 
   @override
   void dispose() {
-    KeyboardDector().setContext(null, 0);
-    OptionMenu().dismiss();
+    KeyboardDetector().setContext(null, 0);
+    OptionMenuPopup().dismiss();
     super.dispose();
   }
 
   _updateKeyboard() => Future.delayed(Duration(milliseconds: 500), () async {
         if (this.mounted == false) {
-          KeyboardDector().setContext(context, 0);
+          KeyboardDetector().setContext(context, 0);
           return;
         }
 
-        KeyboardDector()
+        KeyboardDetector()
             .setContext(context, _inputBarKey.currentContext.size.height + 4);
       });
 
@@ -560,7 +560,7 @@ class _CommentListState extends State<CommentList> {
   }
 
   void _scrollListener() {
-    OptionMenu().dismiss();
+    OptionMenuPopup().dismiss();
     FocusScope.of(context).requestFocus(FocusNode());
     if (_autoScrollController.offset >=
             _autoScrollController.position.maxScrollExtent &&
