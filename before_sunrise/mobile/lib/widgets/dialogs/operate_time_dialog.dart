@@ -90,7 +90,7 @@ class _OperateTimeDialogState extends State<OperateTimeDialog> {
                           confirmCallback: () {
                             if (dialogOpenDateTime == null ||
                                 dialogCloseDateTime == null) {
-                              FailSnackbar().show(
+                              FailSnackBar().show(
                                   "error_clubInfo_form_select_time", null);
 
                               return;

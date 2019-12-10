@@ -1,17 +1,17 @@
 import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart';
 
-typedef TogetherFormDateCallback = void Function(DateTime dateTime);
+typedef TogetherStepDateCallback = void Function(DateTime dateTime);
 
-class TogetherFormDate extends StatefulWidget {
-  TogetherFormDate({this.callback, this.editSelectedDate});
+class TogetherStepDate extends StatefulWidget {
+  TogetherStepDate({this.callback, this.editSelectedDate});
   @override
-  _TogetherFormDateState createState() => _TogetherFormDateState();
-  final TogetherFormDateCallback callback;
+  _TogetherStepDateState createState() => _TogetherStepDateState();
+  final TogetherStepDateCallback callback;
   DateTime editSelectedDate;
 }
 
-class _TogetherFormDateState extends State<TogetherFormDate> {
+class _TogetherStepDateState extends State<TogetherStepDate> {
   DateTime selectedDate() => widget.editSelectedDate;
   @override
   Widget build(BuildContext context) {

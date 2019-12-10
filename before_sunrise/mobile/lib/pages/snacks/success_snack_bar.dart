@@ -1,14 +1,14 @@
+import 'package:before_sunrise/import.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class FailSnackbar {
-  static final FailSnackbar _successSnarbarSingleton =
-      new FailSnackbar._internal();
-  factory FailSnackbar() {
+class SuccessSnackBar {
+  static final SuccessSnackBar _successSnarbarSingleton =
+      new SuccessSnackBar._internal();
+  factory SuccessSnackBar() {
     return _successSnarbarSingleton;
   }
 
-  FailSnackbar._internal();
+  SuccessSnackBar._internal();
   GlobalKey<ScaffoldState> _scaffoldKey;
 
   void initialize(GlobalKey<ScaffoldState> scaffoldKey) {
@@ -31,7 +31,7 @@ class FailSnackbar {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(child: Text(message)),
-              Icon(FontAwesomeIcons.exclamationCircle, color: Colors.redAccent),
+              Icon(FontAwesomeIcons.checkCircle, color: Colors.green),
             ],
           ),
         ),

@@ -1,11 +1,11 @@
 import 'package:before_sunrise/import.dart';
 
-class TogetherFormTopBar extends StatefulWidget {
+class TogetherStepTopBar extends StatefulWidget {
   @override
   _BoardTopBarWidgetState createState() => _BoardTopBarWidgetState();
 }
 
-class _BoardTopBarWidgetState extends State<TogetherFormTopBar>
+class _BoardTopBarWidgetState extends State<TogetherStepTopBar>
     with SingleTickerProviderStateMixin {
   @override
   void initState() {

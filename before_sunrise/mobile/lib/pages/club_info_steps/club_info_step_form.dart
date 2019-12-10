@@ -65,8 +65,8 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
       _clubInfo = ClubInfo();
     }
 
-    SuccessSnackbar().initialize(_scaffoldKey);
-    FailSnackbar().initialize(_scaffoldKey);
+    SuccessSnackBar().initialize(_scaffoldKey);
+    FailSnackBar().initialize(_scaffoldKey);
     _updateEditMode();
   }
 
@@ -103,8 +103,8 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
     _tablePriceTextFocusCreator.focusNode.dispose();
 
     _clubInfo = ClubInfo();
-    SuccessSnackbar().initialize(null);
-    FailSnackbar().initialize(null);
+    SuccessSnackBar().initialize(null);
+    FailSnackBar().initialize(null);
     KeyboardDetector().setContext(null, 0);
 
     super.dispose();
@@ -143,7 +143,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
         bloc: _clubInfoBloc,
         listener: (context, state) async {
           if (state is SuccessClubInfoState) {
-            SuccessSnackbar().show("success_clubInfo", () {
+            SuccessSnackBar().show("success_clubInfo", () {
               Navigator.pop(context);
             });
 
@@ -569,7 +569,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                               onPressed: () {
                                 if (_selectedOriginalDatas.length >=
                                     maxPicturesCount) {
-                                  FailSnackbar().show("remove_pictures", null);
+                                  FailSnackBar().show("remove_pictures", null);
 
                                   return;
                                 }
@@ -729,24 +729,24 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
   void _touchedRegistButton(int lastIndex) {
     if (currentStep == 0 || currentStep == lastIndex) {
       if (_clubInfo.genreType == 0) {
-        FailSnackbar().show("error_clubInfo_form_genre_type", null);
+        FailSnackBar().show("error_clubInfo_form_genre_type", null);
         return;
       }
     }
 
     if (currentStep == 1 || currentStep == lastIndex) {
       if (_nameTextFocusCreator.textEditingController.text.length <= 0) {
-        FailSnackbar().show("error_clubInfo_form_name", null);
+        FailSnackBar().show("error_clubInfo_form_name", null);
         return;
       }
 
       if (_regionTextFocusCreator.textEditingController.text.length <= 0) {
-        FailSnackbar().show("error_clubInfo_form_region", null);
+        FailSnackBar().show("error_clubInfo_form_region", null);
         return;
       }
 
       if (_addressTextFocusCreator.textEditingController.text.length <= 0) {
-        FailSnackbar().show("error_clubInfo_form_address", null);
+        FailSnackBar().show("error_clubInfo_form_address", null);
         return;
       }
     }
@@ -754,12 +754,12 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
     if (currentStep == 2 || currentStep == lastIndex) {
       if (_entrancePriceTextFocusCreator.textEditingController.text.length <=
           0) {
-        FailSnackbar().show("error_clubInfo_form_entrance", null);
+        FailSnackBar().show("error_clubInfo_form_entrance", null);
         return;
       }
 
       if (_tablePriceTextFocusCreator.textEditingController.text.length <= 0) {
-        FailSnackbar().show("error_clubInfo_form_table", null);
+        FailSnackBar().show("error_clubInfo_form_table", null);
         return;
       }
     }

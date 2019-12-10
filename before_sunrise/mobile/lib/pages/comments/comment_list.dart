@@ -499,12 +499,12 @@ class _CommentListState extends State<CommentList> {
 
   void _touchedSendButton() {
     if (widget.isReport == true) {
-      FailSnackbar().show("fail_report_post", null);
+      FailSnackBar().show("fail_report_post", null);
       return;
     }
 
     if (_textController.text.length <= 0) {
-      FailSnackbar().show("error_empty_text", null);
+      FailSnackBar().show("error_empty_text", null);
       return;
     }
 
@@ -531,12 +531,12 @@ class _CommentListState extends State<CommentList> {
 
   void _touchedSendImageButton() {
     if (widget.isReport == true) {
-      FailSnackbar().show("fail_report_post", null);
+      FailSnackBar().show("fail_report_post", null);
       return;
     }
 
     if (_selectedOriginalData == null) {
-      FailSnackbar().show("error_empty_image", null);
+      FailSnackBar().show("error_empty_image", null);
       return;
     }
 

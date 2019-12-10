@@ -54,12 +54,12 @@ class UnAuthScreen extends StatelessWidget {
 
   Future<void> _touchedCreateVerifyCodeButton() async {
     if (_selectedCountryCode == null || _selectedCountryCode.isEmpty) {
-      FailSnackbar().show("error_country_code", () {});
+      FailSnackBar().show("error_country_code", () {});
       return;
     }
 
     if (!_phoneNumberFormKey.currentState.validate()) {
-      FailSnackbar().show("error_wrong_phone_number", () {});
+      FailSnackBar().show("error_wrong_phone_number", () {});
       return;
     }
 

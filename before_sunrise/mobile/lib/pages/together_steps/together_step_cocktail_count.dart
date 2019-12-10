@@ -10,31 +10,31 @@ class CocktailCountInfo {
 
 CocktailCountInfo cocktailCountInfo =
     CocktailCountInfo(hardCount: 0, champagneCount: 0, serviceCount: 0);
-typedef TogetherFormCocktailCountCallback = void Function(
+typedef TogetherStepCocktailCountCallback = void Function(
     CocktailCountInfo editCocktailCountInfo);
 
-class TogetherFormCocktailCount extends StatefulWidget {
-  TogetherFormCocktailCount({
+class TogetherStepCocktailCount extends StatefulWidget {
+  TogetherStepCocktailCount({
     this.callback,
     this.editCocktailCountInfo,
   });
   @override
-  _TogetherFormCocktailCountState createState() {
+  _TogetherStepCocktailCountState createState() {
     if (editCocktailCountInfo == null) {
-      return _TogetherFormCocktailCountState();
+      return _TogetherStepCocktailCountState();
     }
 
     cocktailCountInfo.hardCount = editCocktailCountInfo.hardCount;
     cocktailCountInfo.champagneCount = editCocktailCountInfo.champagneCount;
     cocktailCountInfo.serviceCount = editCocktailCountInfo.serviceCount;
-    return _TogetherFormCocktailCountState();
+    return _TogetherStepCocktailCountState();
   }
 
-  final TogetherFormCocktailCountCallback callback;
+  final TogetherStepCocktailCountCallback callback;
   final CocktailCountInfo editCocktailCountInfo;
 }
 
-class _TogetherFormCocktailCountState extends State<TogetherFormCocktailCount> {
+class _TogetherStepCocktailCountState extends State<TogetherStepCocktailCount> {
   @override
   void initState() {
     super.initState();
@@ -76,7 +76,7 @@ class _TogetherFormCocktailCountState extends State<TogetherFormCocktailCount> {
                                 .text("cocktail_count_select_hint")),
                         Material(
                           type: MaterialType.transparency,
-                          child: TogetherFormCocktailCountContentsWidget(),
+                          child: TogetherStepCocktailCountContentsWidget(),
                         ),
                         BottomDialog(
                           cancelCallback: () {
@@ -97,14 +97,14 @@ class _TogetherFormCocktailCountState extends State<TogetherFormCocktailCount> {
   }
 }
 
-class TogetherFormCocktailCountContentsWidget extends StatefulWidget {
+class TogetherStepCocktailCountContentsWidget extends StatefulWidget {
   @override
-  _TogetherFormCocktailCountContentsWidgetState createState() =>
-      _TogetherFormCocktailCountContentsWidgetState();
+  _TogetherStepCocktailCountContentsWidgetState createState() =>
+      _TogetherStepCocktailCountContentsWidgetState();
 }
 
-class _TogetherFormCocktailCountContentsWidgetState
-    extends State<TogetherFormCocktailCountContentsWidget> {
+class _TogetherStepCocktailCountContentsWidgetState
+    extends State<TogetherStepCocktailCountContentsWidget> {
   @override
   final double maxCount = 30;
 

@@ -12,10 +12,9 @@ abstract class ClubInfoEvent {
 }
 
 class LoadClubInfoEvent extends ClubInfoEvent {
-  LoadClubInfoEvent({@required this.category, @required this.post});
+  LoadClubInfoEvent({@required this.post});
   @override
   String toString() => 'LoadClubInfoEvent';
-  final String category;
   final ClubInfo post;
 
   @override

@@ -59,9 +59,9 @@ class _MainAppState extends State<MainApp> {
       routes: {
         HomeScreen.routeName: (context) => HomeScreen(),
         AuthScreen.routeName: (context) => AuthScreen(),
-        ProfileInputPage.routeName: (context) {
+        ProfileStepPage.routeName: (context) {
           var value = ModalRoute.of(context).settings.arguments;
-          return ProfileInputPage(value);
+          return ProfileStepPage(value);
         },
         PostStepForm.routeName: (context) {
           Map<String, dynamic> infoMap =

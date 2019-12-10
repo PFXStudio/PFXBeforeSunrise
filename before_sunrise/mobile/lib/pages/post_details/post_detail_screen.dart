@@ -31,15 +31,15 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   void initState() {
     super.initState();
     _post = widget._post.copyWith();
-    SuccessSnackbar().initialize(_scaffoldKey);
-    FailSnackbar().initialize(_scaffoldKey);
+    SuccessSnackBar().initialize(_scaffoldKey);
+    FailSnackBar().initialize(_scaffoldKey);
     _isMine = _post.userID == ProfileBloc().signedProfile.userID;
   }
 
   @override
   void dispose() {
-    SuccessSnackbar().initialize(null);
-    FailSnackbar().initialize(null);
+    SuccessSnackBar().initialize(null);
+    FailSnackBar().initialize(null);
     super.dispose();
   }
 
@@ -53,7 +53,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
         listener: (context, state) async {
           print(state.toString());
           if (state is SuccessRemovePostState) {
-            SuccessSnackbar().show("success_remove_post", () {
+            SuccessSnackBar().show("success_remove_post", () {
               Navigator.pop(context);
             });
           }
@@ -695,7 +695,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
 
     if (optionItem.index == 0) {
       if (_post.isReported() == true) {
-        FailSnackbar().show("fail_reported_post", () {});
+        FailSnackBar().show("fail_reported_post", () {});
 
         return;
       }
@@ -707,7 +707,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
 
     if (optionItem.index == 1) {
       if (_isMine == true) {
-        FailSnackbar().show("cant_report_mine", () {});
+        FailSnackBar().show("cant_report_mine", () {});
 
         return;
       }
@@ -719,7 +719,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
 
     if (optionItem.index == 2) {
       if (_post.isReported() == true) {
-        FailSnackbar().show("fail_reported_post", () {});
+        FailSnackBar().show("fail_reported_post", () {});
 
         return;
       }
@@ -743,14 +743,14 @@ class PostDetailScreenState extends State<PostDetailScreen> {
 
     if (optionItem.index == 3) {
       if (_post.isReported() == true) {
-        FailSnackbar().show("fail_reported_post", () {});
+        FailSnackBar().show("fail_reported_post", () {});
 
         return;
       }
 
       bool isMine = _post.userID == ProfileBloc().signedProfile.userID;
       if (isMine == false) {
-        FailSnackbar().show("error_not_mine", () {});
+        FailSnackBar().show("error_not_mine", () {});
         return;
       }
 

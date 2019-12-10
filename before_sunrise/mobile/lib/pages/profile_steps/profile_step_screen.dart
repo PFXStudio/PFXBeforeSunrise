@@ -1,18 +1,18 @@
 import 'package:before_sunrise/import.dart';
 
-class ProfileInputScreen extends StatefulWidget {
-  const ProfileInputScreen({Key key, @required this.userID}) : super(key: key);
+class ProfileStepScreen extends StatefulWidget {
+  const ProfileStepScreen({Key key, @required this.userID}) : super(key: key);
   final String userID;
 
   @override
-  ProfileInputScreenState createState() {
-    return new ProfileInputScreenState();
+  ProfileStepScreenState createState() {
+    return new ProfileStepScreenState();
   }
 }
 
-class ProfileInputScreenState extends State<ProfileInputScreen> {
+class ProfileStepScreenState extends State<ProfileStepScreen> {
   final ProfileBloc _profileBloc = ProfileBloc();
-  ProfileInputScreenState();
+  ProfileStepScreenState();
   TextEditingController nicknameController = new TextEditingController();
   TextEditingController descriptionController = new TextEditingController();
   final FocusNode nicknameFocusNode = FocusNode();

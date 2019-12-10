@@ -23,8 +23,8 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
     _scrollController.addListener(_scrollListener);
     _scrollEffects = TogetherDetailScrollEffects();
 
-    SuccessSnackbar().initialize(_scaffoldKey);
-    FailSnackbar().initialize(_scaffoldKey);
+    SuccessSnackBar().initialize(_scaffoldKey);
+    FailSnackBar().initialize(_scaffoldKey);
   }
 
   @override
@@ -32,8 +32,8 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
     _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
 
-    SuccessSnackbar().initialize(null);
-    FailSnackbar().initialize(null);
+    SuccessSnackBar().initialize(null);
+    FailSnackBar().initialize(null);
 
     super.dispose();
   }
@@ -92,7 +92,7 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
               listener: (context, state) async {
                 print(state.toString());
                 if (state is SuccessRemoveTogetherState) {
-                  SuccessSnackbar().show("success_remove_post", () {
+                  SuccessSnackBar().show("success_remove_post", () {
                     Navigator.pop(context);
                   });
                 }
@@ -394,7 +394,7 @@ class _MenuButton extends StatelessWidget {
     OptionItem optionItem = item;
     if (optionItem.index == 0) {
       if (together.isReported() == true) {
-        FailSnackbar().show("fail_reported_post", () {});
+        FailSnackBar().show("fail_reported_post", () {});
 
         return;
       }
@@ -406,7 +406,7 @@ class _MenuButton extends StatelessWidget {
 
     if (optionItem.index == 1) {
       if (_isMine == true) {
-        FailSnackbar().show("cant_report_mine", () {});
+        FailSnackBar().show("cant_report_mine", () {});
 
         return;
       }
@@ -418,7 +418,7 @@ class _MenuButton extends StatelessWidget {
 
     if (optionItem.index == 2) {
       if (together.isReported() == true) {
-        FailSnackbar().show("fail_reported_post", () {});
+        FailSnackBar().show("fail_reported_post", () {});
 
         return;
       }
@@ -441,13 +441,13 @@ class _MenuButton extends StatelessWidget {
 
     if (optionItem.index == 3) {
       if (together.isReported() == true) {
-        FailSnackbar().show("fail_reported_post", () {});
+        FailSnackBar().show("fail_reported_post", () {});
 
         return;
       }
 
       if (_isMine == false) {
-        FailSnackbar().show("error_not_mine", () {});
+        FailSnackBar().show("error_not_mine", () {});
         return;
       }
 

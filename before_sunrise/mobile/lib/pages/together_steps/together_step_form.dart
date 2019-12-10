@@ -1,24 +1,23 @@
 import 'package:before_sunrise/import.dart';
+import 'package:before_sunrise/pages/together_steps/together_step_club.dart';
+import 'package:before_sunrise/pages/together_steps/together_step_price.dart';
 
-class PostStepForm extends StatefulWidget {
-  static const String routeName = "/postStepForm";
-  const PostStepForm(
-      {Key key, @required this.category, this.editPost, this.editImageMap})
+class TogetherStepForm extends StatefulWidget {
+  static const String routeName = "/togetherStepForm";
+  TogetherStepForm({Key key, this.editPost, this.editImageMap})
       : super(key: key);
 
-  final String category;
-  final Post editPost;
+  final Together editPost;
   final Map<String, dynamic> editImageMap;
+
   @override
-  PostStepFormState createState() {
-    return new PostStepFormState();
-  }
+  _TogetherStepFormState createState() => new _TogetherStepFormState();
 }
 
-class PostStepFormState extends State<PostStepForm>
+class _TogetherStepFormState extends State<TogetherStepForm>
     with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  PostBloc _postBloc = PostBloc();
+  TogetherBloc _togetherBloc = TogetherBloc();
   final TextEditingController _titleController = new TextEditingController();
   final TextEditingController _contentsController = new TextEditingController();
   final TextEditingController _youtubeController = new TextEditingController();
@@ -27,22 +26,24 @@ class PostStepFormState extends State<PostStepForm>
   FocusNode _contentsFocusNode = new FocusNode();
   FocusNode _youtubeFocusNode = new FocusNode();
   GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  Together _together;
 // multi image picker 이미지 데이터가 사라짐. 받아오면 바로 백업.
   final List<ByteData> _selectedOriginalDatas = List<ByteData>();
   Map<String, dynamic> _editImageMap = Map<String, dynamic>();
   List<String> _removeImageUrls = List<String>();
 
-  bool sanctionAgreeEnabled = false;
   int currentStep = 0;
   final int maxPicturesCount = 20;
   String _error;
-  Post _post;
+  bool sanctionAgreeEnabled = false;
+  bool phoneNumberAgreeEnabled = false;
+
   @override
   void initState() {
     super.initState();
-    _postBloc.dispatch(EditPostEvent());
+    _togetherBloc.dispatch(EditTogetherEvent());
     if (widget.editPost != null) {
-      _post = widget.editPost.copyWith();
+      _together = widget.editPost.copyWith();
       if (widget.editImageMap != null) {
         var keys = widget.editImageMap.keys.toList();
         for (var key in keys) {
@@ -52,11 +53,11 @@ class PostStepFormState extends State<PostStepForm>
         }
       }
     } else {
-      _post = Post(category: widget.category);
+      _together = Together();
     }
 
-    SuccessSnackbar().initialize(_scaffoldKey);
-    FailSnackbar().initialize(_scaffoldKey);
+    SuccessSnackBar().initialize(_scaffoldKey);
+    FailSnackBar().initialize(_scaffoldKey);
     _updateEditMode();
   }
 
@@ -68,7 +69,6 @@ class PostStepFormState extends State<PostStepForm>
         _titleController.text = widget.editPost.title;
         _contentsController.text = widget.editPost.contents;
         _youtubeController.text = widget.editPost.youtubeUrl;
-        _post.type = widget.editPost.type;
 
         if (widget.editPost.imageUrls == null) {
           return;
@@ -80,11 +80,9 @@ class PostStepFormState extends State<PostStepForm>
     _titleFocusNode.dispose();
     _contentsFocusNode.dispose();
     _youtubeFocusNode.dispose();
-    _post = Post();
-    SuccessSnackbar().initialize(null);
-    FailSnackbar().initialize(null);
-    _postBloc.dispatch(BindPostEvent());
+    _together = null;
     KeyboardDetector().setContext(null, 0);
+    _togetherBloc.dispatch(BindTogetherEvent());
 
     super.dispose();
   }
@@ -92,53 +90,53 @@ class PostStepFormState extends State<PostStepForm>
   @override
   Widget build(BuildContext context) {
     KeyboardDetector().setContext(context, 0);
-    var typeStep = new Step(
-        title: const Text('게시판 종류'),
-        isActive: true,
-        state: StepState.indexed,
-        content: _buildType());
 
-    var contentsStep = new Step(
-        title: const Text('내용'),
-        isActive: true,
-        state: StepState.indexed,
-        content: _buildContents());
-    var mediaStep = new Step(
-        title: const Text('미디어'),
-        isActive: true,
-        state: StepState.indexed,
-        content: _buildGalleryFiles(context));
-    var registStep = new Step(
-        title: const Text('등록'),
-        isActive: true,
-        state: StepState.complete,
-        content: _buildAgree());
-    List<Step> steps = [];
-    steps.add(typeStep);
-    steps.add(contentsStep);
-    steps.add(mediaStep);
-    steps.add(registStep);
+    final List<Step> steps = [
+      new Step(
+          title: const Text('정보'),
+          isActive: true,
+          state: StepState.indexed,
+          content: _buildInfo()),
+      new Step(
+          title: const Text('내용'),
+          isActive: true,
+          state: StepState.indexed,
+          content: _buildContents()),
+      new Step(
+          title: const Text('미디어'),
+          isActive: true,
+          state: StepState.indexed,
+          content: _buildGalleryFiles(context)),
+      new Step(
+          title: const Text('등록'),
+          isActive: true,
+          state: StepState.complete,
+          content: _buildAgree()),
+    ];
 
     return BlocListener(
-        bloc: _postBloc,
+        bloc: _togetherBloc,
         listener: (context, state) async {
-          if (state is SuccessPostState) {
-            SuccessSnackbar().show("success_post", () {
+          if (state is SuccessTogetherState) {
+            SuccessSnackBar().show("success_post", () {
               Navigator.pop(context);
             });
 
             return;
           }
         },
-        child: BlocBuilder<PostBloc, PostState>(
-            bloc: _postBloc,
+        child: BlocBuilder<TogetherBloc, TogetherState>(
+            bloc: _togetherBloc,
             builder: (
               BuildContext context,
-              PostState currentState,
+              TogetherState currentState,
             ) {
               return Scaffold(
                 resizeToAvoidBottomInset: false,
-                appBar: PostFormTopBar(),
+                appBar: PreferredSize(
+                  preferredSize: const Size.fromHeight(kToolbarHeight),
+                  child: TogetherStepTopBar(),
+                ),
                 key: _scaffoldKey,
                 body: Container(
                   child: new ListView(
@@ -174,29 +172,7 @@ class PostStepFormState extends State<PostStepForm>
             }));
   }
 
-  Widget _buildType() {
-    if (widget.editPost != null) {
-      return Card(
-          elevation: 2.0,
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: Container(
-              width: kDeviceWidth - MainTheme.edgeInsets.left,
-              height: 45,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  FlatIconTextButton(
-                    iconData: FontAwesomeIcons.thLarge,
-                    color: MainTheme.enabledButtonColor,
-                    text: getPostType(_post.category),
-                    enabled: false,
-                  )
-                ],
-              )));
-    }
+  Widget _buildInfo() {
     return Card(
         elevation: 2.0,
         color: Colors.white,
@@ -205,17 +181,80 @@ class PostStepFormState extends State<PostStepForm>
         ),
         child: Container(
             width: kDeviceWidth - MainTheme.edgeInsets.left,
-            height: 45,
+            height: 250,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                PostTypeDialog(
-                  callback: (type) {
-                    setState(() {
-                      _post.type = type;
-                    });
+                TogetherStepDate(
+                    editSelectedDate: (_together.dateString != null &&
+                            _together.dateString.length > 0)
+                        ? CoreConst.togetherDateFormat
+                            .parse(_together.dateString)
+                        : null,
+                    callback: (dateTime) {
+                      if (dateTime == null) {
+                        return;
+                      }
+
+                      _together.dateString =
+                          CoreConst.togetherDateFormat.format(dateTime);
+                    }),
+                TogetherStepClub(
+                  editSelectedClubID:
+                      (_together.clubID != null && _together.clubID.length > 0)
+                          ? _together.clubID
+                          : null,
+                  callback: (clubID) {
+                    print(clubID);
+                    _together.clubID = clubID;
                   },
                 ),
+                TogetherStepCocktailCount(
+                  editCocktailCountInfo: (_together.hardCount != 0 &&
+                          _together.champagneCount != 0 &&
+                          _together.serviceCount != 0)
+                      ? CocktailCountInfo(
+                          hardCount: _together.hardCount.toDouble(),
+                          champagneCount: _together.champagneCount.toDouble(),
+                          serviceCount: _together.serviceCount.toDouble())
+                      : null,
+                  callback: (cocktailCountInfo) {
+                    _together.hardCount = cocktailCountInfo.hardCount.toInt();
+                    _together.champagneCount =
+                        cocktailCountInfo.champagneCount.toInt();
+                    _together.serviceCount =
+                        cocktailCountInfo.serviceCount.toInt();
+                  },
+                ),
+                TogetherStepPrice(
+                    editPriceInfo: (_together.tablePrice != 0)
+                        ? PriceInfo(
+                            tablePrice: _together.tablePrice.toDouble(),
+                            tipPrice: _together.tipPrice.toDouble())
+                        : null,
+                    callback: (priceInfo) {
+                      _together.tablePrice = priceInfo.tablePrice.toInt();
+                      _together.tipPrice = priceInfo.tipPrice.toInt();
+                      setState(() {});
+                    }),
+                TogetherStepMemberCount(
+                    editMemberCountInfo: (_together.totalCount != 0)
+                        ? MemberCountInfo(
+                            totalCount: _together.totalCount.toDouble(),
+                            restCount: _together.restCount.toDouble())
+                        : null,
+                    callback: (memberCountInfo) {
+                      _together.totalCount = memberCountInfo.totalCount.toInt();
+                      _together.restCount = memberCountInfo.restCount.toInt();
+                      setState(() {});
+                    }),
+                FlatIconTextButton(
+                    color: MainTheme.enabledButtonColor,
+                    iconData: FontAwesomeIcons.moneyBillWave,
+                    text: (_together.totalCount != 0 &&
+                            _together.tablePrice != 0)
+                        ? "${_together.tablePrice + _together.tipPrice}만원 / ${_together.totalCount}명 = ${((_together.tablePrice + _together.tipPrice) / _together.totalCount.toDouble()).toStringAsFixed(1)} 만원"
+                        : "..."),
               ],
             )));
   }
@@ -229,7 +268,7 @@ class PostStepFormState extends State<PostStepForm>
         ),
         child: Container(
             width: kDeviceWidth - MainTheme.edgeInsets.left,
-            height: 360,
+            height: 400,
             child: Center(
                 child: new ListView(
               shrinkWrap: true,
@@ -254,12 +293,12 @@ class PostStepFormState extends State<PostStepForm>
                                       padding: EdgeInsets.only(
                                           left: 10.0, right: 10.0),
                                       child: new TextFormField(
-                                        maxLength: 64,
                                         focusNode: _titleFocusNode,
                                         controller: _titleController,
                                         decoration: new InputDecoration(
                                             labelText: "Title",
                                             filled: false,
+                                            labelStyle: MainTheme.hintTextStyle,
                                             prefixIcon: Padding(
                                               padding: EdgeInsets.only(
                                                   bottom: 10.0,
@@ -267,16 +306,15 @@ class PostStepFormState extends State<PostStepForm>
                                                   left: 10.0,
                                                   right: 10.0),
                                               child: Icon(
-                                                FontAwesomeIcons.quoteLeft,
-                                                size: 14,
-                                              ),
+                                                  FontAwesomeIcons.quoteLeft,
+                                                  size: 14),
                                             )),
                                         keyboardType: TextInputType.text,
                                       ),
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(
-                                          left: 10.0, right: 10.0),
+                                          left: 10.0, right: 10.0, bottom: 10),
                                       child: new TextFormField(
                                         maxLength: 512,
                                         maxLines: 10,
@@ -328,18 +366,18 @@ class PostStepFormState extends State<PostStepForm>
                 ),
                 child: Container(
                   width: kDeviceWidth - MainTheme.edgeInsets.left,
-                  height: (_selectedOriginalDatas.length > 0) ? 360 : 114,
+                  height: (_selectedOriginalDatas.length > 0) ? 300 : 114,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Padding(
-                          padding: EdgeInsets.only(left: 9, top: 5, bottom: 5),
+                          padding: EdgeInsets.only(left: 7, top: 5, bottom: 5),
                           child: FlatButton.icon(
                               focusColor: Colors.red,
                               icon: Icon(
-                                FontAwesomeIcons.image,
+                                FontAwesomeIcons.images,
                                 color: MainTheme.enabledButtonColor,
-                                size: 18,
+                                size: 15,
                               ),
                               label: Text(
                                 sprintf(
@@ -349,14 +387,12 @@ class PostStepFormState extends State<PostStepForm>
                                       _selectedOriginalDatas.length,
                                       maxPicturesCount
                                     ]),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: MainTheme.enabledButtonColor),
+                                style: MainTheme.enabledFlatIconTextButtonStyle,
                               ),
                               onPressed: () {
                                 if (_selectedOriginalDatas.length >=
                                     maxPicturesCount) {
-                                  FailSnackbar().show("remove_pictures", null);
+                                  FailSnackBar().show("remove_pictures", null);
 
                                   return;
                                 }
@@ -393,11 +429,11 @@ class PostStepFormState extends State<PostStepForm>
                             icon: Icon(
                               FontAwesomeIcons.youtube,
                               color: Colors.black54,
-                              size: 18.0,
+                              size: 15.0,
                             ),
                             hintText: LocalizableLoader.of(context)
                                 .text("youtube_hint"),
-                            hintStyle: TextStyle(fontSize: 17.0),
+                            hintStyle: MainTheme.hintTextStyle,
                           ),
                         ),
                       ),
@@ -433,7 +469,8 @@ class PostStepFormState extends State<PostStepForm>
             backgroundColor: MainTheme.disabledButtonColor,
             child: IconButton(
               icon: Icon(
-                FontAwesomeIcons.trash,
+                FontAwesomeIcons.trashAlt,
+                size: 20,
               ),
               color: MainTheme.enabledIconColor,
               onPressed: () {
@@ -498,7 +535,7 @@ class PostStepFormState extends State<PostStepForm>
         ),
         child: Container(
             width: kDeviceWidth - MainTheme.edgeInsets.left,
-            height: 250,
+            height: kDeviceHeight * 0.45,
             child: Padding(
                 padding: EdgeInsets.all(10),
                 child: Column(
@@ -522,34 +559,100 @@ class PostStepFormState extends State<PostStepForm>
                         ),
                       ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Checkbox(
+                          value: phoneNumberAgreeEnabled,
+                          onChanged: (bool value) {
+                            setState(() {
+                              phoneNumberAgreeEnabled = value;
+                            });
+                          },
+                        ),
+                        Text(
+                          LocalizableLoader.of(context)
+                              .text("phone_number_agree_checkbox"),
+                          style: MainTheme.contentsTextStyle,
+                        ),
+                      ],
+                    ),
                   ],
                 ))));
   }
 
   void _touchedRegistButton(int lastIndex) {
     if (currentStep == 0 || currentStep == lastIndex) {
-      if (_post.type == null) {
-        FailSnackbar().show("error_post_form_type", null);
+      if (_together.dateString == null || _together.dateString.length <= 0) {
+        FailSnackBar().show("error_together_step_date", () {
+          setState(() {
+            currentStep = 0;
+          });
+        });
+        return;
+      }
+
+      if (_together.clubID == null || _together.clubID.length <= 0) {
+        FailSnackBar().show("error_together_step_club", () {
+          setState(() {
+            currentStep = 0;
+          });
+        });
+        return;
+      }
+
+      if (_together.hardCount == 0 && _together.champagneCount == 0) {
+        FailSnackBar().show("error_together_step_cocktail", () {
+          setState(() {
+            currentStep = 0;
+          });
+        });
+        return;
+      }
+
+      if (_together.tablePrice <= 0) {
+        FailSnackBar().show("error_together_step_price", () {
+          setState(() {
+            currentStep = 0;
+          });
+        });
+        return;
+      }
+
+      if (_together.totalCount < 2 || _together.restCount < 1) {
+        FailSnackBar().show("error_together_step_count", () {
+          setState(() {
+            currentStep = 0;
+          });
+        });
         return;
       }
     }
 
     if (currentStep == 1 || currentStep == lastIndex) {
       if (_titleController.text.length <= 0) {
-        FailSnackbar().show("error_post_form_title", null);
+        FailSnackBar().show("error_together_step_title", () {
+          setState(() {
+            currentStep = 1;
+          });
+        });
         return;
       }
 
       if (_contentsController.text.length <= 0) {
-        FailSnackbar().show("error_post_form_title", null);
+        FailSnackBar().show("error_together_step_contents", () {
+          setState(() {
+            currentStep = 1;
+          });
+        });
         return;
       }
     }
 
     if (currentStep == 2 || currentStep == lastIndex) {}
     if (currentStep == 3 || currentStep == lastIndex) {
-      if (sanctionAgreeEnabled == false) {
-        FailSnackbar().show("error_agree_check", null);
+      if (sanctionAgreeEnabled == false || phoneNumberAgreeEnabled == false) {
+        FailSnackBar().show("error_agree_check", null);
         return;
       }
     }
@@ -558,9 +661,9 @@ class PostStepFormState extends State<PostStepForm>
       if (currentStep < lastIndex) {
         currentStep = currentStep + 1;
       } else {
-        _post.title = _titleController.text;
-        _post.contents = _contentsController.text;
-        _post.youtubeUrl = _youtubeController.text;
+        _together.title = _titleController.text;
+        _together.contents = _contentsController.text;
+        _together.youtubeUrl = _youtubeController.text;
 
         // _removeImageUrls 삭제 된 이미지들
         // _editImageMap 유지 된 이미지들
@@ -578,8 +681,8 @@ class PostStepFormState extends State<PostStepForm>
           }
         }
 
-        _postBloc.dispatch(CreatePostEvent(
-            post: _post,
+        _togetherBloc.dispatch(CreateTogetherEvent(
+            together: _together,
             byteDatas: _selectedOriginalDatas,
             removedImageUrls: _removeImageUrls,
             alreadyImageUrls: alreadyImageUrls));

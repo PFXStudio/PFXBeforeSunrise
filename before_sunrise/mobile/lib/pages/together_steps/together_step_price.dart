@@ -1,51 +1,48 @@
 import 'package:before_sunrise/import.dart';
 import 'package:intl/intl.dart' as intl;
 
-class MemberCountInfo {
-  MemberCountInfo({this.totalCount, this.restCount});
-  double totalCount = 2;
-  double restCount = 1;
+class PriceInfo {
+  PriceInfo({this.tablePrice, this.tipPrice});
+  double tablePrice = 0;
+  double tipPrice = 0;
 }
 
-MemberCountInfo s_memberCountInfo =
-    MemberCountInfo(totalCount: 2, restCount: 1);
-typedef TogetherFormMemberCountCallback = void Function(
-    MemberCountInfo memberCountInfo);
+PriceInfo s_priceInfo = PriceInfo(tablePrice: 0, tipPrice: 0);
+typedef TogetherStepPriceCallback = void Function(PriceInfo priceInfo);
 
-class TogetherFormMemberCount extends StatefulWidget {
-  TogetherFormMemberCount({this.callback, this.editMemberCountInfo});
+class TogetherStepPrice extends StatefulWidget {
+  TogetherStepPrice({this.callback = null, this.editPriceInfo});
   @override
-  _TogetherFormMemberCountState createState() {
-    if (editMemberCountInfo == null) {
-      return _TogetherFormMemberCountState();
+  _TogetherStepPriceState createState() {
+    if (editPriceInfo == null) {
+      return _TogetherStepPriceState();
     }
 
-    s_memberCountInfo.totalCount = editMemberCountInfo.totalCount;
-    s_memberCountInfo.restCount = editMemberCountInfo.restCount;
-    return _TogetherFormMemberCountState();
+    s_priceInfo.tablePrice = editPriceInfo.tablePrice;
+    s_priceInfo.tipPrice = editPriceInfo.tipPrice;
+    return _TogetherStepPriceState();
   }
 
-  final TogetherFormMemberCountCallback callback;
-  final MemberCountInfo editMemberCountInfo;
+  TogetherStepPriceCallback callback;
+  PriceInfo editPriceInfo;
 }
 
-class _TogetherFormMemberCountState extends State<TogetherFormMemberCount> {
-  double selectedPrice = 0;
+class _TogetherStepPriceState extends State<TogetherStepPrice> {
   @override
   void dispose() {
-    s_memberCountInfo.totalCount = 2;
-    s_memberCountInfo.restCount = 1;
+    s_priceInfo.tablePrice = 0;
+    s_priceInfo.tipPrice = 0;
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return FlatIconTextButton(
-        iconData: FontAwesomeIcons.users,
+        iconData: FontAwesomeIcons.wonSign,
         color: MainTheme.enabledButtonColor,
-        text: s_memberCountInfo.totalCount > 2
-            ? "총 인원 : ${s_memberCountInfo.totalCount.toInt()}, 모집 인원 : ${s_memberCountInfo.restCount.toInt()}"
-            : LocalizableLoader.of(context).text("member_count_select_hint"),
+        text: s_priceInfo.tablePrice != 0
+            ? "${s_priceInfo.tablePrice.toInt()} + ${s_priceInfo.tipPrice.toInt()} = ${s_priceInfo.tablePrice.toInt() + s_priceInfo.tipPrice.toInt()}만원"
+            : LocalizableLoader.of(context).text("price_select_hint"),
         onPressed: () {
           showDialog(
               context: context,
@@ -58,10 +55,10 @@ class _TogetherFormMemberCountState extends State<TogetherFormMemberCount> {
                       children: <Widget>[
                         HeaderDialog(
                             title: LocalizableLoader.of(context)
-                                .text("member_count_select_hint")),
+                                .text("price_select_hint")),
                         Material(
                           type: MaterialType.transparency,
-                          child: TogetherFormMemberCountContentsWidget(),
+                          child: TogetherStepPriceContentsWidget(),
                         ),
                         BottomDialog(
                           cancelCallback: () {
@@ -73,7 +70,7 @@ class _TogetherFormMemberCountState extends State<TogetherFormMemberCount> {
                               return;
                             }
 
-                            widget.callback(s_memberCountInfo);
+                            widget.callback(s_priceInfo);
                             setState(() {});
                           },
                         )
@@ -93,7 +90,7 @@ customHandler(IconData icon) {
         child: Icon(
           icon,
           color: Colors.white,
-          size: 23,
+          size: 14,
         ),
       ),
       decoration: BoxDecoration(
@@ -111,16 +108,16 @@ customHandler(IconData icon) {
   );
 }
 
-class TogetherFormMemberCountContentsWidget extends StatefulWidget {
+class TogetherStepPriceContentsWidget extends StatefulWidget {
   @override
-  _TogetherFormMemberCountContentsWidgetState createState() =>
-      _TogetherFormMemberCountContentsWidgetState();
+  _TogetherStepPriceContentsWidgetState createState() =>
+      _TogetherStepPriceContentsWidgetState();
 }
 
-class _TogetherFormMemberCountContentsWidgetState
-    extends State<TogetherFormMemberCountContentsWidget> {
-  final double maxCount = 15;
-
+class _TogetherStepPriceContentsWidgetState
+    extends State<TogetherStepPriceContentsWidget> {
+  @override
+  final double maxPrice = 1000;
   Widget build(BuildContext context) {
     return Container(
         color: Colors.white,
@@ -134,65 +131,59 @@ class _TogetherFormMemberCountContentsWidgetState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    padding: EdgeInsets.only(top: 28),
-                    icon: Icon(FontAwesomeIcons.caretLeft),
-                    color: Colors.blueAccent,
-                    onPressed: () {
-                      setState(() {
-                        if (s_memberCountInfo.totalCount > 2) {
-                          s_memberCountInfo.totalCount =
-                              s_memberCountInfo.totalCount - 1;
-                          if (s_memberCountInfo.restCount >
-                              s_memberCountInfo.totalCount) {
-                            s_memberCountInfo.restCount =
-                                s_memberCountInfo.totalCount;
+                    flex: 1,
+                    child: IconButton(
+                      padding: EdgeInsets.only(top: 28),
+                      icon: Icon(FontAwesomeIcons.caretLeft),
+                      color: Colors.blue,
+                      onPressed: () {
+                        setState(() {
+                          if (s_priceInfo.tablePrice > 10) {
+                            s_priceInfo.tablePrice = s_priceInfo.tablePrice - 1;
                           }
-                        }
-                      });
-                    },
-                  ),
-                ),
+                        });
+                      },
+                    )),
                 Expanded(
                     flex: 10,
                     child: FlutterSlider(
-                      values: [s_memberCountInfo.totalCount],
+                      values: [s_priceInfo.tablePrice],
                       rangeSlider: false,
-                      max: maxCount,
-                      min: 2,
+                      max: maxPrice,
+                      min: 0,
                       step: 1,
                       jump: true,
                       trackBar: FlutterSliderTrackBar(
+                        activeDisabledTrackBarColor: Colors.red,
                         inactiveTrackBarHeight: 2,
                         activeTrackBarHeight: 3,
                       ),
                       disabled: false,
-                      handler: customHandler(FontAwesomeIcons.caretRight),
-                      rightHandler: customHandler(FontAwesomeIcons.caretLeft),
+                      handler: customHandler(FontAwesomeIcons.circle),
                       tooltip: FlutterSliderTooltip(
                         alwaysShowTooltip: true,
                         numberFormat: intl.NumberFormat(),
+                        // leftPrefix: Icon(
+                        //   FontAwesomeIcons.wonSign,
+                        //   size: 14,
+                        //   color: Colors.black45,
+                        // ),
                         rightSuffix: Padding(
                             padding: EdgeInsets.only(left: 5),
                             child: Text(
-                                LocalizableLoader.of(context)
-                                    .text("total_member_count"),
+                                LocalizableLoader.of(context).text("manwon"),
                                 style: TextStyle(
                                     color: Colors.black54,
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold))),
-                        textStyle:
-                            TextStyle(fontSize: 17, color: Colors.black45),
+                        textStyle: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold),
                       ),
                       onDragCompleted: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
-                          s_memberCountInfo.totalCount = lowerValue;
-                          if (s_memberCountInfo.restCount >
-                              s_memberCountInfo.totalCount) {
-                            s_memberCountInfo.restCount =
-                                s_memberCountInfo.totalCount;
-                          }
+                          s_priceInfo.tablePrice = lowerValue;
                         });
                       },
                     )),
@@ -204,9 +195,8 @@ class _TogetherFormMemberCountContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (s_memberCountInfo.totalCount < maxCount) {
-                            s_memberCountInfo.totalCount =
-                                s_memberCountInfo.totalCount + 1;
+                          if (s_priceInfo.tablePrice < maxPrice) {
+                            s_priceInfo.tablePrice = s_priceInfo.tablePrice + 1;
                           }
                         });
                       },
@@ -220,28 +210,26 @@ class _TogetherFormMemberCountContentsWidgetState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    padding: EdgeInsets.only(top: 28),
-                    icon: Icon(FontAwesomeIcons.caretLeft),
-                    color: Colors.blueAccent,
-                    onPressed: () {
-                      setState(() {
-                        if (s_memberCountInfo.restCount > 1) {
-                          s_memberCountInfo.restCount =
-                              s_memberCountInfo.restCount - 1;
-                        }
-                      });
-                    },
-                  ),
-                ),
+                    flex: 1,
+                    child: IconButton(
+                      padding: EdgeInsets.only(top: 28),
+                      icon: Icon(FontAwesomeIcons.caretLeft),
+                      color: Colors.blue,
+                      onPressed: () {
+                        setState(() {
+                          if (s_priceInfo.tipPrice > 0) {
+                            s_priceInfo.tipPrice = s_priceInfo.tipPrice - 1;
+                          }
+                        });
+                      },
+                    )),
                 Expanded(
                     flex: 10,
                     child: FlutterSlider(
-                      values: [s_memberCountInfo.restCount],
+                      values: [s_priceInfo.tipPrice],
                       rangeSlider: false,
-                      max: s_memberCountInfo.totalCount,
-                      min: 1,
+                      max: 10,
+                      min: 0,
                       step: 1,
                       jump: true,
                       trackBar: FlutterSliderTrackBar(
@@ -249,26 +237,31 @@ class _TogetherFormMemberCountContentsWidgetState
                         activeTrackBarHeight: 3,
                       ),
                       disabled: false,
-                      handler: customHandler(FontAwesomeIcons.caretRight),
-                      rightHandler: customHandler(FontAwesomeIcons.caretLeft),
+                      handler: customHandler(FontAwesomeIcons.circle),
                       tooltip: FlutterSliderTooltip(
                         alwaysShowTooltip: true,
                         numberFormat: intl.NumberFormat(),
+                        // leftPrefix: Icon(
+                        //   FontAwesomeIcons.wonSign,
+                        //   size: 14,
+                        //   color: Colors.black45,
+                        // ),
                         rightSuffix: Padding(
                             padding: EdgeInsets.only(left: 5),
                             child: Text(
-                                LocalizableLoader.of(context)
-                                    .text("rest_member_count"),
+                                LocalizableLoader.of(context).text("manwon"),
                                 style: TextStyle(
                                     color: Colors.black54,
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold))),
-                        textStyle:
-                            TextStyle(fontSize: 17, color: Colors.black45),
+                        textStyle: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold),
                       ),
                       onDragCompleted: (handlerIndex, lowerValue, upperValue) {
                         setState(() {
-                          s_memberCountInfo.restCount = lowerValue;
+                          s_priceInfo.tipPrice = lowerValue;
                         });
                       },
                     )),
@@ -280,46 +273,15 @@ class _TogetherFormMemberCountContentsWidgetState
                       color: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          if (s_memberCountInfo.restCount <
-                              s_memberCountInfo.totalCount) {
-                            s_memberCountInfo.restCount =
-                                s_memberCountInfo.restCount + 1;
+                          if (s_priceInfo.tipPrice < maxPrice) {
+                            s_priceInfo.tipPrice = s_priceInfo.tipPrice + 1;
                           }
                         });
                       },
                     )),
               ],
-            ),
+            )
           ],
         ));
-  }
-
-  customHandler(IconData icon) {
-    return FlutterSliderHandler(
-      decoration: BoxDecoration(),
-      child: Container(
-        child: Container(
-          margin: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.3), shape: BoxShape.circle),
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 23,
-          ),
-        ),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.blue.withOpacity(0.3),
-                spreadRadius: 0.05,
-                blurRadius: 5,
-                offset: Offset(0, 1))
-          ],
-        ),
-      ),
-    );
   }
 }

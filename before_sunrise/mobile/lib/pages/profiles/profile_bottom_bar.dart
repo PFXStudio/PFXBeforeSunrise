@@ -1,11 +1,11 @@
 import 'package:before_sunrise/import.dart';
 
-class ProfileNavbar extends StatefulWidget {
+class ProfileBottomBar extends StatefulWidget {
   final int activeIndex;
   final Function(int) onActiveIndexChange;
   final bool isCurrentUserProfile;
 
-  const ProfileNavbar(
+  const ProfileBottomBar(
       {Key key,
       this.activeIndex = 0,
       @required this.onActiveIndexChange,
@@ -13,10 +13,10 @@ class ProfileNavbar extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ProfileNavbarState createState() => _ProfileNavbarState();
+  _ProfileBottomBarState createState() => _ProfileBottomBarState();
 }
 
-class _ProfileNavbarState extends State<ProfileNavbar> {
+class _ProfileBottomBarState extends State<ProfileBottomBar> {
   int _activeIndex;
   Function(int) get _onActiveIndexChanged => widget.onActiveIndexChange;
   bool get _isCurrentUserProfile => widget.isCurrentUserProfile;

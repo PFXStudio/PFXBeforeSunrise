@@ -1,16 +1,16 @@
 import 'package:before_sunrise/import.dart';
 
-typedef TogetherFormClubCallback = void Function(String clubID);
+typedef TogetherStepClubCallback = void Function(String clubID);
 
-class TogetherFormClub extends StatefulWidget {
-  TogetherFormClub({this.callback, this.editSelectedClubID});
+class TogetherStepClub extends StatefulWidget {
+  TogetherStepClub({this.callback, this.editSelectedClubID});
   @override
-  _TogetherFormClubState createState() => _TogetherFormClubState();
-  final TogetherFormClubCallback callback;
+  _TogetherStepClubState createState() => _TogetherStepClubState();
+  final TogetherStepClubCallback callback;
   String editSelectedClubID;
 }
 
-class _TogetherFormClubState extends State<TogetherFormClub> {
+class _TogetherStepClubState extends State<TogetherStepClub> {
   @override
   void dispose() {
     super.dispose();
