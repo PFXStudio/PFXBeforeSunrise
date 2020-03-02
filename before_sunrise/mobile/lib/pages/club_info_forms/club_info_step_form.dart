@@ -317,7 +317,7 @@ class ClubInfoStepFormState extends State<ClubInfoStepForm>
                     new Stack(
                       children: <Widget>[
                         Padding(
-                            padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                            padding: EdgeInsets.only(left: 20.0, right: 20.0),
                             child: new Form(
                               autovalidate: false,
                               child: new Column(
