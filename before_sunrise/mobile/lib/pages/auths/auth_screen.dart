@@ -26,8 +26,8 @@ class AuthScreenState extends State<AuthScreen> {
   void initState() {
     super.initState();
     this._authBloc.dispatch(LoadAuthEvent());
-    SuccessSnackbar().initialize(_scaffoldKey);
-    FailSnackbar().initialize(_scaffoldKey);
+    SuccessSnackBar().initialize(_scaffoldKey);
+    FailSnackBar().initialize(_scaffoldKey);
 
     _errorAuthScreen = ErrorAuthScreen(
         context: context,
@@ -55,7 +55,7 @@ class AuthScreenState extends State<AuthScreen> {
         context: context,
         callback: (verifyCode) {
           if (_verificationID == null || _verificationID.length <= 0) {
-            FailSnackbar().show("error_wrong_verification", () {});
+            FailSnackBar().show("error_wrong_verification", () {});
             return;
           }
 
@@ -66,8 +66,8 @@ class AuthScreenState extends State<AuthScreen> {
 
   @override
   void dispose() {
-    SuccessSnackbar().initialize(null);
-    FailSnackbar().initialize(null);
+    SuccessSnackBar().initialize(null);
+    FailSnackBar().initialize(null);
     super.dispose();
   }
 
@@ -82,7 +82,7 @@ class AuthScreenState extends State<AuthScreen> {
               if (state is InAuthState) {
                 String userID = await _authBloc.getUserID();
                 Navigator.pushReplacementNamed(
-                    context, ProfileInputPage.routeName,
+                    context, ProfileStepPage.routeName,
                     arguments: userID);
 
                 return;

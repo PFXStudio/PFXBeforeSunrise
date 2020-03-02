@@ -55,7 +55,7 @@ class VerifyAuthScreen extends StatelessWidget {
 
   Future<void> _touchedVerifyButton() async {
     if (!_verifyFormKey.currentState.validate()) {
-      FailSnackbar().show("error_wrong_verify_number", () {});
+      FailSnackBar().show("error_wrong_verify_number", () {});
       return;
     }
 
@@ -69,7 +69,7 @@ class VerifyAuthScreen extends StatelessWidget {
         Row(
           children: <Widget>[
             Text(
-              LocalizableLoader.of(context).text("app_title"),
+              LocalizableLoader.of(context).text("app_name"),
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 35.0,

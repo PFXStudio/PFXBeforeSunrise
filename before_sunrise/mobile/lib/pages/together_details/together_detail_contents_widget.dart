@@ -148,7 +148,7 @@ class _Title extends StatelessWidget {
   Widget build(BuildContext context) {
     final content = <Widget>[
       Text(
-        LocalizableLoader.of(context).text("board_contents_text"),
+        LocalizableLoader.of(context).text("contents"),
         style: MainTheme.subTitleTextStyle,
       ),
     ];
@@ -157,7 +157,7 @@ class _Title extends StatelessWidget {
       content.add(Padding(
         padding: const EdgeInsets.only(left: 4.0),
         child: _buildExpandCollapsePrompt(
-            LocalizableLoader.of(context).text("board_contents_more_text")),
+            LocalizableLoader.of(context).text("more")),
       ));
     }
 

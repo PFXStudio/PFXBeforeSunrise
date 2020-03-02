@@ -123,7 +123,7 @@ class _CommentBubbleState extends State<CommentBubble> {
         ),
         constraints: BoxConstraints(
           minHeight: 25,
-          maxHeight: 157,
+          maxHeight: 160,
           minWidth: 80,
         ),
         child: Padding(
@@ -455,7 +455,7 @@ class _CommentBubbleState extends State<CommentBubble> {
   }
 
   void _showMyMoreMenu(BuildContext context) {
-    OptionMenu().dismiss();
+    OptionMenuPopup().dismiss();
 
     List<OptionItem> menuItems = [
       OptionItem(
@@ -489,14 +489,14 @@ class _CommentBubbleState extends State<CommentBubble> {
           color: Colors.white,
         )));
 
-    OptionMenu().initialize(
+    OptionMenuPopup().initialize(
         context: context,
         backgroundColor: Colors.black54,
         items: menuItems,
         onClickMenu: onClickedMyMenu,
         onDismiss: onDismiss);
 
-    OptionMenu().show(widgetKey: commentKey);
+    OptionMenuPopup().show(widgetKey: commentKey);
   }
 
   void onClickedMyMenu(item) async {
@@ -551,14 +551,14 @@ class _CommentBubbleState extends State<CommentBubble> {
           )),
     ];
 
-    OptionMenu().initialize(
+    OptionMenuPopup().initialize(
         context: context,
         backgroundColor: Colors.black54,
         items: menuItems,
         onClickMenu: onClickedYourMenu,
         onDismiss: onDismiss);
 
-    OptionMenu().show(widgetKey: commentKey);
+    OptionMenuPopup().show(widgetKey: commentKey);
   }
 
   void onClickedYourMenu(item) async {

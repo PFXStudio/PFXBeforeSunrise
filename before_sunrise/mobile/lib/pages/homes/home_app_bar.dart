@@ -36,7 +36,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
         onPressed: () => widget.scaffoldKey.currentState.openDrawer(),
       ),
       title: Text(
-        LocalizableLoader.of(context).text("app_title"),
+        LocalizableLoader.of(context).text("app_name"),
         style: MainTheme.navTitleTextStyle,
       ),
       actions: <Widget>[

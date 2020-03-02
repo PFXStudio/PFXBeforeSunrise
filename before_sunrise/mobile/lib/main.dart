@@ -30,7 +30,7 @@ class _MainAppState extends State<MainApp> {
     super.initState();
     _localizableDelegate = LocalizableDelegate(newLocale: null);
     localizableManager.onLocaleChanged = onLocaleChange;
-    KeyboardDector().initialize();
+    KeyboardDetector().initialize();
   }
 
   void onLocaleChange(Locale locale) {
@@ -44,7 +44,7 @@ class _MainAppState extends State<MainApp> {
       debugShowCheckedModeBanner: false,
       title: 'Before Sunrise',
       theme: ThemeData(
-        fontFamily: 'Roboto',
+        fontFamily: 'SpoqaHanSansRegular',
         primaryColor: MainTheme.bgndColor,
         accentColor: MainTheme.activeIndicatorColor,
       ),
@@ -59,9 +59,9 @@ class _MainAppState extends State<MainApp> {
       routes: {
         HomeScreen.routeName: (context) => HomeScreen(),
         AuthScreen.routeName: (context) => AuthScreen(),
-        ProfileInputPage.routeName: (context) {
+        ProfileStepPage.routeName: (context) {
           var value = ModalRoute.of(context).settings.arguments;
-          return ProfileInputPage(value);
+          return ProfileStepPage(value);
         },
         PostStepForm.routeName: (context) {
           Map<String, dynamic> infoMap =

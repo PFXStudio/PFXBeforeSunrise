@@ -25,7 +25,7 @@ class _Title extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Text(
-        LocalizableLoader.of(context).text("board_gallery_title"),
+        LocalizableLoader.of(context).text("gallery"),
         style: const TextStyle(
           fontSize: 18.0,
           color: Colors.white,

@@ -76,7 +76,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       ),
       bottom: PreferredSize(
           preferredSize: Size.fromHeight(5.0),
-          child: ProfileNavbar(
+          child: ProfileBottomBar(
             isCurrentUserProfile: _isCurrentUserProfile,
             onActiveIndexChange: (int index) {
               setState(() {

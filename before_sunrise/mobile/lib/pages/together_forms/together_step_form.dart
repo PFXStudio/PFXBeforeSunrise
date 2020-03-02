@@ -1,6 +1,6 @@
 import 'package:before_sunrise/import.dart';
-import 'package:before_sunrise/pages/together_forms/together_form_club.dart';
-import 'package:before_sunrise/pages/together_forms/together_form_price.dart';
+import 'package:before_sunrise/pages/together_steps/together_step_club.dart';
+import 'package:before_sunrise/pages/together_steps/together_step_price.dart';
 
 class TogetherStepForm extends StatefulWidget {
   static const String routeName = "/togetherStepForm";
@@ -56,8 +56,8 @@ class _TogetherStepFormState extends State<TogetherStepForm>
       _together = Together();
     }
 
-    SuccessSnackbar().initialize(_scaffoldKey);
-    FailSnackbar().initialize(_scaffoldKey);
+    SuccessSnackBar().initialize(_scaffoldKey);
+    FailSnackBar().initialize(_scaffoldKey);
     _updateEditMode();
   }
 
@@ -81,7 +81,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
     _contentsFocusNode.dispose();
     _youtubeFocusNode.dispose();
     _together = null;
-    KeyboardDector().setContext(null, 0);
+    KeyboardDetector().setContext(null, 0);
     _togetherBloc.dispatch(BindTogetherEvent());
 
     super.dispose();
@@ -89,7 +89,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
 
   @override
   Widget build(BuildContext context) {
-    KeyboardDector().setContext(context, 0);
+    KeyboardDetector().setContext(context, 0);
 
     final List<Step> steps = [
       new Step(
@@ -118,7 +118,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
         bloc: _togetherBloc,
         listener: (context, state) async {
           if (state is SuccessTogetherState) {
-            SuccessSnackbar().show("success_post", () {
+            SuccessSnackBar().show("success_post", () {
               Navigator.pop(context);
             });
 
@@ -135,7 +135,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                 resizeToAvoidBottomInset: false,
                 appBar: PreferredSize(
                   preferredSize: const Size.fromHeight(kToolbarHeight),
-                  child: TogetherFormTopBar(),
+                  child: TogetherStepTopBar(),
                 ),
                 key: _scaffoldKey,
                 body: Container(
@@ -185,7 +185,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                TogetherFormDate(
+                TogetherStepDate(
                     editSelectedDate: (_together.dateString != null &&
                             _together.dateString.length > 0)
                         ? CoreConst.togetherDateFormat
@@ -199,7 +199,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                       _together.dateString =
                           CoreConst.togetherDateFormat.format(dateTime);
                     }),
-                TogetherFormClub(
+                TogetherStepClub(
                   editSelectedClubID:
                       (_together.clubID != null && _together.clubID.length > 0)
                           ? _together.clubID
@@ -209,7 +209,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                     _together.clubID = clubID;
                   },
                 ),
-                TogetherFormCocktailCount(
+                TogetherStepCocktailCount(
                   editCocktailCountInfo: (_together.hardCount != 0 &&
                           _together.champagneCount != 0 &&
                           _together.serviceCount != 0)
@@ -226,7 +226,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                         cocktailCountInfo.serviceCount.toInt();
                   },
                 ),
-                TogetherFormPrice(
+                TogetherStepPrice(
                     editPriceInfo: (_together.tablePrice != 0)
                         ? PriceInfo(
                             tablePrice: _together.tablePrice.toDouble(),
@@ -237,7 +237,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                       _together.tipPrice = priceInfo.tipPrice.toInt();
                       setState(() {});
                     }),
-                TogetherFormMemberCount(
+                TogetherStepMemberCount(
                     editMemberCountInfo: (_together.totalCount != 0)
                         ? MemberCountInfo(
                             totalCount: _together.totalCount.toDouble(),
@@ -382,7 +382,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                               label: Text(
                                 sprintf(
                                     LocalizableLoader.of(context)
-                                        .text("add_pictures_button"),
+                                        .text("add_pictures"),
                                     [
                                       _selectedOriginalDatas.length,
                                       maxPicturesCount
@@ -392,8 +392,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                               onPressed: () {
                                 if (_selectedOriginalDatas.length >=
                                     maxPicturesCount) {
-                                  FailSnackbar()
-                                      .show("notice_remove_pictures", null);
+                                  FailSnackBar().show("remove_pictures", null);
 
                                   return;
                                 }
@@ -433,7 +432,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
                               size: 15.0,
                             ),
                             hintText: LocalizableLoader.of(context)
-                                .text("board_youtube_hint_text"),
+                                .text("youtube_hint"),
                             hintStyle: MainTheme.hintTextStyle,
                           ),
                         ),
@@ -585,7 +584,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
   void _touchedRegistButton(int lastIndex) {
     if (currentStep == 0 || currentStep == lastIndex) {
       if (_together.dateString == null || _together.dateString.length <= 0) {
-        FailSnackbar().show("error_together_form_date", () {
+        FailSnackBar().show("error_together_step_date", () {
           setState(() {
             currentStep = 0;
           });
@@ -594,7 +593,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
       }
 
       if (_together.clubID == null || _together.clubID.length <= 0) {
-        FailSnackbar().show("error_together_form_club", () {
+        FailSnackBar().show("error_together_step_club", () {
           setState(() {
             currentStep = 0;
           });
@@ -603,7 +602,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
       }
 
       if (_together.hardCount == 0 && _together.champagneCount == 0) {
-        FailSnackbar().show("error_together_form_cocktail", () {
+        FailSnackBar().show("error_together_step_cocktail", () {
           setState(() {
             currentStep = 0;
           });
@@ -612,7 +611,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
       }
 
       if (_together.tablePrice <= 0) {
-        FailSnackbar().show("error_together_form_price", () {
+        FailSnackBar().show("error_together_step_price", () {
           setState(() {
             currentStep = 0;
           });
@@ -621,7 +620,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
       }
 
       if (_together.totalCount < 2 || _together.restCount < 1) {
-        FailSnackbar().show("error_together_form_count", () {
+        FailSnackBar().show("error_together_step_count", () {
           setState(() {
             currentStep = 0;
           });
@@ -632,7 +631,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
 
     if (currentStep == 1 || currentStep == lastIndex) {
       if (_titleController.text.length <= 0) {
-        FailSnackbar().show("error_together_form_title", () {
+        FailSnackBar().show("error_together_step_title", () {
           setState(() {
             currentStep = 1;
           });
@@ -641,7 +640,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
       }
 
       if (_contentsController.text.length <= 0) {
-        FailSnackbar().show("error_together_form_contents", () {
+        FailSnackBar().show("error_together_step_contents", () {
           setState(() {
             currentStep = 1;
           });
@@ -653,7 +652,7 @@ class _TogetherStepFormState extends State<TogetherStepForm>
     if (currentStep == 2 || currentStep == lastIndex) {}
     if (currentStep == 3 || currentStep == lastIndex) {
       if (sanctionAgreeEnabled == false || phoneNumberAgreeEnabled == false) {
-        FailSnackbar().show("error_agree_check", null);
+        FailSnackBar().show("error_agree_check", null);
         return;
       }
     }

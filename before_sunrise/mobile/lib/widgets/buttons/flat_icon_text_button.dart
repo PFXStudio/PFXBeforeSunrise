@@ -28,7 +28,6 @@ class _FlatIconTextButtonState extends State<FlatIconTextButton> {
         padding: EdgeInsets.only(
           left: 15,
           right: 5,
-          top: 5,
         ),
         onPressed: widget.enabled == true ? widget.onPressed : () => {},
         child: Row(
@@ -39,10 +38,10 @@ class _FlatIconTextButtonState extends State<FlatIconTextButton> {
               color: widget.enabled == false
                   ? MainTheme.disabledButtonColor
                   : widget.color,
-              size: 16,
+              size: 18,
             ),
             Padding(
-              padding: EdgeInsets.only(left: 10, top: 2),
+              padding: EdgeInsets.only(left: 10),
               child: Text(widget.text,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

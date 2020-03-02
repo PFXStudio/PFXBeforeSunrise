@@ -50,18 +50,18 @@ class _CommentListState extends State<CommentList> {
 
   @override
   void dispose() {
-    KeyboardDector().setContext(null, 0);
-    OptionMenu().dismiss();
+    KeyboardDetector().setContext(null, 0);
+    OptionMenuPopup().dismiss();
     super.dispose();
   }
 
   _updateKeyboard() => Future.delayed(Duration(milliseconds: 500), () async {
         if (this.mounted == false) {
-          KeyboardDector().setContext(context, 0);
+          KeyboardDetector().setContext(context, 0);
           return;
         }
 
-        KeyboardDector()
+        KeyboardDetector()
             .setContext(context, _inputBarKey.currentContext.size.height + 4);
       });
 
@@ -366,7 +366,7 @@ class _CommentListState extends State<CommentList> {
                               hoverColor: Colors.black,
                               contentPadding: EdgeInsets.all(10.0),
                               hintText: LocalizableLoader.of(context)
-                                  .text("comment_hint_text"),
+                                  .text("comment_hint"),
                             ),
                             minLines: 1,
                             maxLines: 5,
@@ -499,12 +499,12 @@ class _CommentListState extends State<CommentList> {
 
   void _touchedSendButton() {
     if (widget.isReport == true) {
-      FailSnackbar().show("fail_report_post", null);
+      FailSnackBar().show("fail_report_post", null);
       return;
     }
 
     if (_textController.text.length <= 0) {
-      FailSnackbar().show("error_empty_text", null);
+      FailSnackBar().show("error_empty_text", null);
       return;
     }
 
@@ -531,12 +531,12 @@ class _CommentListState extends State<CommentList> {
 
   void _touchedSendImageButton() {
     if (widget.isReport == true) {
-      FailSnackbar().show("fail_report_post", null);
+      FailSnackBar().show("fail_report_post", null);
       return;
     }
 
     if (_selectedOriginalData == null) {
-      FailSnackbar().show("error_empty_image", null);
+      FailSnackBar().show("error_empty_image", null);
       return;
     }
 
@@ -560,7 +560,7 @@ class _CommentListState extends State<CommentList> {
   }
 
   void _scrollListener() {
-    OptionMenu().dismiss();
+    OptionMenuPopup().dismiss();
     FocusScope.of(context).requestFocus(FocusNode());
     if (_autoScrollController.offset >=
             _autoScrollController.position.maxScrollExtent &&

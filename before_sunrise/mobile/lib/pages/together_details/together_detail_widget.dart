@@ -23,8 +23,8 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
     _scrollController.addListener(_scrollListener);
     _scrollEffects = TogetherDetailScrollEffects();
 
-    SuccessSnackbar().initialize(_scaffoldKey);
-    FailSnackbar().initialize(_scaffoldKey);
+    SuccessSnackBar().initialize(_scaffoldKey);
+    FailSnackBar().initialize(_scaffoldKey);
   }
 
   @override
@@ -32,8 +32,8 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
     _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
 
-    SuccessSnackbar().initialize(null);
-    FailSnackbar().initialize(null);
+    SuccessSnackBar().initialize(null);
+    FailSnackBar().initialize(null);
 
     super.dispose();
   }
@@ -92,7 +92,7 @@ class _TogetherDetailWidgetState extends State<TogetherDetailWidget> {
               listener: (context, state) async {
                 print(state.toString());
                 if (state is SuccessRemoveTogetherState) {
-                  SuccessSnackbar().show("success_remove_post", () {
+                  SuccessSnackBar().show("success_remove_post", () {
                     Navigator.pop(context);
                   });
                 }
@@ -272,7 +272,7 @@ Widget _buildJoin(BuildContext context) {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 42.0),
           child: Text(
-            LocalizableLoader.of(context).text("together_join_button"),
+            LocalizableLoader.of(context).text("request_join"),
             style: TextStyle(
               color: Colors.white,
               fontSize: 20.0,
@@ -380,21 +380,21 @@ class _MenuButton extends StatelessWidget {
           )));
     }
 
-    OptionMenu().initialize(
+    OptionMenuPopup().initialize(
         context: context,
         backgroundColor: Colors.black54,
         items: menuItems,
         onClickMenu: onClickMenu,
         onDismiss: onDismiss);
 
-    OptionMenu().show(widgetKey: moreMenuKey);
+    OptionMenuPopup().show(widgetKey: moreMenuKey);
   }
 
   void onClickMenu(item) {
     OptionItem optionItem = item;
     if (optionItem.index == 0) {
       if (together.isReported() == true) {
-        FailSnackbar().show("fail_reported_post", () {});
+        FailSnackBar().show("fail_reported_post", () {});
 
         return;
       }
@@ -406,7 +406,7 @@ class _MenuButton extends StatelessWidget {
 
     if (optionItem.index == 1) {
       if (_isMine == true) {
-        FailSnackbar().show("cant_report_mine", () {});
+        FailSnackBar().show("cant_report_mine", () {});
 
         return;
       }
@@ -418,14 +418,14 @@ class _MenuButton extends StatelessWidget {
 
     if (optionItem.index == 2) {
       if (together.isReported() == true) {
-        FailSnackbar().show("fail_reported_post", () {});
+        FailSnackBar().show("fail_reported_post", () {});
 
         return;
       }
 
       Map<String, dynamic> infoMap = {"editPost": together};
 
-      var context = OptionMenu().context;
+      var context = OptionMenuPopup().context;
       downloadAllImages(together.imageUrls, (editImageMap) {
         if (editImageMap != null) {
           infoMap["editImageMap"] = editImageMap;
@@ -441,13 +441,13 @@ class _MenuButton extends StatelessWidget {
 
     if (optionItem.index == 3) {
       if (together.isReported() == true) {
-        FailSnackbar().show("fail_reported_post", () {});
+        FailSnackBar().show("fail_reported_post", () {});
 
         return;
       }
 
       if (_isMine == false) {
-        FailSnackbar().show("error_not_mine", () {});
+        FailSnackBar().show("error_not_mine", () {});
         return;
       }
 
